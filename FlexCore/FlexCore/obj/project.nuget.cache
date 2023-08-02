@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "wZs3DeYHViMw14v1gAR8fypbQ7T+yHKPBy2jko5oZhVtuUNeVXPnXVuDyJx5Uc2yBO8/uH0ITTE7pRbCo5uJHA==",
+  "dgSpecHash": "r5MLQ7nB6dnIKQcbme2ZKDMiXdT1J3qR/uX3YweBAPT8FRrRviBO8S2aSJQ1rtqNPYjmSGLGB8R2unKYIc96Hw==",
   "success": true,
-  "projectFilePath": "C:\\大專FlexCore\\FlexCore\\FlexCore.csproj",
+  "projectFilePath": "C:\\大專前後分離\\FlexCore\\FlexCore\\FlexCore.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\dapper\\2.0.143\\dapper.2.0.143.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
