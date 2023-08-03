@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
+import Home from "../views/home/Home.vue";
 
 // 路由設定
 const routes = [
@@ -11,17 +11,17 @@ const routes = [
   {
     //http://loaclhost/Men
     path: "/men",
-    component: () => import("../views/ProductMenLayout.vue"),
+    component: () => import("../views/product/ProductMenLayout.vue"),
     children: [
       {
         path: "",
-        component: () => import("../views/ProductMen.vue"),
+        component: () => import("../views/product/ProductMen.vue"),
       },
       {
         // 当 /user/:id/posts 匹配成功
         // UserPosts 将被渲染到 User 的 <router-view> 内部
         path: "detail/:prdouctId",
-        component: () => import("../views/ProductDetail.vue"),
+        component: () => import("../views/product/ProductDetail.vue"),
       },
     ],
   },
