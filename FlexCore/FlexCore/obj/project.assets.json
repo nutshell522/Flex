@@ -10803,11 +10803,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\大專FlexCore\\FlexCore\\FlexCore.csproj",
+      "projectUniqueName": "C:\\大專\\FlexSite\\FlexCore\\FlexCore\\FlexCore.csproj",
       "projectName": "FlexCore",
-      "projectPath": "C:\\大專FlexCore\\FlexCore\\FlexCore.csproj",
+      "projectPath": "C:\\大專\\FlexSite\\FlexCore\\FlexCore\\FlexCore.csproj",
       "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-      "outputPath": "C:\\大專FlexCore\\FlexCore\\obj\\",
+      "outputPath": "C:\\大專\\FlexSite\\FlexCore\\FlexCore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -10825,8 +10825,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\大專FlexCore\\EFModels\\EFModels.csproj": {
-              "projectPath": "C:\\大專FlexCore\\EFModels\\EFModels.csproj"
+            "C:\\大專\\FlexSite\\FlexCore\\EFModels\\EFModels.csproj": {
+              "projectPath": "C:\\大專\\FlexSite\\FlexCore\\EFModels\\EFModels.csproj"
             }
           }
         }
