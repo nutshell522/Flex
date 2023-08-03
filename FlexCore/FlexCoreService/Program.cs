@@ -50,6 +50,8 @@ namespace FlexCoreService
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
+
             app.UseAuthorization();
 
 
