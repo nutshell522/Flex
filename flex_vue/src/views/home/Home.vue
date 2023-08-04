@@ -18,13 +18,7 @@
     <div class="container main-area mb-3">
       <a href="javascript:;" class="home-row">
         <div class="video-container">
-          <video
-            src="../../../public/videos/pexels-cottonbro-5275266 (2160p).mp4"
-            muted
-            autoplay
-            loop
-            controls="false"
-          ></video>
+          <video src="../../../public/videos/Pexels-Cottonbro-5275266.mp4" muted autoplay loop controls="false"></video>
         </div>
         <div class="home-card">
           <div class="home-card-title">
@@ -63,44 +57,28 @@
         <div class="home-product-list">
           <div class="home-product-list-items">
             <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
+              <img src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg" />
             </a>
             <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
+              <img src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg" />
             </a>
             <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
+              <img src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg" />
             </a>
             <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
+              <img src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg" />
             </a>
             <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
+              <img src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg" />
             </a>
             <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
+              <img src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg" />
             </a>
             <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
+              <img src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg" />
             </a>
             <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
+              <img src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg" />
             </a>
           </div>
         </div>
@@ -110,7 +88,7 @@
   <homeFooter></homeFooter>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import navBar from '@/components/home/NavBar.vue';
 import homeFooter from '../../components/home/footer.vue';
 </script>
@@ -237,7 +215,7 @@ main {
           display: flex;
           align-items: center;
 
-          & > *:not(:first-child) {
+          &>*:not(:first-child) {
             margin-left: 10px;
           }
 
