@@ -1,6 +1,5 @@
 <template>
   <navBar></navBar>
-  <!-- <userList></userList> -->
   <main>
     <div class="text-carousel-container">
       <div class="text-carousel">
@@ -19,13 +18,13 @@
     <div class="container main-area mb-3">
       <a href="javascript:;" class="home-row">
         <div class="video-container">
-          <!-- <video
-            src="../../public/videos/pexels-cottonbro-5275266 (2160p).mp4"
+          <video
+            src="../../../public/videos/pexels-cottonbro-5275266 (2160p).mp4"
             muted
             autoplay
             loop
             controls="false"
-          ></video> -->
+          ></video>
         </div>
         <div class="home-card">
           <div class="home-card-title">
@@ -43,11 +42,11 @@
         </div>
         <div class="row row-cols-2 gx-3">
           <a href="javascript:;" class="img-wrapper col">
-            <img src="../../public/imgs/pexels-luis-zambrano-17570085.jpg" />
+            <img src="../../../public/imgs/pexels-luis-zambrano-17570085.jpg" />
             <div class="img-text">男款</div>
           </a>
           <a href="#" class="img-wrapper col">
-            <img src="../../public/imgs/pexels-daniel-duarte-17122658.jpg" />
+            <img src="../../../public/imgs/pexels-daniel-duarte-17122658.jpg" />
             <div class="img-text">女款</div>
           </a>
         </div>
@@ -65,42 +64,42 @@
           <div class="home-product-list-items">
             <a href="javascript:;" class="img-wrapper">
               <img
-                src="../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
+                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
               />
             </a>
             <a href="javascript:;" class="img-wrapper">
               <img
-                src="../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
+                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
               />
             </a>
             <a href="javascript:;" class="img-wrapper">
               <img
-                src="../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
+                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
               />
             </a>
             <a href="javascript:;" class="img-wrapper">
               <img
-                src="../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
+                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
               />
             </a>
             <a href="javascript:;" class="img-wrapper">
               <img
-                src="../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
+                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
               />
             </a>
             <a href="javascript:;" class="img-wrapper">
               <img
-                src="../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
+                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
               />
             </a>
             <a href="javascript:;" class="img-wrapper">
               <img
-                src="../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
+                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
               />
             </a>
             <a href="javascript:;" class="img-wrapper">
               <img
-                src="../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
+                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
               />
             </a>
           </div>
@@ -112,9 +111,8 @@
 </template>
 
 <script setup lang="ts">
-import navBar from '../components/home/NavBar.vue';
-// import userList from '../components/home/userList.vue';
-import homeFooter from '../components/home/footer.vue';
+import navBar from '@/components/home/NavBar.vue';
+import homeFooter from '../../components/home/footer.vue';
 </script>
 
 <style lang="scss">

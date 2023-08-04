@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\FlexFrontend\\FlexCore\\FlexCore\\FlexCore.csproj": {}
+    "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\FlexCore\\FlexCore.csproj": {}
   },
   "projects": {
-    "D:\\FlexFrontend\\FlexCore\\EFModels\\EFModels.csproj": {
+    "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\EFModels\\EFModels.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\FlexFrontend\\FlexCore\\EFModels\\EFModels.csproj",
+        "projectUniqueName": "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\EFModels\\EFModels.csproj",
         "projectName": "EFModels",
-        "projectPath": "D:\\FlexFrontend\\FlexCore\\EFModels\\EFModels.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "D:\\FlexFrontend\\FlexCore\\EFModels\\obj\\",
+        "projectPath": "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\EFModels\\EFModels.csproj",
+        "packagesPath": "C:\\Users\\ispan\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\EFModels\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ispan\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -71,21 +71,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\FlexFrontend\\FlexCore\\FlexCore\\FlexCore.csproj": {
+    "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\FlexCore\\FlexCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\FlexFrontend\\FlexCore\\FlexCore\\FlexCore.csproj",
+        "projectUniqueName": "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\FlexCore\\FlexCore.csproj",
         "projectName": "FlexCore",
-        "projectPath": "D:\\FlexFrontend\\FlexCore\\FlexCore\\FlexCore.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "D:\\FlexFrontend\\FlexCore\\FlexCore\\obj\\",
+        "projectPath": "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\FlexCore\\FlexCore.csproj",
+        "packagesPath": "C:\\Users\\ispan\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\FlexCore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ispan\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -93,15 +93,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\FlexFrontend\\FlexCore\\EFModels\\EFModels.csproj": {
-                "projectPath": "D:\\FlexFrontend\\FlexCore\\EFModels\\EFModels.csproj"
+              "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\EFModels\\EFModels.csproj": {
+                "projectPath": "C:\\Users\\ispan\\Desktop\\flex\\Flex\\FlexCore\\EFModels\\EFModels.csproj"
               }
             }
           }
@@ -154,7 +154,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
         }
       }
     }

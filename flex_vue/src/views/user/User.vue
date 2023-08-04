@@ -105,7 +105,7 @@
 </template>
 
 <script setup>
-import navBar from '../components/home/navBar.vue';
+import navBar from '@/components/home/navBar.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 
@@ -145,10 +145,6 @@ axios
 </script>
 
 <style>
-.container {
-  width: 30%;
-  margin-left: 10%;
-}
 .gender {
   display: flex;
 }
