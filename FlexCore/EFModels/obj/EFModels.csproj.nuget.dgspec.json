@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\flex_main\\Flex\\FlexCore\\EFModels\\EFModels.csproj": {}
+    "C:\\Users\\ispan\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj": {}
   },
   "projects": {
-    "D:\\flex_main\\Flex\\FlexCore\\EFModels\\EFModels.csproj": {
+    "C:\\Users\\ispan\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\flex_main\\Flex\\FlexCore\\EFModels\\EFModels.csproj",
+        "projectUniqueName": "C:\\Users\\ispan\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj",
         "projectName": "EFModels",
-        "projectPath": "D:\\flex_main\\Flex\\FlexCore\\EFModels\\EFModels.csproj",
+        "projectPath": "C:\\Users\\ispan\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj",
         "packagesPath": "C:\\Users\\ispan\\.nuget\\packages\\",
-        "outputPath": "D:\\flex_main\\Flex\\FlexCore\\EFModels\\obj\\",
+        "outputPath": "C:\\Users\\ispan\\Desktop\\Flex\\FlexCore\\EFModels\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ispan\\AppData\\Roaming\\NuGet\\NuGet.Config",
