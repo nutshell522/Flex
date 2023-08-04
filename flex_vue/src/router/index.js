@@ -12,7 +12,12 @@ const routes = [
     //http://loaclhost/User
     path: '/user',
     component: User
-  }
+  },
+  {
+    //http://loaclhost/Men
+    path: "/orders",
+    component: () => import("../views/orders/orderindex.vue"),
+  },
 ]
 
 const router = createRouter({

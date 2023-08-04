@@ -29,7 +29,7 @@
         <div class="home-card">
           <div class="home-card-title">
             <p>舉手投足,</p>
-            <p>　暢動自如</p>
+            <p>暢動自如</p>
           </div>
           <div class="home-card-body">
             無論今天或明天將面對什麼訓練挑戰,這些必備款式讓你輕鬆應對每個動作。
