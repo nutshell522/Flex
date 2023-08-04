@@ -20,6 +20,7 @@ namespace EFModels.Models
 
         public virtual DbSet<Activity> Activities { get; set; }
         public virtual DbSet<ActivityCategory> ActivityCategories { get; set; }
+        public virtual DbSet<ActivityImg> ActivityImgs { get; set; }
         public virtual DbSet<ActivityStatus> ActivityStatuses { get; set; }
         public virtual DbSet<AlternateAddress> AlternateAddresses { get; set; }
         public virtual DbSet<BlackList> BlackLists { get; set; }
@@ -51,7 +52,10 @@ namespace EFModels.Models
         public virtual DbSet<ProductSubCategory> ProductSubCategories { get; set; }
         public virtual DbSet<ProjectTag> ProjectTags { get; set; }
         public virtual DbSet<ProjectTagItem> ProjectTagItems { get; set; }
+        public virtual DbSet<ReservationImg> ReservationImgs { get; set; }
         public virtual DbSet<ReservationStatus> ReservationStatuses { get; set; }
+        public virtual DbSet<Return> Returns { get; set; }
+        public virtual DbSet<ReturnReson> ReturnResons { get; set; }
         public virtual DbSet<SalesCategory> SalesCategories { get; set; }
         public virtual DbSet<ShoesCategory> ShoesCategories { get; set; }
         public virtual DbSet<ShoesChoose> ShoesChooses { get; set; }
@@ -128,6 +132,21 @@ namespace EFModels.Models
                 entity.Property(e => e.ActivityCategoryName)
                     .IsRequired()
                     .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<ActivityImg>(entity =>
+            {
+                entity.ToTable("ActivityImg");
+
+                entity.Property(e => e.ImgPath)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
+                entity.HasOne(d => d.fk_Activity)
+                    .WithMany(p => p.ActivityImgs)
+                    .HasForeignKey(d => d.fk_ActivityId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ActivityI__fk_Ac__4C6B5938");
             });
 
             modelBuilder.Entity<ActivityStatus>(entity =>
@@ -823,6 +842,15 @@ namespace EFModels.Models
                     .HasConstraintName("FK_discount_group_item_discount_group");
             });
 
+            modelBuilder.Entity<ReservationImg>(entity =>
+            {
+                entity.ToTable("ReservationImg");
+
+                entity.Property(e => e.ImgPath)
+                    .IsRequired()
+                    .HasMaxLength(300);
+            });
+
             modelBuilder.Entity<ReservationStatus>(entity =>
             {
                 entity.HasKey(e => e.ReservationId)
@@ -836,6 +864,32 @@ namespace EFModels.Models
                 entity.Property(e => e.ReservationStatusDescription)
                     .IsRequired()
                     .HasMaxLength(10);
+            });
+
+            modelBuilder.Entity<Return>(entity =>
+            {
+                entity.Property(e => e.ID).ValueGeneratedNever();
+
+                entity.Property(e => e.退貨日期).HasColumnType("datetime");
+
+                entity.HasOne(d => d.fk訂單Navigation)
+                    .WithMany(p => p.Returns)
+                    .HasForeignKey(d => d.fk訂單)
+                    .HasConstraintName("FK_Returns_orders");
+
+                entity.HasOne(d => d.退貨理由Navigation)
+                    .WithMany(p => p.Returns)
+                    .HasForeignKey(d => d.退貨理由)
+                    .HasConstraintName("FK_Returns_ReturnResons");
+            });
+
+            modelBuilder.Entity<ReturnReson>(entity =>
+            {
+                entity.Property(e => e.ID).ValueGeneratedNever();
+
+                entity.Property(e => e.退貨理由)
+                    .HasMaxLength(20)
+                    .IsFixedLength();
             });
 
             modelBuilder.Entity<SalesCategory>(entity =>
