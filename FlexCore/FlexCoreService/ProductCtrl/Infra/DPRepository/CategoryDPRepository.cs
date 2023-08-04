@@ -18,8 +18,46 @@ namespace FlexCoreService.ProductCtrl.Infra.DPRepository
         public IEnumerable<CategoryDto> GetAllCategory()
         {
             string sql = @"select pc.ProductCategoryName from ProductCategories as pc
+join SalesCategories as sc on sc.SalesCategoryId=pc.fk_SalesCategoryId";
+
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.Query<CategoryDto>(sql);
+            return result;
+        }
+
+        public IEnumerable<CategoryDto> GetCategoryMen()
+        {
+            string sql = @"select pc.ProductCategoryName,ps.ProductSubCategoryName 
+from ProductCategories as pc
 join SalesCategories as sc on sc.SalesCategoryId=pc.fk_SalesCategoryId
+join ProductSubCategories as ps on ps.fk_ProductCategoryId=pc.ProductCategoryId
 where fk_SalesCategoryId=1";
+
+            using IDbConnection dbConnection=new SqlConnection(_connStr);
+            var result=dbConnection.Query<CategoryDto>(sql); 
+            return result;
+        }
+
+        public IEnumerable<CategoryDto> GetCategoryWomen()
+        {
+            string sql = @"select pc.ProductCategoryName,ps.ProductSubCategoryName 
+from ProductCategories as pc
+join SalesCategories as sc on sc.SalesCategoryId=pc.fk_SalesCategoryId
+join ProductSubCategories as ps on ps.fk_ProductCategoryId=pc.ProductCategoryId
+where fk_SalesCategoryId=2";
+
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.Query<CategoryDto>(sql);
+            return result;
+        }
+
+        public IEnumerable<CategoryDto> GetCategoryKid()
+        {
+            string sql = @"select pc.ProductCategoryName,ps.ProductSubCategoryName 
+from ProductCategories as pc
+join SalesCategories as sc on sc.SalesCategoryId=pc.fk_SalesCategoryId
+join ProductSubCategories as ps on ps.fk_ProductCategoryId=pc.ProductCategoryId
+where fk_SalesCategoryId=3";
 
             using IDbConnection dbConnection = new SqlConnection(_connStr);
             var result = dbConnection.Query<CategoryDto>(sql);
