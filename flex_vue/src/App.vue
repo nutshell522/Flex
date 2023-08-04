@@ -6,7 +6,6 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 </script>
 
 <template>
-  <metainfo></metainfo>
   <router-view />
 </template>
 
