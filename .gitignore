@@ -29,7 +29,5 @@
 
 # Ignore .vs directory under FlexCore
 /FlexCore/.vs
-/FlexCore/FlexCore/bin
-/FlexCore/FlexCore/obj
-/FlexCore/FlexCoreService/bin
-/FlexCore/FlexCoreService/obj
+/FlexCore/FlexCoreService/bin/
+/FlexCore/FlexCoreService/obj/
