@@ -10,7 +10,6 @@ namespace EFModels.Models
         public int Id { get; set; }
         public int order_Id { get; set; }
         public string product_name { get; set; }
-        public int fk_typeId { get; set; }
         public int? per_price { get; set; }
         public int? quantity { get; set; }
         public string discount_name { get; set; }
@@ -18,7 +17,6 @@ namespace EFModels.Models
         public int? discount_subtotal { get; set; }
         public string Items_description { get; set; }
 
-        public virtual Type fk_type { get; set; }
         public virtual order order { get; set; }
     }
 }

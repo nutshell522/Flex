@@ -9,12 +9,11 @@ namespace EFModels.Models
     {
         public int CartItemId { get; set; }
         public int fk_CardId { get; set; }
-        public int fk_Type { get; set; }
-        public int ProductId { get; set; }
+        public int fk_ProductId { get; set; }
         public string Description { get; set; }
         public int Qty { get; set; }
 
         public virtual ShoppingCart CartItemNavigation { get; set; }
-        public virtual Type fk_TypeNavigation { get; set; }
+        public virtual ProductGroup fk_Product { get; set; }
     }
 }

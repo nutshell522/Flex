@@ -1,4 +1,4 @@
-﻿/****** Object:  Table [dbo].[Activities]    Script Date: 2023/7/31 上午 01:03:29 ******/
+﻿/****** Object:  Table [dbo].[Activities]    Script Date: 2023/8/4 下午 04:17:22 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10,7 +10,6 @@ CREATE TABLE [dbo].[Activities](
 	[ActivityDate] [datetime] NOT NULL,
 	[fk_SpeakerId] [int] NOT NULL,
 	[ActivityPlace] [nvarchar](100) NOT NULL,
-	[ActivityImage] [nvarchar](300) NOT NULL,
 	[ActivityBookStartTime] [datetime] NOT NULL,
 	[ActivityBookEndTime] [datetime] NOT NULL,
 	[ActivityAge] [tinyint] NOT NULL,
@@ -24,7 +23,38 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ActivityCategories]    Script Date: 2023/7/31 上午 01:03:29 ******/
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ActivityImg](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[fk_ActivityId] [int] NOT NULL,
+	[ImgPath] [nvarchar](300) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ReservationImg]    Script Date: 2023/7/29 下午 11:06:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ReservationImg](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ImgPath] [nvarchar](300) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[ActivityCategories]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -38,7 +68,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ActivityStatuses]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ActivityStatuses]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -52,7 +82,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AlternateAddresses]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[AlternateAddresses]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -68,7 +98,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[BlackLists]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[BlackLists]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -83,7 +113,7 @@ CREATE TABLE [dbo].[BlackLists](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Branches]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Branches]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -98,7 +128,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CartItems]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[CartItems]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -106,8 +136,7 @@ GO
 CREATE TABLE [dbo].[CartItems](
 	[CartItemId] [int] IDENTITY(1,1) NOT NULL,
 	[fk_CardId] [int] NOT NULL,
-	[fk_Type] [int] NOT NULL,
-	[ProductId] [int] NOT NULL,
+	[fk_ProductId] [int] NOT NULL,
 	[Description] [nvarchar](700) NOT NULL,
 	[Qty] [int] NOT NULL,
  CONSTRAINT [PK_CartItem] PRIMARY KEY CLUSTERED 
@@ -116,7 +145,7 @@ CREATE TABLE [dbo].[CartItems](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ColorCategories]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ColorCategories]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -130,7 +159,7 @@ CREATE TABLE [dbo].[ColorCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CouponCategories]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[CouponCategories]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -144,7 +173,7 @@ CREATE TABLE [dbo].[CouponCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Coupons]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Coupons]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -173,7 +202,7 @@ CREATE TABLE [dbo].[Coupons](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CouponSendings]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[CouponSendings]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -191,7 +220,7 @@ CREATE TABLE [dbo].[CouponSendings](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Customized_materials]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Customized_materials]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -205,7 +234,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CustomizedOrders]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[CustomizedOrders]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -229,7 +258,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CustomizedShoesPo]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[CustomizedShoesPo]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -253,7 +282,7 @@ CREATE TABLE [dbo].[CustomizedShoesPo](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Departments]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Departments]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -267,7 +296,7 @@ CREATE TABLE [dbo].[Departments](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Discounts]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Discounts]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -291,7 +320,7 @@ CREATE TABLE [dbo].[Discounts](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[JobTitles]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[JobTitles]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -306,7 +335,7 @@ CREATE TABLE [dbo].[JobTitles](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[logistics_companies]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[logistics_companies]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -322,7 +351,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MemberPoints]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[MemberPoints]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -337,7 +366,7 @@ CREATE TABLE [dbo].[MemberPoints](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Members]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Members]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -350,12 +379,13 @@ CREATE TABLE [dbo].[Members](
 	[Mobile] [varchar](10) NOT NULL,
 	[Email] [nvarchar](300) NOT NULL,
 	[Birthday] [date] NULL,
-	[CommonAddress] [nvarchar](100) NOT NULL,
+	[CommonAddress] [nvarchar](100) NULL,
 	[Account] [varchar](30) NOT NULL,
 	[EncryptedPassword] [varchar](70) NOT NULL,
 	[Registration] [datetime] NULL,
 	[IsConfirmed] [bit] NULL,
 	[ConfirmCode] [varchar](50) NULL,
+	[IsSubscribeNews] [bit] NULL,
 	[fk_LevelId] [int] NOT NULL,
 	[fk_BlackListId] [int] NULL,
  CONSTRAINT [PK__Members__0CF04B18BDECE389] PRIMARY KEY CLUSTERED 
@@ -364,7 +394,7 @@ CREATE TABLE [dbo].[Members](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MembershipLevelPrivileges]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[MembershipLevelPrivileges]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -379,7 +409,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MembershipLevels]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[MembershipLevels]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -396,7 +426,7 @@ CREATE TABLE [dbo].[MembershipLevels](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[OneToOneReservations]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[OneToOneReservations]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -416,7 +446,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[order_statuses]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[order_statuses]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -430,7 +460,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[orderItems]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[orderItems]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -439,7 +469,6 @@ CREATE TABLE [dbo].[orderItems](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[order_Id] [int] NOT NULL,
 	[product_name] [nvarchar](50) NULL,
-	[fk_typeId] [int] NOT NULL,
 	[per_price] [int] NULL,
 	[quantity] [int] NULL,
 	[discount_name] [nvarchar](50) NULL,
@@ -452,7 +481,7 @@ CREATE TABLE [dbo].[orderItems](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[orders]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[orders]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -484,7 +513,7 @@ CREATE TABLE [dbo].[orders](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[pay_methods]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[pay_methods]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -498,7 +527,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[pay_statuses]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[pay_statuses]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -512,7 +541,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PointHistories]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[PointHistories]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -532,7 +561,7 @@ CREATE TABLE [dbo].[PointHistories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PointManage]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[PointManage]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -550,7 +579,7 @@ CREATE TABLE [dbo].[PointManage](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PointTradeIn]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[PointTradeIn]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -570,7 +599,7 @@ CREATE TABLE [dbo].[PointTradeIn](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Privileges]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Privileges]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -585,7 +614,7 @@ CREATE TABLE [dbo].[Privileges](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductCategories]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ProductCategories]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -601,7 +630,7 @@ CREATE TABLE [dbo].[ProductCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductComment]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ProductComment]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -616,7 +645,7 @@ CREATE TABLE [dbo].[ProductComment](
 	[CreateTime] [datetime] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductGroups]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ProductGroups]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -633,7 +662,7 @@ CREATE TABLE [dbo].[ProductGroups](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductImgs]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ProductImgs]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -649,7 +678,7 @@ CREATE TABLE [dbo].[ProductImgs](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Products]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Products]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -676,7 +705,7 @@ CREATE TABLE [dbo].[Products](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductSubCategories]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ProductSubCategories]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -692,7 +721,7 @@ CREATE TABLE [dbo].[ProductSubCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProjectTagItems]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ProjectTagItems]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -707,7 +736,7 @@ CREATE TABLE [dbo].[ProjectTagItems](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProjectTags]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ProjectTags]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -724,7 +753,7 @@ CREATE TABLE [dbo].[ProjectTags](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReservationStatuses]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ReservationStatuses]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -738,7 +767,39 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SalesCategories]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ReturnResons]    Script Date: 2023/8/4 下午 04:17:23 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ReturnResons](
+	[ID] [int] NOT NULL,
+	[退貨理由] [nchar](20) NULL,
+ CONSTRAINT [PK_ReturnResons] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Returns]    Script Date: 2023/8/4 下午 04:17:23 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Returns](
+	[ID] [int] NOT NULL,
+	[退貨日期] [datetime] NULL,
+	[fk訂單] [int] NULL,
+	[退貨轉帳帳號] [int] NULL,
+	[退款狀態] [bit] NULL,
+	[退貨理由] [int] NULL,
+ CONSTRAINT [PK_Returns] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[SalesCategories]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -752,7 +813,7 @@ CREATE TABLE [dbo].[SalesCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesCategories]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ShoesCategories]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -766,7 +827,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesChooses]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ShoesChooses]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -780,7 +841,7 @@ CREATE TABLE [dbo].[ShoesChooses](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesColorCategories]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ShoesColorCategories]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -795,7 +856,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesGroups]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ShoesGroups]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -813,7 +874,7 @@ CREATE TABLE [dbo].[ShoesGroups](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesPictures]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ShoesPictures]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -828,7 +889,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoppingCarts]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[ShoppingCarts]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -842,7 +903,7 @@ CREATE TABLE [dbo].[ShoppingCarts](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SizeCategories]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[SizeCategories]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -856,7 +917,7 @@ CREATE TABLE [dbo].[SizeCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SpeakerFields]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[SpeakerFields]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -870,7 +931,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Speakers]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Speakers]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -890,7 +951,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[StaffPermissions]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[StaffPermissions]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -904,7 +965,7 @@ CREATE TABLE [dbo].[StaffPermissions](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Staffs]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Staffs]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -930,7 +991,7 @@ CREATE TABLE [dbo].[Staffs](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Suppliers]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Suppliers]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -951,7 +1012,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Type]    Script Date: 2023/7/31 上午 01:03:29 ******/
+/****** Object:  Table [dbo].[Type]    Script Date: 2023/8/4 下午 04:17:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -965,15 +1026,21 @@ CREATE TABLE [dbo].[Type](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+INSERT [dbo].[ReturnResons] ([ID], [退貨理由]) VALUES (1, N'1                   ')
+GO
+INSERT [dbo].[ReturnResons] ([ID], [退貨理由]) VALUES (2, N'2                   ')
+GO
+INSERT [dbo].[ReturnResons] ([ID], [退貨理由]) VALUES (3, N'3                   ')
+GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Activity__732635EC1EAC76D8]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__Activity__732635EC1EAC76D8]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[ActivityStatuses] ADD UNIQUE NONCLUSTERED 
 (
 	[ActivityStatusDescription] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Alternat__3B54230C0C0A4AD5]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__Alternat__3B54230C0C0A4AD5]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[AlternateAddresses] ADD UNIQUE NONCLUSTERED 
 (
 	[fk_MemberId] ASC
@@ -981,7 +1048,7 @@ ALTER TABLE [dbo].[AlternateAddresses] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Branches__3903DB03170DB972]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__Branches__3903DB03170DB972]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[Branches] ADD UNIQUE NONCLUSTERED 
 (
 	[BranchName] ASC
@@ -989,7 +1056,7 @@ ALTER TABLE [dbo].[Branches] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Branches__F50DE17A81A39D90]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__Branches__F50DE17A81A39D90]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[Branches] ADD UNIQUE NONCLUSTERED 
 (
 	[BranchAddress] ASC
@@ -997,13 +1064,13 @@ ALTER TABLE [dbo].[Branches] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__JobTitle__252BE89C516695E0]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__JobTitle__252BE89C516695E0]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[JobTitles] ADD  CONSTRAINT [UQ__JobTitle__252BE89C516695E0] UNIQUE NONCLUSTERED 
 (
 	[TitleName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__MemberPo__3B54230C8C81DA21]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__MemberPo__3B54230C8C81DA21]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[MemberPoints] ADD  CONSTRAINT [UQ__MemberPo__3B54230C8C81DA21] UNIQUE NONCLUSTERED 
 (
 	[fk_MemberId] ASC
@@ -1011,7 +1078,7 @@ ALTER TABLE [dbo].[MemberPoints] ADD  CONSTRAINT [UQ__MemberPo__3B54230C8C81DA21
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Members__6FAE0782E1A56EB7]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__Members__6FAE0782E1A56EB7]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__6FAE0782E1A56EB7] UNIQUE NONCLUSTERED 
 (
 	[Mobile] ASC
@@ -1019,7 +1086,7 @@ ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__6FAE0782E1A56EB7] UNIQ
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Members__A9D1053442354E1D]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__Members__A9D1053442354E1D]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__A9D1053442354E1D] UNIQUE NONCLUSTERED 
 (
 	[Email] ASC
@@ -1027,7 +1094,7 @@ ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__A9D1053442354E1D] UNIQ
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Members__B0C3AC46ED2152FF]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__Members__B0C3AC46ED2152FF]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__B0C3AC46ED2152FF] UNIQUE NONCLUSTERED 
 (
 	[Account] ASC
@@ -1035,7 +1102,7 @@ ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__B0C3AC46ED2152FF] UNIQ
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Reservat__ADF40EA639545590]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__Reservat__ADF40EA639545590]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[ReservationStatuses] ADD UNIQUE NONCLUSTERED 
 (
 	[ReservationStatusDescription] ASC
@@ -1043,13 +1110,13 @@ ALTER TABLE [dbo].[ReservationStatuses] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__StaffPer__9EF3BE7B6829F02D]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__StaffPer__9EF3BE7B6829F02D]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[StaffPermissions] ADD  CONSTRAINT [UQ__StaffPer__9EF3BE7B6829F02D] UNIQUE NONCLUSTERED 
 (
 	[LevelName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Supplier__AE8E9B41568C6187]    Script Date: 2023/7/31 上午 01:03:30 ******/
+/****** Object:  Index [UQ__Supplier__AE8E9B41568C6187]    Script Date: 2023/8/4 下午 04:17:23 ******/
 ALTER TABLE [dbo].[Suppliers] ADD UNIQUE NONCLUSTERED 
 (
 	[SupplierCompanyNumber] ASC
@@ -1119,15 +1186,18 @@ REFERENCES [dbo].[Members] ([MemberId])
 GO
 ALTER TABLE [dbo].[AlternateAddresses] CHECK CONSTRAINT [FK__Alternate__fk_Me__3D2915A8]
 GO
+ALTER TABLE [dbo].[ActivityImg]  WITH CHECK ADD FOREIGN KEY([fk_ActivityId])
+REFERENCES [dbo].[Activities] ([ActivityId])
+GO
 ALTER TABLE [dbo].[CartItems]  WITH CHECK ADD  CONSTRAINT [FK_CartItem_CartItem] FOREIGN KEY([CartItemId])
 REFERENCES [dbo].[ShoppingCarts] ([CartId])
 GO
 ALTER TABLE [dbo].[CartItems] CHECK CONSTRAINT [FK_CartItem_CartItem]
 GO
-ALTER TABLE [dbo].[CartItems]  WITH CHECK ADD  CONSTRAINT [FK_CartItems_Type] FOREIGN KEY([fk_Type])
-REFERENCES [dbo].[Type] ([TypeId])
+ALTER TABLE [dbo].[CartItems]  WITH CHECK ADD  CONSTRAINT [FK_CartItems_ProductGroups] FOREIGN KEY([fk_ProductId])
+REFERENCES [dbo].[ProductGroups] ([ProductGroupId])
 GO
-ALTER TABLE [dbo].[CartItems] CHECK CONSTRAINT [FK_CartItems_Type]
+ALTER TABLE [dbo].[CartItems] CHECK CONSTRAINT [FK_CartItems_ProductGroups]
 GO
 ALTER TABLE [dbo].[Coupons]  WITH CHECK ADD  CONSTRAINT [FK_Coupon_CouponCategory] FOREIGN KEY([fk_CouponCategoryId])
 REFERENCES [dbo].[CouponCategories] ([CouponCategoryId])
@@ -1234,11 +1304,6 @@ ALTER TABLE [dbo].[orderItems]  WITH CHECK ADD  CONSTRAINT [FK__orderItem__order
 REFERENCES [dbo].[orders] ([Id])
 GO
 ALTER TABLE [dbo].[orderItems] CHECK CONSTRAINT [FK__orderItem__order__1B9317B3]
-GO
-ALTER TABLE [dbo].[orderItems]  WITH CHECK ADD  CONSTRAINT [FK_orderItems_Type] FOREIGN KEY([fk_typeId])
-REFERENCES [dbo].[Type] ([TypeId])
-GO
-ALTER TABLE [dbo].[orderItems] CHECK CONSTRAINT [FK_orderItems_Type]
 GO
 ALTER TABLE [dbo].[orders]  WITH CHECK ADD  CONSTRAINT [FK__orders__fk_membe__5BAD9CC8] FOREIGN KEY([fk_member_Id])
 REFERENCES [dbo].[Members] ([MemberId])
@@ -1385,6 +1450,16 @@ REFERENCES [dbo].[ProjectTags] ([ProjectTagId])
 GO
 ALTER TABLE [dbo].[ProjectTags] CHECK CONSTRAINT [FK_ProjectTags_ProjectTags]
 GO
+ALTER TABLE [dbo].[Returns]  WITH CHECK ADD  CONSTRAINT [FK_Returns_orders] FOREIGN KEY([fk訂單])
+REFERENCES [dbo].[orders] ([Id])
+GO
+ALTER TABLE [dbo].[Returns] CHECK CONSTRAINT [FK_Returns_orders]
+GO
+ALTER TABLE [dbo].[Returns]  WITH CHECK ADD  CONSTRAINT [FK_Returns_ReturnResons] FOREIGN KEY([退貨理由])
+REFERENCES [dbo].[ReturnResons] ([ID])
+GO
+ALTER TABLE [dbo].[Returns] CHECK CONSTRAINT [FK_Returns_ReturnResons]
+GO
 ALTER TABLE [dbo].[ShoesGroups]  WITH CHECK ADD  CONSTRAINT [FK_ShoesGroups_Customized_materials] FOREIGN KEY([fk_MaterialId])
 REFERENCES [dbo].[Customized_materials] ([Shoesmaterial_Id])
 GO
@@ -1439,6 +1514,7 @@ REFERENCES [dbo].[JobTitles] ([TitleId])
 GO
 ALTER TABLE [dbo].[Staffs] CHECK CONSTRAINT [FK__Staffs__fk_Title__76619304]
 GO
+
 
 
 --建倫***************************************************************--
@@ -2552,39 +2628,103 @@ SET IDENTITY_INSERT [dbo].[ActivityStatuses] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Activities] ON 
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (1, N'2023台北歡慶雙十節路跑', 1, CAST(N'2023-10-10T07:00:00.000' AS DateTime), 1, N'臺北市政府市民廣場', N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023台北歡慶雙十節路跑.jpg', CAST(N'2023-08-10T00:00:00.000' AS DateTime), CAST(N'2023-10-10T23:59:59.000' AS DateTime), 7, 600, 700, N'一起在清晨享受健康的路跑活動慶祝台灣的生日吧！', 1)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (1, N'2023台北歡慶雙十節路跑', 1, CAST(N'2023-10-10T07:00:00.000' AS DateTime), 1, N'臺北市政府市民廣場', CAST(N'2023-08-10T00:00:00.000' AS DateTime), CAST(N'2023-10-10T23:59:59.000' AS DateTime), 7, 600, 700, N'一起在清晨享受健康的路跑活動慶祝台灣的生日吧！', 1)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (2, N'2023新竹馬拉松', 1, CAST(N'2023-06-25T09:30:00.000' AS DateTime), 3, N'竹南寮十七公里海岸線', N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023新竹馬拉松.png', CAST(N'2023-03-25T00:00:00.000' AS DateTime), CAST(N'2023-05-25T23:59:59.000' AS DateTime), 7, 600, 700, N'邀請您，一起來感受新竹南寮十七公里海岸線的無敵海景。', 3)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (2, N'2023新竹馬拉松', 1, CAST(N'2023-06-25T09:30:00.000' AS DateTime), 3, N'竹南寮十七公里海岸線', CAST(N'2023-03-25T00:00:00.000' AS DateTime), CAST(N'2023-05-25T23:59:59.000' AS DateTime), 7, 600, 700, N'邀請您，一起來感受新竹南寮十七公里海岸線的無敵海景。', 3)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (3, N'2023太平山自行車挑戰賽', 3, CAST(N'2023-07-30T08:00:00.000' AS DateTime), 4, N'宜蘭太平山國家森林遊樂區', N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023太平山自行車挑戰賽.jpg', CAST(N'2023-04-30T10:00:00.000' AS DateTime), CAST(N'2023-06-30T23:59:59.000' AS DateTime), 16, 850, 1000, N'一起騎著自行車遊覽台灣的美景吧！', 3)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (3, N'2023太平山自行車挑戰賽', 3, CAST(N'2023-07-30T08:00:00.000' AS DateTime), 4, N'宜蘭太平山國家森林遊樂區', CAST(N'2023-04-30T10:00:00.000' AS DateTime), CAST(N'2023-06-30T23:59:59.000' AS DateTime), 16, 850, 1000, N'一起騎著自行車遊覽台灣的美景吧！', 3)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (4, N'2023登峰造極之嘉明湖登山體驗', 5, CAST(N'2023-08-19T06:30:00.000' AS DateTime), 7, N'台東向陽森林遊樂區登山口', N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023登峰造極之嘉明湖登山體驗.jpg', CAST(N'2023-05-19T00:00:00.000' AS DateTime), CAST(N'2023-07-19T23:59:59.000' AS DateTime), 18, 3300, 3500, N'一睹「?高山藍寶石」、「天使的眼淚」嘉明湖', 2)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (4, N'2023登峰造極之嘉明湖登山體驗', 5, CAST(N'2023-08-19T06:30:00.000' AS DateTime), 7, N'台東向陽森林遊樂區登山口', CAST(N'2023-05-19T00:00:00.000' AS DateTime), CAST(N'2023-07-19T23:59:59.000' AS DateTime), 18, 3300, 3500, N'一睹「?高山藍寶石」、「天使的眼淚」嘉明湖', 2)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (5, N'2023第6屆桃園健行嘉年華', 4, CAST(N'2023-12-10T10:00:00.000' AS DateTime), 9, N'聖德基督教學院', N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023第6屆桃園健行嘉年華.png', CAST(N'2023-08-10T00:00:00.000' AS DateTime), CAST(N'2023-10-10T00:00:00.000' AS DateTime), 7, 699, 799, N'加入我們，一同參加2023第6屆桃園健行嘉年華！這是一個充滿活力和健康的盛會，旨在鼓勵人們關注身心健康，享受戶外運動的樂趣。在這次活動中，您將有機會體驗桃園美麗的自然風光和豐富的運動活動。', 1)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (5, N'2023第6屆桃園健行嘉年華', 4, CAST(N'2023-12-10T10:00:00.000' AS DateTime), 9, N'聖德基督教學院', CAST(N'2023-08-10T00:00:00.000' AS DateTime), CAST(N'2023-10-10T00:00:00.000' AS DateTime), 7, 699, 799, N'加入我們，一同參加2023第6屆桃園健行嘉年華！這是一個充滿活力和健康的盛會，旨在鼓勵人們關注身心健康，享受戶外運動的樂趣。在這次活動中，您將有機會體驗桃園美麗的自然風光和豐富的運動活動。', 1)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (6, N'2023Flex第3屆公益路跑活動', 1, CAST(N'2023-09-28T07:00:00.000' AS DateTime), 6, N'台北大稻埕碼頭', N'51b361a98e2e427eafbf8b055d16c6ab.png', CAST(N'2023-07-28T00:00:00.000' AS DateTime), CAST(N'2023-09-01T00:00:00.000' AS DateTime), 10, 500, 600, N'秋天的季節，一起來路跑感受一下碼頭邊的美景，還可以一起參與公益活動喔!!!', 1)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (6, N'2023Flex第3屆公益路跑活動', 1, CAST(N'2023-09-28T07:00:00.000' AS DateTime), 6, N'台北大稻埕碼頭', CAST(N'2023-07-28T00:00:00.000' AS DateTime), CAST(N'2023-09-01T00:00:00.000' AS DateTime), 10, 500, 600, N'秋天的季節，一起來路跑感受一下碼頭邊的美景，還可以一起參與公益活動喔!!!', 1)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (7, N'2023Flex第2屆公益路跑活動', 1, CAST(N'2023-07-07T08:00:00.000' AS DateTime), 4, N'新竹南寮漁港', N'de2bb592a3554e10a43a3282e962a2c8.jpg', CAST(N'2023-05-07T00:00:00.000' AS DateTime), CAST(N'2023-06-30T00:00:00.000' AS DateTime), 10, 600, 700, N'一起來參加我們的夏季路跑吧!!', 3)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (7, N'2023Flex第2屆公益路跑活動', 1, CAST(N'2023-07-07T08:00:00.000' AS DateTime), 4, N'新竹南寮漁港', CAST(N'2023-05-07T00:00:00.000' AS DateTime), CAST(N'2023-06-30T00:00:00.000' AS DateTime), 10, 600, 700, N'一起來參加我們的夏季路跑吧!!', 3)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (8, N'2023Flex第1屆公益路跑活動', 1, CAST(N'2023-03-17T08:00:00.000' AS DateTime), 7, N'聖德基督學院', N'702da3f2703e4f88995d3898069b7dc9.jpg', CAST(N'2023-01-01T00:00:00.000' AS DateTime), CAST(N'2023-03-01T00:00:00.000' AS DateTime), 10, 500, 600, N'在冷冷的冬天，一起來路跑熱身，並寒冬送暖給公益團體吧!!', 3)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (8, N'2023Flex第1屆公益路跑活動', 1, CAST(N'2023-03-17T08:00:00.000' AS DateTime), 7, N'聖德基督學院', CAST(N'2023-01-01T00:00:00.000' AS DateTime), CAST(N'2023-03-01T00:00:00.000' AS DateTime), 10, 500, 600, N'在冷冷的冬天，一起來路跑熱身，並寒冬送暖給公益團體吧!!', 3)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (9, N'2023太平山秋季自行車挑戰賽', 3, CAST(N'2023-10-01T08:00:00.000' AS DateTime), 8, N'太平山', N'8d3af39a91854ec190537ffa32ae4629.jpg', CAST(N'2023-07-15T00:00:00.000' AS DateTime), CAST(N'2023-09-15T00:00:00.000' AS DateTime), 15, 999, 1100, N'一起來參加我們秋季的太平山自行車挑戰吧!!!', 1)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (9, N'2023太平山秋季自行車挑戰賽', 3, CAST(N'2023-10-01T08:00:00.000' AS DateTime), 8, N'太平山', CAST(N'2023-07-15T00:00:00.000' AS DateTime), CAST(N'2023-09-15T00:00:00.000' AS DateTime), 15, 999, 1100, N'一起來參加我們秋季的太平山自行車挑戰吧!!!', 1)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (10, N'2023太平山冬季自行車挑戰賽', 3, CAST(N'2023-11-27T08:00:00.000' AS DateTime), 9, N'太平山', N'1e6b49bc26e24e95a334b613a93e2e57.jpg', CAST(N'2023-09-27T00:00:00.000' AS DateTime), CAST(N'2023-11-07T00:00:00.000' AS DateTime), 15, 700, 800, N'冬天就是要和大家一起騎車，熱身熱起來~~', 1)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (10, N'2023太平山冬季自行車挑戰賽', 3, CAST(N'2023-11-27T08:00:00.000' AS DateTime), 9, N'太平山', CAST(N'2023-09-27T00:00:00.000' AS DateTime), CAST(N'2023-11-07T00:00:00.000' AS DateTime), 15, 700, 800, N'冬天就是要和大家一起騎車，熱身熱起來~~', 1)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (11, N'2023太平山夏季自行車挑戰賽', 3, CAST(N'2023-06-20T08:00:00.000' AS DateTime), 3, N'太平山', N'07387b7355f844f8a94218c15f8aab28.jpg', CAST(N'2023-04-20T00:00:00.000' AS DateTime), CAST(N'2023-06-10T00:00:00.000' AS DateTime), 15, 700, 800, N'一起來趟太平山的自行車挑戰之旅吧!', 3)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (11, N'2023太平山夏季自行車挑戰賽', 3, CAST(N'2023-06-20T08:00:00.000' AS DateTime), 3, N'太平山', CAST(N'2023-04-20T00:00:00.000' AS DateTime), CAST(N'2023-06-10T00:00:00.000' AS DateTime), 15, 700, 800, N'一起來趟太平山的自行車挑戰之旅吧!', 3)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (12, N'2023第3屆桃園健行嘉年華', 4, CAST(N'2023-03-19T10:00:00.000' AS DateTime), 5, N'聖德基督學院', N'1616b89584f9465f8e085e653f3cf2c9.png', CAST(N'2023-01-19T00:00:00.000' AS DateTime), CAST(N'2023-03-10T00:00:00.000' AS DateTime), 7, 500, 600, N'2023年第3屆桃園健行嘉年華隆重登場！旨在促進健康生活和運動文化。我們誠摯邀請您加入我們，一同享受運動的樂趣和社交互動的機會。這個活動將在桃園市舉行，屆時將有各種令人興奮的活動和娛樂節目等待著您。', 3)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (12, N'2023第3屆桃園健行嘉年華', 4, CAST(N'2023-03-19T10:00:00.000' AS DateTime), 5, N'聖德基督學院', CAST(N'2023-01-19T00:00:00.000' AS DateTime), CAST(N'2023-03-10T00:00:00.000' AS DateTime), 7, 500, 600, N'2023年第3屆桃園健行嘉年華隆重登場！旨在促進健康生活和運動文化。我們誠摯邀請您加入我們，一同享受運動的樂趣和社交互動的機會。這個活動將在桃園市舉行，屆時將有各種令人興奮的活動和娛樂節目等待著您。', 3)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (13, N'2023第4屆桃園健行嘉年華', 4, CAST(N'2023-04-23T07:00:00.000' AS DateTime), 7, N'聖德基督學院', N'34bd7c8fcfbb4249bb297310762bfe6f.png', CAST(N'2023-02-23T00:00:00.000' AS DateTime), CAST(N'2023-04-13T00:00:00.000' AS DateTime), 7, 399, 500, N'2023年第3屆桃園健行嘉年華即將震撼登場！這是一個非常特別的活動!無論您是運動愛好者、家庭或朋友團體，我們都歡迎您加入我們，一同享受健康運動的樂趣。這個嘉年華將提供各種精彩的活動和表演，讓您度過難忘的時光。', 3)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (13, N'2023第4屆桃園健行嘉年華', 4, CAST(N'2023-04-23T07:00:00.000' AS DateTime), 7, N'聖德基督學院', CAST(N'2023-02-23T00:00:00.000' AS DateTime), CAST(N'2023-04-13T00:00:00.000' AS DateTime), 7, 399, 500, N'2023年第3屆桃園健行嘉年華即將震撼登場！這是一個非常特別的活動!無論您是運動愛好者、家庭或朋友團體，我們都歡迎您加入我們，一同享受健康運動的樂趣。這個嘉年華將提供各種精彩的活動和表演，讓您度過難忘的時光。', 3)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (14, N'2023第7屆桃園健行嘉年華', 4, CAST(N'2023-12-30T11:00:00.000' AS DateTime), 2, N'聖德基督學院', N'ac51784414c6488fbcac01003caaac81.png', CAST(N'2023-10-30T00:00:00.000' AS DateTime), CAST(N'2023-12-10T00:00:00.000' AS DateTime), 10, 500, 600, N'第7屆桃園健行嘉年華即將開幕，為您帶來一場前所未有的健康饗宴！這是一個集合了各種健身運動、休閒娛樂和文化表演的盛大活動。我們邀請您和您的親朋好友一同參與，一起享受動感十足的氛圍和豐富多彩的活動內容。這將是一個讓您身心愉悅的五天，不容錯過！', 1)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (14, N'2023第7屆桃園健行嘉年華', 4, CAST(N'2023-12-30T11:00:00.000' AS DateTime), 2, N'聖德基督學院', CAST(N'2023-10-30T00:00:00.000' AS DateTime), CAST(N'2023-12-10T00:00:00.000' AS DateTime), 10, 500, 600, N'第7屆桃園健行嘉年華即將開幕，為您帶來一場前所未有的健康饗宴！這是一個集合了各種健身運動、休閒娛樂和文化表演的盛大活動。我們邀請您和您的親朋好友一同參與，一起享受動感十足的氛圍和豐富多彩的活動內容。這將是一個讓您身心愉悅的五天，不容錯過！', 1)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (15, N'2023第5屆桃園健行嘉年華', 4, CAST(N'2023-05-27T10:00:00.000' AS DateTime), 1, N'聖德基督學院', N'85549ba52279478b81e71e66aa2e0ce3.png', CAST(N'2023-03-27T00:00:00.000' AS DateTime), CAST(N'2023-05-20T00:00:00.000' AS DateTime), 10, 399, 500, N'2023年第5屆桃園健行嘉年華即將開幕！這是一個讓您盡情揮灑汗水的活動，旨在鼓勵大眾遵循健康生活方式並享受運動的樂趣。我們誠摯邀請您和您的家人一同參與，感受健康生活的魅力。活動期間將有許多有趣的活動和遊戲等待著您，無論您是健身愛好者還是新手，都能找到適合自己的活動。', 3)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (15, N'2023第5屆桃園健行嘉年華', 4, CAST(N'2023-05-27T10:00:00.000' AS DateTime), 1, N'聖德基督學院', CAST(N'2023-03-27T00:00:00.000' AS DateTime), CAST(N'2023-05-20T00:00:00.000' AS DateTime), 10, 399, 500, N'2023年第5屆桃園健行嘉年華即將開幕！這是一個讓您盡情揮灑汗水的活動，旨在鼓勵大眾遵循健康生活方式並享受運動的樂趣。我們誠摯邀請您和您的家人一同參與，感受健康生活的魅力。活動期間將有許多有趣的活動和遊戲等待著您，無論您是健身愛好者還是新手，都能找到適合自己的活動。', 3)
 GO
-INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityImage], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (16, N'2023一日單攻玉山挑戰', 5, CAST(N'2023-10-15T03:00:00.000' AS DateTime), 6, N'玉山登山口', N'b44059ab21584d1e88ca49261687aebe.jpg', CAST(N'2023-08-15T00:00:00.000' AS DateTime), CAST(N'2023-10-01T00:00:00.000' AS DateTime), 18, 1300, 1500, N'在2023年，我們誠摯邀請您參加一個令人振奮的活動 - 一日單攻玉山挑戰活動！這將是一個難得的機會，讓您有機會攀登台灣最高峰 - 玉山。這個活動將提供您一個刺激和令人難忘的登山經驗，讓您挑戰自我，突破極限。', 1)
+INSERT [dbo].[Activities] ([ActivityId], [ActivityName], [fk_ActivityCategoryId], [ActivityDate], [fk_SpeakerId], [ActivityPlace], [ActivityBookStartTime], [ActivityBookEndTime], [ActivityAge], [ActivitySalePrice], [ActivityOriginalPrice], [ActivityDescription], [fk_ActivityStatusId]) VALUES (16, N'2023一日單攻玉山挑戰', 5, CAST(N'2023-10-15T03:00:00.000' AS DateTime), 6, N'玉山登山口', CAST(N'2023-08-15T00:00:00.000' AS DateTime), CAST(N'2023-10-01T00:00:00.000' AS DateTime), 18, 1300, 1500, N'在2023年，我們誠摯邀請您參加一個令人振奮的活動 - 一日單攻玉山挑戰活動！這將是一個難得的機會，讓您有機會攀登台灣最高峰 - 玉山。這個活動將提供您一個刺激和令人難忘的登山經驗，讓您挑戰自我，突破極限。', 1)
 GO
 SET IDENTITY_INSERT [dbo].[Activities] OFF
+GO
+SET IDENTITY_INSERT [dbo].[ActivityImg] ON 
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (1, 2, N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023新竹馬拉松.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (2, 3, N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023太平山自行車挑戰賽.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (3, 4, N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023登峰造極之嘉明湖登山體驗.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (4, 5, N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023第6屆桃園健行嘉年華.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (5, 6, N'51b361a98e2e427eafbf8b055d16c6ab.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (6, 7, N'de2bb592a3554e10a43a3282e962a2c8.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (7, 8, N'702da3f2703e4f88995d3898069b7dc9.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (8, 9, N'8d3af39a91854ec190537ffa32ae4629.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (9, 10, N'1e6b49bc26e24e95a334b613a93e2e57.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (10, 11, N'07387b7355f844f8a94218c15f8aab28.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (11, 12, N'1616b89584f9465f8e085e653f3cf2c9.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (12, 13, N'34bd7c8fcfbb4249bb297310762bfe6f.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (13, 14, N'ac51784414c6488fbcac01003caaac81.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (14, 15, N'85549ba52279478b81e71e66aa2e0ce3.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (15, 16, N'b44059ab21584d1e88ca49261687aebe.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (16, 2, N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023新竹馬拉松.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (17, 3, N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023太平山自行車挑戰賽.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (18, 4, N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023登峰造極之嘉明湖登山體驗.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (19, 5, N'D:\期中專題 Flex\FLEX活動照片\活動照片\2023第6屆桃園健行嘉年華.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (20, 6, N'51b361a98e2e427eafbf8b055d16c6ab.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (21, 7, N'de2bb592a3554e10a43a3282e962a2c8.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (22, 8, N'702da3f2703e4f88995d3898069b7dc9.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (23, 9, N'8d3af39a91854ec190537ffa32ae4629.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (24, 10, N'1e6b49bc26e24e95a334b613a93e2e57.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (25, 11, N'07387b7355f844f8a94218c15f8aab28.jpg')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (26, 12, N'1616b89584f9465f8e085e653f3cf2c9.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (27, 13, N'34bd7c8fcfbb4249bb297310762bfe6f.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (28, 14, N'ac51784414c6488fbcac01003caaac81.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (29, 15, N'85549ba52279478b81e71e66aa2e0ce3.png')
+GO
+INSERT [dbo].[ActivityImg] ([Id], [fk_ActivityId], [ImgPath]) VALUES (30, 16, N'b44059ab21584d1e88ca49261687aebe.jpg')
+GO
+SET IDENTITY_INSERT [dbo].[ActivityImg] OFF
 GO
 INSERT [dbo].[ReservationStatuses] ([ReservationId], [ReservationStatusDescription]) VALUES (1, N'已完成')
 GO
@@ -2614,7 +2754,20 @@ INSERT [dbo].[OneToOneReservations] ([ReservationId], [fk_BookerId], [Reservatio
 GO
 SET IDENTITY_INSERT [dbo].[OneToOneReservations] OFF
 GO
-
+SET IDENTITY_INSERT [dbo].[ReservationImg] ON 
+GO
+INSERT [dbo].[ReservationImg] ([Id], [ImgPath]) VALUES (1, N'C:\TEST Core MVC\Flex_TEST\預約照片\Reservation01.jpg')
+GO
+INSERT [dbo].[ReservationImg] ([Id], [ImgPath]) VALUES (2, N'C:\TEST Core MVC\Flex_TEST\預約照片\Reservation02.jpg')
+GO
+INSERT [dbo].[ReservationImg] ([Id], [ImgPath]) VALUES (3, N'C:\TEST Core MVC\Flex_TEST\預約照片\Reservation03.jpg')
+GO
+INSERT [dbo].[ReservationImg] ([Id], [ImgPath]) VALUES (4, N'C:\TEST Core MVC\Flex_TEST\預約照片\Reservation04.jpg')
+GO
+INSERT [dbo].[ReservationImg] ([Id], [ImgPath]) VALUES (5, N'C:\TEST Core MVC\Flex_TEST\預約照片\Reservation05.jpg')
+GO
+SET IDENTITY_INSERT [dbo].[ReservationImg] OFF
+GO
 
 
 
@@ -2896,6 +3049,4 @@ values
 (5,88,'服務品質一流',5),(5,89,'服務品質一流',5),(5,90,'服務品質一流',5),(5,91,'服務品質一流',5),(5,92,'服務品質一流',5),
 (5,93,'服務品質一流',5),(5,94,'服務品質一流',5),(5,95,'服務品質一流',5),(5,96,'服務品質一流',5),(5,97,'服務品質一流',5),
 (5,98,'服務品質一流',5),(5,99,'服務品質一流',5)
-
-
 
