@@ -11,6 +11,7 @@ namespace EFModels.Models
         {
             PointHistories = new HashSet<PointHistory>();
             PointTradeIns = new HashSet<PointTradeIn>();
+            Returns = new HashSet<Return>();
             orderItems = new HashSet<orderItem>();
         }
 
@@ -43,6 +44,7 @@ namespace EFModels.Models
         public virtual pay_status pay_status { get; set; }
         public virtual ICollection<PointHistory> PointHistories { get; set; }
         public virtual ICollection<PointTradeIn> PointTradeIns { get; set; }
+        public virtual ICollection<Return> Returns { get; set; }
         public virtual ICollection<orderItem> orderItems { get; set; }
     }
 }
