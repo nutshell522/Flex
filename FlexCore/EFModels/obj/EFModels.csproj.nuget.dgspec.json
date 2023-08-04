@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ispan\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj": {}
+    "C:\\Users\\VAL\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ispan\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj": {
+    "C:\\Users\\VAL\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ispan\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj",
+        "projectUniqueName": "C:\\Users\\VAL\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj",
         "projectName": "EFModels",
-        "projectPath": "C:\\Users\\ispan\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj",
-        "packagesPath": "C:\\Users\\ispan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ispan\\Desktop\\Flex\\FlexCore\\EFModels\\obj\\",
+        "projectPath": "C:\\Users\\VAL\\Desktop\\Flex\\FlexCore\\EFModels\\EFModels.csproj",
+        "packagesPath": "C:\\Users\\VAL\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\VAL\\Desktop\\Flex\\FlexCore\\EFModels\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\ispan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\VAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
