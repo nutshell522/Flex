@@ -13,7 +13,6 @@ namespace EFModels.Models
         public DateTime ActivityDate { get; set; }
         public int fk_SpeakerId { get; set; }
         public string ActivityPlace { get; set; }
-        public string ActivityImage { get; set; }
         public DateTime ActivityBookStartTime { get; set; }
         public DateTime ActivityBookEndTime { get; set; }
         public byte ActivityAge { get; set; }

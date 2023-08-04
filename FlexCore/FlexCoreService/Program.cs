@@ -48,6 +48,8 @@ namespace FlexCoreService
 
             app.UseCors();
 
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

@@ -7,6 +7,11 @@ namespace EFModels.Models
 {
     public partial class ProductGroup
     {
+        public ProductGroup()
+        {
+            CartItems = new HashSet<CartItem>();
+        }
+
         public int ProductGroupId { get; set; }
         public string fk_ProductId { get; set; }
         public int fk_ColorId { get; set; }
@@ -16,5 +21,6 @@ namespace EFModels.Models
         public virtual ColorCategory fk_Color { get; set; }
         public virtual Product fk_Product { get; set; }
         public virtual SizeCategory fk_Size { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
     }
 }

@@ -31,6 +31,7 @@ namespace EFModels.Models
         public DateTime? Registration { get; set; }
         public bool? IsConfirmed { get; set; }
         public string ConfirmCode { get; set; }
+        public bool? IsSubscribeNews { get; set; }
         public int fk_LevelId { get; set; }
         public int? fk_BlackListId { get; set; }
 
