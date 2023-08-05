@@ -84,67 +84,67 @@ namespace FlexCoreService.Controllers
         }
 
 
-        // GET: api/Products
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
-        {
-            if (_db.Products == null)
-            {
-                return NotFound();
-            }
-            return await _db.Products.ToListAsync();
-        }
+        //// GET: api/Products
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        //{
+        //    if (_db.Products == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return await _db.Products.ToListAsync();
+        //}
 
-        // GET: api/Products/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProducts(string id)
-        {
-            if (_db.Products == null)
-            {
-                return NotFound();
-            }
-            var products = await _db.Products.FindAsync(id);
+        //// GET: api/Products/5
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Product>> GetProducts(string id)
+        //{
+        //    if (_db.Products == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var products = await _db.Products.FindAsync(id);
 
-            if (products == null)
-            {
-                return NotFound();
-            }
+        //    if (products == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return products;
-        }
+        //    return products;
+        //}
 
-        // PUT: api/Products/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProducts(string id, Product products)
-        {
-            if (id != products.ProductId)
-            {
-                return BadRequest();
-            }
+        //// PUT: api/Products/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutProducts(string id, Product products)
+        //{
+        //    if (id != products.ProductId)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _db.Entry(products).State = EntityState.Modified;
+        //    _db.Entry(products).State = EntityState.Modified;
 
-            try
-            {
-                await _db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _db.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!ProductsExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        // POST: api/Products
+        //// POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPost]
         //public async Task<ActionResult<Products>> PostProducts(Products products)
@@ -160,24 +160,25 @@ namespace FlexCoreService.Controllers
         //}
 
         // DELETE: api/Products/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProducts(string id)
-        {
-            if (_db.Products == null)
-            {
-                return NotFound();
-            }
-            var products = await _db.Products.FindAsync(id);
-            if (products == null)
-            {
-                return NotFound();
-            }
 
-            _db.Products.Remove(products);
-            await _db.SaveChangesAsync();
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteProducts(string id)
+        //{
+        //    if (_db.Products == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var products = await _db.Products.FindAsync(id);
+        //    if (products == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return NoContent();
-        }
+        //    _db.Products.Remove(products);
+        //    await _db.SaveChangesAsync();
+
+        //    return NoContent();
+        //}
 
         private bool ProductsExists(string id)
         {

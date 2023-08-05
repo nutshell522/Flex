@@ -40,8 +40,8 @@ const routes = [
         component: () => import("../views/product/ProductMen.vue"),
       },
       {
-        // 当 /user/:id/posts 匹配成功
-        // UserPosts 将被渲染到 User 的 <router-view> 内部
+        // 當 /ProductMenLayout/:id/posts 匹配成功
+        // Detial.vue 將被渲染到 ProductMenLayout 的 <router-view> 内部，替換card.vue
         path: "detail/:prdouctId",
         component: () => import("../views/product/ProductDetail.vue"),
       },
