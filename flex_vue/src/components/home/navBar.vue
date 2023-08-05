@@ -5,7 +5,8 @@
       <ul>
         <li><a href="javascript:;">說明</a></li>
         <li><a href="javascript:;">加入</a></li>
-        <li class="p-relative"><a href="javascript:;" @mouseenter="showList">登入</a>
+        <li class="p-relative">
+          <a href="javascript:;" @mouseenter="showList">登入</a>
           <userList v-if="showList"></userList>
         </li>
       </ul>
@@ -14,17 +15,17 @@
   <nav>
     <div class="container">
       <div class="left">
-        <a href="#" class="logo-wrapper">
+        <router-link to="/" class="logo-wrapper">
           <img src="" alt="" />
           <h1>FLEX</h1>
-        </a>
+        </router-link>
       </div>
       <div class="center">
         <ul>
           <li>
             <div class="nav-list-item">
-              <div>Men</div>
-              <div>男款</div>
+              <div><router-link to="/men">Men</router-link></div>
+              <div><router-link to="/men">男款</router-link></div>
             </div>
           </li>
           <li>
@@ -57,15 +58,14 @@
       </div>
     </div>
   </nav>
-  
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import userList from '../home/userList.vue';
+import { ref } from "vue";
+import userList from "../home/userList.vue";
 
 function showList() {
-  alert('hi');
+  alert("hi");
 }
 </script>
 
@@ -108,37 +108,36 @@ body {
   width: 100vw;
   overflow-x: hidden;
 }
-.p-relative{
-          position: relative;
-        }
+.p-relative {
+  position: relative;
+}
 header {
   background-color: #f5f5f5;
   height: $header-height;
 
-  &>div {
+  & > div {
     display: flex;
     height: 100%;
 
-    &>ul {
+    & > ul {
       display: flex;
       align-items: center;
       height: 100%;
 
-      &>li {
+      & > li {
         list-style: none;
         font-size: 14px;
         height: 100%;
 
-        &>a {
+        & > a {
           @extend .text-link;
           display: inline-block;
           height: 100%;
           line-height: $header-height;
         }
-        
 
         &:not(:first-child)::before {
-          content: '|';
+          content: "|";
           padding: 0 15px;
           font-size: 14px;
         }
