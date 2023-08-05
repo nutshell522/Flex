@@ -31,3 +31,5 @@
 /FlexCore/.vs
 /FlexCore/FlexCoreService/bin/
 /FlexCore/FlexCoreService/obj/
+/FlexCore/EFModels/obj/
+/FlexCore/EFModels/bin/
