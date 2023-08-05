@@ -2,6 +2,7 @@
 using FlexCoreService.ActivityCtrl.Infra.DPRepository;
 using FlexCoreService.ActivityCtrl.Interface;
 using FlexCoreService.ActivityCtrl.Models.Dtos;
+using FlexWebAPI.Models.DTO;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,17 @@ namespace FlexCoreService.Controllers
             }
             return result;
 
+        }
+
+        [HttpGet("SignUp{id}")]
+        public async Task<ActionResult<MemberDTO>> GetMemberInfoAsnyc(int id)
+        {
+            var memberInfoDto = await _repo.GetMembreInfoAsync(id);
+            if(memberInfoDto == null)
+            {
+                return NotFound();
+            }
+            return memberInfoDto;
         }
     }
 }

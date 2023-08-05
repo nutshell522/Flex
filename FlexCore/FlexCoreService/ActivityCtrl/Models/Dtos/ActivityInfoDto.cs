@@ -11,5 +11,9 @@
         public string ActivityPlace { get; set; }
         public string ActivityDescription { get; set; }
 
+        public string SpeakerName { get; set; }
+
+        public string ImgPath { get; set; }
+
     }
 }
