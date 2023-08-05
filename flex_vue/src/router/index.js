@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/home/Home.vue";
 import User from "../views/user/User.vue";
 import ActivityInfo from "../views/activity/ActivityInfo.vue";
-
+import ActivitySignUp from "../views/activity/ActivitySignUp.vue";
 const webTitle = "FLEX - ";
 // 路由設定
 const routes = [
@@ -29,6 +29,12 @@ const routes = [
     path: "/activityInfo",
     component: ActivityInfo,
     meta: { title: `${webTitle}活動` },
+  },
+  {
+    //http://loaclhost/activitySignUp
+    path: "/activitySignUp",
+    component: ActivitySignUp,
+    meta: { title: `${webTitle}活動報名` },
   },
   {
     //http://loaclhost/Men

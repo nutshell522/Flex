@@ -4,7 +4,7 @@
 <section class="featured row">
     <div class="col-md-8" data-aos="fade-left" data-aos-delay="400" data-aos-duration="800">
         <div class="featured-img">
-            <img class="featured-big" src="https://img.cava.tw/cava2022/news/2023/01/06/1673027195_78045.jpg"
+            <img class="featured-big" src='"/Public/Img/"+{{activities.imgPath}}'
                 alt="Featured 1">
 
         </div>
@@ -12,11 +12,11 @@
 
     <div class="col-md-4" data-aos="fade-right" data-aos-delay="400" data-aos-duration="800">
         <div class="title mb-5 me-5 text-end">
-            <p class="date">{{activityDate}}</p>
+            <p class="date">{{activities.activityDate}}</p>
         </div>
         <div class="price ">
-            <h2 class="text-center fw-bold">${{activitySalePrice}}</h2>
-            <h3 class="text-center fw-bold">${{activityOriginalPrice}}</h3>
+            <h2 class="text-center fw-bold">${{activities.activitySalePrice}}</h2>
+            <h3 class="text-center fw-bold">${{activities.activityOriginalPrice}}</h3>
         </div>
 
         <div class="media-element d-flex justify-content-between">
@@ -46,22 +46,24 @@
 </div>
 <!-- 下半部 【活動詳細資訊】 -->
 <div class="info">
-<h1 class="slanted-text">{{activityName}}</h1>
+<h1 class="slanted-text">{{activities.activityName}}</h1>
 <div class="mb-5">
+    <h4>活動類別</h4>
+    <p>{{ activities.activityCategoryName }}</p>
     <h4>活動主講人</h4>
-    <p>{{speakerName}}</p>
+    <p>{{activities.speakerName}}</p>
 </div>
 <div class="mb-5">
     <h4>活動年齡</h4>
-    <p>{{activityAge}}歲</p>
+    <p>{{activities.activityAge}}歲</p>
 </div>
 <div class="mb-5">
     <h4>活動地點 </h4>
-    <p>{{activityPlace}}</p>
+    <p>{{activities.activityPlace}}</p>
 </div>
 <div class>
     <h4>活動簡介 </h4>
-    <p>{{activityDescription}}</p>
+    <p>{{activities.activityDescription}}</p>
 </div>
 
 </div>
@@ -71,21 +73,44 @@
 
 <script setup>
 import axios from 'axios';
-import{ref} from 'vue';
+import{ref, reactive} from 'vue';
 import AOS from 'aos';
 AOS.init();
-const activities = ref("");
+const activities = reactive({
+    activityName:"",
+    activityDate:"",
+    speakerName:"",
+    activityCategoryName:"",
+    activityAge:"",
+    activityPlace:"",
+    activityDescription:"",
+    imgPath:"",
+    activitySalePrice:0,
+    activityOriginalPrice:0
+})
 const loadActivities = async(id)=>{
 axios.get(`https://localhost:7183/api/Activity/${id}`)
 .then(res=>{
-    console.log(res.data);
-    activityName = res.activityName;
+    // console.log(res.data);
+    const datas = res.data;
+    console.log(datas);
+    console.log(datas.activityName);
+    activities.activityName = datas.activityName;
+    activities.activityDate = datas.activityDate;
+    activities.speakerName = datas.speakerName;
+    activities.activityAge = datas.activityAge;
+    activities.activityPlace = datas.activityPlace;
+    activities.activityDescription = datas.activityDescription;
+    activities.activitySalePrice = datas.activitySalePrice;
+    activities.activityOriginalPrice = datas.activityOriginalPrice;
+    activities.activityCategoryName = datas.activityCategoryName;
+    activities.imgPath = datas.imgPath;
 })
 .catch(err=>{
     console.log(err);
 })
 }
-loadActivities(1);
+loadActivities(2);
 
 </script>
 
