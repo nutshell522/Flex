@@ -5,7 +5,6 @@
       <div class="nav-category">
         <categoryNavBar></categoryNavBar>
       </div>
-
       <div class="container-body d-flex">
         <div class="list-group"></div>
         <router-view></router-view>

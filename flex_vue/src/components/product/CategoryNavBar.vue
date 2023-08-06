@@ -2,18 +2,29 @@
   <nav>
     <ul class="list-unstyled">
       <li
-        v-for="(subCategories, category) in categories"
-        :key="category"
+        v-for="(subCategories, categoryName) in categories"
+        :key="categoryName"
         class="category"
       >
-        <a href="#">{{ category }}</a>
+        <router-link :to="`/men?categoryName=${categoryName}`">{{
+          categoryName
+        }}</router-link>
+        <!-- <router-link :to="`/men/${categoryName}`">{{
+          categoryName
+        }}</router-link> -->
         <ul class="list-unstyled">
           <li
             class="subCategory"
-            v-for="subCategory in subCategories"
-            :key="subCategory"
+            v-for="subCategoryName in subCategories"
+            :key="subCategoryName"
           >
-            <a href="#">{{ subCategory }}</a>
+            <router-link
+              :to="`/men?categoryName=${categoryName}&subCategoryName=${subCategoryName}`"
+              >{{ subCategoryName }}</router-link
+            >
+            <!-- <router-link :to="`/men/${categoryName}/${subCategoryName}`">{{
+              subCategoryName
+            }}</router-link> -->
           </li>
         </ul>
       </li>

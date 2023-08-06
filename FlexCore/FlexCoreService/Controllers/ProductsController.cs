@@ -29,25 +29,25 @@ namespace FlexCoreService.Controllers
         }
 
         // POST: api/Products/
-        [HttpPost]
-        public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetAllProducts()
-        {
-            var server = new ProductService(_repo);
-            var products = server.SearchProducts().Select(p => p.ToCardVM()).ToList();
-            if (products.Count == 0)
-            {
-                return NotFound();
-            }
-            return products;
-        }
+        //[HttpPost]
+        //public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetAllProducts()
+        //{
+        //    var server = new ProductService(_repo);
+        //    var products = server.SearchProducts().Select(p => p.ToCardVM()).ToList();
+        //    if (products.Count == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return products;
+        //}
 
         // POST: api/Products/Men
-        [HttpPost("Men")]
-        public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetMenProducts()
+        [HttpGet("Men")]
+        public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetMenProducts(string? categoryName = null, string? subCategoryName = null)
         {
             int salesId = 1;
             var server = new ProductService(_repo);
-            var products = server.SearchSalesProducts(salesId).Select(p => p.ToCardVM()).ToList();
+            var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
             if (products.Count == 0)
             {
                 return NotFound();
@@ -56,12 +56,12 @@ namespace FlexCoreService.Controllers
         }
 
         // POST: api/Products/Women
-        [HttpPost("Women")]
-        public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetWomenProducts()
+        [HttpGet("Women")]
+        public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetWomenProducts(string? categoryName = null, string? subCategoryName = null)
         {
             int salesId = 2;
             var server = new ProductService(_repo);
-            var products = server.SearchSalesProducts(salesId).Select(p => p.ToCardVM()).ToList();
+            var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
             if (products.Count == 0)
             {
                 return NotFound();
@@ -70,12 +70,12 @@ namespace FlexCoreService.Controllers
         }
 
         // POST: api/Products/Kid
-        [HttpPost("Kid")]
-        public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetKidProducts()
+        [HttpGet("Kid")]
+        public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetKidProducts(string? categoryName = null, string? subCategoryName = null)
         {
             int salesId = 3;
             var server = new ProductService(_repo);
-            var products = server.SearchSalesProducts(salesId).Select(p => p.ToCardVM()).ToList();
+            var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
             if (products.Count == 0)
             {
                 return NotFound();

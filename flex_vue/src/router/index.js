@@ -40,6 +40,14 @@ const routes = [
         component: () => import("../views/product/ProductMen.vue"),
       },
       {
+        path: ":categoryName",
+        component: () => import("../views/product/ProductMen.vue"),
+      },
+      {
+        path: ":categoryName/:subCategoryName",
+        component: () => import("../views/product/ProductMen.vue"),
+      },
+      {
         // 當 /ProductMenLayout/:id/posts 匹配成功
         // Detial.vue 將被渲染到 ProductMenLayout 的 <router-view> 内部，替換card.vue
         path: "detail/:prdouctId",
