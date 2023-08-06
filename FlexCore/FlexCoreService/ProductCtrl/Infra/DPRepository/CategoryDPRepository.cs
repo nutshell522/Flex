@@ -25,6 +25,8 @@ join SalesCategories as sc on sc.SalesCategoryId=pc.fk_SalesCategoryId";
             return result;
         }
 
+
+
         public IEnumerable<CategoryDto> GetCategoryMen()
         {
             string sql = @"select pc.ProductCategoryName,ps.ProductSubCategoryName 
