@@ -16,13 +16,17 @@
     <div class="container">
       <div class="left">
         <router-link to="/" class="logo-wrapper">
-          <img src="../../../../public/LOGO/FlexLogoDark.png" alt="" class="logo" />
+          <img
+            src="../../../../public/LOGO/FlexLogoDark.png"
+            alt=""
+            class="logo"
+          />
           <h1>FLEX</h1>
         </router-link>
       </div>
       <div class="center">
         <ul>
-          <router-link to="/men">
+          <router-link to="/men" class="transetion">
             <li>
               <div class="nav-list-item">
                 <div>Men</div>
@@ -119,21 +123,21 @@ header {
   background-color: #f5f5f5;
   height: $header-height;
 
-  &>div {
+  & > div {
     display: flex;
     height: 100%;
 
-    &>ul {
+    & > ul {
       display: flex;
       align-items: center;
       height: 100%;
 
-      &>li {
+      & > li {
         list-style: none;
         font-size: 14px;
         height: 100%;
 
-        &>a {
+        & > a {
           @extend .text-link;
           display: inline-block;
           height: 100%;
@@ -158,21 +162,21 @@ nav {
   @extend .nav-height;
   background-color: #fff;
 
-  &>.container {
+  & > .container {
     position: relative;
 
-    &>.left,
-    &>.center,
-    &>.right {
+    & > .left,
+    & > .center,
+    & > .right {
       @extend .nav-height;
       position: absolute;
     }
 
-    &>.left {
+    & > .left {
       @extend .nav-height;
       position: absolute;
 
-      &>.logo-wrapper {
+      & > .logo-wrapper {
         @extend .nav-height;
         width: 100px;
         display: flex;
@@ -185,7 +189,7 @@ nav {
           }
 
           .logo {
-            opacity: .7;
+            opacity: 0.7;
           }
         }
 
@@ -194,7 +198,7 @@ nav {
           object-fit: cover;
         }
 
-        &>h1 {
+        & > h1 {
           line-height: $nav-height;
           font-weight: bold;
           font-size: 40px;
@@ -203,15 +207,50 @@ nav {
       }
     }
 
-    &>.center {
+    & > .center {
       left: 50%;
       transform: translate(-50%);
 
-      &>ul {
+      & > ul {
         display: flex;
         height: 100%;
 
-        &>li {
+        & > .transetion {
+          & > li {
+            height: 100%;
+            cursor: pointer;
+            overflow-y: hidden;
+            font-size: 22px;
+            position: relative;
+            width: 100px;
+            display: flex;
+            justify-content: center;
+
+            & > .nav-list-item {
+              height: 200%;
+              position: absolute;
+              top: 0;
+              transition: 0.3s;
+
+              & > div {
+                display: flex;
+                height: 50%;
+                align-items: center;
+                justify-content: center;
+              }
+            }
+
+            &:hover {
+              border-bottom: 3px solid black;
+
+              & > .nav-list-item {
+                top: -100%;
+              }
+            }
+          }
+        }
+
+        & > li {
           height: 100%;
           cursor: pointer;
           overflow-y: hidden;
@@ -221,13 +260,13 @@ nav {
           display: flex;
           justify-content: center;
 
-          &>.nav-list-item {
+          & > .nav-list-item {
             height: 200%;
             position: absolute;
             top: 0;
             transition: 0.3s;
 
-            &>div {
+            & > div {
               display: flex;
               height: 50%;
               align-items: center;
@@ -238,7 +277,7 @@ nav {
           &:hover {
             border-bottom: 3px solid black;
 
-            &>.nav-list-item {
+            & > .nav-list-item {
               top: -100%;
             }
           }
