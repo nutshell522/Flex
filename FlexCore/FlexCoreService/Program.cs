@@ -1,6 +1,8 @@
 using EFModels.Models;
 using FlexCoreService.ActivityCtrl.Infra.DPRepository;
 using FlexCoreService.ActivityCtrl.Interface;
+using FlexCoreService.CartCtrl.Infra;
+using FlexCoreService.CartCtrl.Interface;
 using FlexCoreService.CustomeShoes.Infra.DPRepository;
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.ProductCtrl.Infra.DPRepository;
@@ -38,6 +40,7 @@ namespace FlexCoreService
             builder.Services.AddScoped<ICategoryRepository, CategoryDPRepository>();
             builder.Services.AddScoped< ActivityDPRepository >();
 			builder.Services.AddScoped<ICustomeShoesRepository, CustomeShoesDPRepository>();
+			builder.Services.AddScoped<ICartRepository, CartDapperRepository>();
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();

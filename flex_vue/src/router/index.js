@@ -13,6 +13,12 @@ const routes = [
     meta: { title: `${webTitle}首頁` },
   },
   {
+    //http://loaclhost/
+    path: "/cart",
+    component: () => import("../views/home/Cart.vue"),
+    meta: { title: `${webTitle}購物車` },
+  },
+  {
     //http://loaclhost/User
     path: "/user",
     component: User,
