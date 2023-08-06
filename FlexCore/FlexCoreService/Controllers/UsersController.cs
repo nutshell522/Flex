@@ -3,6 +3,7 @@ using FlexCoreService.UserCtrl.Dtos;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlexCoreService.Controllers
 {
@@ -29,16 +30,19 @@ namespace FlexCoreService.Controllers
             {
                 return null;
             }
-            ProfileDto proDto = _db.Members.Where(m=>m.Account==account).Select(m=>new ProfileDto
+            ProfileDto proDto = _db.Members.Include(m=>m.fk_Level).Where(m=>m.Account==account).Select(m=>new ProfileDto
             {
                 MemberId = m.MemberId,
-                fk_LevelId=m.fk_LevelId,
+                fk_Level=m.fk_LevelId,
+                LevelName =m.fk_Level.LevelName,
                 Name=m.Name,                
                 Email=m.Email,
                 Mobile=m.Mobile,
                 Gender=m.Gender,
                 Birthday=m.Birthday,
-                CommonAddress=m.CommonAddress
+                CommonAddress=m.CommonAddress,
+                AlternateAddress1=m.AlternateAddress.AlternateAddress1,
+                IsSubscribeNews=m.IsSubscribeNews
             }).Single();
             return proDto;
         }

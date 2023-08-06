@@ -113,6 +113,8 @@
 <script setup lang="ts">
 import navBar from '@/components/home/NavBar.vue';
 import homeFooter from '../../components/home/footer.vue';
+
+alert('Flex 優惠享不完 立即追蹤，優惠折扣從此不漏接(還沒做完喔!)');
 </script>
 
 <style lang="scss">

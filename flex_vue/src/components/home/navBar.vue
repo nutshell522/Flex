@@ -5,8 +5,9 @@
       <ul>
         <li><a href="javascript:;">說明</a></li>
         <li><a href="javascript:;">加入</a></li>
-        <li class="p-relative"><a href="javascript:;" @mouseenter="showList">登入</a>
-          <userList v-if="showList"></userList>
+        <li class="p-relative">
+          <a href="javascript:;" @mouseenter="showList">登入</a>
+          <!-- <userList v-if="showList"></userList> -->
         </li>
       </ul>
     </div>
@@ -57,7 +58,6 @@
       </div>
     </div>
   </nav>
-  
 </template>
 
 <script setup>
@@ -108,34 +108,33 @@ body {
   width: 100vw;
   overflow-x: hidden;
 }
-.p-relative{
-          position: relative;
-        }
+.p-relative {
+  position: relative;
+}
 header {
   background-color: #f5f5f5;
   height: $header-height;
 
-  &>div {
+  & > div {
     display: flex;
     height: 100%;
 
-    &>ul {
+    & > ul {
       display: flex;
       align-items: center;
       height: 100%;
 
-      &>li {
+      & > li {
         list-style: none;
         font-size: 14px;
         height: 100%;
 
-        &>a {
+        & > a {
           @extend .text-link;
           display: inline-block;
           height: 100%;
           line-height: $header-height;
         }
-        
 
         &:not(:first-child)::before {
           content: '|';
