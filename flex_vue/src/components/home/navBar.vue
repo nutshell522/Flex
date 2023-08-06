@@ -22,12 +22,14 @@
       </div>
       <div class="center">
         <ul>
-          <li>
-            <div class="nav-list-item">
-              <div><router-link to="/men">Men</router-link></div>
-              <div><router-link to="/men">男款</router-link></div>
-            </div>
-          </li>
+          <router-link to="/men">
+            <li>
+              <div class="nav-list-item">
+                <div>Men</div>
+                <div>男款</div>
+              </div>
+            </li>
+          </router-link>
           <li>
             <div class="nav-list-item">
               <div>Women</div>

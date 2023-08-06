@@ -21,18 +21,6 @@ namespace FlexCoreService.Controllers
             _db = db;
             _repo = repo;
         }
-        // Get: api/Category/
-        //[HttpGet]
-        //public async Task<ActionResult<CategoryVM>> GetAllCategory()
-        //{
-        //    var server = new CategoryService(_repo);
-        //    var category = server.GetAllCategory().Select(p => p.ToVM()).ToList();
-        //    if (category.Count == 0)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return category;
-        //}
 
         //Get: api/Category/
         [HttpPost("Men")]
