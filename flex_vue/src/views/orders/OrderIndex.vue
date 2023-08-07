@@ -2,13 +2,13 @@
 <template>
     <OrdernavBar></OrdernavBar>
     <div id="cate" class="container">
-        <button style="padding-right:20px ;" @click="setKeywordValue('1')">商品</button>
+        <button @click="setKeywordValue('1')">商品</button>
 
-        <button style="padding-right:20px ;" @click="setKeywordValue('4')">客製化</button>
+        <button @click="setKeywordValue('4')">客製化</button>
 
-        <button style="padding-right:20px ;" @click="setKeywordValue('2')">活動</button>
+        <button @click="setKeywordValue('2')">活動</button>
 
-        <button style="padding-right:20px ;" @click="setKeywordValue('3')">課程</button>
+        <button @click="setKeywordValue('3')">課程</button>
     </div>
     <div class="container">
         <table class="table table-striped table-hover" style="width:80% ;">
@@ -85,8 +85,16 @@ onMounted(() => {
     text-align: center;
 }
 
-.div>button {
+#cate>button {
     text-align: center;
-    padding-right: 10px;
+    padding-right: 20px;
+    margin-right: 80px;
+    font-size: 30PX;
+}
+
+#cate {
+    background-color: antiquewhite;
+    text-align: center;
+    width: 60%
 }
 </style>
