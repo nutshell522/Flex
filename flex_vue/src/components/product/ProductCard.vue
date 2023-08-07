@@ -9,7 +9,7 @@
     <!-- </router-link> -->
   </div>
   <div class="card-body">
-    <P class="card-title">{{ card.productName }}</P>
+    <div class="card-title">{{ card.productName }}</div>
     <span class="text-decoration-line-through" v-if="card.unitPrice != null">
       NT:{{ card.unitPrice }}
     </span>
