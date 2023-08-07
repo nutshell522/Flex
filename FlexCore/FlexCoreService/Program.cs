@@ -51,23 +51,23 @@ namespace FlexCoreService
 
 
 
-            //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
-            //{
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            {
 
-            //    //option.LoginPath = new PathString("/api/Users/NoLogin");
-
-
-            //    option.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            //});
+                //option.LoginPath = new PathString("/api/Users/NoLogin");
 
 
-            //builder.Services.AddMvc(options =>
-            //{
-            //    options.Filters.Add(new AuthorizeFilter());
-            //});
+                option.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            });
 
-			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-			builder.Services.AddEndpointsApiExplorer();
+
+            builder.Services.AddMvc(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter());
+            });
+
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
@@ -81,9 +81,9 @@ namespace FlexCoreService
 
             app.UseCors();
 
-
             app.UseCookiePolicy();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseStaticFiles();
 

@@ -83,14 +83,25 @@ namespace FlexCoreService.Controllers
             return products;
         }
 
-        // GET: api/Products/Detial/productId
-        [Route("Detial")]
-        [HttpGet("{productId}")]
-        public async Task<ActionResult<string>> GetProductDetial()
+        //GET: api/Products/Detial/productId
+       [HttpGet("Detail/{productId}")]
+        public async Task<ActionResult<Product>> GetProductDetail(string productId)
         {
+            if (_db.Products == null)
+            {
+                return NotFound();
+            }
+            var products = await _db.Products.FirstOrDefaultAsync(p=>p.ProductId== productId);
 
-            return "OK";
+            if (products == null)
+            {
+                return NotFound();
+            }
+
+            return products;
         }
+
+
         //// GET: api/Products
         //[HttpGet]
         //public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
