@@ -2,7 +2,7 @@
 {
 	public class ProductDiscountVM
 	{
-		public int Id { get; set; }
+		public int DiscountId { get; set; }
 		public string? DiscountName { get; set; }
 		public string? DiscountDescription { get; set; }
 		public int? DiscountType { get; set;}

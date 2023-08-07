@@ -27,15 +27,18 @@ namespace FlexCoreService.CartCtrl.Infra
 
 				string sql = @"select 
 ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId,
-p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
-d.DiscountId, d.DiscountName, d.DiscountDescription, d.DiscountType, d.DiscountValue,
-d.ConditionType, d.ConditionValue, d.OrderBy as DiscountOrder
+p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath, 
+ssc.SalesCategoryName, d.DiscountId, d.DiscountName, d.DiscountDescription, d.DiscountType, 
+d.DiscountValue, d.ConditionType, d.ConditionValue, d.OrderBy as DiscountOrder
 from CartItems as ci
 inner join ShoppingCarts as C on c.CartId = ci.fk_CardId
 inner join ProductGroups as pg on pg.ProductGroupId = ci.fk_ProductId
 inner join Products as p on p.ProductId = pg.fk_ProductId
 inner join ColorCategories as cc on cc.ColorId = pg.fk_ColorId
 inner join SizeCategories as sc on sc.SizeId = pg.fk_SizeId
+inner join ProductSubCategories as psc on psc.ProductSubCategoryId = p.fk_ProductSubCategoryId
+inner join ProductCategories as pc on pc.ProductCategoryId = psc.fk_ProductCategoryId
+inner join SalesCategories as ssc on ssc.SalesCategoryId = pc.fk_SalesCategoryId
 left join ProjectTagItems as pti on pti.fk_ProductId = p.ProductId
 LEFT JOIN (
     SELECT
@@ -56,7 +59,7 @@ GROUP BY
 ci.CartItemId, c.CartId, pg.ProductGroupId, ci.Qty, p.ProductId,
 p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
 d.DiscountId, d.DiscountName, d.DiscountDescription, d.DiscountType, d.DiscountValue,
-d.ConditionType, d.ConditionValue, d.OrderBy
+d.ConditionType, d.ConditionValue, d.OrderBy, ssc.SalesCategoryName
 ORDER BY p.ProductId asc, d.OrderBy asc;
 ";
 
