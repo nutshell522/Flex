@@ -1,18 +1,22 @@
 <template>
-    <navBar></navBar>
-    <main>
-        <div class="container">
-            <div class="row gx-4">
-                <div class="left col-12 col-lg-8">
-                    <div class="bg-dark"></div>
-                </div>
-                <div class="right col-12 col-lg-4">
-                    <div class="bg-primary"></div>
-                </div>
-            </div>
+  <navBar></navBar>
+  <main>
+    <div class="container">
+      <div class="row gx-4">
+        <div class="left col-12 col-lg-8">
+          <ul class="d-flex flex-wrap">
+            <li v-for="cartItem in cartItems" :key="cartItems.cartItemId" class="card text-center">
+              <span>{{ cartItem.product.productSaleId }}</span>
+            </li>
+          </ul>
         </div>
-    </main>
-    <homeFooter></homeFooter>
+        <div class="right col-12 col-lg-4">
+          <div class="bg-primary"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <homeFooter></homeFooter>
 </template>
     
 <script setup lang="ts">
@@ -26,18 +30,20 @@ import { useRouter, useRoute } from "vue-router";
 // 用vite獲得環境變數
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 
-const loadCartItems = async () => {
-    const route = useRoute();
+const cartItems = ref([]);
 
-    let url: string;
-  
-    url = `${baseAddress}api/Cart`;
-    const cards = ref([]);
-    await axios
+const loadCartItems = async () => {
+  const route = useRoute();
+
+  let url: string;
+
+  url = `${baseAddress}api/Cart`;
+  const cards = ref([]);
+  await axios
     .post(url)
     .then((response) => {
       console.log(response.data);
-    //   cards.value = response.data;
+      cartItems.value = response.data;
     })
     .catch((error) => {
       alert(error);
@@ -68,17 +74,17 @@ watch(someData, (newValue, oldValue) => {
     
 <style lang="scss">
 main {
-    margin-top: 40px;
-    padding-bottom: 120px;
+  margin-top: 40px;
+  padding-bottom: 120px;
 
-    .row {
-        &>.left {
-            &>div {}
-        }
-
-        &>.right {
-            &>div {}
-        }
+  .row {
+    &>.left {
+      &>div {}
     }
+
+    &>.right {
+      &>div {}
+    }
+  }
 }
 </style>
