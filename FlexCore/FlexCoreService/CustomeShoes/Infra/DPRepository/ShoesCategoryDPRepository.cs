@@ -25,5 +25,6 @@ namespace FlexCoreService.CustomeShoes.Infra.DPRepository
 			var result = dbConnection.Query<ShoesCategoryDto>(sql);
 			return result;
 		}
-	}
+
+    }
 }
