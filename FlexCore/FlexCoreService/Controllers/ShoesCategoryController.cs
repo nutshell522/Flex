@@ -1,4 +1,5 @@
 ﻿using EFModels.Models;
+using FlexCoreService.ActivityCtrl.Models.Dtos;
 using FlexCoreService.CustomeShoes.Exts;
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.CustomeShoes.Models.VMs;
@@ -35,5 +36,24 @@ namespace FlexCoreService.Controllers
 			}
 			return category;
 		}
-	}
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ShoesCategory>> GetCategory(int id)
+        {
+            if (_db.ShoesCategories == null)
+            {
+                return NotFound();
+            }
+            var shoesCategory = await _db.ShoesCategories.FindAsync(id);
+
+            if (shoesCategory == null)
+            {
+                return NotFound();
+            }
+
+            return shoesCategory;
+        }
+
+
+    }
 }
