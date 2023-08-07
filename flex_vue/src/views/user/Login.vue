@@ -12,27 +12,26 @@
       <input
         type="text"
         name="account"
+        v-if="accInput"
         v-model="account"
         class="form-control"
         placeholder="手機號碼/帳號/Email"
       />
     </div>
-    <div class="from-group mb-3">
+    <div class="from-group mb-3" v-if="validated">
       <label>密碼</label>
       <input
         type="password"
         name="password"
-        v-if="validated"
         class="form-control"
-        placeholder="密碼"
+        placeholder="輸入6-20碼英數字"
       />
     </div>
-    <div class="from-group mb-3">
+    <div class="from-group mb-3" v-if="unValidated">
       <label>信箱</label>
       <input
         type="email"
         name="email"
-        v-if="unValidated"
         class="form-control"
         placeholder="信箱"
       />
@@ -40,10 +39,28 @@
     <div class="from-group mb-3">
       <button
         type="submit"
-        class="btn btn-danger logBtn"
+        class="btn btn-danger logAndRegBtn"
+        v-if="registered"
+        v-show="logAndRegBtn"
         @click="ValidatedIdentity"
       >
         登入 / 註冊
+      </button>
+      <button
+        type="submit"
+        class="btn btn-danger logBtn"
+        @click="Login"
+        v-if="!registered"
+      >
+        登入
+      </button>
+      <button
+        type="submit"
+        class="btn btn-danger registerBtn"
+        @click="register"
+        v-if="unRegistered"
+      >
+        註冊
       </button>
     </div>
     <div>
@@ -67,11 +84,15 @@ import { ref } from 'vue';
 
 const errors = ref([]);
 const userData = ref([]);
+const accInput = ref(true);
 const validated = ref(false); //初始化狀態為不顯示
 const unValidated = ref(false);
+const logAndRegBtn = ref(true);
+const registered = ref(true);
+const unRegistered = ref(false);
 
 const account = ref('');
-//const password = ref('');
+const password = ref('');
 
 const baseAddress = 'https://localhost:7183';
 const uri = `${baseAddress}/api/Users/Login`;
@@ -85,29 +106,57 @@ function ValidatedIdentity() {
   } else {
     //已填寫
     var loginData = {}; //儲存傳給後端的登入資料
-    loginData.Account = account;
+    loginData.Account = account.value;
     //console.log(loginData.Account.value);
 
     axios
-      .post(uri, { account: account.value })
+      .post(uri, loginData)
       .then((res) => {
         userData.value = res.data;
-        console.log(userData.value); //後端return的訊息
+        //console.log(userData.value); //後端return的訊息
+
+        //從回傳的資料中取得帳號並進行比較
+        //已註冊
+        if (userData.value === account.value) {
+          //console.log('帳號驗證成功囉!');
+          validated.value = true;
+          accInput.value = false;
+          registered.value = false;
+        } else {
+          //未註冊
+          validated.value = false;
+          //console.log('帳號驗證失敗');
+          logAndRegBtn.value = false;
+          unValidated.value = true;
+          unRegistered.value = true;
+          //todo驗證帳號是否唯一
+          //todo寄信
+        }
       })
       .catch((err) => {
         alert('API請求失敗：' + err.message);
       });
-
-    //如果跟資料庫資料帳號一樣
-    if (userData.value === account) {
-      //console.log('有找到帳號');
-      validated.value = true;
-    }
   }
-  //   else {
-  //     //未註冊
-  //     unValidated.value = true;
-  //   }
+}
+
+function Login() {
+  //alert('Login');
+  //todo是否與資料庫的密碼相符
+  axios
+    .post(uri, password) //todo帳號密碼都要往後端送
+    .then((res) => {
+      res.data;
+      console.log(res.data);
+    })
+    .catch((err) => {
+      err;
+    });
+}
+
+function register() {
+  //alert('register');
+  //todo檢查信箱格式
+  //todo是否與資料庫的信箱一樣，信箱已經註冊過囉
 }
 </script>
 <style>
@@ -115,7 +164,7 @@ function ValidatedIdentity() {
   border: solid;
 }
 
-.logBtn {
+.logAndRegBtn {
   width: 150px;
 }
 p {
