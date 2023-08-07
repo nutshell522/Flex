@@ -35,14 +35,14 @@ watch(
 
 const loadProducts = async () => {
   let url;
-  if (route.query.categoryName && !route.query.subCategoryName) {
-    url = `${baseAddress}api/Products/Men?categoryName=${route.query.categoryName}`;
-  } else if (route.query.categoryName && route.query.subCategoryName) {
-    url = `${baseAddress}api/Products/Men?categoryName=${route.query.categoryName}&subCategoryName=${route.query.subCategoryName}`;
+  if (route.params.categoryName && !route.params.subCategoryName) {
+    url = `${baseAddress}api/Products/Men?categoryName=${route.params.categoryName}`;
+  } else if (route.params.categoryName && route.params.subCategoryName) {
+    url = `${baseAddress}api/Products/Men?categoryName=${route.params.categoryName}&subCategoryName=${route.params.subCategoryName}`;
   } else {
     url = `${baseAddress}api/Products/Men`;
   }
-  //console.log(url);
+  console.log(url);
   await axios
     .get(url)
     .then((response) => {
