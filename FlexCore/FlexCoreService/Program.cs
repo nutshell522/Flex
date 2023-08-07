@@ -28,7 +28,7 @@ namespace FlexCoreService
                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext"))
             );
 
-            //CORSé–‹æ”¾
+            //CORS¶}©ñ
             string MyAllow = "AllowAny";
             builder.Services.AddCors(options =>
             {
@@ -37,7 +37,7 @@ namespace FlexCoreService
                 );
             });
 
-            //DIæ³¨å…¥Dapper
+            //DIª`¤JDapper
             builder.Services.AddScoped<IProductRepository, ProductDPRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryDPRepository>();
             builder.Services.AddScoped<IActivityDPRepository, ActivityDPRepository>();
@@ -51,20 +51,18 @@ namespace FlexCoreService
 
 
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
-            {
+            //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            //{
 
-                //option.LoginPath = new PathString("/api/Users/NoLogin");
-
-
-                option.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            });
+            //    //option.LoginPath = new PathString("/api/Users/NoLogin");
+            //    option.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //});
 
 
-            builder.Services.AddMvc(options =>
-            {
-                options.Filters.Add(new AuthorizeFilter());
-            });
+            //builder.Services.AddMvc(options =>
+            //{
+            //    options.Filters.Add(new AuthorizeFilter());
+            //});
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

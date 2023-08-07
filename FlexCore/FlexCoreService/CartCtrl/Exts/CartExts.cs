@@ -26,7 +26,9 @@ namespace FlexCoreService.CartCtrl.Exts
 				SalesPrice = dto.SalesPrice,
 				Size = dto.Size,
 				UnitPrice = dto.UnitPrice,
-				MatchDiscounts = dto.MatchDiscounts.Select(x => x.ToViewModel())
+				MatchDiscounts = dto.MatchDiscounts.Select(x => x.ToViewModel()),
+				SalesCategoryName = dto.SalesCategoryName,
+
 			};
 		}
 		public static ProductDiscountVM ToViewModel(this ProductDiscountDto dto)
