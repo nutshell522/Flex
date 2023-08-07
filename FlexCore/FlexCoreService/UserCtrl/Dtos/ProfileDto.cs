@@ -13,7 +13,7 @@
         public string CommonAddress { get; set; }
         public string AlternateAddress1 { get; set; }
         public bool? IsSubscribeNews { get; set; }
-
+    
 
     }
 }

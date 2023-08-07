@@ -3,6 +3,8 @@ using FlexCoreService.ActivityCtrl.Infra.DPRepository;
 using FlexCoreService.ActivityCtrl.Interface;
 using FlexCoreService.ProductCtrl.Infra.DPRepository;
 using FlexCoreService.ProductCtrl.Interface;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlexCoreService
@@ -35,6 +37,26 @@ namespace FlexCoreService
             builder.Services.AddScoped<IProductRepository, ProductDPRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryDPRepository>();
             builder.Services.AddScoped<IActivityDPRepository, ActivityDPRepository>();
+            
+            //DI注入身分驗證
+            builder.Services.AddAuthentication();
+
+            
+            //使用Cookie
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            {
+                //未登入時會自動導向網址
+                option.LoginPath = new PathString("/api/Users/NoLogin");
+
+                //登入時效
+                option.ExpireTimeSpan= TimeSpan.FromMinutes(5);
+            });
+
+            //全域設定登入驗證
+            builder.Services.AddMvc(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter());
+            });
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -50,6 +72,11 @@ namespace FlexCoreService
             }
 
             app.UseCors();
+
+            //使用者登入驗證
+            app.UseCookiePolicy();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseStaticFiles();
 
