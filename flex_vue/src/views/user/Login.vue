@@ -22,7 +22,6 @@
       <input
         type="password"
         name="password"
-        v-model="password"
         v-if="validated"
         class="form-control"
         placeholder="密碼"
@@ -67,34 +66,49 @@ import axios from 'axios';
 import { ref } from 'vue';
 
 const errors = ref([]);
+const userData = ref([]);
 const validated = ref(false); //初始化狀態為不顯示
 const unValidated = ref(false);
 
+const account = ref('');
+//const password = ref('');
+
+const baseAddress = 'https://localhost:7183';
+const uri = `${baseAddress}/api/Users/Login`;
+
 function ValidatedIdentity() {
   //alert('loginAndRegister');
-  if (account.value == '') {
+  //未填寫
+  if (account.value === '') {
     errors.value = [];
     errors.value.push('沒有填誰知道你是誰');
-  } else if (account.value == 123) {
-    //如果跟資料庫資料帳號一樣
-    //已註冊
-    validated.value = true;
   } else {
-    //未註冊
-    unValidated.value = true;
+    //已填寫
+    var loginData = {}; //儲存傳給後端的登入資料
+    loginData.Account = account;
+    //console.log(loginData.Account.value);
+
+    axios
+      .post(uri, { account: account.value })
+      .then((res) => {
+        userData.value = res.data;
+        console.log(userData.value); //後端return的訊息
+      })
+      .catch((err) => {
+        alert('API請求失敗：' + err.message);
+      });
+
+    //如果跟資料庫資料帳號一樣
+    if (userData.value === account) {
+      //console.log('有找到帳號');
+      validated.value = true;
+    }
   }
+  //   else {
+  //     //未註冊
+  //     unValidated.value = true;
+  //   }
 }
-
-const account = ref('a123');
-const password = ref('');
-
-const baseAddress = 'https://localhost:7183/api';
-const uri = `${baseAddress}/Users/Login`;
-
-// axios
-//   .post(uri, account)
-//   .then((res) => {})
-//   .catch((err) => {});
 </script>
 <style>
 .loginBox {

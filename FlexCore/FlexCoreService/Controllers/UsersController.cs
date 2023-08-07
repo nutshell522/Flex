@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Xml.Linq;
 
 namespace FlexCoreService.Controllers
 {
@@ -17,11 +18,12 @@ namespace FlexCoreService.Controllers
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _db;
-        private readonly IHttpContextAccessor _contextAccessor;
-        public UsersController(AppDbContext db, HttpContextAccessor contextAccessor)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
-            _contextAccessor = contextAccessor;
+            _httpContextAccessor = httpContextAccessor;
+
         }
 
         /// <summary>
@@ -61,17 +63,16 @@ namespace FlexCoreService.Controllers
         /// <returns></returns>
         [HttpPost("Login")]
         [AllowAnonymous]
-        public string Login(LoginDto value)
+        public string Login([FromBody]LoginDto value)
         {
             var user = (from m in _db.Members
-                        where m.Account == value.Account
-                        && m.EncryptedPassword == value.EncryptedPassword
+                        where m.Account == value.Account                      
                         select m).SingleOrDefault();
 
             if (user == null)
             {
                 //驗證失敗
-                return "帳號密碼錯誤";
+                return "帳號錯誤";
             }
             else
             {
@@ -88,7 +89,7 @@ namespace FlexCoreService.Controllers
 
                 //控制登入狀態
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                return "ok";
+                return user.Account;
             }
         }
 

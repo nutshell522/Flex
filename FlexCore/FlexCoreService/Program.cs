@@ -39,7 +39,7 @@ namespace FlexCoreService
             builder.Services.AddScoped<IActivityDPRepository, ActivityDPRepository>();
             
             //DI注入身分驗證
-            builder.Services.AddAuthentication();
+            builder.Services.AddHttpContextAccessor();
 
             
             //使用Cookie
