@@ -12,11 +12,14 @@ namespace EFModels.Models
         public int fk_OptionId { get; set; }
         public int fk_MaterialId { get; set; }
         public int fk_ShoesColorId { get; set; }
+        public int Qty { get; set; }
+        public int fk_SizeId { get; set; }
         public string Remark { get; set; }
 
         public virtual Customized_material fk_Material { get; set; }
         public virtual ShoesChoose fk_Option { get; set; }
         public virtual ShoesColorCategory fk_ShoesColor { get; set; }
         public virtual CustomizedShoesPo fk_ShoesMain { get; set; }
+        public virtual ShoesSize fk_Size { get; set; }
     }
 }
