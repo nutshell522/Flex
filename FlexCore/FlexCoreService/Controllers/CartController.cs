@@ -1,4 +1,5 @@
 ﻿using EFModels.Models;
+using FlexCoreService.CartCtrl.Exts;
 using FlexCoreService.CartCtrl.Interface;
 using FlexCoreService.CartCtrl.Models.vm;
 using FlexCoreService.CartCtrl.Service;
@@ -27,12 +28,13 @@ namespace FlexCoreService.Controllers
 			_service = new CartService(_repo);
 		}
 
-		// POST: api/Products/
+		// POST: api/Cart/
 		[HttpPost]
-		public async Task<ActionResult<IEnumerable<CartItemDto>>> GetCartItems(int memberId = 1)
+		public async Task<ActionResult<IEnumerable<CartItemVM>>> GetCartItems()
 		{
-			var cartItems = _service.GetCartItems(memberId);
-			return Ok(cartItems);
-		}
+            int memberId = 1;
+            var cartItems = await Task.Run(() => _service.GetCartItems(memberId).Select(x => x.ToViewModel()));
+            return Ok(cartItems);
+        }
 	}
 }

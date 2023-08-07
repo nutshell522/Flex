@@ -18,5 +18,6 @@ namespace FlexCoreService.CustomeShoes.Service
 			var result = _repo.GetAllCategory();
 			return result;
 		}
-	}
+
+    }
 }
