@@ -1,19 +1,17 @@
 <template>
   <navBar></navBar>
-
+  <div>
+    <userBar></userBar>
+  </div>
   <div class="container">
-    <div>
-      <h2>會員資料修改</h2>
-    </div>
-
     <div class="d-flex">
       <div class="input-group mb-3">
         <label for="nameInput" class="text">姓名</label>
         <label for="">{{ name }}</label>
       </div>
-      <div class="aaa mb-3">
-        <label class="text">會員等級</label>
-        <label for="">{{ level }}</label>
+      <div class="level mb-3">
+        <!-- <label for="">{{ level }}</label> -->
+        <label for="">{{ levelName }}</label>
       </div>
     </div>
 
@@ -49,6 +47,7 @@
               type="radio"
               name="genderRadio"
               id="genderRadio1"
+              v-model="gender"
             />
             <label class="form-check-label" for="genderRadio1"> 生理男 </label>
           </div>
@@ -62,9 +61,8 @@
             type="radio"
             name="genderRadio"
             id="genderRadio2"
-            checked
           />
-          <label class="form-check-label" for="genderRadio2"> 生理女 </label>
+          <label class="form-check-label" for="genderRadio2">生理女 </label>
         </div>
       </div>
     </div>
@@ -80,8 +78,31 @@
         />
       </div>
       <div class="addAddress">
-        <button type="button" class="btn btn-primary text-black">+</button>
+        <button
+          type="button"
+          class="btn btn-primary text-black"
+          @click="addBtn"
+        >
+          +
+        </button>
       </div>
+    </div>
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        class="form-control addAddressInput1"
+        placeholder="alternate address"
+        v-model="alternateAddress"
+        v-if="addAddressInput1"
+      />
+    </div>
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        class="form-control addAddressInput2"
+        placeholder="alternate address"
+        v-if="addAddressInput2"
+      />
     </div>
     <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="載具先不寫" />
@@ -93,8 +114,16 @@
 
     <label class="text mb-3">訂閱電子報</label>
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="checkbox" id="subscribeBtn" />
-      <label class="form-check-label" for="subscribeBtn">是否訂閱電子報</label>
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="subscribeBtn"
+        v-model="subscribeNews"
+        v-if="subscribeNews"
+      />
+      <label class="form-check-label" for="subscribeBtn"
+        >{{ subscribeNews }}是否訂閱電子報</label
+      >
     </div>
     <div>
       <button type="button" class="btn btn-outline-primary text-black">
@@ -106,18 +135,23 @@
 
 <script setup>
 import navBar from '@/components/home/navBar.vue';
-import { ref } from 'vue';
+import userBar from '@/components/user/userBar.vue';
+
 import axios from 'axios';
+import { ref } from 'vue';
 
 const userProfile = ref([]);
 const account = ref('a123'); // 初始化為空字符串
 let id = ref('');
-let level = ref('');
+// let level = ref('');
+let levelName = ref('');
 let name = ref('');
 let email = ref('');
 let mobile = ref('');
 let gender = ref('');
 let commonAddress = ref('');
+let alternateAddress = ref('');
+let subscribeNews = ref('');
 
 const baseAddress = 'https://localhost:7183/api';
 const uri = `${baseAddress}/Users/${account.value}`;
@@ -125,23 +159,47 @@ const uri = `${baseAddress}/Users/${account.value}`;
 axios
   .get(uri)
   .then((res) => {
-    // userProfile.value = res.data;
-    // console.log(userProfile);
+    userProfile.value = res.data;
+    console.log(userProfile);
 
     id.value = res.data.memberId;
     //console.log(id);
 
-    level.value = res.data.fk_LevelId;
+    // level.value = res.data.fk_Level;
+    levelName.value = res.data.levelName;
     name.value = res.data.name;
     email.value = res.data.email;
     mobile.value = res.data.mobile;
     gender.value = res.data.gender;
     commonAddress.value = res.data.commonAddress;
-    // console.log(level);
+    alternateAddress.value = res.data.alternateAddress1;
+    subscribeNews.value = res.data.isSubscribeNews;
   })
   .catch((err) => {
     err;
   });
+
+const addAddressInput1 = ref(false);
+const addAddressInput2 = ref(false);
+
+//當值為?哪個選項被選到
+if (gender.value === false) {
+  genderRadio1.checked = true;
+}
+
+function addBtn() {
+  //alert('addAddress');
+  if (addAddressInput1.value === false) {
+    addAddressInput1.value = true;
+  } else {
+    addAddressInput2.value = true;
+  }
+}
+
+//還沒正確隱藏值
+if (subscribeNews.value === true) {
+  subscribeNews.value = false;
+}
 </script>
 
 <style>
@@ -155,7 +213,7 @@ axios
 .addAddress {
   padding-left: 20px;
 }
-.aaa {
+.level {
   width: 30%;
   background-color: #fce0d9;
   border-radius: 10px;

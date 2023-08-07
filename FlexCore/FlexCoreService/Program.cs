@@ -7,6 +7,8 @@ using FlexCoreService.CustomeShoes.Infra.DPRepository;
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.ProductCtrl.Infra.DPRepository;
 using FlexCoreService.ProductCtrl.Interface;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlexCoreService
@@ -38,10 +40,31 @@ namespace FlexCoreService
             //DI�`�JDapper
             builder.Services.AddScoped<IProductRepository, ProductDPRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryDPRepository>();
-            builder.Services.AddScoped< ActivityDPRepository >();
+            builder.Services.AddScoped<IActivityDPRepository, ActivityDPRepository>();
+            builder.Services.AddScoped<ActivityDPRepository>();
 			builder.Services.AddScoped<ICustomeShoesRepository, CustomeShoesDPRepository>();
 			builder.Services.AddScoped<ICartRepository, CartDapperRepository>();
             builder.Services.AddScoped<IShoesCategoryRepository, ShoesCategoryDPRepository>();
+            
+            //DI�`�J��������
+            builder.Services.AddHttpContextAccessor();
+
+            
+            //�ϥ�Cookie
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            {
+                //���n�J�ɷ|�۰ʾɦV���}
+                option.LoginPath = new PathString("/api/Users/NoLogin");
+
+                //�n�J�ɮ�
+                option.ExpireTimeSpan= TimeSpan.FromMinutes(5);
+            });
+
+            //����]�w�n�J����
+            builder.Services.AddMvc(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter());
+            });
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
@@ -57,6 +80,11 @@ namespace FlexCoreService
             }
 
             app.UseCors();
+
+            //�ϥΪ̵n�J����
+            app.UseCookiePolicy();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseStaticFiles();
 

@@ -7,7 +7,7 @@
         <li><a href="javascript:;">加入</a></li>
         <li class="p-relative">
           <a href="javascript:;" @mouseenter="showList">登入</a>
-          <userList v-if="showList" style="display: none"></userList>
+          <!-- <userList v-if="showList"></userList> -->
         </li>
       </ul>
     </div>
@@ -67,11 +67,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import userList from "../home/userList.vue";
+import { ref } from 'vue';
+import userList from '../home/userList.vue';
 
 function showList() {
-  alert("hi");
+  alert('hi');
 }
 </script>
 
@@ -145,7 +145,7 @@ header {
         }
 
         &:not(:first-child)::before {
-          content: "|";
+          content: '|';
           padding: 0 15px;
           font-size: 14px;
         }
