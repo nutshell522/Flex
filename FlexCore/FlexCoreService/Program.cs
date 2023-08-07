@@ -28,6 +28,7 @@ namespace FlexCoreService
                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext"))
             );
 
+            //CORS¶}©ñ
             string MyAllow = "AllowAny";
             builder.Services.AddCors(options =>
             {
@@ -35,6 +36,8 @@ namespace FlexCoreService
                     name: MyAllow, policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
                 );
             });
+
+            //DIª`¤JDapper
             builder.Services.AddScoped<IProductRepository, ProductDPRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryDPRepository>();
             builder.Services.AddScoped<IActivityDPRepository, ActivityDPRepository>();
@@ -43,14 +46,18 @@ namespace FlexCoreService
 			builder.Services.AddScoped<ICartRepository, CartDapperRepository>();
             builder.Services.AddScoped<IShoesCategoryRepository, ShoesCategoryDPRepository>();
             
+
             builder.Services.AddHttpContextAccessor();
+
+
 
             //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             //{
-            //    option.LoginPath = new PathString("/api/Users/NoLogin");
 
+            //    //option.LoginPath = new PathString("/api/Users/NoLogin");
             //    option.ExpireTimeSpan = TimeSpan.FromMinutes(5);
             //});
+
 
             //builder.Services.AddMvc(options =>
             //{
