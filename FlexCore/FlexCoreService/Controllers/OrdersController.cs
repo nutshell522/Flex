@@ -18,7 +18,7 @@ namespace FlexCoreService.Controllers
 				_context = context;
 			}
 			[HttpGet("GetOrders")]
-			public async Task<IEnumerable<OrdersIndexVM>> GetOrders()
+			public async Task<IEnumerable<OrdersIndexVM>> GetOrders(int? typeId)
 			{
 				var db = _context;
 				if (_context.orders == null)
@@ -28,7 +28,11 @@ namespace FlexCoreService.Controllers
 				var orderStatuses = db.order_statuses.AsNoTracking().ToDictionary(os => os.Id, os => os.order_status1);
 				var paymethods = db.pay_methods.AsNoTracking().ToDictionary(pd => pd.Id, pd => pd.pay_method1);
 				var paystatuses = db.pay_statuses.AsNoTracking().ToDictionary(ps => ps.Id, ps => ps.pay_status1);
-				return _context.orders.Select(p => new OrdersIndexVM
+				var query = typeId.HasValue
+				? _context.orders.Where(o => o.fk_typeId == typeId)
+				: _context.orders;
+
+			return query.Select(p => new OrdersIndexVM
 				{
 					Id = p.Id,
 					ordertime = p.ordertime,

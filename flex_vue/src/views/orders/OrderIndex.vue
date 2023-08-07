@@ -1,6 +1,15 @@
 
 <template>
     <OrdernavBar></OrdernavBar>
+    <div id="cate" class="container">
+        <button style="padding-right:20px ;" @click="setKeywordValue('1')">商品</button>
+
+        <button style="padding-right:20px ;" @click="setKeywordValue('4')">客製化</button>
+
+        <button style="padding-right:20px ;" @click="setKeywordValue('2')">活動</button>
+
+        <button style="padding-right:20px ;" @click="setKeywordValue('3')">課程</button>
+    </div>
     <div class="container">
         <table class="table table-striped table-hover" style="width:80% ;">
             <thead>
@@ -34,11 +43,12 @@ import OrdernavBar from "@/components/Order/OrdernavBar.vue";
 import { ref, onMounted } from 'vue'
 import axios from "axios";
 
-const GetOrders = ref([])
+const GetOrders = ref([]);
+const keyword = ref('');
 
 const loadGetOrders = async () => {
     await axios
-        .get(`https://localhost:7183/api/Orders/GetOrders`)
+        .get(`https://localhost:7183/api/Orders/GetOrders?typeId=${keyword.value}`)
         .then((response) => {
             //console.log(response.data);
             GetOrders.value = response.data;
@@ -56,6 +66,10 @@ const formatOrderTime = (ordertime) => {
     const minutes = dateTimeObject.getMinutes().toString().padStart(2, '0');
     return year + '-' + month + '-' + dates + ' ' + hours + ':' + minutes + '';
 };
+const setKeywordValue = (paramValue) => {
+    keyword.value = paramValue;
+    loadGetOrders();
+};
 onMounted(() => {
     loadGetOrders()
 })
@@ -69,5 +83,10 @@ onMounted(() => {
 
 .table>tbody>tr>td {
     text-align: center;
+}
+
+.div>button {
+    text-align: center;
+    padding-right: 10px;
 }
 </style>
