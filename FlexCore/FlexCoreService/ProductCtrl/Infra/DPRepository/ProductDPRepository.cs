@@ -45,7 +45,7 @@ having p.Status=0 and p.LogOut=0 and
 s.SalesCategoryId = " + @salesId +
 " and pc.ProductCategoryName like '%" + @categoryName + "%'" +
 " and ps.ProductSubCategoryName like '%" + @subCategoryName + "%'" +
-" order by p.ProductId";
+" order by p.SalesPrice";
 
             using IDbConnection dbConnection = new SqlConnection(_connStr);
             var result = dbConnection.Query<ProductCardDto>(sql, new { salesId , categoryName , subCategoryName });

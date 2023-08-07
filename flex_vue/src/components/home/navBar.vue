@@ -7,7 +7,7 @@
         <li><a href="javascript:;">加入</a></li>
         <li class="p-relative">
           <a href="javascript:;" @mouseenter="showList">登入</a>
-          <userList v-if="showList"></userList>
+          <userList v-if="showList" style="display: none"></userList>
         </li>
       </ul>
     </div>

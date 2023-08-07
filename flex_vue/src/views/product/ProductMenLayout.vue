@@ -16,6 +16,7 @@
 <script setup>
 import navBar from "@/components/home/navBar.vue";
 import categoryNavBar from "@/components/product/CategoryNavBar.vue";
+import searchPrice from "@/components/product/SearchPrice.vue";
 </script>
 
 <style></style>

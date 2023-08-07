@@ -62,6 +62,7 @@ onMounted(() => {
   text-decoration: none;
   outline: none;
   font-size: 20px;
+  font-weight: bold;
 }
 
 .subCategory a {
@@ -69,6 +70,16 @@ onMounted(() => {
   text-decoration: none;
   outline: none;
   font-size: 15px;
-  margin-left: 10px;
+  font-weight: 400;
+}
+
+ul li.subCategory {
+  background-image: url("../../../public/LOGO/CategoryIcon.jpg");
+  background-size: 13px 13px;
+  background-repeat: no-repeat;
+  padding-left: 20px;
+  font-size: 15px;
+  margin-bottom: 5px;
+  line-height: 18px;
 }
 </style>
