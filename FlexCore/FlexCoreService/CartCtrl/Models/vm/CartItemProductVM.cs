@@ -10,5 +10,23 @@
 		public string? Color { get; set; }
 		public IEnumerable<ProductDiscountVM>? MatchDiscounts { get; set; }
 		public string? ImgPath { get; set; }
+		public string? SalesCategoryName { get; set; }
+		public string SalesCategoryNameStr
+		{
+			get
+			{
+				switch (SalesCategoryName)
+				{
+					case "男裝":
+						return "男款";
+					case "女裝":
+						return "女款";
+					case "童裝":
+						return "兒童款";
+					default:
+						return"";
+				}
+			}
+		}
 	}
 }
