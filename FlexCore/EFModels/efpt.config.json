@@ -24,6 +24,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ActivityImg]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ActivityStatuses]",
          "ObjectType": 0
       },
@@ -176,6 +180,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ReservationImg]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ReservationStatuses]",
          "ObjectType": 0
       },
@@ -248,7 +256,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "desktop-paksetb.Flex.dbo",
+   "UiHint": "lun.Flex.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
