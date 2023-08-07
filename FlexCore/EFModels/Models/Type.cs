@@ -11,6 +11,7 @@ namespace EFModels.Models
         {
             PointHistories = new HashSet<PointHistory>();
             PointManages = new HashSet<PointManage>();
+            orderItems = new HashSet<orderItem>();
             orders = new HashSet<order>();
         }
 
@@ -19,6 +20,7 @@ namespace EFModels.Models
 
         public virtual ICollection<PointHistory> PointHistories { get; set; }
         public virtual ICollection<PointManage> PointManages { get; set; }
+        public virtual ICollection<orderItem> orderItems { get; set; }
         public virtual ICollection<order> orders { get; set; }
     }
 }
