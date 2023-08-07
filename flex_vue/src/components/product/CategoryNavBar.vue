@@ -6,25 +6,26 @@
         :key="categoryName"
         class="category"
       >
-        <router-link :to="`/men?categoryName=${categoryName}`">{{
-          categoryName
-        }}</router-link>
-        <!-- <router-link :to="`/men/${categoryName}`">{{
+        <!-- <router-link :to="`/men?categoryName=${categoryName}`">{{
           categoryName
         }}</router-link> -->
+        <router-link :to="'/men/' + categoryName">{{
+          categoryName
+        }}</router-link>
+        <!-- <a :href="'/men/' + categoryName">{{ categoryName }}</a> -->
         <ul class="list-unstyled">
           <li
             class="subCategory"
             v-for="subCategoryName in subCategories"
             :key="subCategoryName"
           >
-            <router-link
+            <!-- <router-link
               :to="`/men?categoryName=${categoryName}&subCategoryName=${subCategoryName}`"
               >{{ subCategoryName }}</router-link
-            >
-            <!-- <router-link :to="`/men/${categoryName}/${subCategoryName}`">{{
+            > -->
+            <router-link :to="'/men/' + categoryName + '/' + subCategoryName">{{
               subCategoryName
-            }}</router-link> -->
+            }}</router-link>
           </li>
         </ul>
       </li>
