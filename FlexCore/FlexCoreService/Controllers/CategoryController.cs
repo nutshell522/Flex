@@ -22,12 +22,41 @@ namespace FlexCoreService.Controllers
             _repo = repo;
         }
 
-        //Get: api/Category/
+        //Post: api/Category/Men
         [HttpPost("Men")]
         public async Task<ActionResult<CategoryVM>> GetCategoryMen()
         {
+            int categoryId = 1;
             var server = new CategoryService(_repo);
-            var category = server.GetCategoryMen().ToCategoryVM();
+            var category = server.SearchCategory(categoryId).ToCategoryVM();
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return category;
+        }
+
+        //Post: api/Category/Women
+        [HttpPost("Women")]
+        public async Task<ActionResult<CategoryVM>> GetCategoryWomen()
+        {
+            int categoryId = 2;
+            var server = new CategoryService(_repo);
+            var category = server.SearchCategory(categoryId).ToCategoryVM();
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return category;
+        }
+
+        //Post: api/Category/Kid
+        [HttpPost("Kid")]
+        public async Task<ActionResult<CategoryVM>> GetCategoryKid()
+        {
+            int categoryId = 3;
+            var server = new CategoryService(_repo);
+            var category = server.SearchCategory(categoryId).ToCategoryVM();
             if (category == null)
             {
                 return NotFound();

@@ -6,10 +6,7 @@ namespace FlexCoreService.ProductCtrl.Interface
     {
         IEnumerable<CategoryDto> GetAllCategory();
 
-        IEnumerable<CategoryDto> GetCategoryMen();
+        IEnumerable<CategoryDto> SearchCategory(int categoryId);
 
-        IEnumerable<CategoryDto> GetCategoryWomen();
-
-        IEnumerable<CategoryDto> GetCategoryKid();
     }
 }

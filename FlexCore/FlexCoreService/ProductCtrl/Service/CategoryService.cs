@@ -16,22 +16,11 @@ namespace FlexCoreService.ProductCtrl.Service
             return result;
         }
 
-        public IEnumerable<CategoryDto> GetCategoryMen()
+        public IEnumerable<CategoryDto> SearchCategory(int categoryId)
         {
-            var result = _repo.GetCategoryMen();
+            var result = _repo.SearchCategory(categoryId);
             return result;
         }
 
-        public IEnumerable<CategoryDto> GetCategoryWomen()
-        {
-            var result = _repo.GetCategoryWomen();
-            return result;
-        }
-
-        public IEnumerable<CategoryDto> GetCategoryKid()
-        {
-            var result = _repo.GetCategoryKid();
-            return result;
-        }
     }
 }
