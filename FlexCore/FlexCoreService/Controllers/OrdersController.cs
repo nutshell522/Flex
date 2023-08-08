@@ -3,6 +3,7 @@ using FlexCoreService.Orders;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace FlexCoreService.Controllers
 {
@@ -18,19 +19,31 @@ namespace FlexCoreService.Controllers
 				_context = context;
 			}
 			[HttpGet("GetOrders")]
-			public async Task<IEnumerable<OrdersIndexVM>> GetOrders(int? typeId)
+			public async Task<IEnumerable<OrdersIndexVM>> GetOrders(string? keyword, int? typeId, DateTime? begintime,DateTime? endtime)
 			{
 				var db = _context;
-				if (_context.orders == null)
+			if (_context.orders == null)
 				{
-					return null;
+				return null;
 				}
-				var orderStatuses = db.order_statuses.AsNoTracking().ToDictionary(os => os.Id, os => os.order_status1);
+			var orderStatuses = db.order_statuses.AsNoTracking().ToDictionary(os => os.Id, os => os.order_status1);
 				var paymethods = db.pay_methods.AsNoTracking().ToDictionary(pd => pd.Id, pd => pd.pay_method1);
 				var paystatuses = db.pay_statuses.AsNoTracking().ToDictionary(ps => ps.Id, ps => ps.pay_status1);
 				var query = typeId.HasValue
 				? _context.orders.Where(o => o.fk_typeId == typeId)
 				: _context.orders;
+			if (!string.IsNullOrEmpty(keyword))
+			{
+				query = query.Where(o =>
+					o.orderItems.Any(oi => oi.product_name.Contains(keyword))
+				);
+			}
+			if (begintime.HasValue && endtime.HasValue)
+			{
+				query = query.Where(o =>
+					o.ordertime >= begintime.Value && o.ordertime <= endtime.Value
+				);
+			}
 
 			return query.Select(p => new OrdersIndexVM
 				{

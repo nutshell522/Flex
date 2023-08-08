@@ -26,10 +26,10 @@ namespace FlexCoreService.CartCtrl.Infra
 				dbConnection.Open();
 
 				string sql = @"select 
-ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId,
-p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath, 
-ssc.SalesCategoryName, d.DiscountId, d.DiscountName, d.DiscountDescription, d.DiscountType, 
-d.DiscountValue, d.ConditionType, d.ConditionValue, d.OrderBy as DiscountOrder
+ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId, 
+p.ProductName, p.UnitPrice, p.SalesPrice, sc.SizeName as Size, cc.ColorName as Color, 
+pir.ImgPath, ssc.SalesCategoryName, d.DiscountId, d.DiscountName, d.DiscountDescription, 
+d.DiscountType, d.DiscountValue, d.ConditionType, d.ConditionValue, d.OrderBy as DiscountOrder
 from CartItems as ci
 inner join ShoppingCarts as C on c.CartId = ci.fk_CardId
 inner join ProductGroups as pg on pg.ProductGroupId = ci.fk_ProductId
@@ -40,7 +40,7 @@ inner join ProductSubCategories as psc on psc.ProductSubCategoryId = p.fk_Produc
 inner join ProductCategories as pc on pc.ProductCategoryId = psc.fk_ProductCategoryId
 inner join SalesCategories as ssc on ssc.SalesCategoryId = pc.fk_SalesCategoryId
 left join ProjectTagItems as pti on pti.fk_ProductId = p.ProductId
-LEFT JOIN (
+left join(
     SELECT
         pi.fk_ProductId,
         pi.ProductImgId,
@@ -54,12 +54,12 @@ LEFT JOIN (
     )
 ) AS pir ON pir.fk_ProductId = p.ProductId
 left join Discounts as d on d.fk_ProjectTagId = pti.fk_ProjectTagId
-where p.Status=0 and p.LogOut=0 and c.fk_MemberID = @memberId
+where p.Status=0 and p.LogOut=0 and c.fk_MemberID = 1 
 GROUP BY
 ci.CartItemId, c.CartId, pg.ProductGroupId, ci.Qty, p.ProductId,
 p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
 d.DiscountId, d.DiscountName, d.DiscountDescription, d.DiscountType, d.DiscountValue,
-d.ConditionType, d.ConditionValue, d.OrderBy, ssc.SalesCategoryName
+d.ConditionType, d.ConditionValue, d.OrderBy, ssc.SalesCategoryName ,p.ProductName
 ORDER BY p.ProductId asc, d.OrderBy asc;
 ";
 

@@ -86,6 +86,26 @@ const routes = [
       },
     ],
   },
+  {
+    //http://loaclhost/CustomeShoes
+    path: "/CustomeShoes",
+    component: () => import("../views/CustomeShoes/CustomeShoesLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("../views/CustomeShoes/CustomeShoesAll.vue"),
+      },
+      {
+        path: ":shoescategoryName",
+        component: () => import("../views/CustomeShoes/CustomeShoesAll.vue"),
+      },
+      {
+        //http://loaclhost/Login
+        path: "/login",
+        component: Login,
+      },
+    ],
+  },
 ];
 
 const router = createRouter({

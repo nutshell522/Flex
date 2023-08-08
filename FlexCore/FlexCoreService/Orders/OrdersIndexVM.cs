@@ -3,7 +3,7 @@
 	public class OrdersIndexVM
 	{
 		public int Id { get; set; }
-		public DateTime ordertime { get; set; }
+		public DateTime? ordertime { get; set; }
 		public int fk_member_Id { get; set; }
 		public int total_quantity { get; set; }
 		public int logistics_company_Id { get; set; }

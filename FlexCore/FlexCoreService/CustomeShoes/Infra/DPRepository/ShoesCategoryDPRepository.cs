@@ -18,7 +18,7 @@ namespace FlexCoreService.CustomeShoes.Infra.DPRepository
 		}
 		public IEnumerable<ShoesCategoryDto> GetAllCategory()
 		{
-			string sql = @"select sc.ShoesCategoryName from ShoesCategories as sc
+			string sql = @"select sc.ShoesCategoryId, sc.ShoesCategoryName from ShoesCategories as sc
 ";
 
 			using IDbConnection dbConnection = new SqlConnection(_connStr);
