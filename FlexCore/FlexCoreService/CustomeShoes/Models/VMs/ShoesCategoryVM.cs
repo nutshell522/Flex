@@ -2,6 +2,7 @@
 {
 	public class ShoesCategoryVM
 	{
-		public string? ShoesCategoryName { get; set; }
+        public int? ShoesCategoryId { get; set; }
+        public string? ShoesCategoryName { get; set; }
 	}
 }
