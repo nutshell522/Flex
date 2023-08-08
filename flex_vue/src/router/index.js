@@ -1,47 +1,51 @@
-import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/home/Home.vue";
-import User from "../views/user/User.vue";
-import Login from "../views/user/Login.vue";
-import ActivityInfo from "../views/activity/ActivityInfo.vue";
-import ActivitySignUp from "../views/activity/ActivitySignUp.vue";
-import { useRouter, useRoute } from "vue-router";
-const webTitle = "FLEX - ";
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '../views/home/Home.vue';
+import User from '../views/user/User.vue';
+import Login from '../views/user/Login.vue';
+import ActivityInfo from '../views/activity/ActivityInfo.vue';
+import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
+const webTitle = 'FLEX - ';
 
 // 路由設定
 const routes = [
   {
     //http://loaclhost/
-    path: "/",
+    path: '/',
     component: Home,
     meta: { title: `${webTitle}首頁` },
   },
   {
     //http://loaclhost/
-    path: "/cart",
-    component: () => import("../views/home/Cart.vue"),
+    path: '/cart',
+    component: () => import('../views/home/Cart.vue'),
     meta: { title: `${webTitle}購物車` },
   },
   {
     //http://loaclhost/User
-    path: "/user",
+    path: '/user',
     component: User,
     meta: { title: `${webTitle}會員` },
   },
   {
+    //http://loaclhost/Login
+    path: '/login',
+    component: Login,
+  },
+  {
     //http://loaclhost/orders
-    path: "/orders",
-    component: () => import("../views/orders/orderindex.vue"),
+    path: '/orders',
+    component: () => import('../views/orders/orderindex.vue'),
     meta: { title: `${webTitle}訂單` },
   },
   {
     //http://loaclhost/activityInfo
-    path: "/activityInfo",
+    path: '/activityInfo',
     component: ActivityInfo,
     meta: { title: `${webTitle}活動` },
   },
   {
     //http://loaclhost/activitySignUp
-    path: "/activitySignUp",
+    path: '/activitySignUp',
     component: ActivitySignUp,
     meta: { title: `${webTitle}活動報名` },
   },
@@ -52,8 +56,8 @@ const routes = [
   },
   {
     //http://loaclhost/Men
-    path: "/men",
-    component: () => import("../views/product/ProductMenLayout.vue"),
+    path: '/men',
+    component: () => import('../views/product/ProductMenLayout.vue'),
     children: [
       {
         path: "",
