@@ -42,23 +42,20 @@ namespace FlexCoreService
             builder.Services.AddScoped<ICategoryRepository, CategoryDPRepository>();
             builder.Services.AddScoped<IActivityDPRepository, ActivityDPRepository>();
             builder.Services.AddScoped<ActivityDPRepository>();
-			builder.Services.AddScoped<ICustomeShoesRepository, CustomeShoesDPRepository>();
-			builder.Services.AddScoped<ICartRepository, CartDapperRepository>();
+            builder.Services.AddScoped<ICustomeShoesRepository, CustomeShoesDPRepository>();
+            builder.Services.AddScoped<ICartRepository, CartDapperRepository>();
             builder.Services.AddScoped<IShoesCategoryRepository, ShoesCategoryDPRepository>();
-            
+
 
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+                {
+                    //未登入時會自動導到這個網址
+                    option.LoginPath = new PathString("/api/Users/Login");
+                });
 
-
-            //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
-            //{
-
-            //    //option.LoginPath = new PathString("/api/Users/NoLogin");
-            //    option.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            //});
-
-
+            //設定全域登入
             //builder.Services.AddMvc(options =>
             //{
             //    options.Filters.Add(new AuthorizeFilter());
@@ -78,6 +75,8 @@ namespace FlexCoreService
             }
 
             app.UseCors();
+
+            //app.UseRouting();
 
             app.UseCookiePolicy();
             app.UseAuthentication();

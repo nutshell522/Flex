@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <ul class="userList-items">
-      <li class="mb-1"><a href="http://localhost:5175/user">個人資料</a></li>
+      <li class="mb-1"><a href="/user">個人資料</a></li>
 
       <li class="mb-1"><a href="/orders">訂單查詢/申請退貨</a></li>
 
@@ -27,7 +27,6 @@
   z-index: 9999;
   /* 設置較大的 z-index 值 */
   border: solid 2px;
-  /* display: none; */
   position: absolute;
   right: 0;
   top: 100%;
@@ -40,7 +39,6 @@
   justify-content: center;
   padding: 0;
   margin: 0;
-
 }
 
 .userList-items li:not(:last-child) {
@@ -59,4 +57,5 @@
 .logout:hover {
   background-color: black;
   color: white;
-}</style>
+}
+</style>

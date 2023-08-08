@@ -5,9 +5,14 @@
       <ul>
         <li><a href="javascript:;">說明</a></li>
         <li><a href="javascript:;">加入</a></li>
-        <li class="p-relative">
-          <a href="javascript:;" @mouseenter="showList">登入</a>
-          <!-- <userList v-if="showList"></userList> -->
+        <li class="" v-if="!loginSuccess">
+          <a href="/login">登入</a>
+        </li>
+        <li class="p-relative userIcon" v-if="loginSuccess">
+          <a href="/orders" @mouseenter="showList"
+            ><i class="bi bi-person-circle"></i
+          ></a>
+          <userList v-if="isListVisible" @mouseleave="hideList"></userList>
         </li>
       </ul>
     </div>
@@ -61,6 +66,10 @@
         </div>
         <i class="bi bi-heart"></i>
         <i class="bi bi-bag"></i>
+        <!-- <div>
+          <h2>{{ res }}</h2>
+          <button @click="getApi">GetData</button>
+        </div> -->
       </div>
     </div>
   </nav>
@@ -70,9 +79,40 @@
 import { ref } from "vue";
 import userList from "../home/userList.vue";
 
+// import { useGetApiDataStore } from '../stores/useGetApiDataStore.js';
+// import { storeToRefs } from 'pinia';
+
+// const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+
+// const url = `${baseAddress}api/Category/Men`;
+// const getApiStore = useGetApiDataStore();
+// const { getData } = getApiStore;
+// const { res } = storeToRefs(getApiStore);
+// // 打算以按鈕觸發取得API所以把getData包在函式內，注意參數url直接帶入getData(url)就好，
+// // 如果由function getApi(url){}則會報錯，url不會真的被帶入。
+// // 原因還要再查查。
+// function getApi() {
+//   getData(url);
+// }
+
+//userlist
+const isListVisible = ref(false);
 function showList() {
-  alert("hi");
+  isListVisible.value = true;
 }
+function hideList() {
+  isListVisible.value = false;
+}
+
+//userIcon
+const loginSuccess = ref(false);
+
+//登入
+//user有值
+//loginSuccess = true;
+
+//未登入
+//loginSuccess = false;
 </script>
 
 <style lang="scss">
