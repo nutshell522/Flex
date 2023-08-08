@@ -1,10 +1,11 @@
 <template>
+  <navBar></navBar>
   <div class="container loginBox">
-    <div>
-      <h4>LOGIN</h4>
+    <div class="loginText">
+      <h4>Flex Your Journey. Join us!</h4>
     </div>
     <div class="from-group" v-if="errors.length">
-      <ul>
+      <ul class="mb-3 errsText">
         <span v-for="error in errors" class="text-danger">{{ error }}</span>
       </ul>
     </div>
@@ -19,10 +20,11 @@
       />
     </div>
     <div class="from-group mb-3" v-if="validated">
-      <label>密碼</label>
+      <label class="mb-1">密碼</label>
       <input
         type="password"
         name="password"
+        v-model="password"
         class="form-control"
         placeholder="輸入6-20碼英數字"
       />
@@ -39,7 +41,7 @@
     <div class="from-group mb-3">
       <button
         type="submit"
-        class="btn btn-danger logAndRegBtn"
+        class="btn logAndRegBtn"
         v-if="registered"
         v-show="logAndRegBtn"
         @click="ValidatedIdentity"
@@ -48,7 +50,7 @@
       </button>
       <button
         type="submit"
-        class="btn btn-danger logBtn"
+        class="btn logBtn"
         @click="Login"
         v-if="!registered"
       >
@@ -80,6 +82,7 @@
 
 <script setup>
 import axios from 'axios';
+import navBar from '@/components/home/navBar.vue';
 import { ref } from 'vue';
 
 const errors = ref([]);
@@ -96,6 +99,7 @@ const password = ref('');
 
 const baseAddress = 'https://localhost:7183';
 const uri = `${baseAddress}/api/Users/Login`;
+var loginData = {}; //儲存傳給後端的登入資料
 
 function ValidatedIdentity() {
   //alert('loginAndRegister');
@@ -105,7 +109,7 @@ function ValidatedIdentity() {
     errors.value.push('沒有填誰知道你是誰');
   } else {
     //已填寫
-    var loginData = {}; //儲存傳給後端的登入資料
+    errors.value = [];
     loginData.Account = account.value;
     //console.log(loginData.Account.value);
 
@@ -142,14 +146,39 @@ function ValidatedIdentity() {
 function Login() {
   //alert('Login');
   //todo是否與資料庫的密碼相符
+  loginData.EncryptedPassword = password.value;
+  //console.log(loginData);
+
+  //未填寫密碼
+  if (password.value === '') {
+    errors.value = [];
+    errors.value.push('密碼沒有填想怎樣');
+    return;
+  }
+
   axios
-    .post(uri, password) //todo帳號密碼都要往後端送
+    .post(uri, loginData)
     .then((res) => {
-      res.data;
-      console.log(res.data);
+      const jsonData = res.data;
+      const userPassword = jsonData.find(
+        (claim) => claim.Type === 'UserPassword'
+      );
+      //console.log(userPassword.Value);
+
+      if (userPassword.Value === password.value) {
+        //密碼正確
+        errors.value = [];
+        //errors.value.push('密碼正確');
+        //console.log(userPassword.Value);
+        const userName = jsonData.find((claim) => claim.Type === 'FullName');
+        //console.log(userName.Value);
+        //alert('登入成功啦港動~~~');
+      }
     })
     .catch((err) => {
-      err;
+      errors.value = [];
+      errors.value.push('密碼錯誤');
+      //todo錯誤累計三次
     });
 }
 
@@ -159,13 +188,44 @@ function register() {
   //todo是否與資料庫的信箱一樣，信箱已經註冊過囉
 }
 </script>
-<style>
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap');
 .loginBox {
-  border: solid;
+  width: 23%;
+  justify-content: center;
+  align-items: center;
+  padding: 45px;
+  margin-top: 80px;
 }
-
+.loginText {
+  display: flex;
+  justify-content: center;
+}
+.loginText > h4 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: bold;
+  font-size: 40px;
+}
+.errsText {
+  display: flex;
+  justify-content: center;
+  padding: 0px;
+  margin: 0px;
+}
 .logAndRegBtn {
-  width: 150px;
+  width: 100%;
+  margin: auto;
+  background-color: black;
+  color: white;
+}
+.logBtn {
+  width: 100%;
+  margin: auto;
+  background-color: black;
+  color: white;
+}
+.googleBtn {
+  width: 100%;
 }
 p {
   position: relative;
@@ -177,7 +237,7 @@ p::after {
   content: '';
   position: absolute;
   top: 50%;
-  width: 220px; /* 調整線段的長度 */
+  width: 150px; /* 調整線段的長度 */
   height: 1px; /* 調整線段的粗細 */
   background-color: black; /* 設定線段的顏色 */
 }

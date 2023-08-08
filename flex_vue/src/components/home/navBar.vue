@@ -5,9 +5,14 @@
       <ul>
         <li><a href="javascript:;">說明</a></li>
         <li><a href="javascript:;">加入</a></li>
-        <li class="p-relative">
-          <a href="javascript:;" @mouseenter="showList">登入</a>
-          <!-- <userList v-if="showList"></userList> -->
+        <li class="" v-if="!loginSuccess">
+          <a href="/login">登入</a>
+        </li>
+        <li class="p-relative userIcon" v-if="loginSuccess">
+          <a href="/orders" @mouseenter="showList"
+            ><i class="bi bi-person-circle"></i
+          ></a>
+          <userList v-if="isListVisible" @mouseleave="hideList"></userList>
         </li>
       </ul>
     </div>
@@ -70,9 +75,24 @@
 import { ref } from 'vue';
 import userList from '../home/userList.vue';
 
+//userlist
+const isListVisible = ref(false);
 function showList() {
-  alert('hi');
+  isListVisible.value = true;
 }
+function hideList() {
+  isListVisible.value = false;
+}
+
+//userIcon
+const loginSuccess = ref(false);
+
+//登入
+//user有值
+//loginSuccess = true;
+
+//未登入
+//loginSuccess = false;
 </script>
 
 <style lang="scss">
