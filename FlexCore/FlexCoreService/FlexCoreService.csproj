@@ -32,4 +32,10 @@
   <ItemGroup>
     <ProjectReference Include="..\EFModels\EFModels.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ECPay.Payment.Integration">
+      <HintPath>..\..\..\Users\ispan\Downloads\ECPayAIO_Net-master\ECPay.Payment.Integration.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
