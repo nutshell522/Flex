@@ -10,19 +10,22 @@
                 <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath" :title="cartItem.product.productName" />
               </a>
               <div class="item-info-wrapper me-auto">
-                <a href="javascript:;" class="fw-bold">{{ cartItem.product.productName }}-{{ cartItem.product.salesCategoryNameStr }}-{{ cartItem.product.color }}</a>
-                <div>尺寸 <a href="javascript:;"><span>{{ cartItem.product.size }}</span><i class="bi bi-chevron-down"></i></a></div>
+                <a href="javascript:;" class="fw-bold">{{ cartItem.product.productName }}-{{
+                  cartItem.product.salesCategoryNameStr }}-{{ cartItem.product.color }}</a>
+                <div>尺寸 <a href="javascript:;"><span>{{ cartItem.product.size }}</span><i
+                      class="bi bi-chevron-down"></i></a></div>
                 <ul class="d-flex px-0">
-                <li class="me-2" v-for="matchDiscount in cartItem.product.matchDiscounts" :key="matchDiscount.discountId">
-                  <a href="javascript:;">{{ matchDiscount.discountName }}</a>
-                </li>
-              </ul>
+                  <li class="me-2" v-for="matchDiscount in cartItem.product.matchDiscounts"
+                    :key="matchDiscount.discountId">
+                    <a href="javascript:;">{{ matchDiscount.discountName }}</a>
+                  </li>
+                </ul>
               </div>
               <div>
                 <div class="d-flex">
-                  <button><i class="bi bi-dash-lg"></i></button>
+                  <button @click="decrementCartItem(cartItem)"><i class="bi bi-dash-lg"></i></button>
                   <div>{{ cartItem.qty }}</div>
-                  <button><i class="bi bi-plus-lg"></i></button>
+                  <button @click="incrementCartItem(cartItem)"><i class="bi bi-plus-lg"></i></button>
                 </div>
               </div>
               <div class="px-4">
@@ -42,31 +45,25 @@
 </template>
     
 <script setup lang="ts">
-import ProductCard from "@/components/product/ProductCard.vue";
-import NavBar from '@/components/home/NavBar.vue';
-import HomeFooter from '@/components/home/Footer.vue';
+import NavBar from '@/components/home/navBar.vue';
+import HomeFooter from '@/components/home/footer.vue';
 import axios from "axios";
 import { onMounted, ref, computed, watchEffect, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { CartItem } from '@/types/type';
 
 // 用vite獲得環境變數
-const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
-const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
-
-const cartItems = ref([]);
+const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
+const imgBaseUrl = ref(baseAddress);
+const cartItems = ref<CartItem[]>([]);
 
 const loadCartItems = async () => {
-  const route = useRoute();
-
   let url: string;
-
   url = `${baseAddress}api/Cart`;
-  const cards = ref([]);
   await axios
-    .post(url)
+    .post<CartItem[]>(url)
     .then((response) => {
-      console.log(response.data);
       cartItems.value = response.data;
+      console.log(cartItems.value);
     })
     .catch((error) => {
       alert(error);
@@ -75,39 +72,33 @@ const loadCartItems = async () => {
 
 loadCartItems();
 
-const someData = ref<string>(""); // 使用 ref 定義響應式數據
 const computedValue = computed(() => {
   // 定義計算屬性的計算邏輯
 });
 
-watchEffect(() => {
-  // 註冊一個副作用，監聽響應式數據的變化
-});
-
-watch(someData, (newValue, oldValue) => {
-  // 監聽 someData 的變化並執行回調函式
-});
 
 // 購物車物件
 class ShoppingCartItem {
   private itemInfo: {
-    productId: number;
+    cartItemId: number;
     qty: number;
     // 可以添加其他商品信息，例如名称、价格等
-  }={ productId: 0, qty: 0 };;
+  } = { cartItemId: 0, qty: 0 };;
 
-  constructor(initialProductId: number, initialQty: number) {
-    this.itemInfo.productId = initialProductId;
+  constructor(initialCartItemId: number, initialQty: number) {
+    this.itemInfo.cartItemId = initialCartItemId;
     this.itemInfo.qty = initialQty;
   }
 
   addItem(qty: number): void {
     this.itemInfo.qty += qty;
+    alert(this.itemInfo.qty)
   }
 
   removeItem(qty: number): void {
     if (this.itemInfo.qty >= qty) {
       this.itemInfo.qty -= qty;
+      alert(this.itemInfo.qty)
     }
   }
 
@@ -115,21 +106,21 @@ class ShoppingCartItem {
     return this.itemInfo.qty;
   }
 }
-onMounted(() => {
-  const shoppingCart = new ShoppingCartItem();
-  // 執行組件掛載後的初始化程式碼
-  const incrementCartItem = (productId:number) => {
-    shoppingCart.addItem(productId);
-  };
 
-  const decrementCartItem = (productId:number) => {
-    shoppingCart.removeItem(productId);
-  };
+const incrementCartItem = (cartItem: CartItem) => {
+  const shoppingCart = new ShoppingCartItem(cartItem.cartId, cartItem.qty);
+  shoppingCart.addItem(1);
+};
 
-  const getCartItemQty = (productId:number) => {
-    return shoppingCart.getCartItemQty(productId);
-  };
-});
+const decrementCartItem = (cartItem: CartItem) => {
+  const shoppingCart = new ShoppingCartItem(cartItem.cartId, cartItem.qty);
+  shoppingCart.removeItem(1);
+};
+
+const getCartItemQty = (cartItem: CartItem) => {
+  const shoppingCart = new ShoppingCartItem(cartItem.cartId, cartItem.qty);
+  return shoppingCart.getCartItemQty();
+};
 
 </script>
     
@@ -141,9 +132,10 @@ main {
   .row {
     &>.left {
       &>.cart {
-        &>.cart-item{
+        &>.cart-item {
           display: flex;
-          .pd-img-wrapper{
+
+          .pd-img-wrapper {
             width: 150px;
             height: 150px;
             overflow: hidden;
@@ -151,7 +143,7 @@ main {
             align-items: center;
             justify-content: center;
 
-            &>img{
+            &>img {
               width: 100%;
               height: auto;
               object-fit: cover;
