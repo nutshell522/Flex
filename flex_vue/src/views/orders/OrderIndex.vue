@@ -1,16 +1,28 @@
 <template>
   <OrdernavBar></OrdernavBar>
+  <dev id="searchorderout" class="container">
+    <dev id="srarchdate" class="col-3">
+      <input type="text" v-model="begintime" @searchInputbegintime="inputbegintime" class="form-control"
+        placeholder="輸入開始日期">
+      ~
+      <input type="text" v-model="endtime" @searchInputendtime="inputendtime" class="form-control" placeholder="輸入結束日期">
+    </dev>
+    <div id="searchorder" class="col-3">
+      <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control" placeholder="輸入名稱">
+      <button class="button" @click="keywordSearch">搜尋</button>
+    </div>
+  </dev>
   <div id="cate" class="container">
-    <button @click="setKeywordValue('1')">商品</button>
+    <button @click="setTypeValue('1')">商品</button>
 
-    <button @click="setKeywordValue('4')">客製化</button>
+    <button @click="setTypeValue('4')">客製化</button>
 
-    <button @click="setKeywordValue('2')">活動</button>
+    <button @click="setTypeValue('2')">活動</button>
 
-    <button @click="setKeywordValue('3')">課程</button>
+    <button @click="setTypeValue('3')">課程</button>
   </div>
   <div class="container">
-    <table class="table table-striped table-hover" style="width: 80%">
+    <table class="table table-striped table-hover" style="width: 100%">
       <thead>
         <tr>
           <th>訂單日期</th>
@@ -42,11 +54,14 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 const GetOrders = ref([]);
+const Type = ref("");
 const keyword = ref("");
+const begintime = ref("");
+const endtime = ref("");
 
 const loadGetOrders = async () => {
   await axios
-    .get(`https://localhost:7183/api/Orders/GetOrders?typeId=${keyword.value}`)
+    .get(`https://localhost:7183/api/Orders/GetOrders?begintime=${begintime.value}&endtime=${endtime.value}&keyword=${keyword.value}&typeId=${Type.value}`)
     .then((response) => {
       //console.log(response.data);
       GetOrders.value = response.data;
@@ -64,26 +79,48 @@ const formatOrderTime = (ordertime) => {
   const minutes = dateTimeObject.getMinutes().toString().padStart(2, "0");
   return year + "-" + month + "-" + dates + " " + hours + ":" + minutes + "";
 };
-const setKeywordValue = (paramValue) => {
-  keyword.value = paramValue;
+const setTypeValue = (paramValue) => {
+  Type.value = paramValue;
   loadGetOrders();
 };
+
+const emit = defineEmits(["searchInput"])
+const inputhandler = () => {
+  emit1("searchInput", keyword.value);
+  loadGetOrders();
+};
+
+const inputbegintime = () => {
+  emit2("searchInputbegintime", begintime.value);
+  loadGetOrders();
+};
+
+const inputendtime = () => {
+  emit3("searchInputendtime", endtime.value);
+  loadGetOrders();
+};
+
+const keywordSearch = () => {
+  loadGetOrders();
+};
+
 onMounted(() => {
+  Type.value = 1;
   loadGetOrders();
 });
 </script>
 <style scoped>
-.table > thead > tr > th {
+.table>thead>tr>th {
   background-color: maroon;
   color: white;
   text-align: center;
 }
 
-.table > tbody > tr > td {
+.table>tbody>tr>td {
   text-align: center;
 }
 
-#cate > button {
+#cate>button {
   text-align: center;
   padding-right: 20px;
   margin-right: 80px;
@@ -94,5 +131,40 @@ onMounted(() => {
   background-color: antiquewhite;
   text-align: center;
   width: 60%;
+}
+
+#searchorder {
+  text-align: center;
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#searchorder>input {
+  margin: 20px;
+  padding: 10px;
+  width: 300px;
+}
+
+#searchorder>button {
+  margin: 20px;
+  padding: 10px;
+  width: 60px;
+  position: relative;
+}
+
+#srarchdate {
+  text-align: center;
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#srarchdate>input {
+  margin: 20px;
+  padding: 10px;
+  width: 300px;
 }
 </style>
