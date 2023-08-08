@@ -49,7 +49,8 @@
           </tr>
           <tr>
             <td colspan="7">
-              <table class="nested-table" v-show="expandedItems.includes(item.id)">
+              <table class="table table-striped table-hover" style=" text-align: left;"
+                v-show="expandedItems.includes(item.id)">
                 <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
                   <td>商品名稱：{{ orderItem.product_name }}</td>
                   <td>數量：{{ orderItem.quantity }}</td>
