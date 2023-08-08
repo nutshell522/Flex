@@ -85,13 +85,11 @@ namespace FlexCoreService.Controllers
 
         //GET: api/Products/Detial/productId
        [HttpGet("Detail/{productId}")]
-        public async Task<ActionResult<Product>> GetProductDetail(string productId)
+        public async Task<ActionResult<ProductDetailVM>> GetProductDetail(string productId)
         {
-            if (_db.Products == null)
-            {
-                return NotFound();
-            }
-            var products = await _db.Products.FirstOrDefaultAsync(p=>p.ProductId== productId);
+            var service = new ProductService(_repo);
+
+            var products = service.GetProductDetail(productId).ToDetailVM();
 
             if (products == null)
             {

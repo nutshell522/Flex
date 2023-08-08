@@ -1,9 +1,12 @@
 <template>
   <div class="img">
-    <!-- <router-link to="/detail/123"> -->
-    <img :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath" class="card-img-top mx-auto d-block"
-      :title="card.productName" />
-    <!-- </router-link> -->
+    <router-link :to="'men/detail/' + card.productId">
+      <img
+        :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath"
+        class="card-img-top mx-auto d-block"
+        :title="card.productName"
+      />
+    </router-link>
   </div>
   <div class="card-body">
     <div class="card-title">{{ card.productName }}</div>

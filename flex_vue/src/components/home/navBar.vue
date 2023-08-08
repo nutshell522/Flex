@@ -67,11 +67,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import userList from '../home/userList.vue';
+import { ref } from "vue";
+import userList from "../home/userList.vue";
 
 function showList() {
-  alert('hi');
+  alert("hi");
 }
 </script>
 
@@ -145,7 +145,7 @@ header {
         }
 
         &:not(:first-child)::before {
-          content: '|';
+          content: "|";
           padding: 0 15px;
           font-size: 14px;
         }

@@ -4,6 +4,7 @@ import User from "../views/user/User.vue";
 import Login from "../views/user/Login.vue";
 import ActivityInfo from "../views/activity/ActivityInfo.vue";
 import ActivitySignUp from "../views/activity/ActivitySignUp.vue";
+import { useRouter, useRoute } from "vue-router";
 const webTitle = "FLEX - ";
 
 // 路由設定
@@ -45,6 +46,11 @@ const routes = [
     meta: { title: `${webTitle}活動報名` },
   },
   {
+    //http://loaclhost/Login
+    path: "/login",
+    component: Login,
+  },
+  {
     //http://loaclhost/Men
     path: "/men",
     component: () => import("../views/product/ProductMenLayout.vue"),
@@ -52,25 +58,31 @@ const routes = [
       {
         path: "",
         component: () => import("../views/product/ProductMen.vue"),
+        meta: { title: `${webTitle}男裝` },
       },
       {
         path: ":categoryName",
         component: () => import("../views/product/ProductMen.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}男裝/${to.params.categoryName}`;
+          next();
+        },
       },
       {
         path: ":categoryName/:subCategoryName",
         component: () => import("../views/product/ProductMen.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}男裝/${to.params.categoryName}/${to.params.subCategoryName}`;
+          next();
+        },
       },
       {
         // 當 /ProductMenLayout/:id/posts 匹配成功
         // Detial.vue 將被渲染到 ProductMenLayout 的 <router-view> 内部，替換card.vue
         path: "detail/:prdouctId",
         component: () => import("../views/product/ProductDetail.vue"),
-      },
-      {
-        //http://loaclhost/Login
-        path: "/login",
-        component: Login,
       },
     ],
   },
