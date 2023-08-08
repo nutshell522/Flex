@@ -8,5 +8,6 @@
 		public int Qty { get; set; }
 		public CartItemProductVM Product { get; set; }
 		public int SubTotal => Product.SalesPrice * Qty;
-	}
+		public int? UnitSubTotal => Product.UnitPrice * Qty;
+    }
 }
