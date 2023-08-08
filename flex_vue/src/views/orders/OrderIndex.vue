@@ -25,6 +25,7 @@
     <table class="table table-striped table-hover" style="width: 100%">
       <thead>
         <tr>
+          <th></th>
           <th>訂單日期</th>
           <th>訂單編號</th>
           <th>總數量</th>
@@ -35,15 +36,30 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in GetOrders" :key="item.id">
-          <td>{{ formatOrderTime(item.ordertime) }}</td>
-          <td>{{ item.id }}</td>
-          <td>{{ item.total_quantity }}</td>
-          <td>{{ item.total_price }}</td>
-          <td>{{ item.pay_method }}</td>
-          <td>{{ item.receipt }}</td>
-          <td>{{ item.order_status }}</td>
-        </tr>
+        <template v-for="item in GetOrders" :key="item.id">
+          <tr>
+            <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
+            <td>{{ formatOrderTime(item.ordertime) }}</td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.total_quantity }}</td>
+            <td>{{ item.total_price }}</td>
+            <td>{{ item.pay_method }}</td>
+            <td>{{ item.receipt }}</td>
+            <td>{{ item.order_status }}</td>
+          </tr>
+          <tr>
+            <td colspan="7">
+              <table class="nested-table" v-show="expandedItems.includes(item.id)">
+                <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+                  <td>商品名稱：{{ orderItem.product_name }}</td>
+                  <td>數量：{{ orderItem.quantity }}</td>
+                  <td>價格：{{ orderItem.per_price }}</td>
+                  <td>規格：{{ orderItem.items_description }}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </template>
       </tbody>
     </table>
   </div>
@@ -58,6 +74,7 @@ const Type = ref("");
 const keyword = ref("");
 const begintime = ref("");
 const endtime = ref("");
+const expandedItems = ref([]);
 
 const loadGetOrders = async () => {
   await axios
@@ -103,6 +120,16 @@ const inputendtime = () => {
 const keywordSearch = () => {
   loadGetOrders();
 };
+
+const toggleDetails = (itemId) => {
+  if (expandedItems.value.includes(itemId)) {
+    const index = expandedItems.value.indexOf(itemId);
+    expandedItems.value.splice(index, 1);
+  } else {
+    expandedItems.value.push(itemId);
+  }
+}
+
 
 onMounted(() => {
   Type.value = 1;
