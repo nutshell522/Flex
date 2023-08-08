@@ -171,7 +171,7 @@ function Login() {
         //errors.value.push('密碼正確');
         //console.log(userPassword.Value);
         const userName = jsonData.find((claim) => claim.Type === 'FullName');
-        //console.log(userName.Value);
+        console.log(userName.Value);
         //alert('登入成功啦港動~~~');
       }
     })

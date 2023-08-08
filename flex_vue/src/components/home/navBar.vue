@@ -66,6 +66,10 @@
         </div>
         <i class="bi bi-heart"></i>
         <i class="bi bi-bag"></i>
+        <!-- <div>
+          <h2>{{ res }}</h2>
+          <button @click="getApi">GetData</button>
+        </div> -->
       </div>
     </div>
   </nav>
@@ -74,6 +78,22 @@
 <script setup>
 import { ref } from 'vue';
 import userList from '../home/userList.vue';
+
+// import { useGetApiDataStore } from '../stores/useGetApiDataStore.js';
+// import { storeToRefs } from 'pinia';
+
+// const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+
+// const url = `${baseAddress}api/Category/Men`;
+// const getApiStore = useGetApiDataStore();
+// const { getData } = getApiStore;
+// const { res } = storeToRefs(getApiStore);
+// // 打算以按鈕觸發取得API所以把getData包在函式內，注意參數url直接帶入getData(url)就好，
+// // 如果由function getApi(url){}則會報錯，url不會真的被帶入。
+// // 原因還要再查查。
+// function getApi() {
+//   getData(url);
+// }
 
 //userlist
 const isListVisible = ref(false);
