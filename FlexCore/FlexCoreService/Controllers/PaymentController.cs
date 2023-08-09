@@ -43,16 +43,16 @@ namespace FlexCoreService.Controllers
 
         }
 
+
+
         //[HttpPost("addOrder")]
-        //public string AddOrders(OrderResultDTO order)
+        //public string AddOrders(FormCollection order)
         //{
-           
-
+        //    EcpayOrderDTO dto = new EcpayOrderDTO
+        //    {
+        //        dto.MemberID = order["MemberID"],
+        //        dto.MerchantTradeNo = order.MerchantTradeNo;
         //}
-
-
-
-
 
 
         private string GetCheckMacValue(Dictionary<string, string> order)
@@ -81,5 +81,11 @@ namespace FlexCoreService.Controllers
             }
             return result.ToString();
         }
+
+
+
+
+
+
     }
 }
