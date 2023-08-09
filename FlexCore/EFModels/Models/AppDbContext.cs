@@ -1213,10 +1213,6 @@ namespace EFModels.Models
 
                 entity.Property(e => e.product_name).HasMaxLength(50);
 
-                entity.HasOne(d => d.fk_type)
-                    .WithMany(p => p.orderItems)
-                    .HasForeignKey(d => d.fk_typeId)
-                    .HasConstraintName("FK_orderItems_Type");
 
                 entity.HasOne(d => d.order)
                     .WithMany(p => p.orderItems)
