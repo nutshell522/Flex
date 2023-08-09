@@ -15,11 +15,28 @@
 
       <li class="mb-3"><a href="javascript:;">購物車</a></li>
     </ul>
-    <button class="logout" type="submit">登出</button>
+    <button class="logout" type="submit" @click="logout">登出</button>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { storeToRefs } from 'pinia';
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+const getApiStore = useGetApiDataStore();
+const { handleLogout } = getApiStore; //function透過store取資料
+const { memberData } = storeToRefs(getApiStore); //定義好的資料都是透過storeToRefs取資料
+
+function logout() {
+  // 登入狀態
+  console.log(memberData.value);
+  localStorage.removeItem('loggedInUser');
+  //todo呼叫登出後端Logout()
+
+  //呼叫 Pinia 的登出函數
+  handleLogout();
+  window.location.href = '/';
+}
+</script>
 
 <style>
 .list {

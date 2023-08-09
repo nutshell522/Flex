@@ -86,7 +86,6 @@ namespace FlexCoreService
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
 
 
             app.MapControllers();

@@ -4,7 +4,6 @@
       <div class="me-auto"></div>
       <ul>
         <li><a href="javascript:;">說明</a></li>
-        <li><a href="javascript:;">加入</a></li>
         <li class="" v-if="!loginSuccess">
           <a href="/login">登入</a>
         </li>
@@ -67,26 +66,25 @@
         <i class="bi bi-heart"></i>
         <i class="bi bi-bag"></i>
         <pre>
-          <h2>{{ list }}</h2>
+          <p>{{ memberData.username }}</p>
         </pre>
-        <button @click="getApi">GetData</button>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import userList from '../home/userList.vue';
 
 import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 const getApiStore = useGetApiDataStore();
-const { list } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
+const { memberData } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
 
 const { getData } = getApiStore;
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
-const url = `${baseAddress}api/Products/Men`;
+const url = `${baseAddress}api/Users/Login`;
 function getApi() {
   getData(url);
 }
@@ -104,10 +102,15 @@ const loginSuccess = ref(false);
 
 //登入
 //user有值
-//loginSuccess = true;
-
-//未登入
-//loginSuccess = false;
+watch(memberData, (newValue) => {
+  if (newValue.value != null) {
+    //console.log(memberData.value);
+    loginSuccess.value = false;
+  } else {
+    //未登入
+    loginSuccess.value = true;
+  }
+});
 </script>
 
 <style lang="scss">
