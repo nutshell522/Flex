@@ -2,34 +2,22 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
 
+//第一個參數getApiData指的是整個store的id
+//官方建議pinia function 為use開頭
 export const useGetApiDataStore = defineStore('getApiData', () => {
-  const res = ref([]);
+  const list = ref([]);
   // 把axios修改為async await函式
-  async function getData(url) {
+  const getData = async () => {
     try {
-      const data = await axios.get(url);
-      res.value = data.data;
+      const res = await axios.get('https://localhost:7183/api/Products/Men');
+      console.log(res);
+      list.value = res.data;
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return {
-    res,
+    list, //為了讓外界使用到所以放在return
     getData,
   };
 });
-
-// export const useGetApiDataStore = defineStore({
-//   id: 'counter',
-//   state: () => ({
-//     counter: 0,
-//   }),
-//   getters: {
-//     doubleCount: (state) => state.counter * 2,
-//   },
-//   actions: {
-//     increment() {
-//       this.counter++;
-//     },
-//   },
-// });

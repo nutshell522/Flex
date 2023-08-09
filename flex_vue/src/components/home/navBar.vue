@@ -66,35 +66,30 @@
         </div>
         <i class="bi bi-heart"></i>
         <i class="bi bi-bag"></i>
-        <!-- <div>
-          <h2>{{ res }}</h2>
-          <button @click="getApi">GetData</button>
-        </div> -->
+        <pre>
+          <h2>{{ list }}</h2>
+        </pre>
+        <button @click="getApi">GetData</button>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import userList from "../home/userList.vue";
+import { ref } from 'vue';
+import userList from '../home/userList.vue';
 
-// import { useGetApiDataStore } from '../stores/useGetApiDataStore.js';
-// import { storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+const getApiStore = useGetApiDataStore();
+const { list } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
 
-// const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
-
-// const url = `${baseAddress}api/Category/Men`;
-// const getApiStore = useGetApiDataStore();
-// const { getData } = getApiStore;
-// const { res } = storeToRefs(getApiStore);
-// // 打算以按鈕觸發取得API所以把getData包在函式內，注意參數url直接帶入getData(url)就好，
-// // 如果由function getApi(url){}則會報錯，url不會真的被帶入。
-// // 原因還要再查查。
-// function getApi() {
-//   getData(url);
-// }
-
+const { getData } = getApiStore;
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const url = `${baseAddress}api/Products/Men`;
+function getApi() {
+  getData(url);
+}
 //userlist
 const isListVisible = ref(false);
 function showList() {
@@ -185,7 +180,7 @@ header {
         }
 
         &:not(:first-child)::before {
-          content: "|";
+          content: '|';
           padding: 0 15px;
           font-size: 14px;
         }
