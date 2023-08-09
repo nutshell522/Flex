@@ -15,8 +15,8 @@ namespace FlexCoreService.Controllers
 	[EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ShoesCategoryController : Controller
-	{
+	public class ShoesCategoryController : ControllerBase
+    {
 		private IShoesCategoryRepository _repo;
 		private AppDbContext _db;
 		public ShoesCategoryController(AppDbContext db, IShoesCategoryRepository repo)
