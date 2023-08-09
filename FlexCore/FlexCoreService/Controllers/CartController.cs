@@ -38,17 +38,17 @@ namespace FlexCoreService.Controllers
             return Ok(cartItems);
         }
         // PUT: api/Cart/updateItem
-        [HttpPut("updateItem")]
-        public async Task<ActionResult<Result>> updateItem(string? categoryName = null, string? subCategoryName = null)
-        {
-            int salesId = 1;
-            var server = new ProductService(_repo);
-            var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
-            if (products.Count == 0)
-            {
-                return NotFound();
-            }
-            return products;
-        }
+        //[HttpPut("updateItem")]
+        //public async Task<ActionResult<Result>> updateItem(string? categoryName = null, string? subCategoryName = null)
+        //{
+        //    int salesId = 1;
+        //    var server = new ProductService(_repo);
+        //    var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
+        //    if (products.Count == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return products;
+        //}
     }
 }
