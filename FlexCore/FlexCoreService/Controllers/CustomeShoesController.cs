@@ -17,11 +17,13 @@ namespace FlexCoreService.Controllers
 	{
 		private readonly AppDbContext _db;
 		private ICustomeShoesRepository _repo;
-		public CustomeShoesController(AppDbContext context, ICustomeShoesRepository repo)
+        private ICustomerChooseRepository _chooserepo;
+        public CustomeShoesController(AppDbContext context, ICustomeShoesRepository repo, ICustomerChooseRepository chooserepo)
 		{
 			_db = context;
 			_repo = repo;
-		}
+            _chooserepo = chooserepo;
+        }
 
 		// POST: api/CustomizedShoesPo/
 		[HttpGet("GetAll")]
@@ -47,23 +49,29 @@ namespace FlexCoreService.Controllers
 			return await _db.CustomizedShoesPos.ToListAsync();
 		}
 
-		// GET: api/CustomizedShoesPo/5
-		[HttpGet("{id}")]
-		public async Task<ActionResult<CustomizedShoesPo>> GetShoes(int id)
-		{
-			if (_db.CustomizedShoesPos == null)
-			{
-				return NotFound();
-			}
-			var shoes = await _db.CustomizedShoesPos.FindAsync(id);
+        // GET: api/CustomizedShoesPo/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CustomeShoesVM>> GetShoes(int id)
+        {
+            var server = new CustomeShoesService(_repo);
 
-			if (shoes == null)
-			{
-				return NotFound();
-			}
+            var shoes = server.SearchOneCustomeShoes(id);
 
-			return shoes;
-		}
+            var chooseserver = new ShoesChoosesService(_chooserepo);
+
+            var chooses = chooseserver.GetOptions().ToList();
+            var chooses2 = chooseserver.GetColor().ToList();
+            var chooses3 = chooseserver.GetMaterial().ToList();
+
+            var vm = shoes.ToAllVM(chooses, chooses2, chooses3);
+
+            if (vm == null)
+            {
+                return NotFound();
+            }
+
+            return vm;
+        }
 
         [HttpGet("Detail/{ShoesProductId}")]
         public async Task<ActionResult<CustomizedShoesPo>> GetShoesDetail(int shoesId)

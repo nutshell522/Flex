@@ -11,5 +11,6 @@
 		public int? ShoesUnitPrice { get; set; }
 
 		public string? FirstImgPath { get; set; }
+
 	}
 }
