@@ -205,7 +205,9 @@
       </thead>
       <tbody>
         <template v-for="item in GetOrders" :key="item.id">
+
           <tr>
+
             <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
             <td>{{ formatOrderTime(item.ordertime) }}</td>
             <td>{{ item.id }}</td>
@@ -219,6 +221,14 @@
             <td colspan="8">
               <table class="table " style=" text-align: left;border:2px solid black;"
                 v-show="expandedItems.includes(item.id)">
+                <tr>
+                  <td colspan="4" style="text-align: right;">
+                    <div style="text-align: right;">
+                      <button class="btn btn-primary" style="margin-right: 30px;">取消</button>
+                      <button class="btn btn-primary">退貨</button>
+                    </div>
+                  </td>
+                </tr>
                 <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
                   <td>商品名稱：{{ orderItem.product_name }}</td>
                   <td>數量：{{ orderItem.quantity }}</td>

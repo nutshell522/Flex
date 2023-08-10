@@ -96,7 +96,31 @@ namespace FlexCoreService.Controllers
 
 				return orderItems;
 			}
+		[HttpPut("id")]
+		public async Task<string> CancelOrders(int id)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(id);
+			
+			
+				if (emp.order_status_Id == 1)
+				{
+				emp.order_status_Id = 7;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+					return "已取消訂單";
+				}
+			else
+			{
+				return "訂單已寄出，無法取消";
 
+			}
+		}
+	
 		}
 	
 }
