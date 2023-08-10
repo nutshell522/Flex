@@ -30,12 +30,10 @@ function logout() {
   // 登入狀態
   console.log(memberData.value);
   localStorage.removeItem('loggedInUser');
-  //todo呼叫登出後端Logout()
 
   //呼叫 Pinia 的登出函數
   handleLogout();
-
-  window.location.href = '/';
+  router.push({ path: '/' });
 }
 </script>
 

@@ -8,12 +8,20 @@ import Cookies from 'js-cookie';
 export const useGetApiDataStore = defineStore('getApiData', {
   state: () => {
     return {
+      loginSuccess: ref(false),
       memberData: ref({}),
+      memberId: ref(null),
     };
   },
   actions: {
+    setLoginSuccess(value) {
+      this.loginSuccess = value;
+      //這邊還沒有存成功我的大頭照
+      //console.log(this.loginSuccess);
+    },
     handleLogout() {
       this.memberData.value = {};
+      this.memberId = null;
       Cookies.remove('user_cookie');
 
       const baseAddress = 'https://localhost:7183';
@@ -27,13 +35,10 @@ export const useGetApiDataStore = defineStore('getApiData', {
           console.error(err);
         });
     },
-    setMemberUsername(username) {
+    setMemberUsername(username, memberId) {
+      //組長還要一個memberId
       this.memberData.username = username;
-      this.checkUserCookie(); // 在设置 username 后调用检查函数
-    },
-    checkUserCookie() {
-      const username = Cookies.get('user_cookie');
-      this.memberData.loginSuccess = username;
+      this.memberId = memberId;
     },
   },
 });
