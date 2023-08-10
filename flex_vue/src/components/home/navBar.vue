@@ -76,6 +76,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import userList from '../home/userList.vue';
+import Cookies from 'js-cookie';
 
 import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';

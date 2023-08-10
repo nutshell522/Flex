@@ -207,7 +207,7 @@ function Login() {
         handleSuccessfulLogin({
           username: userName.Value, // 假設用戶名稱在這裡
         });
-        //router.push({ path: '/' });
+        router.push({ path: '/' });
       }
     })
     .catch((err) => {
