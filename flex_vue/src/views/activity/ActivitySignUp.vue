@@ -105,6 +105,8 @@ import{ref, reactive, onMounted} from 'vue';
 const memberId = ref("23"); 
 const activityId = ref("3"); 
 
+console.log(localhost);
+
 const member = reactive({
     name:"",
     gender:"",
@@ -143,8 +145,9 @@ onMounted(()=>{
             
         }
     });
-
 })
+
+
 
 const payInfo = reactive({
     MerchantID:"",
@@ -157,9 +160,10 @@ const payInfo = reactive({
     ReturnURL:"",
     ChoosePayment:"",
     EncryptType:"",
-    ClientBackURL:"",
-    CheckMacValue:""
+    CheckMacValue:"",
+    ClientBackURL:""
 })
+console.log(payInfo.ClientBackURL);
 
 axios.get("https://localhost:7183/api/Payment")
     .then(res=>{
@@ -178,8 +182,7 @@ axios.get("https://localhost:7183/api/Payment")
         payInfo.ItemName = payresult.ItemName;
         payInfo.ReturnURL = payresult.ReturnURL;
         payInfo.ChoosePayment = payresult.ChoosePayment;
-        payInfo.EncryptType = payresult.EncryptType;
-        payInfo.ClientBackURL = payresult.ClientBackURL;
+        payInfo.EncryptType = payresult.EncryptType;   
         payInfo.CheckMacValue = payresult.CheckMacValue;
     })
     .catch(err=>{
@@ -203,8 +206,12 @@ axios.get("https://localhost:7183/api/Payment")
             ActivityId:activityId.value 
         };
         console.log(formData);
-       axios.post().then().catch(err=>{
-        console.log(err);
+        axios.post("https://localhost:7183/api/Payment/addOrder", formData)
+            .then(res=>{
+                console.log(res.data);
+            })
+            .catch(err=>{
+                console.log(err);
        })
     };
     
