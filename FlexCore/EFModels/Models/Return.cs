@@ -13,8 +13,7 @@ namespace EFModels.Models
         public int? 退貨轉帳帳號 { get; set; }
         public bool? 退款狀態 { get; set; }
         public int? 退貨理由 { get; set; }
-
-        public virtual order fk訂單Navigation { get; set; }
+		public virtual order fk訂單Navigation { get; set; }
         public virtual ReturnReson 退貨理由Navigation { get; set; }
     }
 }
