@@ -14,13 +14,13 @@
     </div>
   </dev>
   <div id="cate" class="container">
-    <button @click="setTypeValue('1')">商品</button>
+    <button @click="setTypeValue('1'); setostatusValue('')">商品</button>
 
-    <button @click="setTypeValue('4')">客製化</button>
+    <button @click="setTypeValue('4'); setostatusValue('')">客製化</button>
 
-    <button @click="setTypeValue('2')">活動</button>
+    <button @click="setTypeValue('2'); setostatusValue('1')">活動</button>
 
-    <button @click="setTypeValue('3')">課程</button>
+    <button @click="setTypeValue('3'); setostatusValue('1')">課程</button>
   </div>
   <div class="container" v-if="Type == 1">
     <table class="table" style="width: 100%;">
@@ -109,6 +109,13 @@
   </div>
   <div class="container" v-if="Type == 2">
     <table class="table" style="width: 100%;">
+      <div id="cateorder" class="container">
+        <button @click="setostatusValue('1')">即將開始</button>
+
+        <button @click="setostatusValue('7')">已取消</button>
+
+        <button @click="setostatusValue('6')">已結束</button>
+      </div>
       <thead>
         <h3>我報名的活動</h3>
       </thead>
@@ -137,8 +144,8 @@
                           <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
                           <div>訂單編號:{{ item.id }}</div>
                           <div>發票編號{{ item.receipt }}</div>
-                          <button v-if="item.order_status_Id !== 7" @click="setcancelIdValue(item.id)"
-                            class="btn btn-success">取消</button>
+                          <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
+                            @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
                         </td>
                       </tr>
                     </table>
@@ -154,6 +161,13 @@
   </div>
   <div class="container" v-if="Type == 3">
     <table class="table" style="width: 100%;">
+      <div id="cateorder" class="container">
+        <button @click="setostatusValue('1')">即將開始</button>
+
+        <button @click="setostatusValue('7')">已取消</button>
+
+        <button @click="setostatusValue('6')">已結束</button>
+      </div>
       <thead>
         <h3>我報名的課程</h3>
       </thead>
@@ -180,8 +194,8 @@
                           <h3>訂單詳請</h3>
                           <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
                           <div>訂單編號:{{ item.id }}</div>
-                          <button v-if="item.order_status_Id !== 7" @click="setcancelIdValue(item.id)"
-                            class="btn btn-success">取消</button>
+                          <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
+                            @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
                         </td>
                       </tr>
                     </table>
@@ -297,10 +311,11 @@ const endtime = ref("");
 const expandedItems = ref([]);
 const cancelId = ref("");
 const retrunId = ref("");
+const ostatus = ref("");
 
 const loadGetOrders = async () => {
   await axios
-    .get(`https://localhost:7183/api/Orders/GetOrders?begintime=${begintime.value}&endtime=${endtime.value}&keyword=${keyword.value}&typeId=${Type.value}`)
+    .get(`https://localhost:7183/api/Orders/GetOrders?begintime=${begintime.value}&endtime=${endtime.value}&keyword=${keyword.value}&typeId=${Type.value}&ostatusId=${ostatus.value}`)
     .then((response) => {
       //console.log(response.data);
       GetOrders.value = response.data;
@@ -352,6 +367,10 @@ const formatOrderTime = (ordertime) => {
 };
 const setTypeValue = (paramValue) => {
   Type.value = paramValue;
+  loadGetOrders();
+};
+const setostatusValue = (paramValue) => {
+  ostatus.value = paramValue;
   loadGetOrders();
 };
 
@@ -421,6 +440,19 @@ onMounted(() => {
   width: 60%;
 }
 
+#cateorder {
+  background-color: antiquewhite;
+  text-align: center;
+  width: 60%;
+}
+
+#cateorder>button {
+  text-align: center;
+  padding-right: 20px;
+  margin-right: 80px;
+  font-size: 30px;
+}
+
 #searchorder {
   text-align: center;
   width: 60%;
@@ -454,4 +486,5 @@ onMounted(() => {
   margin: 20px;
   padding: 10px;
   width: 300px;
-}</style>
+}
+</style>

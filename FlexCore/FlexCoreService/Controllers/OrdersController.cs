@@ -19,7 +19,7 @@ namespace FlexCoreService.Controllers
 				_context = context;
 			}
 			[HttpGet("GetOrders")]
-			public async Task<IEnumerable<OrdersIndexVM>> GetOrders(string? keyword, int? typeId, DateTime? begintime,DateTime? endtime)
+			public async Task<IEnumerable<OrdersIndexVM>> GetOrders(string? keyword, int? typeId, DateTime? begintime,DateTime? endtime, int?ostatusId)
 			{
 				var db = _context;
 			if (_context.orders == null)
@@ -32,6 +32,11 @@ namespace FlexCoreService.Controllers
 				var query = typeId.HasValue
 				? _context.orders.Where(o => o.fk_typeId == typeId)
 				: _context.orders;
+			if (ostatusId.HasValue)
+			{
+				query = query.Where(o => o.order_status_Id == ostatusId
+				);
+			}
 			if (!string.IsNullOrEmpty(keyword))
 			{
 				query = query.Where(o =>
