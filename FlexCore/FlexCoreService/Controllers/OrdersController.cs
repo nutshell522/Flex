@@ -161,7 +161,7 @@ namespace FlexCoreService.Controllers
 				fk訂單 = orderid,
 				退貨轉帳帳號 = reDTO.退貨轉帳帳號,
 				退款狀態 = reDTO.退款狀態,
-				退貨理由 = reDTO.退貨理由代號,
+				退貨理由 = reDTO.退貨理由,
 			};
 			_context.Returns.Add(re);
 			await _context.SaveChangesAsync();
