@@ -100,11 +100,10 @@ function hideList() {
 //userIcon
 const loginSuccess = ref(false);
 
-//登入
-//user有值
-watch(memberData, (newValue) => {
+watch(getApiStore.memberData, (newValue) => {
+  //登入
   if (newValue.value != null) {
-    //console.log(memberData.value);
+    //console.log('Watch callback called.');
     loginSuccess.value = false;
   } else {
     //未登入

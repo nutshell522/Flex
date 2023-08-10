@@ -73,7 +73,7 @@ namespace FlexCoreService.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost("Login")]
-        public async Task<string> Login([FromBody] LoginDto value)
+        public async Task<IActionResult> Login([FromBody] LoginDto value)
         {
             var userData = (from m in _db.Members
                             where m.Account == value.Account
@@ -85,7 +85,7 @@ namespace FlexCoreService.Controllers
             if (userData == null)
             {
                 //欄位或帳號驗證失敗
-                return "帳號錯誤";
+                return Ok("帳號錯誤");
             }
             else
             {                
@@ -114,9 +114,9 @@ namespace FlexCoreService.Controllers
                     //控制登入狀態
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                     
-                    return JsonConvert.SerializeObject(claims);
+                    return Ok(JsonConvert.SerializeObject(claims));
                 }               
-                return userData.Account;
+                return Ok(userData.Account);
             }
         }
 
@@ -132,8 +132,7 @@ namespace FlexCoreService.Controllers
         /// <summary>
         /// 登出
         /// </summary>
-        [HttpDelete]
-        [AllowAnonymous]//不需要身分驗證
+        [HttpDelete("Logout")]
         public string Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

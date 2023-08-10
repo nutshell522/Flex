@@ -88,6 +88,9 @@ import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+
+axios.defaults.withCredentials = true;
+
 const getApiStore = useGetApiDataStore();
 const { setMemberUsername } = getApiStore;
 const router = useRouter();
@@ -119,7 +122,7 @@ const unRegistered = ref(false);
 const account = ref('');
 const password = ref('');
 
-const baseAddress = 'http://localhost:5142';
+const baseAddress = 'https://localhost:7183';
 const uri = `${baseAddress}/api/Users/Login`;
 var loginData = {}; //儲存傳給後端的登入資料
 
@@ -193,17 +196,18 @@ function Login() {
         //errors.value.push('密碼正確');
         //console.log(userPassword.Value);
         const userName = jsonData.find((claim) => claim.Type === 'FullName');
-        console.log(userName.Value);
+        console.log('userName' + userName.Value);
 
         if (userName) {
           setMemberUsername(userName.Value);
+          //this~~~~
+          console.log('setMemberUsername' + userName.Value);
         }
         //alert('登入成功啦港動~~~');
         handleSuccessfulLogin({
           username: userName.Value, // 假設用戶名稱在這裡
         });
-
-        router.push({ path: '/' });
+        //router.push({ path: '/' });
       }
     })
     .catch((err) => {

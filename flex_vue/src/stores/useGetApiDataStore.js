@@ -7,30 +7,26 @@ import axios from 'axios';
 export const useGetApiDataStore = defineStore('getApiData', {
   state: () => {
     return {
-      memberData: {},
+      memberData: ref({}),
     };
   },
   actions: {
     handleLogout() {
-      this.memberData = {};
+      this.memberData.value = {};
+
+      const baseAddress = 'https://localhost:7183';
+      const uri = `${baseAddress}/api/Users/Logout`;
+      axios
+        .delete(uri)
+        .then((res) => {
+          console.log('delet API');
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
     setMemberUsername(username) {
       this.memberData.username = username;
     },
   },
 });
-
-// export const useGetApiDataStore = defineStore('getApiData', () => {
-//   const memberData = ref('');
-//   state: () => {};
-
-//   const handleLogout = () => {
-//     memberData.value = '';
-//   };
-
-//   return {
-//     memberData, //為了讓外界使用到所以放在return
-//     setMemberUsername,
-//     handleLogout,
-//   };
-// });

@@ -34,6 +34,7 @@ function logout() {
 
   //呼叫 Pinia 的登出函數
   handleLogout();
+
   window.location.href = '/';
 }
 </script>
