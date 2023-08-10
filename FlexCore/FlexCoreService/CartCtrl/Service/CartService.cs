@@ -48,5 +48,10 @@ namespace FlexCoreService.CartCtrl.Service
 			_repo.UpdateCartItemQty(dto);
 			return Result.Success();
 		}
+
+		public IEnumerable<ProductDiscountDto> GetActiveDiscounts()
+		{
+			return _repo.GetActiveDiscounts();
+		}
 	}
 }
