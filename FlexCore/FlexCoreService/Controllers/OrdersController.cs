@@ -125,34 +125,34 @@ namespace FlexCoreService.Controllers
 
 			}
 		}
-		[HttpPut("return")]
-		public async Task<string> ReturnOrders(int id)
-		{
-			var db = _context;
-			if (_context.orders == null)
-			{
-				return null;
-			}
-			order emp = await _context.orders.FindAsync(id);
+		//[HttpPut("return")]
+		//public async Task<string> ReturnOrders(int id)
+		//{
+		//	var db = _context;
+		//	if (_context.orders == null)
+		//	{
+		//		return null;
+		//	}
+		//	order emp = await _context.orders.FindAsync(id);
 
 
-			if (emp.order_status_Id == 6)
-			{
-				emp.order_status_Id = 9;
-				_context.Entry(emp).State = EntityState.Modified;
-				await _context.SaveChangesAsync();
-				await Return(new ReturnVM
-				{
-					退貨日期 = DateTime.Now,
-				}, id);
-				return "已申請退貨";
-			}
-			else
-			{
-				return "訂單尚未領取";
+		//	if (emp.order_status_Id == 6)
+		//	{
+		//		emp.order_status_Id = 9;
+		//		_context.Entry(emp).State = EntityState.Modified;
+		//		await _context.SaveChangesAsync();
+		//		await Return(new ReturnVM
+		//		{
+		//			退貨日期 = DateTime.Now,
+		//		}, id);
+		//		return "已申請退貨";
+		//	}
+		//	else
+		//	{
+		//		return "訂單尚未領取";
 
-			}
-		}
+		//	}
+		//}
 		//[HttpPost("NewReturn")]
 		//public async Task<string> Return(ReturnVM reDTO, int orderid)
 		//{
