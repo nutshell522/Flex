@@ -24,26 +24,27 @@ namespace FlexCoreService.CartCtrl.Service
 			// 驗證購物車
 			if (!_repo.ExistsCart(memberId)) _repo.CreateCart(memberId);
 			dto.CartId = _repo.GetCartId(memberId);
-			
-			// 若商品數量小於等於0 刪除購物車項目
-			if (dto.Qty <= 0)
+            // 驗證商品是否已存在購物車中
+            var existResult = _repo.ExistsCartItem(memberId, dto.ProductId.Value);
+
+            // 如有，更新購物車項目
+            dto.CartItemId = existResult.CartItemId;
+
+            // 若商品數量小於等於0 刪除購物車項目
+            if (dto.Qty <= 0)
 			{
 				_repo.DeleteCartItem(dto);
 				return Result.Success();
 			}
 
-			// 驗證商品是否已存在購物車中
-			var existResult = _repo.ExistsCartItem(memberId, dto.ProductId.Value);
+            // 如沒有，創建購物車項目
+            if (!existResult.DoesExist)
+            {
+                _repo.CreateCartItem(dto);
+                return Result.Success();
+            }
 
-			// 如沒有，創建購物車項目
-			if (!existResult.DoesExist) 
-			{ 
-				_repo.CreateCartItem(dto);
-				return Result.Success();
-			}
-
-			// 如有，更新購物車項目
-			dto.CartItemId = existResult.CartItemId;
+            
 			_repo.UpdateCartItemQty(dto);
 			return Result.Success();
 		}
