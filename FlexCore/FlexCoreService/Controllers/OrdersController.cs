@@ -107,7 +107,7 @@ namespace FlexCoreService.Controllers
 			order emp = await _context.orders.FindAsync(id);
 			
 			
-				if (emp.order_status_Id == 1)
+				if (emp.order_status_Id == 1 || emp.order_status_Id == 2)
 				{
 				emp.order_status_Id = 7;
 				_context.Entry(emp).State = EntityState.Modified;
