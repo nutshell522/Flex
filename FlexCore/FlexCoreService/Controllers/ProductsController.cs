@@ -84,7 +84,7 @@ namespace FlexCoreService.Controllers
         }
 
         //GET: api/Products/Detial/productId
-       [HttpGet("Detail/{productId}")]
+        [HttpGet("Detail/{productId}")]
         public async Task<ActionResult<ProductDetailVM>> GetProductDetail(string productId)
         {
             var service = new ProductService(_repo);
@@ -96,7 +96,7 @@ namespace FlexCoreService.Controllers
                 return NotFound();
             }
 
-            return products;
+            return Ok(products);
         }
 
 
