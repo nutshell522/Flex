@@ -7,6 +7,8 @@ namespace FlexCoreService.CustomeShoes.Interface
         IEnumerable<ShoesOptionsDto> GetOptions();
         IEnumerable<ShoesColorCategoriesDto> GetColor();
         IEnumerable<CustomizedMaterialsDto> GetMaterial();
+
+        IEnumerable<ShoesSizeDto> GetSize();
         
     }
 }
