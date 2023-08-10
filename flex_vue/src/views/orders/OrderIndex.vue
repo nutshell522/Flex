@@ -55,7 +55,8 @@
                 <tr>
                   <td colspan="4" style="text-align: right;">
                     <div style="text-align: right;">
-                      <button @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
+                      <button @click="setcancelIdValue(item.id)" class="btn btn-primary"
+                        style="margin-right: 30px;">取消</button>
                       <button class="btn btn-primary">退貨</button>
                     </div>
                   </td>
@@ -133,7 +134,7 @@
                           <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
                           <div>訂單編號:{{ item.id }}</div>
                           <div>發票編號{{ item.receipt }}</div>
-                          <button class="btn btn-success">取消</button>
+                          <button @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
                         </td>
                       </tr>
                     </table>
@@ -175,7 +176,7 @@
                           <h3>訂單詳請</h3>
                           <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
                           <div>訂單編號:{{ item.id }}</div>
-                          <button class="btn btn-success">取消</button>
+                          <button @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
                         </td>
                       </tr>
                     </table>
@@ -224,7 +225,8 @@
                 <tr>
                   <td colspan="4" style="text-align: right;">
                     <div style="text-align: right;">
-                      <button class="btn btn-primary" style="margin-right: 30px;">取消</button>
+                      <button @click="setcancelIdValue(item.id)" class="btn btn-primary"
+                        style="margin-right: 30px;">取消</button>
                       <button class="btn btn-primary">退貨</button>
                     </div>
                   </td>
