@@ -1,35 +1,38 @@
 <template>
-  <div class="img">
-    <router-link :to="'men/detail/' + card.productId">
+  <router-link :to="route.path + '/detail/' + card.productId">
+    <div class="productCardImg">
       <img
         :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath"
         class="card-img-top mx-auto d-block"
         :title="card.productName"
       />
-    </router-link>
-  </div>
-  <div class="card-body">
-    <div class="card-title">{{ card.productName }}</div>
-    <span class="text-decoration-line-through" v-if="card.unitPrice != null">
-      NT:{{ card.unitPrice }}
-    </span>
-    <span v-if="card.unitPrice != null"> 活動價 </span>
-    <span v-bind:class="{ 'text-red': card.unitPrice != null }">
-      NT:{{ card.salesPrice }}
-    </span>
-  </div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">{{ card.productName }}</div>
+      <span class="text-decoration-line-through" v-if="card.unitPrice != null">
+        NT:{{ card.unitPrice }}
+      </span>
+      <span v-if="card.unitPrice != null"> 活動價 </span>
+      <span v-bind:class="{ 'text-red': card.unitPrice != null }">
+        NT:{{ card.salesPrice }}
+      </span>
+    </div>
+  </router-link>
 </template>
 
 <script setup>
 import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
 
 const props = defineProps(["card"]);
 const card = computed(() => props.card);
 const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
+const route = useRoute();
+//console.log(route.path);
 </script>
 
 <style>
-.card .img {
+.card .productCardImg {
   min-height: 250px;
   max-height: 250px;
   width: 220px;
@@ -38,6 +41,9 @@ const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
 
 .card img {
   transition: transform 1s;
+  min-height: 250px;
+  max-height: 250px;
+  width: 220px;
 }
 
 .card img:hover {

@@ -5,9 +5,7 @@
         <div class="detailImgbox">
           <img
             class="detailImg"
-            :src="
-              baseAddress + 'Public/Img/0cac753e1aae4728a93d94044326304e.jpg'
-            "
+            :src="baseAddress + 'Public/Img/' + detailImg"
             :title="productDetail.productName"
           />
         </div>
@@ -38,9 +36,9 @@
           <div>
             <span
               class="colorBoxSetting"
-              v-for="(sizes, color) in productDetail.colorAndSize"
+              v-for="(groupDetail, color) in productDetail.productGroup"
               :key="color"
-              @click="updateSizeList(sizes)"
+              @click="updateSizeList(groupDetail)"
               :title="color"
               >{{ color }}
             </span>
@@ -49,10 +47,40 @@
             <div
               class="sizeboxsetting"
               v-for="size in selectSizes"
-              :key="size"
-              :title="size"
+              :key="size.productGroupId"
+              :title="size.sizeName"
+              :data-productGroupId="size.productGroupId"
             >
-              {{ size }}
+              {{ size.sizeName }}
+            </div>
+          </div>
+          <div class="mt-3 d-flex mb-3">
+            <div>預計尺寸跟最愛</div>
+          </div>
+          <hr />
+          <div class="mt-3 mb-3 col-12">
+            <div class="d-flex row">
+              <div class="d-flex me-3 col-5">
+                <span
+                  class="col-3"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                  >數量:</span
+                >
+                <input
+                  type="number"
+                  name=""
+                  id=""
+                  min="1"
+                  class="form-control"
+                />
+              </div>
+              <div class="col-6">
+                <button class="form-control">加入購物車</button>
+              </div>
             </div>
           </div>
         </div>
@@ -71,17 +99,21 @@ export default {
     const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
     const route = useRoute();
     const productDetail = ref({});
-    const selectSizes = ref([]);
+    const selectSizes = ref({});
+    const detailImg = ref("");
 
     let getData = async () => {
       await axios
-        .get(`${baseAddress}api/Products/Detail/${route.params.prdouctId}`)
+        .get(`${baseAddress}api/Products/Detail/${route.params.productId}`)
         .then((response) => {
-          //console.log(response.data.colorAndSize);
+          //console.log(response.data.productGroup);
           productDetail.value = response.data;
-          const firstColor = Object.keys(productDetail.value.colorAndSize)[0];
+          const firstColor = Object.keys(productDetail.value.productGroup)[0];
+          //console.log(firstColor);
           if (firstColor) {
-            selectSizes.value = productDetail.value.colorAndSize[firstColor];
+            selectSizes.value = productDetail.value.productGroup[firstColor];
+            detailImg.value = selectSizes.value[0].defaultColorImg;
+            //console.log(selectSizes.value[0].defaultColorImg);
           }
         })
         .catch((error) => {
@@ -91,6 +123,7 @@ export default {
 
     let updateSizeList = (sizes) => {
       selectSizes.value = sizes;
+      detailImg.value = sizes[0].defaultColorImg;
     };
 
     onMounted(() => {
@@ -101,6 +134,7 @@ export default {
       productDetail,
       selectSizes,
       baseAddress,
+      detailImg,
       updateSizeList,
     };
   },
