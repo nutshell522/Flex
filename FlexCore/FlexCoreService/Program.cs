@@ -28,7 +28,7 @@ namespace FlexCoreService
                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext"))
             );
 
-            //CORS¶}©ñ
+            //CORS?‹æ”¾
             string MyAllow = "AllowAny";
             builder.Services.AddCors(options =>
             {
@@ -37,7 +37,7 @@ namespace FlexCoreService
                 );
             });
 
-            //DIª`¤JDapper
+            //DIæ³¨å…¥Dapper
             builder.Services.AddScoped<IProductRepository, ProductDPRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryDPRepository>();
             builder.Services.AddScoped<IActivityDPRepository, ActivityDPRepository>();
@@ -50,17 +50,22 @@ namespace FlexCoreService
 
             builder.Services.AddHttpContextAccessor();
 
+            
+            //ï¿½Ï¥ï¿½Cookie
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
-                {
-                    //¥¼µn¤J®É·|¦Û°Ê¾É¨ì³o­Óºô§}
-                    option.LoginPath = new PathString("/api/Users/Login");
-                });
+            {
+                //ï¿½ï¿½ï¿½nï¿½Jï¿½É·|ï¿½Û°Ê¾É¦Vï¿½ï¿½ï¿½}
+                option.LoginPath = new PathString("/api/Users/NoLogin");
 
-            //³]©w¥þ°ìµn¤J
-            //builder.Services.AddMvc(options =>
-            //{
-            //    options.Filters.Add(new AuthorizeFilter());
-            //});
+                //ï¿½nï¿½Jï¿½É®ï¿½
+                option.ExpireTimeSpan= TimeSpan.FromMinutes(5);
+            });
+
+            //ï¿½ï¿½ï¿½ï¿½]ï¿½wï¿½nï¿½Jï¿½ï¿½ï¿½ï¿½
+            builder.Services.AddMvc(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter());
+            });
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
