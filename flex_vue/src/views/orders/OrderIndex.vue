@@ -55,7 +55,7 @@
                 <tr>
                   <td colspan="4" style="text-align: right;">
                     <div style="text-align: right;">
-                      <button class="btn btn-primary" style="margin-right: 30px;">取消</button>
+                      <button @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
                       <button class="btn btn-primary">退貨</button>
                     </div>
                   </td>
@@ -285,6 +285,7 @@ const keyword = ref("");
 const begintime = ref("");
 const endtime = ref("");
 const expandedItems = ref([]);
+const cancelId = ref("");
 
 const loadGetOrders = async () => {
   await axios
@@ -296,6 +297,22 @@ const loadGetOrders = async () => {
     .catch((error) => {
       alert(error);
     });
+};
+const CancelOrders = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/id?id=${cancelId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const setcancelIdValue = (paramValue) => {
+  cancelId.value = paramValue;
+  CancelOrders();
 };
 const formatOrderTime = (ordertime) => {
   const dateTimeObject = new Date(ordertime);
