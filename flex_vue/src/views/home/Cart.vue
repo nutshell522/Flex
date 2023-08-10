@@ -79,46 +79,47 @@ const computedValue = computed(() => {
 
 // 購物車物件
 class ShoppingCartItem {
-  private itemInfo: {
-    cartItemId: number;
-    qty: number;
-    // 可以添加其他商品信息，例如名称、价格等
-  } = { cartItemId: 0, qty: 0 };;
+  private item: CartItem;
 
-  constructor(initialCartItemId: number, initialQty: number) {
-    this.itemInfo.cartItemId = initialCartItemId;
-    this.itemInfo.qty = initialQty;
+  constructor(cartitem: CartItem) {
+    this.item = cartitem;
+  }
+  addOneItem():void{
+    this.addItem(1);
   }
 
   addItem(qty: number): void {
-    this.itemInfo.qty += qty;
-    alert(this.itemInfo.qty)
+    this.item.qty += qty;
+    alert(this.item.qty)
+  }
+  removeOneItem():void{
+    this.removeItem(1);
   }
 
   removeItem(qty: number): void {
-    if (this.itemInfo.qty >= qty) {
-      this.itemInfo.qty -= qty;
-      alert(this.itemInfo.qty)
+    if (this.item.qty >= qty) {
+      this.item.qty -= qty;
+      alert(this.item.qty)
     }
   }
 
   getCartItemQty(): number {
-    return this.itemInfo.qty;
+    return this.item.qty;
   }
 }
 
 const incrementCartItem = (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem.cartId, cartItem.qty);
-  shoppingCart.addItem(1);
+  const shoppingCart = new ShoppingCartItem(cartItem)
+  shoppingCart.addOneItem();
 };
 
 const decrementCartItem = (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem.cartId, cartItem.qty);
-  shoppingCart.removeItem(1);
+  const shoppingCart = new ShoppingCartItem(cartItem);
+  shoppingCart.removeOneItem();
 };
 
 const getCartItemQty = (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem.cartId, cartItem.qty);
+  const shoppingCart = new ShoppingCartItem(cartItem);
   return shoppingCart.getCartItemQty();
 };
 
