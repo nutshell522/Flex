@@ -55,9 +55,12 @@
                 <tr>
                   <td colspan="4" style="text-align: right;">
                     <div style="text-align: right;">
-                      <button @click="setcancelIdValue(item.id)" class="btn btn-primary"
-                        style="margin-right: 30px;">取消</button>
-                      <button class="btn btn-primary">退貨</button>
+                      <button
+                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
+                        @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
+                      <button
+                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
+                        @click="setreturnIdValue(item.id)" class="btn btn-primary">退貨</button>
                     </div>
                   </td>
                 </tr>
@@ -134,7 +137,8 @@
                           <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
                           <div>訂單編號:{{ item.id }}</div>
                           <div>發票編號{{ item.receipt }}</div>
-                          <button @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
+                          <button v-if="item.order_status_Id !== 7" @click="setcancelIdValue(item.id)"
+                            class="btn btn-success">取消</button>
                         </td>
                       </tr>
                     </table>
@@ -176,7 +180,8 @@
                           <h3>訂單詳請</h3>
                           <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
                           <div>訂單編號:{{ item.id }}</div>
-                          <button @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
+                          <button v-if="item.order_status_Id !== 7" @click="setcancelIdValue(item.id)"
+                            class="btn btn-success">取消</button>
                         </td>
                       </tr>
                     </table>
@@ -225,9 +230,12 @@
                 <tr>
                   <td colspan="4" style="text-align: right;">
                     <div style="text-align: right;">
-                      <button @click="setcancelIdValue(item.id)" class="btn btn-primary"
-                        style="margin-right: 30px;">取消</button>
-                      <button class="btn btn-primary">退貨</button>
+                      <button
+                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
+                        @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
+                      <button
+                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
+                        @click="setreturnIdValue(item.id)" class="btn btn-primary">退貨</button>
                     </div>
                   </td>
                 </tr>
@@ -288,6 +296,7 @@ const begintime = ref("");
 const endtime = ref("");
 const expandedItems = ref([]);
 const cancelId = ref("");
+const retrunId = ref("");
 
 const loadGetOrders = async () => {
   await axios
@@ -302,7 +311,7 @@ const loadGetOrders = async () => {
 };
 const CancelOrders = async () => {
   await axios
-    .put(`https://localhost:7183/api/Orders/id?id=${cancelId.value}`)
+    .put(`https://localhost:7183/api/Orders/cancel?id=${cancelId.value}`)
     .then((response) => {
       //console.log(response.data);
       alert(response.data);
@@ -315,6 +324,22 @@ const CancelOrders = async () => {
 const setcancelIdValue = (paramValue) => {
   cancelId.value = paramValue;
   CancelOrders();
+};
+const ReturnOrders = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/return?id=${retrunId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const setreturnIdValue = (paramValue) => {
+  retrunId.value = paramValue;
+  ReturnOrders();
 };
 const formatOrderTime = (ordertime) => {
   const dateTimeObject = new Date(ordertime);
@@ -429,5 +454,4 @@ onMounted(() => {
   margin: 20px;
   padding: 10px;
   width: 300px;
-}
-</style>
+}</style>
