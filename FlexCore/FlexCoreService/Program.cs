@@ -33,7 +33,7 @@ namespace FlexCoreService
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy(
-                    name: MyAllow, policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
+                    name: MyAllow, policy => policy.WithOrigins("https://localhost:8080").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
                 );
             });
 
@@ -87,7 +87,6 @@ namespace FlexCoreService
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
 
 
             app.MapControllers();

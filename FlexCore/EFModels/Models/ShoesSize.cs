@@ -9,12 +9,12 @@ namespace EFModels.Models
     {
         public ShoesSize()
         {
-            ShoesGroups = new HashSet<ShoesGroup>();
+            ShoesOrders = new HashSet<ShoesOrder>();
         }
 
         public int SizeId { get; set; }
         public string SizeName { get; set; }
 
-        public virtual ICollection<ShoesGroup> ShoesGroups { get; set; }
+        public virtual ICollection<ShoesOrder> ShoesOrders { get; set; }
     }
 }

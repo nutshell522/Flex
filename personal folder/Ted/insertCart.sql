@@ -3,10 +3,9 @@ INSERT INTO ShoppingCarts(fk_MemberID)
 VALUES (1),(2),(3),(4),(5);
 go
 
-select * from ShoppingCarts
 -- insert cart°²¸ê®Æ 
 INSERT INTO CartItems(fk_CardId,fk_ProductId,Description,Qty)
-VALUES (1,17,'',2),
+VALUES (1,1,'',2),
 (1,6,'',1),
 (1,7,'',5),
 (1,16,'',2),

@@ -72,9 +72,6 @@ const loadCartItems = async () => {
 
 loadCartItems();
 
-const computedValue = computed(() => {
-  // 定義計算屬性的計算邏輯
-});
 
 
 // 購物車物件
@@ -90,7 +87,7 @@ class ShoppingCartItem {
 
   addItem(qty: number): void {
     this.item.qty += qty;
-    alert(this.item.qty)
+    this.updateItemQty();
   }
   removeOneItem():void{
     this.removeItem(1);
@@ -98,24 +95,52 @@ class ShoppingCartItem {
 
   removeItem(qty: number): void {
     if (this.item.qty >= qty) {
-      this.item.qty -= qty;
-      alert(this.item.qty)
+      this.item.qty = Math.max(this.item.qty - qty , 0);
+      if(this.item.qty>0){
+        this.updateItemQty();
+      }
+      if(this.item.qty<=0){
+        const result = confirm("是否刪除此商品？");
+        if(result){
+          this.updateItemQty();
+        }
+        else{
+          this.item.qty=1;
+        }
+      }
     }
   }
 
   getCartItemQty(): number {
     return this.item.qty;
   }
+
+  private updateItemQty = async () => {
+    let url: string = `${import.meta.env.VITE_API_BASEADDRESS}api/Cart/UpdateItem`;
+    await axios
+      .put(url,this.item)
+      .then((response) => {
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
 }
 
-const incrementCartItem = (cartItem: CartItem) => {
+const incrementCartItem = async (cartItem: CartItem) => {
   const shoppingCart = new ShoppingCartItem(cartItem)
-  shoppingCart.addOneItem();
+  await shoppingCart.addOneItem();
+  setTimeout(() => {
+    loadCartItems();
+  }, 1000);
 };
 
-const decrementCartItem = (cartItem: CartItem) => {
+const decrementCartItem = async (cartItem: CartItem) => {
   const shoppingCart = new ShoppingCartItem(cartItem);
-  shoppingCart.removeOneItem();
+  await shoppingCart.removeOneItem();
+  setTimeout(() => {
+    loadCartItems();
+  }, 1000);
 };
 
 const getCartItemQty = (cartItem: CartItem) => {

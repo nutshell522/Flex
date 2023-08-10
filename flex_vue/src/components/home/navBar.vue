@@ -4,7 +4,6 @@
       <div class="me-auto"></div>
       <ul>
         <li><a href="javascript:;">說明</a></li>
-        <li><a href="javascript:;">加入</a></li>
         <li class="" v-if="!loginSuccess">
           <a href="/login">登入</a>
         </li>
@@ -66,35 +65,29 @@
         </div>
         <i class="bi bi-heart"></i>
         <i class="bi bi-bag"></i>
-        <!-- <div>
-          <h2>{{ res }}</h2>
-          <button @click="getApi">GetData</button>
-        </div> -->
+        <pre>
+          <p>{{ memberData.username }}</p>
+        </pre>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import userList from "../home/userList.vue";
+import { ref, watch } from 'vue';
+import userList from '../home/userList.vue';
 
-// import { useGetApiDataStore } from '../stores/useGetApiDataStore.js';
-// import { storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+const getApiStore = useGetApiDataStore();
+const { memberData } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
 
-// const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
-
-// const url = `${baseAddress}api/Category/Men`;
-// const getApiStore = useGetApiDataStore();
-// const { getData } = getApiStore;
-// const { res } = storeToRefs(getApiStore);
-// // 打算以按鈕觸發取得API所以把getData包在函式內，注意參數url直接帶入getData(url)就好，
-// // 如果由function getApi(url){}則會報錯，url不會真的被帶入。
-// // 原因還要再查查。
-// function getApi() {
-//   getData(url);
-// }
-
+const { getData } = getApiStore;
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const url = `${baseAddress}api/Users/Login`;
+function getApi() {
+  getData(url);
+}
 //userlist
 const isListVisible = ref(false);
 function showList() {
@@ -107,12 +100,16 @@ function hideList() {
 //userIcon
 const loginSuccess = ref(false);
 
-//登入
-//user有值
-//loginSuccess = true;
-
-//未登入
-//loginSuccess = false;
+watch(getApiStore.memberData, (newValue) => {
+  //登入
+  if (newValue.value != null) {
+    //console.log('Watch callback called.');
+    loginSuccess.value = false;
+  } else {
+    //未登入
+    loginSuccess.value = true;
+  }
+});
 </script>
 
 <style lang="scss">
@@ -185,7 +182,7 @@ header {
         }
 
         &:not(:first-child)::before {
-          content: "|";
+          content: '|';
           padding: 0 15px;
           font-size: 14px;
         }
