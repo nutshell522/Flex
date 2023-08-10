@@ -216,6 +216,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ShoesOrders]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ShoesPictures]",
          "ObjectType": 0
       },
@@ -256,7 +260,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "desktop-paksetb.Flex.dbo",
+   "UiHint": "lun.Flex.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
