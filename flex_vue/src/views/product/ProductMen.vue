@@ -1,9 +1,11 @@
 <template>
-  <ul class="d-flex flex-wrap">
-    <li v-for="card in cards" :key="card.productId" class="card text-center">
-      <ProductCard :card="card"></ProductCard>
-    </li>
-  </ul>
+  <div class="container-body d-flex">
+    <ul class="d-flex flex-wrap">
+      <li v-for="card in cards" :key="card.productId" class="card text-center">
+        <ProductCard :card="card"></ProductCard>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup>
@@ -27,7 +29,7 @@ const route = useRoute();
 //const query = route.query;
 
 watch(
-  () => route.params, //route.query,
+  () => route.query, //route.params,
   () => {
     loadProducts();
   }
@@ -35,14 +37,21 @@ watch(
 
 const loadProducts = async () => {
   let url;
-  if (route.params.categoryName && !route.params.subCategoryName) {
-    url = `${baseAddress}api/Products/Men?categoryName=${route.params.categoryName}`;
-  } else if (route.params.categoryName && route.params.subCategoryName) {
-    url = `${baseAddress}api/Products/Men?categoryName=${route.params.categoryName}&subCategoryName=${route.params.subCategoryName}`;
+  // if (route.params.categoryName && !route.params.subCategoryName) {
+  //   url = `${baseAddress}api/Products/Men?categoryName=${route.params.categoryName}`;
+  // } else if (route.params.categoryName && route.params.subCategoryName) {
+  //   url = `${baseAddress}api/Products/Men?categoryName=${route.params.categoryName}&subCategoryName=${route.params.subCategoryName}`;
+  // } else {
+  //   url = `${baseAddress}api/Products/Men`;
+  // }
+  if (route.query.categoryName && !route.query.subCategoryName) {
+    url = `${baseAddress}api/Products/Men?categoryName=${route.query.categoryName}`;
+  } else if (route.query.categoryName && route.query.subCategoryName) {
+    url = `${baseAddress}api/Products/Men?categoryName=${route.query.categoryName}&subCategoryName=${route.query.subCategoryName}`;
   } else {
     url = `${baseAddress}api/Products/Men`;
   }
-  console.log(url);
+  //console.log(url);
   await axios
     .get(url)
     .then((response) => {

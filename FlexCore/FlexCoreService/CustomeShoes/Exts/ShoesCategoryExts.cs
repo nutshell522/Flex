@@ -11,6 +11,7 @@ namespace FlexCoreService.CustomeShoes.Exts
 		{
 			return new ShoesCategoryVM
 			{
+				ShoesCategoryId = dto.ShoesCategoryId,
 				ShoesCategoryName = dto.ShoesCategoryName
 			};
 		}

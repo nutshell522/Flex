@@ -2,7 +2,9 @@
 using EFModels.Models;
 using FlexCoreService.CartCtrl.Interface;
 using FlexCoreService.CartCtrl.Models.vm;
+using Microsoft.CodeAnalysis;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
@@ -24,12 +26,11 @@ namespace FlexCoreService.CartCtrl.Infra
 			using (IDbConnection dbConnection = new SqlConnection(_connStr))
 			{
 				dbConnection.Open();
-
 				string sql = @"select 
-ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId,
-p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath, 
-ssc.SalesCategoryName, d.DiscountId, d.DiscountName, d.DiscountDescription, d.DiscountType, 
-d.DiscountValue, d.ConditionType, d.ConditionValue, d.OrderBy as DiscountOrder
+ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId, 
+p.ProductName, p.UnitPrice, p.SalesPrice, sc.SizeName as Size, cc.ColorName as Color, 
+pir.ImgPath, ssc.SalesCategoryName, d.DiscountId, d.DiscountName, d.DiscountDescription, 
+d.DiscountType, d.DiscountValue, d.ConditionType, d.ConditionValue, d.OrderBy as DiscountOrder
 from CartItems as ci
 inner join ShoppingCarts as C on c.CartId = ci.fk_CardId
 inner join ProductGroups as pg on pg.ProductGroupId = ci.fk_ProductId
@@ -40,7 +41,7 @@ inner join ProductSubCategories as psc on psc.ProductSubCategoryId = p.fk_Produc
 inner join ProductCategories as pc on pc.ProductCategoryId = psc.fk_ProductCategoryId
 inner join SalesCategories as ssc on ssc.SalesCategoryId = pc.fk_SalesCategoryId
 left join ProjectTagItems as pti on pti.fk_ProductId = p.ProductId
-LEFT JOIN (
+left join(
     SELECT
         pi.fk_ProductId,
         pi.ProductImgId,
@@ -54,12 +55,12 @@ LEFT JOIN (
     )
 ) AS pir ON pir.fk_ProductId = p.ProductId
 left join Discounts as d on d.fk_ProjectTagId = pti.fk_ProjectTagId
-where p.Status=0 and p.LogOut=0 and c.fk_MemberID = @memberId
+where p.Status=0 and p.LogOut=0 and c.fk_MemberID = 1 
 GROUP BY
 ci.CartItemId, c.CartId, pg.ProductGroupId, ci.Qty, p.ProductId,
 p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
 d.DiscountId, d.DiscountName, d.DiscountDescription, d.DiscountType, d.DiscountValue,
-d.ConditionType, d.ConditionValue, d.OrderBy, ssc.SalesCategoryName
+d.ConditionType, d.ConditionValue, d.OrderBy, ssc.SalesCategoryName ,p.ProductName
 ORDER BY p.ProductId asc, d.OrderBy asc;
 ";
 
@@ -87,6 +88,119 @@ ORDER BY p.ProductId asc, d.OrderBy asc;
 				});
 
 				return groupedCartItems;
+			}
+		}
+		public void CreateCartItem(CartItemDto dto)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+				string sql = @"
+INSERT INTO CartItems(fk_CardId,fk_ProductId,Description,Qty)
+VALUES (@CartId,@ProductId,@Description,@Qty)
+";
+				var parameters = new { CartId = dto.CartId.Value, ProductId = dto.ProductId.Value , Description = "", Qty = dto.Qty.Value };
+				connection.Execute(sql, parameters);
+			}
+		}
+
+		public void UpdateCartItemQty(CartItemDto dto)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+				string sql = @"
+UPDATE CartItems SET
+qty = @Qty
+WHERE CartItemId = @CartItemId
+";
+				var parameters = new { dto.CartItemId, dto.Qty };
+				connection.Execute(sql, parameters);
+			}
+		}
+
+		public (bool DoesExist, int CartItemId) ExistsCartItem(int memberId, int productId)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+				string sql = @"
+SELECT TOP 1 ci.cartitemId
+FROM CartItems AS ci
+JOIN ShoppingCarts AS sc ON sc.CartId = ci.fk_CardId
+WHERE sc.fk_MemberID = @MemberID AND ci.fk_ProductId = @ProductId"
+;
+				var parameters = new { MemberID = memberId, ProductId = productId };
+				int cartItemId = connection.QuerySingleOrDefault<int?>(sql, parameters) ?? 0;
+				bool doesExist = cartItemId > 0;
+				return (doesExist, cartItemId);
+			}
+		}
+		public bool ExistsCart(int memberId)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+				string sql = @"
+SELECT TOP 1 1
+FROM ShoppingCarts as sc
+WHERE sc.fk_MemberID = @MemberID;"
+;
+				var parameters = new { MemberID = memberId };
+				bool doesExist = connection.QuerySingleOrDefault<bool>(sql, parameters);
+				
+				return doesExist;
+			}
+		}
+		public int CreateCart(int memberId)
+		{
+
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+				string sql = @"
+INSERT INTO ShoppingCarts(fk_MemberID)
+VALUES (@MemberId);
+SELECT SCOPE_IDENTITY();
+"
+;
+				var parameters = new { MemberId = memberId };
+				int newCartId = connection.QuerySingle<int>(sql, parameters);
+
+				return newCartId;
+			}
+		}
+
+		public int GetCartId(int memberId)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+				string sql = @"
+select CartId
+from ShoppingCarts as sc
+where sc.fk_MemberID = @MemberId
+";
+				var parameters = new { MemberId = memberId };
+				int CartId = connection.QuerySingle<int>(sql, parameters);
+				return CartId;
+			}
+		}
+
+		public void DeleteCartItem(CartItemDto dto)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+
+				string sql = @"
+DELETE FROM CartItems
+WHERE CartItemId = @CartItemId"
+;
+
+				var parameters = new { CartItemId = dto.CartItemId.Value };
+
+				connection.Execute(sql, parameters);
 			}
 		}
 	}

@@ -41,7 +41,7 @@ namespace FlexCoreService.Controllers
         //    return products;
         //}
 
-        // POST: api/Products/Men
+        // GET: api/Products/Men
         [HttpGet("Men")]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetMenProducts(string? categoryName = null, string? subCategoryName = null)
         {
@@ -55,7 +55,7 @@ namespace FlexCoreService.Controllers
             return products;
         }
 
-        // POST: api/Products/Women
+        // GET: api/Products/Women
         [HttpGet("Women")]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetWomenProducts(string? categoryName = null, string? subCategoryName = null)
         {
@@ -69,7 +69,7 @@ namespace FlexCoreService.Controllers
             return products;
         }
 
-        // POST: api/Products/Kid
+        // GET: api/Products/Kid
         [HttpGet("Kid")]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetKidProducts(string? categoryName = null, string? subCategoryName = null)
         {
@@ -81,6 +81,22 @@ namespace FlexCoreService.Controllers
                 return NotFound();
             }
             return products;
+        }
+
+        //GET: api/Products/Detial/productId
+        [HttpGet("Detail/{productId}")]
+        public async Task<ActionResult<ProductDetailVM>> GetProductDetail(string productId)
+        {
+            var service = new ProductService(_repo);
+
+            var products = service.GetProductDetail(productId).ToDetailVM();
+
+            if (products == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(products);
         }
 
 

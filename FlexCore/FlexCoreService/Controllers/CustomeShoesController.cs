@@ -17,14 +17,16 @@ namespace FlexCoreService.Controllers
 	{
 		private readonly AppDbContext _db;
 		private ICustomeShoesRepository _repo;
-		public CustomeShoesController(AppDbContext context, ICustomeShoesRepository repo)
+        private ICustomerChooseRepository _chooserepo;
+        public CustomeShoesController(AppDbContext context, ICustomeShoesRepository repo, ICustomerChooseRepository chooserepo)
 		{
 			_db = context;
 			_repo = repo;
-		}
+            _chooserepo = chooserepo;
+        }
 
 		// POST: api/CustomizedShoesPo/
-		[HttpPost("GetAll")]
+		[HttpGet("GetAll")]
 		public async Task<ActionResult<IEnumerable<CustomeShoesVM>>> GetAllCustomeShoes()
 		{
 			var server = new CustomeShoesService(_repo);
@@ -47,91 +49,114 @@ namespace FlexCoreService.Controllers
 			return await _db.CustomizedShoesPos.ToListAsync();
 		}
 
-		// GET: api/CustomizedShoesPo/5
-		[HttpGet("{id}")]
-		public async Task<ActionResult<CustomizedShoesPo>> GetShoes(int id)
-		{
-			if (_db.CustomizedShoesPos == null)
-			{
-				return NotFound();
-			}
-			var shoes = await _db.CustomizedShoesPos.FindAsync(id);
+        // GET: api/CustomizedShoesPo/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CustomeShoesVM>> GetShoes(int id)
+        {
+            var server = new CustomeShoesService(_repo);
 
-			if (shoes == null)
-			{
-				return NotFound();
-			}
+            var shoes = server.SearchOneCustomeShoes(id);
 
-			return shoes;
-		}
+            var chooseserver = new ShoesChoosesService(_chooserepo);
 
-		//// PUT: api/CustomizedShoesPo/5
-		//// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		//[HttpPut("{id}")]
-		//public async Task<IActionResult> PutShoes(int id, CustomizedShoesPo shoes)
-		//{
-		//	if (id != shoes.ShoesProductId)
-		//	{
-		//		return BadRequest();
-		//	}
+            var chooses = chooseserver.GetOptions().ToList();
+            var chooses2 = chooseserver.GetColor().ToList();
+            var chooses3 = chooseserver.GetMaterial().ToList();
 
-		//	_db.Entry(shoes).State = EntityState.Modified;
+            var vm = shoes.ToAllVM(chooses, chooses2, chooses3);
 
-		//	try
-		//	{
-		//		await _db.SaveChangesAsync();
-		//	}
-		//	catch (DbUpdateConcurrencyException)
-		//	{
-		//		if (!ShoesExists(id))
-		//		{
-		//			return NotFound();
-		//		}
-		//		else
-		//		{
-		//			throw;
-		//		}
-		//	}
+            if (vm == null)
+            {
+                return NotFound();
+            }
 
-		//	return NoContent();
-		//}
+            return vm;
+        }
 
-		//// POST: api/CustomizedShoesPo
-		//// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		//[HttpPost]
-		//public async Task<ActionResult<CustomizedShoesPo>> PostShoes(CustomizedShoesPo shoes)
-		//{
-		//	if (_db.CustomizedShoesPos == null)
-		//	{
-		//		return Problem("Entity set 'AppDbContext.CustomizedShoesPo'  is null.");
-		//	}
-		//	_db.CustomizedShoesPos.Add(shoes);
-		//	await _db.SaveChangesAsync();
+        [HttpGet("Detail/{ShoesProductId}")]
+        public async Task<ActionResult<CustomizedShoesPo>> GetShoesDetail(int shoesId)
+        {
+            if (_db.CustomizedShoesPos == null)
+            {
+                return NotFound();
+            }
+            var shoes = await _db.CustomizedShoesPos.FirstOrDefaultAsync(p => p.ShoesProductId == shoesId);
 
-		//	return CreatedAtAction("GetShoes", new { id = shoes.ShoesProductId }, shoes);
-		//}
+            if (shoes == null)
+            {
+                return NotFound();
+            }
 
-		// DELETE: api/CustomizedShoesPo/5
-		//[HttpDelete("{id}")]
-		//public async Task<IActionResult> DeleteShoes(int id)
-		//{
-		//	if (_db.CustomizedShoesPos == null)
-		//	{
-		//		return NotFound();
-		//	}
-		//	var shoes = await _db.CustomizedShoesPos.FindAsync(id);
-		//	if (shoes == null)
-		//	{
-		//		return NotFound();
-		//	}
+            return shoes;
+        }
 
-		//	_db.CustomizedShoesPos.Remove(shoes);
-		//	await _db.SaveChangesAsync();
+        //// PUT: api/CustomizedShoesPo/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutShoes(int id, CustomizedShoesPo shoes)
+        //{
+        //	if (id != shoes.ShoesProductId)
+        //	{
+        //		return BadRequest();
+        //	}
 
-		//	return NoContent();
-		//}
+        //	_db.Entry(shoes).State = EntityState.Modified;
 
-		private bool ShoesExists(int id)
+        //	try
+        //	{
+        //		await _db.SaveChangesAsync();
+        //	}
+        //	catch (DbUpdateConcurrencyException)
+        //	{
+        //		if (!ShoesExists(id))
+        //		{
+        //			return NotFound();
+        //		}
+        //		else
+        //		{
+        //			throw;
+        //		}
+        //	}
+
+        //	return NoContent();
+        //}
+
+        //// POST: api/CustomizedShoesPo
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<CustomizedShoesPo>> PostShoes(CustomizedShoesPo shoes)
+        //{
+        //	if (_db.CustomizedShoesPos == null)
+        //	{
+        //		return Problem("Entity set 'AppDbContext.CustomizedShoesPo'  is null.");
+        //	}
+        //	_db.CustomizedShoesPos.Add(shoes);
+        //	await _db.SaveChangesAsync();
+
+        //	return CreatedAtAction("GetShoes", new { id = shoes.ShoesProductId }, shoes);
+        //}
+
+        // DELETE: api/CustomizedShoesPo/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteShoes(int id)
+        //{
+        //	if (_db.CustomizedShoesPos == null)
+        //	{
+        //		return NotFound();
+        //	}
+        //	var shoes = await _db.CustomizedShoesPos.FindAsync(id);
+        //	if (shoes == null)
+        //	{
+        //		return NotFound();
+        //	}
+
+        //	_db.CustomizedShoesPos.Remove(shoes);
+        //	await _db.SaveChangesAsync();
+
+        //	return NoContent();
+        //}
+
+        private bool ShoesExists(int id)
 		{
 			return (_db.CustomizedShoesPos?.Any(e => e.ShoesProductId == id)).GetValueOrDefault();
 		}

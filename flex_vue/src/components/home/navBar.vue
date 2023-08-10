@@ -4,10 +4,14 @@
       <div class="me-auto"></div>
       <ul>
         <li><a href="javascript:;">說明</a></li>
-        <li><a href="javascript:;">加入</a></li>
-        <li class="p-relative">
-          <a href="javascript:;" @mouseenter="showList">登入</a>
-          <!-- <userList v-if="showList"></userList> -->
+        <li class="" v-if="!loginSuccess">
+          <a href="/login">登入</a>
+        </li>
+        <li class="p-relative userIcon" v-if="loginSuccess">
+          <a href="/orders" @mouseenter="showList"
+            ><i class="bi bi-person-circle"></i
+          ></a>
+          <userList v-if="isListVisible" @mouseleave="hideList"></userList>
         </li>
       </ul>
     </div>
@@ -61,18 +65,51 @@
         </div>
         <i class="bi bi-heart"></i>
         <i class="bi bi-bag"></i>
+        <pre>
+          <p>{{ memberData.username }}</p>
+        </pre>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import userList from '../home/userList.vue';
 
-function showList() {
-  alert('hi');
+import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+const getApiStore = useGetApiDataStore();
+const { memberData } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
+
+const { getData } = getApiStore;
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const url = `${baseAddress}api/Users/Login`;
+function getApi() {
+  getData(url);
 }
+//userlist
+const isListVisible = ref(false);
+function showList() {
+  isListVisible.value = true;
+}
+function hideList() {
+  isListVisible.value = false;
+}
+
+//userIcon
+const loginSuccess = ref(false);
+
+watch(getApiStore.memberData, (newValue) => {
+  //登入
+  if (newValue.value != null) {
+    //console.log('Watch callback called.');
+    loginSuccess.value = false;
+  } else {
+    //未登入
+    loginSuccess.value = true;
+  }
+});
 </script>
 
 <style lang="scss">

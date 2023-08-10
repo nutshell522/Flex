@@ -16,19 +16,40 @@ namespace FlexCoreService.ProductCtrl.Infra.DPRepository
             _connStr = _configuration.GetConnectionString("AppDbContext");
         }
 
-//        public IEnumerable<ProductCardDto> SearchProducts()
-//        {
-//            string sql = @"select p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, MIN(pi.ImgPath) AS FirstImgPath 
-//from Products as p
-//join ProductImgs as pi on p.ProductId = pi.fk_ProductId
-//group by p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, p.Status, p.LogOut
-//having p.Status=0 and p.LogOut=0
-//order by p.ProductId";
+        public IEnumerable<ProductDetailDto> GetProductDetail(string productId)
+        {
+            string sql = @"select 
+p.ProductId,p.ProductName,p.ProductDescription,p.ProductMaterial,p.ProductOrigin, 
+p.UnitPrice,p.SalesPrice,pg.ProductGroupId,cc.ColorName,sc.SizeName, 
+pg.Qty,pi.ImgPath as DefaultColorImg 
+from Products as p 
+join ProductGroups as pg on pg.fk_ProductId=p.ProductId 
+join ColorCategories as cc on cc.ColorId=pg.fk_ColorId 
+join SizeCategories as sc on sc.SizeId=pg.fk_SizeId 
+join ProductImgs as pi on pi.fk_ProductId =p.ProductId 
+where p.Status=0 and 
+p.LogOut=0 and 
+pi.fk_ColorId=cc.ColorId and 
+p.ProductId='" + @productId+"'";
 
-//            using IDbConnection dbConnection = new SqlConnection(_connStr);
-//            var result = dbConnection.Query<ProductCardDto>(sql);
-//            return result;
-//        }
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.Query<ProductDetailDto>(sql, new { productId });
+            return result;
+        }
+
+        //        public IEnumerable<ProductCardDto> SearchProducts()
+        //        {
+        //            string sql = @"select p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, MIN(pi.ImgPath) AS FirstImgPath 
+        //from Products as p
+        //join ProductImgs as pi on p.ProductId = pi.fk_ProductId
+        //group by p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, p.Status, p.LogOut
+        //having p.Status=0 and p.LogOut=0
+        //order by p.ProductId";
+
+        //            using IDbConnection dbConnection = new SqlConnection(_connStr);
+        //            var result = dbConnection.Query<ProductCardDto>(sql);
+        //            return result;
+        //        }
 
         public IEnumerable<ProductCardDto> SearchProducts(int salesId, string? categoryName, string? subCategoryName)
         {

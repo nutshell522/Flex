@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Xml.Linq;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace FlexCoreService.Controllers
 {
@@ -23,7 +25,6 @@ namespace FlexCoreService.Controllers
         {
             _db = db;
             _httpContextAccessor = httpContextAccessor;
-
         }
 
         /// <summary>
@@ -32,9 +33,17 @@ namespace FlexCoreService.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{account}")]
-        //[Authorize]//登入之後才能使用
+        [Authorize]
         public async Task<ProfileDto> GetUserProfil(string account)
         {
+            //StringBuilder sb = new StringBuilder();
+            //sb.AppendLine("<ul>");
+            //foreach (Claim claim in HttpContext.User.Claims)
+            //{
+            //    sb.AppendLine($@"<li> claim.Type:{claim.Type} , claim.Value:{claim.Value}</li>");
+            //}
+            ClaimsPrincipal user = HttpContext.User;
+
             if (_db.Members == null)
             {
                 return null;
@@ -53,6 +62,8 @@ namespace FlexCoreService.Controllers
                 AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
                 IsSubscribeNews = m.IsSubscribeNews
             }).Single();
+
+            
             return proDto;
         }
 
@@ -62,34 +73,50 @@ namespace FlexCoreService.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost("Login")]
-        [AllowAnonymous]
-        public string Login([FromBody]LoginDto value)
+        public async Task<IActionResult> Login([FromBody] LoginDto value)
         {
-            var user = (from m in _db.Members
-                        where m.Account == value.Account                      
-                        select m).SingleOrDefault();
+            var userData = (from m in _db.Members
+                            where m.Account == value.Account
+                            select m).SingleOrDefault();
 
-            if (user == null)
+            var userPassword = string.Empty;
+            
+
+            if (userData == null)
             {
-                //驗證失敗
-                return "帳號錯誤";
+                //欄位或帳號驗證失敗
+                return Ok("帳號錯誤");
             }
             else
-            {
-                //驗證成功
-                var claims = new List<Claim>
+            {                
+                //驗證密碼
+                userPassword = userData.EncryptedPassword;
+
+                if (userPassword == value.EncryptedPassword)
                 {
-                    new Claim(ClaimTypes.Name, user.Account),
-                    new Claim("FullName", user.Name),
-                    new Claim("MemberId",user.MemberId.ToString())//MemberId為自訂宣告的Type名稱
+                    var claims = new List<Claim>
+                    {
+                    new Claim(ClaimTypes.Name, userData.Account),
+                    new Claim("UserPassword", userData.EncryptedPassword),
+                    new Claim("FullName", userData.Name),
+                    new Claim("MemberId",userData.MemberId.ToString())//MemberId為自訂宣告的Type名稱
                    // new Claim(ClaimTypes.Role, "Administrator")//管理角色
-                };
+                    };
 
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                //控制登入狀態
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                return user.Account;
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddDays(7),
+                    };
+
+                    //控制登入狀態
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    
+                    return Ok(JsonConvert.SerializeObject(claims));
+                }               
+                return Ok(userData.Account);
             }
         }
 
@@ -105,11 +132,16 @@ namespace FlexCoreService.Controllers
         /// <summary>
         /// 登出
         /// </summary>
-        [HttpDelete]
-        [AllowAnonymous]//不需要身分驗證
-        public void Logout()
+        [HttpDelete("Logout")]
+        public string Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return "ok";
+        }
+        [HttpGet]
+        public bool IsLogin()
+        {
+            return User.Identity.IsAuthenticated;
         }
 
         /// <summary>
