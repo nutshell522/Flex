@@ -2,34 +2,31 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
 
-export const useGetApiDataStore = defineStore('getApiData', () => {
-  const res = ref([]);
-  // 把axios修改為async await函式
-  async function getData(url) {
-    try {
-      const data = await axios.get(url);
-      res.value = data.data;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  return {
-    res,
-    getData,
-  };
-});
+//第一個參數getApiData指的是整個store的id
+//官方建議pinia function 為use開頭
+export const useGetApiDataStore = defineStore('getApiData', {
+  state: () => {
+    return {
+      memberData: ref({}),
+    };
+  },
+  actions: {
+    handleLogout() {
+      this.memberData.value = {};
 
-// export const useGetApiDataStore = defineStore({
-//   id: 'counter',
-//   state: () => ({
-//     counter: 0,
-//   }),
-//   getters: {
-//     doubleCount: (state) => state.counter * 2,
-//   },
-//   actions: {
-//     increment() {
-//       this.counter++;
-//     },
-//   },
-// });
+      const baseAddress = 'https://localhost:7183';
+      const uri = `${baseAddress}/api/Users/Logout`;
+      axios
+        .delete(uri)
+        .then((res) => {
+          console.log('delet API');
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    setMemberUsername(username) {
+      this.memberData.username = username;
+    },
+  },
+});

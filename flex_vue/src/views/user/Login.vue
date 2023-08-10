@@ -84,6 +84,31 @@
 import axios from 'axios';
 import navBar from '@/components/home/navBar.vue';
 import { ref } from 'vue';
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+
+axios.defaults.withCredentials = true;
+
+const getApiStore = useGetApiDataStore();
+const { setMemberUsername } = getApiStore;
+const router = useRouter();
+
+const loggedInUser = ref(null);
+
+onMounted(() => {
+  //檢查本地儲存是否有登錄信息
+  const storedUser = localStorage.getItem('loggedInUser');
+  //console.log(storedUser);
+
+  if (storedUser) {
+    loggedInUser.value = JSON.parse(storedUser);
+    // 重新将用户信息同步到 pinia store
+    getApiStore.setMemberUsername(loggedInUser.value.username);
+    //console.log('onMounted');
+  }
+});
 
 const errors = ref([]);
 const userData = ref([]);
@@ -171,15 +196,35 @@ function Login() {
         //errors.value.push('密碼正確');
         //console.log(userPassword.Value);
         const userName = jsonData.find((claim) => claim.Type === 'FullName');
-        console.log(userName.Value);
+        console.log('userName' + userName.Value);
+
+        if (userName) {
+          setMemberUsername(userName.Value);
+          //this~~~~
+          console.log('setMemberUsername' + userName.Value);
+        }
         //alert('登入成功啦港動~~~');
+        handleSuccessfulLogin({
+          username: userName.Value, // 假設用戶名稱在這裡
+        });
+        //router.push({ path: '/' });
       }
     })
     .catch((err) => {
       errors.value = [];
       errors.value.push('密碼錯誤');
+      console.error(err);
       //todo錯誤累計三次
     });
+}
+
+function handleSuccessfulLogin(userData) {
+  // 將用戶信息儲存到本地存儲中
+  localStorage.setItem('loggedInUser', JSON.stringify(userData));
+
+  // 同步用戶信息到 pinia store
+  loggedInUser.value = userData;
+  setMemberUsername(userData.username);
 }
 
 function register() {

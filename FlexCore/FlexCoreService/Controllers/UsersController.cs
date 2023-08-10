@@ -73,19 +73,19 @@ namespace FlexCoreService.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost("Login")]
-        public string Login([FromBody] LoginDto value)
+        public async Task<IActionResult> Login([FromBody] LoginDto value)
         {
             var userData = (from m in _db.Members
                             where m.Account == value.Account
                             select m).SingleOrDefault();
 
-            var userPassword=string.Empty;
+            var userPassword = string.Empty;
             
 
             if (userData == null)
             {
                 //欄位或帳號驗證失敗
-                return "帳號錯誤";
+                return Ok("帳號錯誤");
             }
             else
             {                
@@ -105,12 +105,18 @@ namespace FlexCoreService.Controllers
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddDays(7),
+                    };
+
                     //控制登入狀態
-                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                     
-                    return JsonConvert.SerializeObject(claims);
+                    return Ok(JsonConvert.SerializeObject(claims));
                 }               
-                return userData.Account;
+                return Ok(userData.Account);
             }
         }
 
@@ -126,11 +132,16 @@ namespace FlexCoreService.Controllers
         /// <summary>
         /// 登出
         /// </summary>
-        [HttpDelete]
-        [AllowAnonymous]//不需要身分驗證
-        public void Logout()
+        [HttpDelete("Logout")]
+        public string Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return "ok";
+        }
+        [HttpGet]
+        public bool IsLogin()
+        {
+            return User.Identity.IsAuthenticated;
         }
 
         /// <summary>
