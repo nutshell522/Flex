@@ -74,5 +74,22 @@ namespace FlexCoreService.Controllers
 
             return shoesMaterial;
         }
+
+        [HttpGet("Size/{id}")]
+        public async Task<ActionResult<ShoesSize>> GetOneSize(int id)
+        {
+            if (_db.ShoesSizes == null)
+            {
+                return NotFound();
+            }
+            var shoesSize = await _db.ShoesSizes.FindAsync(id);
+
+            if (shoesSize == null)
+            {
+                return NotFound();
+            }
+
+            return shoesSize;
+        }
     }
 }

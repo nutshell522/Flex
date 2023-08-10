@@ -44,5 +44,15 @@ namespace FlexCoreService.CustomeShoes.Infra.DPRepository
             var result = dbConnection.Query<ShoesOptionsDto>(sql);
             return result;
         }
+
+        public IEnumerable<ShoesSizeDto> GetSize()
+        {
+            string sql = @"select ss.SizeId, ss.SizeName from ShoesSizes as ss
+";
+
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.Query<ShoesSizeDto>(sql);
+            return result;
+        }
     }
 }

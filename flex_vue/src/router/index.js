@@ -110,6 +110,36 @@ const routes = [
       },
     ],
   },
+  {
+    //http://loaclhost/CustomeShoes/Contact
+    path: "/CustomeShoes/Contact",
+    component: () => import("../views/CustomeShoes/Contact.vue"),
+    children: [
+      {
+        path: ":shoescategoryName",
+        component: () => import("../views/CustomeShoes/CustomeShoesAll.vue"),
+      },
+      {
+        //http://loaclhost/Login
+        path: "/login",
+        component: Login,
+      },
+    ],
+  },
+
+  {
+    //http://loaclhost/CustomeShoes/Contact
+    path: "/CustomeShoes/FAQ",
+    component: () => import("../views/CustomeShoes/FAQ.vue"),
+    children: [
+      {
+        //http://loaclhost/Login
+        path: "/login",
+        component: Login,
+      },
+    ],
+  },
+
 ];
 
 const router = createRouter({
