@@ -102,109 +102,6 @@
               </table>
             </td>
           </tr>
-
-        </template>
-      </tbody>
-    </table>
-  </div>
-  <div class="container" v-if="Type == 2">
-    <table class="table" style="width: 100%;">
-      <div id="cateorder" class="container">
-        <button @click="setostatusValue('1')">即將開始</button>
-
-        <button @click="setostatusValue('7')">已取消</button>
-
-        <button @click="setostatusValue('6')">已結束</button>
-      </div>
-      <thead>
-        <h3>我報名的活動</h3>
-      </thead>
-      <tbody>
-        <template v-for="item in GetOrders" :key="item.id">
-          <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-            <td style=" text-align: left;">
-              <div>活動名稱：{{ orderItem.product_name }}</div>
-              <div>活動時間:{{ item.order_description }}</div>
-              <div>活動地點：{{ item.recipient_address }}</div>
-              <div>活動講師:{{ item.receiver }}</div>
-              <div>費用：{{ orderItem.per_price }}</div>
-            </td>
-            <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
-          </tr>
-          <tr>
-            <td colspan="8">
-              <table class="table " style=" text-align: left;border:2px solid black;"
-                v-show="expandedItems.includes(item.id)">
-                <tr style="justify-content: center;">
-                  <td colspan="8">
-                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
-                      <tr>
-                        <td style="padding:10px 200px 20px 20px;width: 500px;">
-                          <h3>訂單詳請</h3>
-                          <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
-                          <div>訂單編號:{{ item.id }}</div>
-                          <div>發票編號{{ item.receipt }}</div>
-                          <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
-                            @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-        </template>
-      </tbody>
-    </table>
-  </div>
-  <div class="container" v-if="Type == 3">
-    <table class="table" style="width: 100%;">
-      <div id="cateorder" class="container">
-        <button @click="setostatusValue('1')">即將開始</button>
-
-        <button @click="setostatusValue('7')">已取消</button>
-
-        <button @click="setostatusValue('6')">已結束</button>
-      </div>
-      <thead>
-        <h3>我報名的課程</h3>
-      </thead>
-      <tbody>
-        <template v-for="item in GetOrders" :key="item.id">
-          <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-            <td style=" text-align: left;">
-              <div>課程名稱：{{ orderItem.product_name }}</div>
-              <div>課程時間:{{ item.order_description }}</div>
-              <div>課程地點：{{ item.recipient_address }}</div>
-              <div>課程講師:{{ item.receiver }}</div>
-            </td>
-            <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
-          </tr>
-          <tr>
-            <td colspan="8">
-              <table class="table " style=" text-align: left;border:2px solid black;"
-                v-show="expandedItems.includes(item.id)">
-                <tr style="justify-content: center;">
-                  <td colspan="8">
-                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
-                      <tr>
-                        <td style="padding:10px 200px 20px 20px;width: 500px;">
-                          <h3>訂單詳請</h3>
-                          <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
-                          <div>訂單編號:{{ item.id }}</div>
-                          <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
-                            @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
         </template>
       </tbody>
     </table>
@@ -227,7 +124,6 @@
         <template v-for="item in GetOrders" :key="item.id">
 
           <tr>
-
             <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
             <td>{{ formatOrderTime(item.ordertime) }}</td>
             <td>{{ item.id }}</td>
@@ -290,7 +186,106 @@
               </table>
             </td>
           </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+  <div class="container" v-if="Type == 2">
+    <table class="table" style="width: 100%;">
+      <div id="cateorder" class="container">
+        <button @click="setostatusValue('1')">即將開始</button>
 
+        <button @click="setostatusValue('7')">已取消</button>
+
+        <button @click="setostatusValue('6')">已結束</button>
+      </div>
+      <thead>
+        <h3>我報名的活動</h3>
+      </thead>
+      <tbody>
+        <template v-for="item in GetOrders" :key="item.id">
+          <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+            <td style=" text-align: left;">
+              <div>活動名稱：{{ orderItem.product_name }}</div>
+              <div>活動時間:{{ item.order_description }}</div>
+              <div>活動地點：{{ item.recipient_address }}</div>
+              <div>活動講師:{{ item.receiver }}</div>
+              <div>費用：{{ orderItem.per_price }}</div>
+            </td>
+            <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
+          </tr>
+          <tr>
+            <td colspan="8">
+              <table class="table " style=" text-align: left;border:2px solid black;"
+                v-show="expandedItems.includes(item.id)">
+                <tr style="justify-content: center;">
+                  <td colspan="8">
+                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
+                      <tr>
+                        <td style="padding:10px 200px 20px 20px;width: 500px;">
+                          <h3>訂單詳請</h3>
+                          <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
+                          <div>訂單編號:{{ item.id }}</div>
+                          <div>發票編號{{ item.receipt }}</div>
+                          <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
+                            @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+  <div class="container" v-if="Type == 3">
+    <table class="table" style="width: 100%;">
+      <div id="cateorder" class="container">
+        <button @click="setostatusValue('1')">即將開始</button>
+
+        <button @click="setostatusValue('7')">已取消</button>
+
+        <button @click="setostatusValue('6')">已結束</button>
+      </div>
+      <thead>
+        <h3>我報名的課程</h3>
+      </thead>
+      <tbody>
+        <template v-for="item in GetOrders" :key="item.id">
+          <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+            <td style=" text-align: left;">
+              <div>課程名稱：{{ orderItem.product_name }}</div>
+              <div>課程時間:{{ item.order_description }}</div>
+              <div>課程地點：{{ item.recipient_address }}</div>
+              <div>課程講師:{{ item.receiver }}</div>
+            </td>
+            <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
+          </tr>
+          <tr>
+            <td colspan="8">
+              <table class="table " style=" text-align: left;border:2px solid black;"
+                v-show="expandedItems.includes(item.id)">
+                <tr style="justify-content: center;">
+                  <td colspan="8">
+                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
+                      <tr>
+                        <td style="padding:10px 200px 20px 20px;width: 500px;">
+                          <h3>訂單詳請</h3>
+                          <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
+                          <div>訂單編號:{{ item.id }}</div>
+                          <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
+                            @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
         </template>
       </tbody>
     </table>
