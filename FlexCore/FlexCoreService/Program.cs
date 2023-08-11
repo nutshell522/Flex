@@ -82,7 +82,7 @@ namespace FlexCoreService
 
             app.UseCors();
 
-            app.UseRouting();
+            //app.UseRouting();
 
             app.UseCookiePolicy();
             app.UseAuthentication();
