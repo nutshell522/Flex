@@ -389,7 +389,6 @@ const Returndetail = async () => {
 };
 const showModal = () => {
   ("#insertModal").modal('show');
-  Returndetail();
 };
 const setreturnIdValue = (paramValue) => {
   retrunId.value = paramValue;
