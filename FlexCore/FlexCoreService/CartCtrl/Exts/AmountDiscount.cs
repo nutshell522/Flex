@@ -8,7 +8,7 @@ namespace FlexCoreService.CartCtrl.Exts
         {
             
         }
-        public override IEnumerable<ProductDiscountVM> Process(CartContext cartItems)
+        public override IEnumerable<Discount> Process(CartContext cartItems)
         {
             throw new NotImplementedException();
         }

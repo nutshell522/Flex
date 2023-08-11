@@ -24,6 +24,19 @@ namespace FlexCoreService.Controllers
             _configuration = configuration;
         }
 
+        [HttpGet("index")]
+        public async Task<IEnumerable<ActivityIndexDTO>> GetAll()
+        {
+            if (!_context.Activities.Any())
+            {
+                return Enumerable.Empty<ActivityIndexDTO>();
+            }
+
+           return  await _repo.GetAllAsync();
+          
+        }
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ActivityInfoDto>> GetOneActivity(int id)
         {
