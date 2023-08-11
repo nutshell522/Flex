@@ -1,14 +1,9 @@
 ﻿using EFModels.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Web;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cors;
-using static System.Net.WebRequestMethods;
-using FlexCoreService.ActivityCtrl.Models.Dtos;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
-using ECPay.Payment.Integration;
 
 
 namespace FlexCoreService.Controllers
