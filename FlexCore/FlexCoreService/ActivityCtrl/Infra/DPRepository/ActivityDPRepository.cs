@@ -5,6 +5,7 @@ using FlexCoreService.ProductCtrl.Models.Dtos;
 using FlexWebAPI.Models.DTO;
 using Microsoft.Data.SqlClient;
 
+
 namespace FlexCoreService.ActivityCtrl.Infra.DPRepository
 {
     public class ActivityDPRepository : IActivityDPRepository
@@ -33,6 +34,27 @@ WHERE ActivityId = @id
             using(var conn = new SqlConnection(_connStr))
             {
                 return conn.QueryFirstOrDefault<ActivityInfoDto>(sql, new {id});
+            }
+        }
+
+        public async Task<IEnumerable<ActivityIndexDTO>> GetAllAsync()
+        {
+            string sql = @"SELECT
+    Activities.ActivityId,
+    Activities.ActivityName,
+    Activities.ActivityDate,
+    MIN(ActivityImg.ImgPath) AS ImgPath
+FROM
+    Activities
+JOIN
+    ActivityImg ON ActivityImg.fk_ActivityId = Activities.ActivityId
+GROUP BY
+    Activities.ActivityId, Activities.ActivityName, Activities.ActivityDate";
+
+
+            using(var conn =new SqlConnection(_connStr))
+            {
+                return await conn.QueryAsync<ActivityIndexDTO>(sql);
             }
         }
 

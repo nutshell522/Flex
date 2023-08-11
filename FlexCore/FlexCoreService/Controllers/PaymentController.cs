@@ -7,6 +7,9 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cors;
 using static System.Net.WebRequestMethods;
 using FlexCoreService.ActivityCtrl.Models.Dtos;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
+using ECPay.Payment.Integration;
+
 
 namespace FlexCoreService.Controllers
 {
@@ -15,6 +18,12 @@ namespace FlexCoreService.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
+        private AppDbContext _db;
+        public PaymentController(AppDbContext context)
+        {
+            _db = context;
+        }
+
         [HttpGet]
         public Dictionary<string, string> MakePayment()
         {
@@ -50,8 +59,27 @@ namespace FlexCoreService.Controllers
         //{
         //    EcpayOrderDTO dto = new EcpayOrderDTO
         //    {
-        //        dto.MemberID = order["MemberID"],
-        //        dto.MerchantTradeNo = order.MerchantTradeNo;
+        //        MemberID = int.Parse(order["MemberID"]),
+        //        MerchantTradeNo = order["MerchantTradeNo"],
+        //        RtnCode = 0, //未付款
+        //        RtnMsg = "訂單成功尚未付款",
+        //        TradeNo = order["TradeNo"],
+        //        TradeAmt = int.Parse(order["TradeAmt"]),
+        //        TradeDate = order["TradeDate"],
+        //        PaymentDate = order["PaymentDate"],
+        //        PaymentType = order["PaymentType"],
+        //        PaymentTypeChargeFee = int.Parse(order["PaymentTypeChargeFee"]),
+        //        SimulatePaid = 0,
+        //        TradeDesc = order["TradeDesc"],
+        //        ItemName = order["ItemName"],
+        //        ActivityId = int.Parse(order["ActivityId"])
+        //    };
+
+        //    try { 
+        //    _db.EcpayOrders.
+        //    }
+        //    catch { }
+
         //}
 
 

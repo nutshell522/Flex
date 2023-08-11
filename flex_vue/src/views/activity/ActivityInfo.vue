@@ -4,9 +4,8 @@
 <section class="featured row">
     <div class="col-md-8" data-aos="fade-left" data-aos-delay="400" data-aos-duration="800">
         <div class="featured-img">
-            <img class="featured-big" src='"/Public/Img/"+{{activities.imgPath}}'
-                alt="Featured 1">
-
+            <img :src='imgBaseUrl+"/Public/Img/"+activities.imgPath'
+                alt="Featured 1" class="featured-big">
         </div>
     </div>
 
@@ -75,7 +74,15 @@
 import axios from 'axios';
 import{ref, reactive} from 'vue';
 import AOS from 'aos';
+import {useRoute} from 'vue-router';
+
+const route=useRoute();
+const activityId = route.params.id;
+const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
+//從F12的Vue去看的
+console.log(activityId);
 AOS.init();
+
 const activities = reactive({
     activityName:"",
     activityDate:"",
@@ -110,7 +117,7 @@ axios.get(`https://localhost:7183/api/Activity/${id}`)
     console.log(err);
 })
 }
-loadActivities(2);
+loadActivities(activityId);
 
 </script>
 
