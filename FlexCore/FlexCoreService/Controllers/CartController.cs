@@ -41,5 +41,21 @@ namespace FlexCoreService.Controllers
 			var result = await Task.Run(() => _service.UpdateCartItemQty(vm.ToDto(),memberId));
 			return Ok(result);
 		}
+
+		private IEnumerable<BaseDiscountStrategy> LoadDiscount()
+		{
+			var vms = _service.GetActiveDiscounts().Select(x=>x.ToViewModel());
+			foreach (var vm in vms)
+			{
+				if(vm.DiscountType == 1)
+				{
+					yield return new PercentageDiscount(vm);
+				}
+				else
+				{
+					yield return new AmountDiscount(vm);
+				}
+			}
+		}
 	}
 }

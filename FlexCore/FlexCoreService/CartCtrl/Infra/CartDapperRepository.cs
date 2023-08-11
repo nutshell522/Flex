@@ -56,6 +56,8 @@ left join(
 ) AS pir ON pir.fk_ProductId = p.ProductId
 left join Discounts as d on d.fk_ProjectTagId = pti.fk_ProjectTagId
 where p.Status=0 and p.LogOut=0 and c.fk_MemberID = 1 
+AND (d.StartDate <= GETDATE() AND (d.EndDate > GETDATE() OR d.EndDate IS NULL) AND d.status = 1
+OR d.DiscountId IS NULL)
 GROUP BY
 ci.CartItemId, c.CartId, pg.ProductGroupId, ci.Qty, p.ProductId,
 p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
@@ -201,6 +203,23 @@ WHERE CartItemId = @CartItemId"
 				var parameters = new { CartItemId = dto.CartItemId.Value };
 
 				connection.Execute(sql, parameters);
+			}
+		}
+
+		public IEnumerable<ProductDiscountDto> GetActiveDiscounts()
+		{
+			
+			using (IDbConnection dbConnection = new SqlConnection(_connStr))
+			{
+				dbConnection.Open();
+				string sql = @"
+select * from discounts as d
+where d.StartDate <= getdate() 
+and ( d.EndDate > getdate() OR d.EndDate IS NULL) 
+and d.status = 1
+";
+
+				return dbConnection.Query<ProductDiscountDto>(sql);
 			}
 		}
 	}
