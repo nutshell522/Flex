@@ -1,10 +1,11 @@
-import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/home/Home.vue";
-import User from "../views/user/User.vue";
-import Login from "../views/user/Login.vue";
-import ActivityInfo from "../views/activity/ActivityInfo.vue";
-import ActivitySignUp from "../views/activity/ActivitySignUp.vue";
-const webTitle = "FLEX - ";
+import { createRouter, createWebHistory } from 'vue-router';
+import { useGetApiDataStore } from '../stores/useGetApiDataStore';
+import Home from '../views/home/Home.vue';
+import User from '../views/user/User.vue';
+import Login from '../views/user/Login.vue';
+import ActivityInfo from '../views/activity/ActivityInfo.vue';
+import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
+const webTitle = 'FLEX - ';
 
 // 路由設定
 const routes = [
@@ -24,7 +25,7 @@ const routes = [
     //http://loaclhost/User
     path: "/user",
     component: User,
-    meta: { title: `${webTitle}會員` },
+    meta: { title: `${webTitle}會員`, require: true },
   },
   {
     //http://loaclhost/Login
@@ -51,7 +52,7 @@ const routes = [
   },
   {
     //http://loaclhost/Login
-    path: "/login",
+    path: '/login',
     component: Login,
   },
   {
@@ -60,6 +61,7 @@ const routes = [
     component: () => import("../views/product/ProductMenLayout.vue"),
     children: [
       {
+<<<<<<< HEAD
         path: "",
         component: () => import("../views/product/ProductList.vue"),
         meta: { title: `${webTitle}男裝` },
@@ -67,6 +69,15 @@ const routes = [
       {
         path: ":categoryName",
         component: () => import("../views/product/ProductList.vue"),
+=======
+        path: '',
+        component: () => import('../views/product/ProductMen.vue'),
+        meta: { title: `${webTitle}男裝` },
+      },
+      {
+        path: ':categoryName',
+        component: () => import('../views/product/ProductMen.vue'),
+>>>>>>> WUPINYING-main
         meta: {},
         beforeEnter(to, from, next) {
           document.title = `${webTitle}男裝/${to.params.categoryName}`;
@@ -74,8 +85,13 @@ const routes = [
         },
       },
       {
+<<<<<<< HEAD
         path: ":categoryName/:subCategoryName",
         component: () => import("../views/product/ProductList.vue"),
+=======
+        path: ':categoryName/:subCategoryName',
+        component: () => import('../views/product/ProductMen.vue'),
+>>>>>>> WUPINYING-main
         meta: {},
         beforeEnter(to, from, next) {
           document.title = `${webTitle}男裝/${to.params.categoryName}/${to.params.subCategoryName}`;
@@ -85,6 +101,7 @@ const routes = [
       {
         // 當 /ProductMenLayout/:id/posts 匹配成功
         // Detial.vue 將被渲染到 ProductMenLayout 的 <router-view> 内部，替換card.vue
+<<<<<<< HEAD
         path: "detail/:productId",
         component: () => import("../views/product/ProductDetail.vue"),
         meta: {},
@@ -174,25 +191,29 @@ const routes = [
           document.title = `${webTitle}${to.params.productId}`;
           next();
         },
+=======
+        path: 'detail/:prdouctId',
+        component: () => import('../views/product/ProductDetail.vue'),
+>>>>>>> WUPINYING-main
       },
     ],
   },
   {
     //http://loaclhost/CustomeShoes
-    path: "/CustomeShoes",
-    component: () => import("../views/CustomeShoes/CustomeShoesLayout.vue"),
+    path: '/CustomeShoes',
+    component: () => import('../views/CustomeShoes/CustomeShoesLayout.vue'),
     children: [
       {
-        path: "",
-        component: () => import("../views/CustomeShoes/CustomeShoesAll.vue"),
+        path: '',
+        component: () => import('../views/CustomeShoes/CustomeShoesAll.vue'),
       },
       {
-        path: ":shoescategoryName",
-        component: () => import("../views/CustomeShoes/CustomeShoesAll.vue"),
+        path: ':shoescategoryName',
+        component: () => import('../views/CustomeShoes/CustomeShoesAll.vue'),
       },
       {
         //http://loaclhost/Login
-        path: "/login",
+        path: '/login',
         component: Login,
       },
     ],
@@ -240,6 +261,18 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
   }
   next();
+});
+
+router.beforeEach((to, from, next) => {
+  const getApiData = useGetApiDataStore();
+  const { loginSuccess } = getApiData;
+
+  //檢查是否需要驗證，如果需要，則檢查是否已登入
+  if (to.meta.require && !loginSuccess.value) {
+    next({ path: 'login' });
+  } else {
+    next();
+  }
 });
 
 export default router;

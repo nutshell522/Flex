@@ -78,13 +78,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import userList from "../home/userList.vue";
+import { ref, watch } from 'vue';
+import userList from '../home/userList.vue';
+import Cookies from 'js-cookie';
 
 import { storeToRefs } from "pinia"; //把解構又同時具備響應式功能
 import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
 const getApiStore = useGetApiDataStore();
 const { memberData } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
+const { setLoginSuccess } = getApiStore; //function透過store取資料
 
 const { getData } = getApiStore;
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
@@ -109,9 +111,11 @@ watch(getApiStore.memberData, (newValue) => {
   if (newValue.value != null) {
     //console.log('Watch callback called.');
     loginSuccess.value = false;
+    getApiStore.setLoginSuccess(false);
   } else {
     //未登入
     loginSuccess.value = true;
+    getApiStore.setLoginSuccess(true);
   }
 });
 </script>
