@@ -60,7 +60,7 @@
                         @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
                       <button
                         v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setreturnIdValue(item.id); showModal(item.id)" class="btn btn-primary">退貨</button>
+                        @click="setreturnIdValue(item.id)" class="btn btn-primary">退貨</button>
                     </div>
                   </td>
                 </tr>
@@ -310,7 +310,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-info" data-bs-dismiss="modal">關閉</button>
-          <button type="button" class="btn btn-primary" @@click="insert">確定</button>
+          <button type="button" class="btn btn-primary" @click="insert">確定</button>
         </div>
       </div>
     </div>
@@ -387,13 +387,13 @@ const Returndetail = async () => {
       alert(error);
     });
 };
-const showModal = paramValue => {
-  returnMemberId.value = paramValue;
+const showModal = () => {
+  ("#insertModal").modal('show');
   Returndetail();
-  $("#insertModal").modal('show');
 };
 const setreturnIdValue = (paramValue) => {
   retrunId.value = paramValue;
+  showModal();
   ReturnOrders();
 };
 const formatOrderTime = (ordertime) => {
