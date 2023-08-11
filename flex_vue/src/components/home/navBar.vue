@@ -38,18 +38,22 @@
               </div>
             </li>
           </router-link>
-          <li>
-            <div class="nav-list-item">
-              <div>Women</div>
-              <div>女款</div>
-            </div>
-          </li>
-          <li>
-            <div class="nav-list-item">
-              <div>Kid</div>
-              <div>兒童款</div>
-            </div>
-          </li>
+          <router-link to="/women" class="transetion">
+            <li>
+              <div class="nav-list-item">
+                <div>Women</div>
+                <div>女款</div>
+              </div>
+            </li>
+          </router-link>
+          <router-link to="/kid" class="transetion">
+            <li>
+              <div class="nav-list-item">
+                <div>Kid</div>
+                <div>兒童款</div>
+              </div>
+            </li>
+          </router-link>
           <li>
             <div class="nav-list-item">
               <div>Sale</div>
@@ -74,11 +78,11 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import userList from '../home/userList.vue';
+import { ref, watch } from "vue";
+import userList from "../home/userList.vue";
 
-import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
-import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+import { storeToRefs } from "pinia"; //把解構又同時具備響應式功能
+import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
 const getApiStore = useGetApiDataStore();
 const { memberData } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
 
@@ -182,7 +186,7 @@ header {
         }
 
         &:not(:first-child)::before {
-          content: '|';
+          content: "|";
           padding: 0 15px;
           font-size: 14px;
         }

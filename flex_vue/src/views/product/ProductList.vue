@@ -13,21 +13,27 @@ import ProductCard from "@/components/product/ProductCard.vue";
 import axios from "axios";
 import { onMounted, ref, computed, watchEffect, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-
+const route = useRoute();
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
-
 const cards = ref([]);
+
+//創建本機共用屬性
+const localStorageKey = "originalPath";
+
+//設置路徑
+if (route.path.includes("/men")) {
+  localStorage.setItem(localStorageKey, "/men");
+} else if (route.path.includes("/women")) {
+  localStorage.setItem(localStorageKey, "/women");
+} else if (route.path.includes("/kid")) {
+  localStorage.setItem(localStorageKey, "/kid");
+}
+
+//取得原始路徑
+const originalPath = localStorage.getItem(localStorageKey);
 
 //監聽選擇的分類資料，一旦資料變動，重新加載 cards
 //根據選擇的分類資料重新叫用API
-const route = useRoute();
-
-// 獲取當前的路由參數
-//const id = route.params.id;
-
-// 獲取查詢參數
-//const query = route.query;
-
 watch(
   () => route.query, //route.params,
   () => {
@@ -45,11 +51,11 @@ const loadProducts = async () => {
   //   url = `${baseAddress}api/Products/Men`;
   // }
   if (route.query.categoryName && !route.query.subCategoryName) {
-    url = `${baseAddress}api/Products/Men?categoryName=${route.query.categoryName}`;
+    url = `${baseAddress}api/Products${originalPath}?categoryName=${route.query.categoryName}`;
   } else if (route.query.categoryName && route.query.subCategoryName) {
-    url = `${baseAddress}api/Products/Men?categoryName=${route.query.categoryName}&subCategoryName=${route.query.subCategoryName}`;
+    url = `${baseAddress}api/Products${originalPath}?categoryName=${route.query.categoryName}&subCategoryName=${route.query.subCategoryName}`;
   } else {
-    url = `${baseAddress}api/Products/Men`;
+    url = `${baseAddress}api/Products${originalPath}`;
   }
   //console.log(url);
   await axios

@@ -42,7 +42,7 @@ namespace FlexCoreService.Controllers
         //}
 
         // GET: api/Products/Men
-        [HttpGet("Men")]
+        [HttpGet("men")]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetMenProducts(string? categoryName = null, string? subCategoryName = null)
         {
             int salesId = 1;
@@ -56,7 +56,7 @@ namespace FlexCoreService.Controllers
         }
 
         // GET: api/Products/Women
-        [HttpGet("Women")]
+        [HttpGet("women")]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetWomenProducts(string? categoryName = null, string? subCategoryName = null)
         {
             int salesId = 2;
@@ -70,7 +70,7 @@ namespace FlexCoreService.Controllers
         }
 
         // GET: api/Products/Kid
-        [HttpGet("Kid")]
+        [HttpGet("kid")]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetKidProducts(string? categoryName = null, string? subCategoryName = null)
         {
             int salesId = 3;
