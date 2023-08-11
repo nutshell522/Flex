@@ -73,19 +73,19 @@ namespace FlexCoreService.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost("Login")]
-        public string Login([FromBody] LoginDto value)
+        public async Task<IActionResult> Login([FromBody] LoginDto value)
         {
             var userData = (from m in _db.Members
                             where m.Account == value.Account
                             select m).SingleOrDefault();
 
-            var userPassword=string.Empty;
+            var userPassword = string.Empty;
             
 
             if (userData == null)
             {
                 //欄位或帳號驗證失敗
-                return "帳號錯誤";
+                return BadRequest("帳號錯誤");
             }
             else
             {                
@@ -105,32 +105,39 @@ namespace FlexCoreService.Controllers
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddDays(7),
+                    };
+
                     //控制登入狀態
-                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                     
-                    return JsonConvert.SerializeObject(claims);
+                    return Ok(JsonConvert.SerializeObject(claims));
                 }               
-                return userData.Account;
+                return Ok(userData.Account);
             }
         }
-
-
-        //public void ss (LoginDto value)
-        //{
-        //    var Claim = _contextAccessor.HttpContext.User.Claims.First();
-        //    //var memId=Claim.Where(m=>m.Type=="MemberId").FirstOrDefault();
-        //    //12-3
-        //}
-
 
         /// <summary>
         /// 登出
         /// </summary>
-        [HttpDelete]
-        [AllowAnonymous]//不需要身分驗證
-        public void Logout()
+        [HttpDelete("Logout")]
+        public string Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return "ok";
+        }
+
+        /// <summary>
+        /// 測試登入狀態
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public bool IsLogin()
+        {
+            return User.Identity.IsAuthenticated;
         }
 
         /// <summary>
@@ -143,5 +150,32 @@ namespace FlexCoreService.Controllers
             return "未登入";
         }
 
+
+        /// <summary>
+        /// 註冊
+        /// </summary>
+        /// <param name="regdto"></param>
+        /// <returns></returns>
+        [HttpPost("Register")]
+        public async Task<RegisterDto> Register([FromBody] RegisterDto regdto)
+        {
+            Member member = new Member
+            {
+                Account = regdto.Account,
+                EncryptedPassword = regdto.EncryptedPassword,
+                Email = regdto.Email,
+                Birthday = regdto.Birthday,
+                Mobile = regdto.Mobile,
+                Name = regdto.Name,
+                fk_LevelId = 1//一般會員
+            };
+            //todo發送驗證信
+
+
+
+            _db.Members.Add(member);
+            await _db.SaveChangesAsync();
+            return regdto;
+        }
     }
 }

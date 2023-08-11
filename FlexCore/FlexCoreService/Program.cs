@@ -28,16 +28,16 @@ namespace FlexCoreService
                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext"))
             );
 
-            //CORS¶}©ñ
+            //CORS?‹æ”¾
             string MyAllow = "AllowAny";
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy(
-                    name: MyAllow, policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
+                    name: MyAllow, policy => policy.WithOrigins("https://localhost:8080").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
                 );
             });
 
-            //DIª`¤JDapper
+            //DIæ³¨å…¥Dapper
             builder.Services.AddScoped<IProductRepository, ProductDPRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryDPRepository>();
             builder.Services.AddScoped<IActivityDPRepository, ActivityDPRepository>();
@@ -45,17 +45,23 @@ namespace FlexCoreService
             builder.Services.AddScoped<ICustomeShoesRepository, CustomeShoesDPRepository>();
             builder.Services.AddScoped<ICartRepository, CartDapperRepository>();
             builder.Services.AddScoped<IShoesCategoryRepository, ShoesCategoryDPRepository>();
+            builder.Services.AddScoped<ICustomerChooseRepository, ShoesChooseDPRepository>();
 
 
             builder.Services.AddHttpContextAccessor();
 
+            
+            //ï¿½Ï¥ï¿½Cookie
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
-                {
-                    //¥¼µn¤J®É·|¦Û°Ê¾É¨ì³o­Óºô§}
-                    option.LoginPath = new PathString("/api/Users/Login");
-                });
+            {
+                //ï¿½ï¿½ï¿½nï¿½Jï¿½É·|ï¿½Û°Ê¾É¦Vï¿½ï¿½ï¿½}
+                //option.LoginPath = new PathString("/api/Users/NoLogin");
 
-            //³]©w¥þ°ìµn¤J
+                //ï¿½nï¿½Jï¿½É®ï¿½
+                option.ExpireTimeSpan= TimeSpan.FromMinutes(5);
+            });
+
+            //ï¿½ï¿½ï¿½ï¿½]ï¿½wï¿½nï¿½Jï¿½ï¿½ï¿½ï¿½
             //builder.Services.AddMvc(options =>
             //{
             //    options.Filters.Add(new AuthorizeFilter());
@@ -86,7 +92,6 @@ namespace FlexCoreService
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
 
 
             app.MapControllers();

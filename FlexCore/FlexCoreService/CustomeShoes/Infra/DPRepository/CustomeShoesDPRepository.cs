@@ -28,5 +28,19 @@ order by c.ShoesProductId";
 			var result = dbConnection.Query<CustomeShoesDto>(sql);
 			return result;
 		}
-	}
+
+        public CustomeShoesDto SearchOneCustomeShoes(int Id)
+        {
+            string sql = @"select c.ShoesProductId, c.ShoesName, c.ShoesUnitPrice, sc.ShoesCategoryName, MIN(sp.ShoesPictureUrl) AS FirstImgPath 
+from CustomizedShoesPo as c
+join ShoesPictures as sp on c.ShoesProductId = sp.fk_ShoesPictureProduct_Id
+join ShoesCategories as sc on sc.ShoesCategoryId = c.fk_ShoesCategoryId
+group by c.ShoesProductId, c.ShoesName, c.ShoesUnitPrice, sc.ShoesCategoryName
+having c.ShoesProductId=" + @Id;
+
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.QueryFirstOrDefault<CustomeShoesDto>(sql, new { Id });
+            return result;
+        }
+    }
 }

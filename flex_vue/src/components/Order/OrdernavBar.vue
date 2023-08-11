@@ -24,14 +24,14 @@
           <h1>FLEX</h1>
         </router-link>
       </div>
-      <div class="right">
+      <!-- <div class="right">
         <div class="search-wrapper d-flex">
           <input type="search" class="search-bar" placeholder="搜尋" />
           <i class="bi bi-search"></i>
         </div>
         <i class="bi bi-heart"></i>
         <i class="bi bi-bag"></i>
-      </div>
+      </div> -->
     </div>
   </nav>
 </template>

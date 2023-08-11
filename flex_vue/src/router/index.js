@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { useGetApiDataStore } from '../stores/useGetApiDataStore';
 import Home from '../views/home/Home.vue';
 import User from '../views/user/User.vue';
 import Login from '../views/user/Login.vue';
@@ -11,21 +12,21 @@ const webTitle = 'FLEX - ';
 const routes = [
   {
     //http://loaclhost/
-    path: '/',
+    path: "/",
     component: Home,
     meta: { title: `${webTitle}首頁` },
   },
   {
     //http://loaclhost/
-    path: '/cart',
-    component: () => import('../views/home/Cart.vue'),
+    path: "/cart",
+    component: () => import("../views/home/Cart.vue"),
     meta: { title: `${webTitle}購物車` },
   },
   {
     //http://loaclhost/User
-    path: '/user',
+    path: "/user",
     component: User,
-    meta: { title: `${webTitle}會員` },
+    meta: { title: `${webTitle}會員` ,require: true},
   },
   {
     //http://loaclhost/Login
@@ -61,18 +62,41 @@ const routes = [
     component: Login,
   },
   {
+    //http://loaclhost/orders
+    path: "/orders",
+    component: () => import("../views/orders/orderindex.vue"),
+    meta: { title: `${webTitle}訂單` },
+  },
+  {
+    //http://loaclhost/activityInfo
+    path: "/activityInfo",
+    component: ActivityInfo,
+    meta: { title: `${webTitle}活動` },
+  },
+  {
+    //http://loaclhost/activitySignUp
+    path: "/activitySignUp",
+    component: ActivitySignUp,
+    meta: { title: `${webTitle}活動報名` },
+  },
+  {
+    //http://loaclhost/Login
+    path: '/login',
+    component: Login,
+  },
+  {
     //http://loaclhost/Men
-    path: '/men',
-    component: () => import('../views/product/ProductMenLayout.vue'),
+    path: "/men",
+    component: () => import("../views/product/ProductMenLayout.vue"),
     children: [
       {
         path: "",
-        component: () => import("../views/product/ProductMen.vue"),
+        component: () => import("../views/product/ProductList.vue"),
         meta: { title: `${webTitle}男裝` },
       },
       {
         path: ":categoryName",
-        component: () => import("../views/product/ProductMen.vue"),
+        component: () => import("../views/product/ProductList.vue"),
         meta: {},
         beforeEnter(to, from, next) {
           document.title = `${webTitle}男裝/${to.params.categoryName}`;
@@ -81,7 +105,7 @@ const routes = [
       },
       {
         path: ":categoryName/:subCategoryName",
-        component: () => import("../views/product/ProductMen.vue"),
+        component: () => import("../views/product/ProductList.vue"),
         meta: {},
         beforeEnter(to, from, next) {
           document.title = `${webTitle}男裝/${to.params.categoryName}/${to.params.subCategoryName}`;
@@ -91,20 +115,123 @@ const routes = [
       {
         // 當 /ProductMenLayout/:id/posts 匹配成功
         // Detial.vue 將被渲染到 ProductMenLayout 的 <router-view> 内部，替換card.vue
-        path: "detail/:prdouctId",
+        path: "detail/:productId",
         component: () => import("../views/product/ProductDetail.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}${to.params.productId}`;
+          next();
+        },
+      },
+    ],
+  },
+  {
+    //http://loaclhost/Women
+    path: "/women",
+    component: () => import("../views/product/ProductWomenLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("../views/product/ProductList.vue"),
+        meta: { title: `${webTitle}女裝` },
+      },
+      {
+        path: ":categoryName",
+        component: () => import("../views/product/ProductList.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}女裝/${to.params.categoryName}`;
+          next();
+        },
+      },
+      {
+        path: ":categoryName/:subCategoryName",
+        component: () => import("../views/product/ProductList.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}女裝/${to.params.categoryName}/${to.params.subCategoryName}`;
+          next();
+        },
+      },
+      {
+        // 當 /ProductMenLayout/:id/posts 匹配成功
+        // Detial.vue 將被渲染到 ProductMenLayout 的 <router-view> 内部，替換card.vue
+        path: "detail/:productId",
+        component: () => import("../views/product/ProductDetail.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}${to.params.productId}`;
+          next();
+        },
+      },
+    ],
+  },
+  {
+    //http://loaclhost/Kid
+    path: "/kid",
+    component: () => import("../views/product/ProductKidLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("../views/product/ProductList.vue"),
+        meta: { title: `${webTitle}童裝` },
+      },
+      {
+        path: ":categoryName",
+        component: () => import("../views/product/ProductList.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}童裝/${to.params.categoryName}`;
+          next();
+        },
+      },
+      {
+        path: ":categoryName/:subCategoryName",
+        component: () => import("../views/product/ProductList.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}童裝/${to.params.categoryName}/${to.params.subCategoryName}`;
+          next();
+        },
+      },
+      {
+        // 當 /ProductMenLayout/:id/posts 匹配成功
+        // Detial.vue 將被渲染到 ProductMenLayout 的 <router-view> 内部，替換card.vue
+        path: "detail/:productId",
+        component: () => import("../views/product/ProductDetail.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}${to.params.productId}`;
+          next();
+        },
       },
     ],
   },
   {
     //http://loaclhost/CustomeShoes
-    path: "/CustomeShoes",
-    component: () => import("../views/CustomeShoes/CustomeShoesLayout.vue"),
+    path: '/CustomeShoes',
+    component: () => import('../views/CustomeShoes/CustomeShoesLayout.vue'),
     children: [
       {
-        path: "",
-        component: () => import("../views/CustomeShoes/CustomeShoesAll.vue"),
+        path: '',
+        component: () => import('../views/CustomeShoes/CustomeShoesAll.vue'),
       },
+      {
+        path: ':shoescategoryName',
+        component: () => import('../views/CustomeShoes/CustomeShoesAll.vue'),
+      },
+      {
+        //http://loaclhost/Login
+        path: '/login',
+        component: Login,
+      },
+    ],
+  },
+  {
+    //http://loaclhost/CustomeShoes/Contact
+    path: "/CustomeShoes/Contact",
+    component: () => import("../views/CustomeShoes/Contact.vue"),
+    children: [
       {
         path: ":shoescategoryName",
         component: () => import("../views/CustomeShoes/CustomeShoesAll.vue"),
@@ -116,6 +243,20 @@ const routes = [
       },
     ],
   },
+
+  {
+    //http://loaclhost/CustomeShoes/Contact
+    path: "/CustomeShoes/FAQ",
+    component: () => import("../views/CustomeShoes/FAQ.vue"),
+    children: [
+      {
+        //http://loaclhost/Login
+        path: "/login",
+        component: Login,
+      },
+    ],
+  },
+
 ];
 
 const router = createRouter({
@@ -129,6 +270,18 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
   }
   next();
+});
+
+router.beforeEach((to, from, next) => {
+  const getApiData = useGetApiDataStore();
+  const { loginSuccess } = getApiData;
+
+  //檢查是否需要驗證，如果需要，則檢查是否已登入
+  if (to.meta.require && !loginSuccess.value) {
+    next({ path: 'login' });
+  } else {
+    next();
+  }
 });
 
 export default router;

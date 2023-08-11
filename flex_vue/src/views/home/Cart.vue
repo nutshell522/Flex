@@ -72,53 +72,79 @@ const loadCartItems = async () => {
 
 loadCartItems();
 
-const computedValue = computed(() => {
-  // 定義計算屬性的計算邏輯
-});
 
 
 // 購物車物件
 class ShoppingCartItem {
-  private itemInfo: {
-    cartItemId: number;
-    qty: number;
-    // 可以添加其他商品信息，例如名称、价格等
-  } = { cartItemId: 0, qty: 0 };;
+  private item: CartItem;
 
-  constructor(initialCartItemId: number, initialQty: number) {
-    this.itemInfo.cartItemId = initialCartItemId;
-    this.itemInfo.qty = initialQty;
+  constructor(cartitem: CartItem) {
+    this.item = cartitem;
+  }
+  addOneItem():void{
+    this.addItem(1);
   }
 
   addItem(qty: number): void {
-    this.itemInfo.qty += qty;
-    alert(this.itemInfo.qty)
+    this.item.qty += qty;
+    this.updateItemQty();
+  }
+  removeOneItem():void{
+    this.removeItem(1);
   }
 
   removeItem(qty: number): void {
-    if (this.itemInfo.qty >= qty) {
-      this.itemInfo.qty -= qty;
-      alert(this.itemInfo.qty)
+    if (this.item.qty >= qty) {
+      this.item.qty = Math.max(this.item.qty - qty , 0);
+      if(this.item.qty>0){
+        this.updateItemQty();
+      }
+      if(this.item.qty<=0){
+        const result = confirm("是否刪除此商品？");
+        if(result){
+          this.updateItemQty();
+        }
+        else{
+          this.item.qty=1;
+        }
+      }
     }
   }
 
   getCartItemQty(): number {
-    return this.itemInfo.qty;
+    return this.item.qty;
   }
+
+  private updateItemQty = async () => {
+    let url: string = `${import.meta.env.VITE_API_BASEADDRESS}api/Cart/UpdateItem`;
+    await axios
+      .put(url,this.item)
+      .then((response) => {
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
 }
 
-const incrementCartItem = (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem.cartId, cartItem.qty);
-  shoppingCart.addItem(1);
+const incrementCartItem = async (cartItem: CartItem) => {
+  const shoppingCart = new ShoppingCartItem(cartItem)
+  await shoppingCart.addOneItem();
+  setTimeout(() => {
+    loadCartItems();
+  }, 1000);
 };
 
-const decrementCartItem = (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem.cartId, cartItem.qty);
-  shoppingCart.removeItem(1);
+const decrementCartItem = async (cartItem: CartItem) => {
+  const shoppingCart = new ShoppingCartItem(cartItem);
+  await shoppingCart.removeOneItem();
+  setTimeout(() => {
+    loadCartItems();
+  }, 1000);
 };
 
 const getCartItemQty = (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem.cartId, cartItem.qty);
+  const shoppingCart = new ShoppingCartItem(cartItem);
   return shoppingCart.getCartItemQty();
 };
 

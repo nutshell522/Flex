@@ -18,13 +18,19 @@ namespace FlexCoreService.ProductCtrl.Infra.DPRepository
 
         public IEnumerable<ProductDetailDto> GetProductDetail(string productId)
         {
-            string sql = @"select p.ProductId,p.ProductName,p.UnitPrice,p.SalesPrice,cc.ColorName,
-sc.SizeName,pg.Qty
-from Products as p
-join ProductGroups as pg on pg.fk_ProductId=p.ProductId
-join ColorCategories as cc on cc.ColorId=pg.fk_ColorId
-join SizeCategories as sc on sc.SizeId=pg.fk_SizeId
-where p.Status=0 and p.LogOut=0 and p.ProductId= '"+ @productId+"'";
+            string sql = @"select 
+p.ProductId,p.ProductName,p.ProductDescription,p.ProductMaterial,p.ProductOrigin, 
+p.UnitPrice,p.SalesPrice,pg.ProductGroupId,cc.ColorName,sc.SizeName, 
+pg.Qty,pi.ImgPath as DefaultColorImg 
+from Products as p 
+join ProductGroups as pg on pg.fk_ProductId=p.ProductId 
+join ColorCategories as cc on cc.ColorId=pg.fk_ColorId 
+join SizeCategories as sc on sc.SizeId=pg.fk_SizeId 
+join ProductImgs as pi on pi.fk_ProductId =p.ProductId 
+where p.Status=0 and 
+p.LogOut=0 and 
+pi.fk_ColorId=cc.ColorId and 
+p.ProductId='" + @productId+"'";
 
             using IDbConnection dbConnection = new SqlConnection(_connStr);
             var result = dbConnection.Query<ProductDetailDto>(sql, new { productId });

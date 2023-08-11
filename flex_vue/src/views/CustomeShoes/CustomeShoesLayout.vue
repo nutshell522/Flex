@@ -11,11 +11,13 @@
         </div>
       </div>
     </div>
+    <homeFooter></homeFooter>
   </template>
   
   <script setup>
   import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
   import ShoesCategoryBar from "@/components/customeShoes/ShoesCategoryBar.vue";
+  import homeFooter from "@/components/home/footer.vue";
   </script>
   
   <style></style>
