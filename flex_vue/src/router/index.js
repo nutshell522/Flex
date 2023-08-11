@@ -5,6 +5,7 @@ import User from '../views/user/User.vue';
 import Login from '../views/user/Login.vue';
 import ActivityInfo from '../views/activity/ActivityInfo.vue';
 import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
+import ActivityIndex from '../views/activity/ActivityIndex.vue';
 const webTitle = 'FLEX - ';
 
 // 路由設定
@@ -25,7 +26,35 @@ const routes = [
     //http://loaclhost/User
     path: "/user",
     component: User,
-    meta: { title: `${webTitle}會員`, require: true },
+    meta: { title: `${webTitle}會員` ,require: true},
+  },
+  {
+    //http://loaclhost/Login
+    path: '/login',
+    component: Login,
+  },
+  {
+    //http://loaclhost/orders
+    path: '/orders',
+    component: () => import('../views/orders/orderindex.vue'),
+    meta: { title: `${webTitle}訂單` },
+  },
+  {
+    //http://loaclhost/activityInfo
+    path: '/activityInfo/:id',
+    component: ActivityInfo,
+    meta: { title: `${webTitle}活動` },
+  },
+  {
+    //http://loaclhost/activitySignUp
+    path: '/activitySignUp',
+    component: ActivitySignUp,
+    meta: { title: `${webTitle}活動報名` },
+  },
+  {
+    path: '/activityIndex',
+    component: ActivityIndex,
+    meta: { title: `${webTitle}活動首頁` },
   },
   {
     //http://loaclhost/Login
