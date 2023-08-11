@@ -2,9 +2,9 @@
 
 namespace FlexCoreService.CartCtrl.Exts
 {
-    public class PercentageDiscount : BaseDiscountStrategy
+    public class BuyMoreItemsAmountDiscount : BaseDiscountStrategy
     {
-        public PercentageDiscount(ProductDiscountVM vm)
+        public BuyMoreItemsAmountDiscount(ProductDiscountVM vm)
         {
             
         }
