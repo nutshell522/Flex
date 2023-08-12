@@ -70,7 +70,7 @@
         <i class="bi bi-heart"></i>
         <i class="bi bi-bag"></i>
         <pre>
-          <p>{{ username }}</p>
+          <p>{{ memberInfo.username}}</p>
         </pre>
       </div>
     </div>
@@ -85,10 +85,11 @@ import Cookies from 'js-cookie';
 import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 const getApiStore = useGetApiDataStore();
-const { username } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
+const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
+const { memberInfo } = storeToRefs(getApiStore);
 const { setLoginSuccess } = getApiStore; //function透過store取資料
-
 const { getData } = getApiStore;
+
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const url = `${baseAddress}api/Users/Login`;
 function getApi() {
@@ -103,20 +104,15 @@ function hideList() {
   isListVisible.value = false;
 }
 
-//userIcon
-const loginSuccess = ref(false);
-
-watch(username, (newValue) => {
-  //登入
-  console.log('Username changed:', newValue);
+watch(memberInfo, (newValue) => {
   if (newValue) {
-    loginSuccess.value = true;
-    console.log('Watch callback called.');
     setLoginSuccess(true);
+    //console.log('人頭' + loginSuccess.value);
+
+    loginSuccess.value = true;
   } else {
-    //未登入時username=null
-    loginSuccess.value = false;
     setLoginSuccess(false);
+    loginSuccess.value = false;
   }
 });
 </script>

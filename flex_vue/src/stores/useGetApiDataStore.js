@@ -10,19 +10,19 @@ export const useGetApiDataStore = defineStore('getApiData', {
   state: () => {
     return {
       loginSuccess: ref(false),
-      username: ref(null),
-      memberId: ref(null),
+      memberInfo: {
+        username: null,
+        memberId: null,
+      },
     };
   },
   actions: {
     setLoginSuccess(value) {
-      this.loginSuccess = value;
-      //這邊還沒有存成功我的大頭照
-      //console.log(this.loginSuccess);
+      this.loginSuccess = value; //顯示登入字
+      console.log('轉成大頭' + this.loginSuccess);
     },
     handleLogout() {
-      this.username = null;
-      this.memberId = null;
+      this.memberInfo = null;
       this.loginSuccess = false;
       Cookies.remove('user_cookie');
 
@@ -40,9 +40,8 @@ export const useGetApiDataStore = defineStore('getApiData', {
       //router.push({ path: '/login' });
       window.location.href = '/login';
     },
-    setMemberUsername(username, memberId) {
-      this.username = username;
-      this.memberId = memberId;
+    setMemberUsername(memberInfo) {
+      this.memberInfo = memberInfo;
     },
   },
 });

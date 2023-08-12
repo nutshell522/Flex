@@ -130,6 +130,7 @@ axios.defaults.withCredentials = true;
 
 const getApiStore = useGetApiDataStore();
 const { setMemberUsername } = getApiStore;
+const { setLoginSuccess } = getApiStore;
 const router = useRouter();
 
 const loggedInUser = ref(null);
@@ -143,8 +144,10 @@ onMounted(() => {
     loggedInUser.value = JSON.parse(storedUser);
     // 同步到 pinia store
     getApiStore.setMemberUsername(loggedInUser.value.username);
-    console.log('onMountedusername' + loggedInUser.value.username);
-    console.log('onMountedmemberId' + loggedInUser.value.memberId);
+    getApiStore.setMemberUsername(loggedInUser.value.memberId);
+    console.log('onMountedusername', loggedInUser.value.username);
+    console.log('onMountedmemberId', loggedInUser.value.memberId);
+    setLoginSuccess(true);
   }
 });
 
@@ -246,22 +249,21 @@ function Login() {
       const userPassword = jsonData.find(
         (claim) => claim.Type === 'UserPassword'
       );
-      console.log(userPassword.Value);
+      //console.log(userPassword.Value);
 
       if (userPassword.Value === password.value) {
         //密碼正確
         errors.value = [];
-        //console.log(userPassword.Value);
+
+        //取得登入者資料
         const userName = jsonData.find((claim) => claim.Type === 'FullName');
-        //console.log('userName' + userName.Value);
         const userId = jsonData.find((claim) => claim.Type === 'MemberId');
 
+        //登入者資料包成物件
         const memberInfo = {
           username: userName.Value,
           memberId: userId.Value,
         };
-        //console.log(userName.Value);
-        //console.log(userId.Value);
 
         if (memberInfo) {
           setMemberUsername(memberInfo);
@@ -269,7 +271,7 @@ function Login() {
         }
         //alert('登入成功啦港動~~~');
         handleSuccessfulLogin(memberInfo);
-        router.push({ path: '/' });
+        router.replace({ path: '/' });
       }
     })
     .catch((err) => {
