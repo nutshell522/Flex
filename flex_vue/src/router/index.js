@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useGetApiDataStore } from '../stores/useGetApiDataStore';
+import { storeToRefs } from 'pinia';
 import Home from '../views/home/Home.vue';
 import User from '../views/user/User.vue';
 import Login from '../views/user/Login.vue';
@@ -276,9 +277,11 @@ router.beforeEach((to, from, next) => {
   const { loginSuccess } = getApiData;
 
   //檢查是否需要驗證，如果需要，則檢查是否已登入
-  if (to.meta.require && !loginSuccess.value) {
+  if (to.meta.require && !loginSuccess) {
+    console.log('nologin');
     next({ path: '/login' });
   } else {
+    console.log('login');
     next();
   }
 });

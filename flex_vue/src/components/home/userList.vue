@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <ul class="userList-items">
-      <li class="mb-1"><a href="/user">個人資料</a></li>
+      <li class="mb-1"><router-link to="/user">個人資料</router-link></li>
 
       <li class="mb-1"><a href="/orders">訂單查詢/申請退貨</a></li>
 
