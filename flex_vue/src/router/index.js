@@ -6,6 +6,7 @@ import Login from '../views/user/Login.vue';
 import ActivityInfo from '../views/activity/ActivityInfo.vue';
 import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
 import ActivityIndex from '../views/activity/ActivityIndex.vue';
+import ReservationIndex from '../views/reservation/ReservationIndex.vue';
 const webTitle = 'FLEX - ';
 
 // 路由設定
@@ -26,7 +27,7 @@ const routes = [
     //http://loaclhost/User
     path: "/user",
     component: User,
-    meta: { title: `${webTitle}會員` ,require: true},
+    meta: { title: `${webTitle}會員`, require: true },
   },
   {
     //http://loaclhost/Login
@@ -55,6 +56,11 @@ const routes = [
     path: '/activityIndex',
     component: ActivityIndex,
     meta: { title: `${webTitle}活動首頁` },
+  },
+  {
+    path: '/reservationIndex',
+    component: ReservationIndex,
+    meta: { title: `${webTitle}預約諮詢首頁` },
   },
   {
     //http://loaclhost/Login
