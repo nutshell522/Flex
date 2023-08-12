@@ -29,6 +29,7 @@
         placeholder="輸入6-20碼英數字"
       />
     </div>
+    <div><a href=""></a>忘記密碼</div>
     <div class="from-group mb-3" v-if="unValidated">
       <label>信箱</label>
       <input
@@ -140,9 +141,10 @@ onMounted(() => {
 
   if (storedUser) {
     loggedInUser.value = JSON.parse(storedUser);
-    // 重新将用户信息同步到 pinia store
+    // 同步到 pinia store
     getApiStore.setMemberUsername(loggedInUser.value.username);
-    //console.log('onMounted');
+    console.log('onMountedusername' + loggedInUser.value.username);
+    console.log('onMountedmemberId' + loggedInUser.value.memberId);
   }
 });
 
@@ -190,7 +192,7 @@ function ValidatedIdentity() {
       .post(uri, loginData)
       .then((res) => {
         userData.value = res.data;
-        //console.log(userData.value); //後端return的訊息
+        //console.log('帳號' + userData.value); //後端return的訊息
 
         //從回傳的資料中取得帳號並進行比較
         //已註冊
@@ -244,7 +246,7 @@ function Login() {
       const userPassword = jsonData.find(
         (claim) => claim.Type === 'UserPassword'
       );
-      //console.log(userPassword.Value);
+      console.log(userPassword.Value);
 
       if (userPassword.Value === password.value) {
         //密碼正確
@@ -258,39 +260,34 @@ function Login() {
           username: userName.Value,
           memberId: userId.Value,
         };
-        console.log(userName.Value);
-        console.log(userId.Value);
+        //console.log(userName.Value);
+        //console.log(userId.Value);
 
-        // if (userName) {
-        //   setMemberUsername(userName.Value);
-        //   console.log('setMemberUsername' + userName.Value);
-        // }
-        if (userName) {
+        if (memberInfo) {
           setMemberUsername(memberInfo);
-          //console.log(memberInfo);
+          //console.log('memberInfo', memberInfo);
         }
         //alert('登入成功啦港動~~~');
-        handleSuccessfulLogin({
-          username: userName.Value, // 假設用戶名稱在這裡
-        });
+        handleSuccessfulLogin(memberInfo);
         router.push({ path: '/' });
       }
     })
     .catch((err) => {
       errors.value = [];
-      errors.value.push('密碼錯誤');
+      //errors.value.push('密碼錯誤');
+
       console.error(err);
       //todo錯誤累計三次
     });
 }
 
-function handleSuccessfulLogin(userData) {
-  // 將用戶信息儲存到本地存儲中
-  localStorage.setItem('loggedInUser', JSON.stringify(userData));
+function handleSuccessfulLogin(memberInfo) {
+  // 將用戶信息轉成字串儲存到本地存儲中
+  localStorage.setItem('loggedInUser', JSON.stringify(memberInfo));
 
   // 同步用戶信息到 pinia store
-  loggedInUser.value = userData;
-  setMemberUsername(userData.username);
+  loggedInUser.value = memberInfo;
+  //console.log(loggedInUser.value);
 }
 
 const regUri = `${baseAddress}/api/Users/Register`;

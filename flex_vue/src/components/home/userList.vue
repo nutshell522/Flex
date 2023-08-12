@@ -24,16 +24,12 @@ import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 const getApiStore = useGetApiDataStore();
 const { handleLogout } = getApiStore; //function透過store取資料
-const { memberData } = storeToRefs(getApiStore); //定義好的資料都是透過storeToRefs取資料
 
 function logout() {
   // 登入狀態
-  console.log(memberData.value);
   localStorage.removeItem('loggedInUser');
-
   //呼叫 Pinia 的登出函數
   handleLogout();
-  router.push({ path: '/' });
 }
 </script>
 

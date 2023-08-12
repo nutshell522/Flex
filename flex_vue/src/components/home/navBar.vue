@@ -70,7 +70,7 @@
         <i class="bi bi-heart"></i>
         <i class="bi bi-bag"></i>
         <pre>
-          <p>{{ memberData.username }}</p>
+          <p>{{ username }}</p>
         </pre>
       </div>
     </div>
@@ -82,10 +82,10 @@ import { ref, watch } from 'vue';
 import userList from '../home/userList.vue';
 import Cookies from 'js-cookie';
 
-import { storeToRefs } from "pinia"; //把解構又同時具備響應式功能
-import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
+import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 const getApiStore = useGetApiDataStore();
-const { memberData } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
+const { username } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
 const { setLoginSuccess } = getApiStore; //function透過store取資料
 
 const { getData } = getApiStore;
@@ -106,16 +106,17 @@ function hideList() {
 //userIcon
 const loginSuccess = ref(false);
 
-watch(getApiStore.memberData, (newValue) => {
+watch(username, (newValue) => {
   //登入
-  if (newValue.value != null) {
-    //console.log('Watch callback called.');
-    loginSuccess.value = false;
-    getApiStore.setLoginSuccess(false);
-  } else {
-    //未登入
+  console.log('Username changed:', newValue);
+  if (newValue) {
     loginSuccess.value = true;
-    getApiStore.setLoginSuccess(true);
+    console.log('Watch callback called.');
+    setLoginSuccess(true);
+  } else {
+    //未登入時username=null
+    loginSuccess.value = false;
+    setLoginSuccess(false);
   }
 });
 </script>
@@ -190,7 +191,7 @@ header {
         }
 
         &:not(:first-child)::before {
-          content: "|";
+          content: '|';
           padding: 0 15px;
           font-size: 14px;
         }
