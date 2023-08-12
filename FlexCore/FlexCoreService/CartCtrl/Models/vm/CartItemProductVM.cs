@@ -1,4 +1,6 @@
-﻿namespace FlexCoreService.CartCtrl.Models.vm
+﻿using EFModels.Models;
+
+namespace FlexCoreService.CartCtrl.Models.vm
 {
 	public class CartItemProductVM
 	{
@@ -28,5 +30,15 @@
 				}
 			}
 		}
-	}
+        public HashSet<string> Tags;
+
+        public string TagsValue
+        {
+            get
+            {
+                if (this.Tags == null || this.Tags.Count == 0) return "";
+                return string.Join(",", this.Tags.Select(t => '#' + t));
+            }
+        }
+    }
 }
