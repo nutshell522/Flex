@@ -33,15 +33,16 @@
         </div>
         <hr />
         <div class="row color-list">
-          <div>
-            <span
-              class="colorBoxSetting"
+          <div class="">
+            <a
+              href="#"
+              :class="{ colorBoxSetting: true }"
               v-for="(groupDetail, color) in productDetail.productGroup"
               :key="color"
               @click="updateSizeList(groupDetail)"
               :title="color"
               >{{ color }}
-            </span>
+            </a>
           </div>
           <div class="mt-3 d-flex">
             <div
@@ -70,13 +71,36 @@
                   "
                   >數量:</span
                 >
+                <button @click="decrementProductQty()" class="bg-secondary">
+                  <i class="bi bi-dash-lg"></i>
+                </button>
+                <input
+                  type="number"
+                  name="productQty"
+                  id="productQty"
+                  min="1"
+                  class="form-control"
+                  style="border-radius: 0"
+                />
+                <button @click="incrementProductQty()" class="bg-secondary">
+                  <i class="bi bi-plus-lg"></i>
+                </button>
+                <!-- <span
+                  class="col-3"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                  >數量:</span
+                >
                 <input
                   type="number"
                   name=""
                   id=""
                   min="1"
                   class="form-control"
-                />
+                /> -->
               </div>
               <div class="col-6">
                 <button class="form-control">加入購物車</button>
