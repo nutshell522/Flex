@@ -9,5 +9,6 @@ namespace FlexCoreService.ProductCtrl.Interface
         IEnumerable<ProductCardDto> SearchProducts(int salesId, string? categoryName, string? subCategoryName);
 
         IEnumerable<ProductDetailDto> GetProductDetail(string productId);
+        IEnumerable<ProductImgsDto> GetProductImgs(string productId);
     }
 }
