@@ -1,0 +1,22 @@
+﻿using EFModels.Models;
+using FlexCoreService.ActivityCtrl.Models.VM;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+namespace FlexCoreService.ActivityCtrl.Exts
+{
+    public static class ReservationExts
+    {
+        public static SpeakerDetailVM ToDetailVM(this SpeakerDetailDTO dto)
+        {
+            return new SpeakerDetailVM
+            {
+                SpeakerId = dto.SpeakerId,
+                SpeakerName = dto.SpeakerName,
+                SpeakerDescription = dto.SpeakerDescription,
+                FieldName = dto.FieldName,
+                BranchName = dto.BranchName,
+                BranchAddress = dto.BranchAddress
+            };
+        }
+    }
+}
