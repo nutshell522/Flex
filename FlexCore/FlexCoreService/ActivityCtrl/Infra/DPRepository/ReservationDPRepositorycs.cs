@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using FlexCoreService.ActivityCtrl.Interface;
 using FlexCoreService.ActivityCtrl.Models.Dtos;
+using FlexCoreService.ActivityCtrl.Models.VM;
 using Microsoft.Data.SqlClient;
 
 namespace FlexCoreService.ActivityCtrl.Infra.DPRepository
@@ -26,6 +27,23 @@ ON Speakers.fk_SpeakerFieldId = SpeakerFields.FieldId";
             {
                 return await conn.QueryAsync<ReservationDTO>(sql);
             }
+        }
+
+        public async Task<SpeakerDetailDTO> GetSpeakerInfoAsync(int id)
+        {
+            string sql = @"select SpeakerId, SpeakerName, FieldName, SpeakerImg, SpeakerDescription, BranchName, BranchAddress
+From Speakers
+Join SpeakerFields
+ON Speakers.fk_SpeakerFieldId = SpeakerFields.FieldId
+Join Branches
+On Branches.BranchId = Speakers.fk_SpeakerBranchId
+Where SpeakerId = @id";
+
+            using(var conn = new SqlConnection(_connStr))
+            {
+                return await conn.QueryFirstOrDefaultAsync<SpeakerDetailDTO>(sql, new {id} );
+            }
+
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using EFModels.Models;
 using FlexCoreService.ActivityCtrl.Interface;
 using FlexCoreService.ActivityCtrl.Models.Dtos;
+using FlexCoreService.ActivityCtrl.Models.VM;
 
 namespace FlexCoreService.ActivityCtrl.Service
 {
@@ -21,5 +22,11 @@ namespace FlexCoreService.ActivityCtrl.Service
             return result;
         }
         
+        public async Task<SpeakerDetailDTO> GetSpeakerInfoAsync(int id)
+        {
+            var speaker = await _repo.GetSpeakerInfoAsync(id);
+            return speaker;
+
+        }
     }
 }

@@ -7,6 +7,7 @@ import ActivityInfo from '../views/activity/ActivityInfo.vue';
 import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
 import ActivityIndex from '../views/activity/ActivityIndex.vue';
 import ReservationIndex from '../views/reservation/ReservationIndex.vue';
+import SpeakerInfo from '../views/reservation/SpeakerInfo.vue';
 const webTitle = 'FLEX - ';
 
 // 路由設定
@@ -67,6 +68,11 @@ const routes = [
     path: '/reservationIndex',
     component: ReservationIndex,
     meta: { title: `${webTitle}預約諮詢首頁` },
+  },
+  {
+    path: '/speakerInfo/:id',
+    component: SpeakerInfo,
+    meta: { title: `${webTitle}講師資訊` },
   },
   {
     //http://loaclhost/Login
