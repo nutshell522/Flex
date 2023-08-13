@@ -65,7 +65,7 @@ const routes = [
     meta: { title: `${webTitle}預約諮詢首頁` },
   },
   {
-    path: '/speakerInfo',
+    path: '/speakerInfo/:id',
     component: SpeakerInfo,
     meta: { title: `${webTitle}講師資訊` },
   },

@@ -41,6 +41,11 @@
 <script setup>
 import {onMounted, reactive, ref} from 'vue';
 import axios from 'axios';
+import {useRoute} from 'vue-router';
+
+const route=useRoute();
+const speakerId = route.params.id;
+console.log(speakerId);
 const speaker = ref([]);
 const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
 onMounted(()=>{
@@ -155,15 +160,20 @@ onMounted(()=>{
 
         updateCalendar();
 
-        //呼叫controller得到講師資訊
-        axios.get("https://localhost:7183/api/Reservation/id?id=1")
-            .then(res=>{
-                console.log(res.data);
-                speaker.value = res.data;
-            })
-            .catch(err=>{
-                console.log(err);
-            })
+        const loadSpeaker = async(id)=>{
+            //呼叫controller得到講師資訊
+            axios.get(`https://localhost:7183/api/Reservation/id?id=${id}`)
+                        .then(res=>{
+                            console.log(res.data);
+                            speaker.value = res.data;
+                        })
+                        .catch(err=>{
+                            console.log(err);
+                        })
+        }
+       
+        ////呼叫controller得到講師資訊
+        loadSpeaker(speakerId);
 })
        
 
