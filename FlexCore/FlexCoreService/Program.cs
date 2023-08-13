@@ -80,7 +80,7 @@ namespace FlexCoreService
                 app.UseSwaggerUI();
             }
 
-            //app.UseCors();
+            app.UseCors();
 
             //app.UseRouting();
 
