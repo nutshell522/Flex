@@ -34,7 +34,7 @@ namespace FlexCoreService.Controllers
         /// <returns></returns>
         [HttpGet("{account}")]
         [Authorize]
-        public async Task<ProfileDto> GetUserProfil(string account)
+        public async Task<ProfileDto> GetUserProfile(string account)
         {
             //StringBuilder sb = new StringBuilder();
             //sb.AppendLine("<ul>");
@@ -176,6 +176,41 @@ namespace FlexCoreService.Controllers
             _db.Members.Add(member);
             await _db.SaveChangesAsync();
             return regdto;
+        }
+
+        /// <summary>
+        /// 編輯會員資料
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        [HttpPost("account")]
+        public async Task<ProfileDto> EditUserProfile([FromBody] string account)
+        {
+            //檢查帳號是否存在
+
+            if (_db.Members == null)
+            {
+                return null;
+            }
+            ProfileDto proDto = _db.Members.Where(m => m.Account == account).Select(m => new ProfileDto
+            {
+                MemberId = m.MemberId,
+                fk_Level = m.fk_LevelId,
+                LevelName = m.fk_Level.LevelName,
+                Name = m.Name,
+                Email = m.Email,
+                Mobile = m.Mobile,
+                Gender = m.Gender,
+                Birthday = m.Birthday,
+                CommonAddress = m.CommonAddress,
+                AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
+                IsSubscribeNews = m.IsSubscribeNews
+            }).Single();
+            //檢查資料都填寫
+            //存入資料庫
+
+            //跳更新成功回到本頁
+            return proDto;
         }
     }
 }

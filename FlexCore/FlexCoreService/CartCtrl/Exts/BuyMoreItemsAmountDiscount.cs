@@ -4,13 +4,39 @@ namespace FlexCoreService.CartCtrl.Exts
 {
     public class BuyMoreItemsAmountDiscount : BaseDiscountStrategy
     {
-        public BuyMoreItemsAmountDiscount(ProductDiscountVM vm)
-        {
-            
-        }
-        public override IEnumerable<Discount> Process(CartContext cartItems)
-        {
-            throw new NotImplementedException();
-        }
-    }
+		// 門檻數量
+		private readonly int _itemsCount;
+		// 折扣, 20表示八折
+		private readonly int _discountAmount;
+		public BuyMoreItemsAmountDiscount(ProductDiscountVM vm) : base(vm)
+		{
+			_itemsCount = vm.ConditionValue.Value;
+			_discountAmount = vm.DiscountValue.Value;
+		}
+
+		public override ItemDiscount Process(CartContext cart)
+		{
+			//throw new NotImplementedException();
+			List<CartItemVM> matchedProducts = new List<CartItemVM>();
+
+			foreach (CartItemVM p in cart.CartItems)
+			{
+				if (p.Product.MatchDiscounts.Any(x => x.DiscountId == this.Id))
+				{
+					matchedProducts.Add(p);
+				}
+			}
+
+			if (matchedProducts.Count >= _itemsCount)
+			{
+				return new ItemDiscount()
+				{
+					Rule = this,
+					Products = matchedProducts.Select(x => x.Product).ToArray(),
+					Amount = (decimal)matchedProducts.Sum(x => x.SubTotal) - _discountAmount
+				};
+			}
+			return null;
+		}
+	}
 }

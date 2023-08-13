@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace FlexCoreService.CartCtrl.Exts
 {
-    public class Discount
+    public class ItemDiscount
     {
         public int Id { get; set; }
         public BaseDiscountStrategy Rule { get; set; } // 因為哪一個規則產生的折扣

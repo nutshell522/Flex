@@ -3,10 +3,12 @@ import { useGetApiDataStore } from '../stores/useGetApiDataStore';
 import { storeToRefs } from 'pinia';
 import Home from '../views/home/Home.vue';
 import User from '../views/user/User.vue';
+import Favorites from '../views/user/Favorites.vue';
 import Login from '../views/user/Login.vue';
 import ActivityInfo from '../views/activity/ActivityInfo.vue';
 import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
 import ActivityIndex from '../views/activity/ActivityIndex.vue';
+import ReservationIndex from '../views/reservation/ReservationIndex.vue';
 const webTitle = 'FLEX - ';
 
 // 路由設定
@@ -27,7 +29,13 @@ const routes = [
     //http://loaclhost/User
     path: '/user',
     component: User,
-    meta: { title: `${webTitle}會員`, require: true },
+    meta: { title: `${webTitle}個人資料`, require: true },
+  },
+  {
+    //http://loaclhost/Favorites
+    path: '/favorites',
+    component: Favorites,
+    meta: { title: `${webTitle}收藏清單`, require: true },
   },
   {
     //http://loaclhost/Login
@@ -58,9 +66,9 @@ const routes = [
     meta: { title: `${webTitle}活動首頁` },
   },
   {
-    //http://loaclhost/Login
-    path: '/login',
-    component: Login,
+    path: '/reservationIndex',
+    component: ReservationIndex,
+    meta: { title: `${webTitle}預約諮詢首頁` },
   },
   {
     //http://loaclhost/orders
