@@ -2,7 +2,6 @@
 {
     public class CategoryVM
     {
-        //public string ProductCategoryName { get; set; }
         public Dictionary<string, List<string>> Categories { get; set; }
         public CategoryVM()
         {
