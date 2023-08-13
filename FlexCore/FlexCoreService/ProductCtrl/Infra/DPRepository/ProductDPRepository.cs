@@ -37,6 +37,17 @@ p.ProductId='" + @productId+"'";
             return result;
         }
 
+        public IEnumerable<ProductImgsDto> GetProductImgs(string productId)
+        {
+            string sql = @"select ProductImgId,ImgPath from ProductImgs
+where fk_ProductId='"+ @productId+"'";
+
+            using IDbConnection dbConnection=new SqlConnection(_connStr);
+            var result=dbConnection.Query<ProductImgsDto>(sql, new {productId});
+            return result;
+
+        }
+
         //        public IEnumerable<ProductCardDto> SearchProducts()
         //        {
         //            string sql = @"select p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, MIN(pi.ImgPath) AS FirstImgPath 

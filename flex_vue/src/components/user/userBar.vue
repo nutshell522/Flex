@@ -3,7 +3,7 @@
     <div class="user-menu">
       <ul class="userBar">
         <li>
-          <a href="/user" @click="verifyAgain">個人資料</a>
+          <router-link to="/user" @click="verifyAgain">個人資料</router-link>
         </li>
 
         <li><a href="/orders">訂單查詢/申請退貨</a></li>
@@ -29,7 +29,7 @@ import verify from '@/components/user/verify.vue';
 export default {
   methods: {
     verifyAgain() {
-      alert('要替換成再次驗證的畫面還沒出來!');
+      //alert('要替換成再次驗證的畫面還沒出來!');
       //this.verify = true;
     },
   },

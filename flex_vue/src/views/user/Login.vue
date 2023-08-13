@@ -29,6 +29,7 @@
         placeholder="輸入6-20碼英數字"
       />
     </div>
+    <div><a href=""></a>忘記密碼</div>
     <div class="from-group mb-3" v-if="unValidated">
       <label>信箱</label>
       <input
@@ -129,6 +130,7 @@ axios.defaults.withCredentials = true;
 
 const getApiStore = useGetApiDataStore();
 const { setMemberUsername } = getApiStore;
+const { setLoginSuccess } = getApiStore;
 const router = useRouter();
 
 const loggedInUser = ref(null);
@@ -140,9 +142,12 @@ onMounted(() => {
 
   if (storedUser) {
     loggedInUser.value = JSON.parse(storedUser);
-    // 重新将用户信息同步到 pinia store
+    // 同步到 pinia store
     getApiStore.setMemberUsername(loggedInUser.value.username);
-    //console.log('onMounted');
+    getApiStore.setMemberUsername(loggedInUser.value.memberId);
+    console.log('onMountedusername', loggedInUser.value.username);
+    console.log('onMountedmemberId', loggedInUser.value.memberId);
+    setLoginSuccess(true);
   }
 });
 
@@ -190,7 +195,7 @@ function ValidatedIdentity() {
       .post(uri, loginData)
       .then((res) => {
         userData.value = res.data;
-        //console.log(userData.value); //後端return的訊息
+        //console.log('帳號' + userData.value); //後端return的訊息
 
         //從回傳的資料中取得帳號並進行比較
         //已註冊
@@ -249,48 +254,42 @@ function Login() {
       if (userPassword.Value === password.value) {
         //密碼正確
         errors.value = [];
-        //console.log(userPassword.Value);
+
+        //取得登入者資料
         const userName = jsonData.find((claim) => claim.Type === 'FullName');
-        //console.log('userName' + userName.Value);
         const userId = jsonData.find((claim) => claim.Type === 'MemberId');
 
+        //登入者資料包成物件
         const memberInfo = {
           username: userName.Value,
           memberId: userId.Value,
         };
-        console.log(userName.Value);
-        console.log(userId.Value);
 
-        // if (userName) {
-        //   setMemberUsername(userName.Value);
-        //   console.log('setMemberUsername' + userName.Value);
-        // }
-        if (userName) {
+        if (memberInfo) {
           setMemberUsername(memberInfo);
-          //console.log(memberInfo);
+          //console.log('memberInfo', memberInfo);
         }
         //alert('登入成功啦港動~~~');
-        handleSuccessfulLogin({
-          username: userName.Value, // 假設用戶名稱在這裡
-        });
-        router.push({ path: '/' });
+        handleSuccessfulLogin(memberInfo);
+        router.replace({ path: '/' });
       }
     })
     .catch((err) => {
       errors.value = [];
-      errors.value.push('密碼錯誤');
+      //errors.value.push('密碼錯誤');
+
       console.error(err);
       //todo錯誤累計三次
     });
 }
 
-function handleSuccessfulLogin(userData) {
-  // 將用戶信息儲存到本地存儲中
-  localStorage.setItem('loggedInUser', JSON.stringify(userData));
+function handleSuccessfulLogin(memberInfo) {
+  // 將用戶信息轉成字串儲存到本地存儲中
+  localStorage.setItem('loggedInUser', JSON.stringify(memberInfo));
 
   // 同步用戶信息到 pinia store
-  loggedInUser.value = userData;
-  setMemberUsername(userData.username);
+  loggedInUser.value = memberInfo;
+  //console.log(loggedInUser.value);
 }
 
 const regUri = `${baseAddress}/api/Users/Register`;
