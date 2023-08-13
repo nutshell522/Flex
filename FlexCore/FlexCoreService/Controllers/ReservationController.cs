@@ -1,4 +1,5 @@
 ﻿using EFModels.Models;
+using FlexCoreService.ActivityCtrl.Exts;
 using FlexCoreService.ActivityCtrl.Interface;
 using FlexCoreService.ActivityCtrl.Models.Dtos;
 using FlexCoreService.ActivityCtrl.Service;
@@ -36,6 +37,19 @@ namespace FlexCoreService.Controllers
             return Ok(result);
 
 
+        }
+
+        [HttpGet("id")]
+        public async Task<ActionResult> GetSpeakerInfo(int id)
+        {
+            var speaker = await _service.GetSpeakerInfoAsync(id);
+            var result = speaker.ToDetailVM();
+            if(result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);     
+            
         }
     }
 }

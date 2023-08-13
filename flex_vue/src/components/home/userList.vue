@@ -1,19 +1,19 @@
 <template>
   <div class="list">
     <ul class="userList-items">
-      <li class="mb-1"><router-link to="/user">個人資料</router-link></li>
+      <li class="mb-2"><router-link to="/user">個人資料</router-link></li>
 
-      <li class="mb-1"><a href="/orders">訂單查詢/申請退貨</a></li>
+      <li class="mb-2"><a href="/orders">訂單查詢/申請退貨</a></li>
 
-      <li class="mb-1"><a href="javascript:;">收藏清單/購買清單</a></li>
+      <li class="mb-2"><router-link to="/favorites">收藏清單</router-link></li>
 
-      <li class="mb-1"><a href="javascript:;">積分中心</a></li>
+      <li class="mb-2"><a href="javascript:;">積分中心</a></li>
 
-      <li class="mb-1"><a href="javascript:;">優惠券</a></li>
+      <li class="mb-2"><a href="javascript:;">優惠券</a></li>
 
-      <li class="mb-1"><a href="javascript:;">瀏覽紀錄</a></li>
+      <li class="mb-2"><a href="javascript:;">瀏覽紀錄</a></li>
 
-      <li class="mb-3"><a href="javascript:;">購物車</a></li>
+      <li class="mb-2"><a href="javascript:;">購物車</a></li>
     </ul>
     <button class="logout" type="submit" @click="logout">登出</button>
   </div>
@@ -42,7 +42,7 @@ function logout() {
   position: absolute;
   right: 0;
   top: 100%;
-  padding: 20px 40px;
+  padding: 30px 40px;
 }
 
 .userList-items {
@@ -55,6 +55,7 @@ function logout() {
 
 .userList-items li:not(:last-child) {
   border-bottom: 1px solid gray;
+  height: 23px;
 }
 
 .userList-items li a {
