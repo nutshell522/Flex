@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useGetApiDataStore } from '../stores/useGetApiDataStore';
 import { storeToRefs } from 'pinia';
 import User from '../views/user/User.vue';
+import Favorites from '../views/user/Favorites.vue';
 import Login from '../views/user/Login.vue';
 import ActivityInfo from '../views/activity/ActivityInfo.vue';
 import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
@@ -34,7 +35,13 @@ const routes = [
     //http://loaclhost/User
     path: '/user',
     component: User,
-    meta: { title: `${webTitle}會員`, require: true },
+    meta: { title: `${webTitle}個人資料`, require: true },
+  },
+  {
+    //http://loaclhost/Favorites
+    path: '/favorites',
+    component: Favorites,
+    meta: { title: `${webTitle}收藏清單`, require: true },
   },
   {
     //http://loaclhost/Login
@@ -298,7 +305,7 @@ router.beforeEach((to, from, next) => {
     console.log('nologin');
     next({ path: '/login' });
   } else {
-    console.log('login');
+    //console.log('login');
     next();
   }
 });

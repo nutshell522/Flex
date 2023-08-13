@@ -4,8 +4,8 @@
     <userBar></userBar>
   </div>
   <div class="container">
-    <div class="d-flex">
-      <div class="input-group mb-3">
+    <div class="col-md-6 d-flex">
+      <div class="input-group mb-2">
         <label for="nameInput" class="text">姓名</label>
         <label for="">{{ name }}</label>
       </div>
@@ -14,49 +14,57 @@
         <label for="">{{ levelName }}</label>
       </div>
     </div>
-    <div class="gender">
-      <label class="text">性別</label>
-      <input
-        class="form-check-input"
-        type="radio"
-        id="genderRadio1"
-        value="true"
-        v-model="gender"
-      />
-      <label class="form-check-label ms-1" for="genderRadio1"> 生理男 </label>
-      <input
-        class="form-check-input"
-        type="radio"
-        id="genderRadio2"
-        value="flase"
-        v-model="gender"
-      />
-      <label class="form-check-label ms-1" for="genderRadio2">生理女 </label>
+    <!-- 77gender資料繫結沒有成功 -->
+    <div class="input-group gender">
+      <div class="radioBtn">
+        <label for="genderInput" class="text">性別</label>
+        <input
+          class="form-check-input"
+          type="radio"
+          id="genderRadio1"
+          v-model="gender"
+        />
+        <label class="form-check-label ms-1" for="genderRadio1"> 生理男 </label>
+      </div>
+      <div>
+        <input
+          class="form-check-input"
+          type="radio"
+          id="genderRadio2"
+          v-model="gender"
+        />
+        <label class="form-check-label ms-1" for="genderRadio2">生理女 </label>
+      </div>
     </div>
 
     <div class="col-md-6">
-      <label for="emailInput" class="text">信箱</label>
-      <input
-        type="text"
-        class="form-control"
-        id="emailInput"
-        placeholder="email"
-        v-model="email"
-      />
-    </div>
-
-    <div class="col-md-6">
-      <label for="mobileInput" class="text">手機</label>
-      <input
-        type="text"
-        class="form-control"
-        placeholder="mobile"
-        v-model="mobile"
-      />
-    </div>
-
-    <div class="">
       <div class="input-group">
+        <label for="emailInput" class="text">信箱</label>
+        <input
+          type="text"
+          class="form-control"
+          id="emailInput"
+          placeholder="email"
+          v-model="email"
+        />
+      </div>
+    </div>
+    <!-- 77手機信箱左邊的框框圓角 -->
+    <div class="col-md-6">
+      <div class="input-group">
+        <label for="mobileInput" class="text">手機</label>
+        <input
+          type="text"
+          class="form-control"
+          id="mobileInput"
+          placeholder="mobile"
+          v-model="mobile"
+        />
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="addressInput">
         <label for="addressInput" class="text">地址</label>
         <input
           type="text"
@@ -65,31 +73,44 @@
           placeholder="common address"
           v-model="commonAddress"
         />
-      </div>
-      <div class="AddressBtn">
-        <button type="button">
-          <i class="bi bi-plus-square-fill icon-size" @click="addBtn"></i>
-        </button>
-      </div>
-    </div>
-    <div class="input-group mb-3">
-      <input
-        type="text"
-        class="form-control addAddressInput1"
-        placeholder="alternate address"
-        v-model="alternateAddress"
-        v-if="addAddressInput1"
-      />
-    </div>
-    <div class="input-group mb-3">
-      <input
-        type="text"
-        class="form-control addAddressInput2"
-        placeholder="alternate address"
-        v-if="addAddressInput2"
-      />
-    </div>
 
+        <div class="col-md-1 addressBtn">
+          <button type="button">
+            <i
+              class="bi bi-plus-square-fill icon-size"
+              v-if="!addressBtn"
+              @click="addBtn"
+            ></i>
+          </button>
+          <button type="button">
+            <i
+              class="bi bi-dash-square-fill icon-size"
+              v-if="addressBtn"
+              @click="minusBtn"
+            ></i>
+          </button>
+        </div>
+      </div>
+      <div class="addressInput">
+        <input
+          type="text"
+          class="form-control addAddressInput"
+          placeholder="alternate address"
+          v-model="alternateAddress1"
+          v-if="addAddressInput1"
+        />
+      </div>
+      <div class="addressInput mb-3">
+        <input
+          type="text"
+          class="form-control addAddressInput"
+          placeholder="alternate address"
+          v-model="alternateAddress2"
+          v-if="addAddressInput2"
+        />
+      </div>
+    </div>
+    <!-- 還有基本欄位還沒做 -->
     <!-- 之後增加 -->
     <!-- <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="載具先不寫" />
@@ -99,7 +120,7 @@
       <input type="text" class="form-control" placeholder="取貨店鋪預約" />
     </div> -->
 
-    <label class="text mb-3">訂閱電子報</label>
+    <label class="text">訂閱電子報</label>
     <div class="form-check form-check-inline">
       <input
         class="form-check-input"
@@ -110,63 +131,9 @@
       />
       <label class="form-check-label" for="subscribeBtn">訂閱</label>
     </div>
-    <div>
-      <button type="button" class="btn btn-outline-primary text-black">
-        送出
-      </button>
+    <div class="btn btn-outline-info save">
+      <button type="button" @click="save">儲存</button>
     </div>
-    <!-- <form class="row g-3">
-      <div class="col-md-6">
-        <label for="inputEmail4" class="form-label">Email</label>
-        <input type="email" class="form-control" id="inputEmail4" />
-      </div>
-      <div class="col-md-6">
-        <label for="inputPassword4" class="form-label">Password</label>
-        <input type="password" class="form-control" id="inputPassword4" />
-      </div>
-      <div class="col-12">
-        <label for="inputAddress" class="form-label">Address</label>
-        <input
-          type="text"
-          class="form-control"
-          id="inputAddress"
-          placeholder="1234 Main St"
-        />
-      </div>
-      <div class="col-12">
-        <label for="inputAddress2" class="form-label">Address 2</label>
-        <input
-          type="text"
-          class="form-control"
-          id="inputAddress2"
-          placeholder="Apartment, studio, or floor"
-        />
-      </div>
-      <div class="col-md-6">
-        <label for="inputCity" class="form-label">City</label>
-        <input type="text" class="form-control" id="inputCity" />
-      </div>
-      <div class="col-md-4">
-        <label for="inputState" class="form-label">State</label>
-        <select id="inputState" class="form-select">
-          <option selected>Choose...</option>
-          <option>...</option>
-        </select>
-      </div>
-      <div class="col-md-2">
-        <label for="inputZip" class="form-label">Zip</label>
-        <input type="text" class="form-control" id="inputZip" />
-      </div>
-      <div class="col-12">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="gridCheck" />
-          <label class="form-check-label" for="gridCheck"> Check me out </label>
-        </div>
-      </div>
-      <div class="col-12">
-        <button type="submit" class="btn btn-primary">Sign in</button>
-      </div>
-    </form> -->
   </div>
 </template>
 
@@ -187,17 +154,20 @@ let email = ref('');
 let mobile = ref('');
 let gender = ref('');
 let commonAddress = ref('');
-let alternateAddress = ref('');
+const addAddressInput1 = ref(false);
+const addAddressInput2 = ref(false);
+const addressBtn = ref(false);
+let alternateAddress1 = ref('');
+let alternateAddress2 = ref('');
 let subscribeNews = ref('');
 
 const baseAddress = 'https://localhost:7183/api';
 const uri = `${baseAddress}/Users/${account.value}`;
-
 axios
   .get(uri)
   .then((res) => {
     userProfile.value = res.data;
-    console.log(userProfile);
+    //console.log(userProfile);
 
     id.value = res.data.memberId;
     //console.log(id);
@@ -209,24 +179,71 @@ axios
     mobile.value = res.data.mobile;
     gender.value = res.data.gender;
     commonAddress.value = res.data.commonAddress;
-    alternateAddress.value = res.data.alternateAddress1;
+    alternateAddress1.value = res.data.alternateAddress1;
+    alternateAddress2.value = res.data.alternateAddress2;
     subscribeNews.value = res.data.isSubscribeNews;
+    //console.log(alternateAddress1.value);
+    //console.log(alternateAddress2.value);
+    console.log(gender.value);
+    //console.log(subscribeNews.value);
+    if (alternateAddress1.value) {
+      addAddressInput1.value = true;
+    }
+    if (alternateAddress1.value && alternateAddress2.value) {
+      addAddressInput1.value = true;
+      addAddressInput2.value = true;
+    }
   })
   .catch((err) => {
     err;
   });
 
-const addAddressInput1 = ref(false);
-const addAddressInput2 = ref(false);
-
-//當值為?哪個選項被選到
-
 function addBtn() {
   if (addAddressInput1.value === false) {
     addAddressInput1.value = true;
+    console.log('addAddressInput1');
   } else {
     addAddressInput2.value = true;
+    console.log('addAddressInput2');
+    addressBtn.value = true;
   }
+}
+function minusBtn() {
+  if (addAddressInput1.value === true) {
+    addAddressInput2.value = false;
+    console.log('addAddressInput1');
+    addressBtn.value = false;
+  } else {
+    addAddressInput1.value = false;
+    console.log('addAddressInput2');
+  }
+}
+const userData = ref([]);
+
+function save() {
+  alert('save');
+  //todo檢查欄位有沒有確實填寫
+  //todo檔案更新成功
+  var uri = `${baseAddress}/Users/${id.value}`;
+  var editUserProfile = {};
+  editUserProfile.Gender = gender.value;
+  editUserProfile.Email = email.value;
+  editUserProfile.Mobile = mobile.value;
+  editUserProfile.CommonAddress = commonAddress.value;
+  editUserProfile.AlternateAddress1 = alternateAddress1.value;
+  editUserProfile.alternateAddress2 = addAddressInput2.value;
+  editUserProfile.IsSubscribeNews = subscribeNews.value;
+
+  axios
+    .post(uri, editUserProfile)
+    .then((res) => {
+      userData.value = res.data;
+      console.log(userData.value);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  //todo傳給後端
 }
 
 //還沒正確隱藏值
@@ -235,20 +252,24 @@ if (subscribeNews.value === true) {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .gender {
   display: flex;
+  align-items: center;
+  /* 77文字跟按鈕沒有水平 */
 }
 .text {
-  padding-right: 10px;
+  padding-right: 13px;
   font-size: 18px;
 }
-.AddressBtn {
+.addressBtn {
   display: flex;
-  padding-left: 20px;
+  padding-left: 10px;
+  justify-content: center;
+  /*77這個按鈕怎麼水平置中*/
 }
 .level {
-  width: 8%;
+  width: 20%;
   background-color: #fce0d9;
   border-radius: 10px;
   border: solid 1px #bb3e20;
@@ -258,5 +279,30 @@ if (subscribeNews.value === true) {
 .icon-size {
   font-size: 35px;
   color: #bb3e20;
+}
+.input-group {
+  margin-bottom: 5px;
+  padding-top: 10px;
+  align-items: center;
+}
+.addressInput {
+  margin: 5px 0px;
+  align-items: center;
+  display: flex;
+  width: 100%;
+  .addAddressInput {
+    border-radius: 0px;
+    margin-left: 47px;
+  }
+}
+.save {
+  display: flex;
+  width: 6%;
+  height: 6%;
+  justify-content: center;
+  margin: 20px 0px;
+}
+.radioBtn {
+  margin-right: 10px;
 }
 </style>
