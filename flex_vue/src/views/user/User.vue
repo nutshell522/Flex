@@ -14,8 +14,27 @@
         <label for="">{{ levelName }}</label>
       </div>
     </div>
+    <div class="gender">
+      <label class="text">性別</label>
+      <input
+        class="form-check-input"
+        type="radio"
+        id="genderRadio1"
+        value="true"
+        v-model="gender"
+      />
+      <label class="form-check-label ms-1" for="genderRadio1"> 生理男 </label>
+      <input
+        class="form-check-input"
+        type="radio"
+        id="genderRadio2"
+        value="flase"
+        v-model="gender"
+      />
+      <label class="form-check-label ms-1" for="genderRadio2">生理女 </label>
+    </div>
 
-    <div class="input-group mb-3">
+    <div class="col-md-6">
       <label for="emailInput" class="text">信箱</label>
       <input
         type="text"
@@ -26,7 +45,7 @@
       />
     </div>
 
-    <div class="input-group mb-3">
+    <div class="col-md-6">
       <label for="mobileInput" class="text">手機</label>
       <input
         type="text"
@@ -36,38 +55,8 @@
       />
     </div>
 
-    <div class="row mb-3">
-      <div class="clo">
-        <label class="text">性別</label>
-
-        <div class="gender">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="genderRadio"
-              id="genderRadio1"
-              v-model="gender"
-            />
-            <label class="form-check-label" for="genderRadio1"> 生理男 </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="clo">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="genderRadio"
-            id="genderRadio2"
-          />
-          <label class="form-check-label" for="genderRadio2">生理女 </label>
-        </div>
-      </div>
-    </div>
-    <div class="d-flex">
-      <div class="input-group mb-3">
+    <div class="">
+      <div class="input-group">
         <label for="addressInput" class="text">地址</label>
         <input
           type="text"
@@ -77,13 +66,9 @@
           v-model="commonAddress"
         />
       </div>
-      <div class="addAddress">
-        <button
-          type="button"
-          class="btn btn-primary text-black"
-          @click="addBtn"
-        >
-          +
+      <div class="AddressBtn">
+        <button type="button">
+          <i class="bi bi-plus-square-fill icon-size" @click="addBtn"></i>
         </button>
       </div>
     </div>
@@ -104,13 +89,15 @@
         v-if="addAddressInput2"
       />
     </div>
-    <div class="input-group mb-3">
+
+    <!-- 之後增加 -->
+    <!-- <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="載具先不寫" />
     </div>
 
     <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="取貨店鋪預約" />
-    </div>
+    </div> -->
 
     <label class="text mb-3">訂閱電子報</label>
     <div class="form-check form-check-inline">
@@ -121,15 +108,65 @@
         v-model="subscribeNews"
         v-if="subscribeNews"
       />
-      <label class="form-check-label" for="subscribeBtn"
-        >{{ subscribeNews }}是否訂閱電子報</label
-      >
+      <label class="form-check-label" for="subscribeBtn">訂閱</label>
     </div>
     <div>
       <button type="button" class="btn btn-outline-primary text-black">
         送出
       </button>
     </div>
+    <!-- <form class="row g-3">
+      <div class="col-md-6">
+        <label for="inputEmail4" class="form-label">Email</label>
+        <input type="email" class="form-control" id="inputEmail4" />
+      </div>
+      <div class="col-md-6">
+        <label for="inputPassword4" class="form-label">Password</label>
+        <input type="password" class="form-control" id="inputPassword4" />
+      </div>
+      <div class="col-12">
+        <label for="inputAddress" class="form-label">Address</label>
+        <input
+          type="text"
+          class="form-control"
+          id="inputAddress"
+          placeholder="1234 Main St"
+        />
+      </div>
+      <div class="col-12">
+        <label for="inputAddress2" class="form-label">Address 2</label>
+        <input
+          type="text"
+          class="form-control"
+          id="inputAddress2"
+          placeholder="Apartment, studio, or floor"
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="inputCity" class="form-label">City</label>
+        <input type="text" class="form-control" id="inputCity" />
+      </div>
+      <div class="col-md-4">
+        <label for="inputState" class="form-label">State</label>
+        <select id="inputState" class="form-select">
+          <option selected>Choose...</option>
+          <option>...</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="inputZip" class="form-label">Zip</label>
+        <input type="text" class="form-control" id="inputZip" />
+      </div>
+      <div class="col-12">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="gridCheck" />
+          <label class="form-check-label" for="gridCheck"> Check me out </label>
+        </div>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Sign in</button>
+      </div>
+    </form> -->
   </div>
 </template>
 
@@ -183,12 +220,8 @@ const addAddressInput1 = ref(false);
 const addAddressInput2 = ref(false);
 
 //當值為?哪個選項被選到
-if (gender.value === false) {
-  genderRadio1.checked = true;
-}
 
 function addBtn() {
-  //alert('addAddress');
   if (addAddressInput1.value === false) {
     addAddressInput1.value = true;
   } else {
@@ -210,13 +243,20 @@ if (subscribeNews.value === true) {
   padding-right: 10px;
   font-size: 18px;
 }
-.addAddress {
+.AddressBtn {
+  display: flex;
   padding-left: 20px;
 }
 .level {
-  width: 30%;
+  width: 8%;
   background-color: #fce0d9;
   border-radius: 10px;
   border: solid 1px #bb3e20;
+  display: flex;
+  justify-content: center;
+}
+.icon-size {
+  font-size: 35px;
+  color: #bb3e20;
 }
 </style>

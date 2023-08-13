@@ -4,25 +4,27 @@
 	{
 		public readonly List<BaseDiscountStrategy> ActivedRules = new List<BaseDiscountStrategy>();
 
-		public bool checkoutprocess(CartContext cart)
+		public bool CheckoutProcess(CartContext cart)
 		{
 			// reset cart
 			cart.AppliedDiscounts.Clear();
-
-			cart.TotalPrice = (decimal)(cart.CartItems.Select(p => p.SubTotal.Value).Sum());
+			cart.OriginalTotalAmount = (decimal)(cart.CartItems.Select(p => p.SubTotal.Value).Sum());
+			cart.TotalPrice = cart.OriginalTotalAmount;
 			foreach (var rule in this.ActivedRules)
 			{
+				
 				var discounts = rule.Process(cart);
-				cart.AppliedDiscounts.AddRange(discounts);
-				if (rule.Exclusivetag != null)
+				if(discounts != null)
 				{
-					foreach (var d in discounts)
-					{
-						foreach (var p in d.Products) p.Tags.Add(rule.Exclusivetag);
-					}
+					cart.AppliedDiscounts.Add(discounts);
+					cart.TotalPrice -= discounts.Amount;
 				}
-				cart.TotalPrice -= discounts.Select(d => d.Amount).Sum();
 			}
+			if(cart.TotalPrice > 2000)
+			{
+				cart.DeliveryFee = 0;
+			}
+			cart.TotalPrice += cart.DeliveryFee;
 			return true;
 		}
 	}
