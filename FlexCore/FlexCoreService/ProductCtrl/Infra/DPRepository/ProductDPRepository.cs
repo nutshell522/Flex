@@ -20,13 +20,13 @@ namespace FlexCoreService.ProductCtrl.Infra.DPRepository
         {
             string sql = @"select pc.Id as CommentId,pc.Description,pc.Score,
 cast(pc.CreateTime as date) as CreateTime,
-m.Name as MemberName,cast(avg(cast(pc.Score as decimal)) over() as decimal(10, 2)) as AverageScore
+m.Name as MemberName,cast(avg(cast(pc.Score as decimal)) over() as decimal(10, 2)) as AverageScore 
 from ProductComment as pc 
 join ProductGroups as pg on pg.ProductGroupId=pc.fk_ProductGroupId 
 join Products as p on p.ProductId=pg.fk_ProductId 
 join Members as m on m.MemberId=pc.fk_MemberId 
-where p.ProductId='"+ @productId+
-"' and pc.Status=0 " +
+where p.ProductId='"+@productId+ 
+"' and pc.Status=0 " + 
 "order by pc.CreateTime";
 
             using IDbConnection dbConnection = new SqlConnection(_connStr);
