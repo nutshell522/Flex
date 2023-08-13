@@ -52,7 +52,7 @@ namespace FlexCoreService.Controllers
             {
                 return BadRequest();
             }
-            return products;
+            return Ok(products);
         }
 
         // GET: api/Products/Women
@@ -66,7 +66,7 @@ namespace FlexCoreService.Controllers
             {
                 return BadRequest();
             }
-            return products;
+            return Ok(products);
         }
 
         // GET: api/Products/Kid
@@ -80,7 +80,7 @@ namespace FlexCoreService.Controllers
             {
                 return BadRequest();
             }
-            return products;
+            return Ok(products);
         }
 
         //GET: api/Products/Detial/productId
@@ -113,6 +113,20 @@ namespace FlexCoreService.Controllers
             }
 
             return Ok(products);
+        }
+
+
+        //GET: api/Products/Comment/productId
+        [HttpGet("Comment/{productId}")]
+        public async Task<ActionResult<IEnumerable<ProductCommentVM>>> GetProductComment(string productId)
+        {
+            var service=new ProductService(_repo);
+            var result = service.GetProductComment(productId).Select(c=>c.ToCommentVM());
+            if(result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
         }
 
 

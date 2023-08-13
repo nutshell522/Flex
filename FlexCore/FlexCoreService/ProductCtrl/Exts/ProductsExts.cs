@@ -65,5 +65,18 @@ namespace FlexCoreService.ProductCtrl.Exts
             };
             return vm;
         }
+
+        public static ProductCommentVM ToCommentVM(this ProductCommentDto dto)
+        {
+            return new ProductCommentVM
+            {
+                CommentId = dto.CommentId,
+                Description = dto.Description,
+                MemberName = dto.MemberName,
+                CreateTime = dto.CreateTime,
+                Score = dto.Score,
+                AverageScore = dto.AverageScore,
+            };
+        }
     }
 }
