@@ -1,16 +1,16 @@
 <template>
-        <div class="row cardbody">
-    <div v-for="(activity, index) in info" :key="index" class="card mb-3 col-4 cards" style="width: 18rem;">
-       
-        <img :src='imgBaseUrl+"/Public/Img/"+activity.imgPath' class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">{{ activity.activityName }}</h5>
-            <!-- 使用計算屬性將日期格式化為所需形式 -->
-            <p class="card-text">{{ formatDate(activity.activityDate) }}</p>
-            <a :href="'activityInfo/'+activity.activityId" class="btn btn-primary">前往報名</a>
+    <div class="row cardbody">
+        <div v-for="(activity, index) in info" :key="index" class="card mb-3 col-4 cards" style="width: 18rem;">
+        
+            <img :src='imgBaseUrl+"/Public/Img/"+activity.imgPath' class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{ activity.activityName }}</h5>
+                <!-- 使用計算屬性將日期格式化為所需形式 -->
+                <p class="card-text">{{ formatDate(activity.activityDate) }}</p>
+                <a :href="'activityInfo/'+activity.activityId" class="btn btn-primary">前往報名</a>
+            </div>
         </div>
     </div>
-</div>
 </template>
     
 <script setup>

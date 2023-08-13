@@ -13,6 +13,7 @@ namespace FlexCoreService.ActivityCtrl.Exts
                 SpeakerId = dto.SpeakerId,
                 SpeakerName = dto.SpeakerName,
                 SpeakerDescription = dto.SpeakerDescription,
+                SpeakerImg = dto.SpeakerImg,
                 FieldName = dto.FieldName,
                 BranchName = dto.BranchName,
                 BranchAddress = dto.BranchAddress
