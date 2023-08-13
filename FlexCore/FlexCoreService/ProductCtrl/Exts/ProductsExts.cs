@@ -53,13 +53,16 @@ namespace FlexCoreService.ProductCtrl.Exts
                 //DefaultColorImg = new Dictionary<string, string>(),
                 ProductGroup=group
             };
-            //foreach (var item in dto)
-            //{
-            //    if (!vm.DefaultColorImg.ContainsKey(item.ColorName)) 
-            //    {
-            //        vm.DefaultColorImg[item.ColorName] = item.DefaultColorImg;
-            //    }
-            //}
+            return vm;
+        }
+
+        public static ProductImgsVM ToImgVM(this ProductImgsDto dto)
+        {
+            var vm = new ProductImgsVM
+            {
+                ProductImgId = dto.ProductImgId,
+                ImgPath = dto.ImgPath,
+            };
             return vm;
         }
     }

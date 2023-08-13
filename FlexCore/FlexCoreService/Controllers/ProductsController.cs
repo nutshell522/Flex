@@ -50,7 +50,7 @@ namespace FlexCoreService.Controllers
             var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
             if (products.Count == 0)
             {
-                return NotFound();
+                return BadRequest();
             }
             return products;
         }
@@ -64,7 +64,7 @@ namespace FlexCoreService.Controllers
             var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
             if (products.Count == 0)
             {
-                return NotFound();
+                return BadRequest();
             }
             return products;
         }
@@ -78,7 +78,7 @@ namespace FlexCoreService.Controllers
             var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
             if (products.Count == 0)
             {
-                return NotFound();
+                return BadRequest();
             }
             return products;
         }
@@ -93,7 +93,23 @@ namespace FlexCoreService.Controllers
 
             if (products == null)
             {
-                return NotFound();
+                return BadRequest();
+            }
+
+            return Ok(products);
+        }
+
+        //GET: api/Products/Detial/productId
+        [HttpGet("Imgs/{productId}")]
+        public async Task<ActionResult<IEnumerable<ProductImgsVM>>> GetProductImgs(string productId)
+        {
+            var service = new ProductService(_repo);
+
+            var products = service.GetProductImgs(productId).Select(i => i.ToImgVM());
+
+            if (products == null)
+            {
+                return BadRequest();
             }
 
             return Ok(products);

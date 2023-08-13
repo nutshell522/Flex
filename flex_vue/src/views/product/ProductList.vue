@@ -13,12 +13,13 @@ import ProductCard from "@/components/product/ProductCard.vue";
 import axios from "axios";
 import { onMounted, ref, computed, watchEffect, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
+
 const route = useRoute();
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const cards = ref([]);
 
 //創建本機共用屬性
-const localStorageKey = "originalPath";
+const localStorageKey = "";
 
 //設置路徑
 if (route.path.includes("/men")) {
