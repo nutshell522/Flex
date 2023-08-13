@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useGetApiDataStore } from '../stores/useGetApiDataStore';
 import { storeToRefs } from 'pinia';
-import Home from '../views/home/Home.vue';
 import User from '../views/user/User.vue';
 import Login from '../views/user/Login.vue';
 import ActivityInfo from '../views/activity/ActivityInfo.vue';
@@ -15,14 +14,20 @@ const routes = [
   {
     //http://loaclhost/
     path: '/',
-    component: Home,
+    component: () => import('@/views/home/Home.vue'),
     meta: { title: `${webTitle}首頁` },
   },
   {
-    //http://loaclhost/
+    //http://loaclhost/cart
     path: '/cart',
-    component: () => import('../views/home/Cart.vue'),
+    component: () => import('@/views/home/Cart.vue'),
     meta: { title: `${webTitle}購物車` },
+  },
+  {
+    //http://loaclhost/buy
+    path: '/buy',
+    component: () => import('@/views/home/Buy.vue'),
+    meta: { title: `${webTitle}結帳` },
   },
   {
     //http://loaclhost/User
