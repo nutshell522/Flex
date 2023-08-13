@@ -13,6 +13,7 @@ namespace FlexCoreService.CartCtrl.Interface
 		void UpdateCartItemQty(CartItemDto dto);
 		void DeleteCartItem(CartItemDto dto);
 		(bool DoesExist, int CartItemId) ExistsCartItem(int memberId, int productId);
+		IEnumerable<ProductDiscountDto> GetActiveDiscounts();
 		
 	}
 }

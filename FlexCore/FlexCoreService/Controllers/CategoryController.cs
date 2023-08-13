@@ -23,7 +23,7 @@ namespace FlexCoreService.Controllers
         }
 
         //Post: api/Category/Men
-        [HttpPost("Men")]
+        [HttpPost("men")]
         public async Task<ActionResult<CategoryVM>> GetCategoryMen()
         {
             int categoryId = 1;
@@ -37,7 +37,7 @@ namespace FlexCoreService.Controllers
         }
 
         //Post: api/Category/Women
-        [HttpPost("Women")]
+        [HttpPost("women")]
         public async Task<ActionResult<CategoryVM>> GetCategoryWomen()
         {
             int categoryId = 2;
@@ -51,7 +51,7 @@ namespace FlexCoreService.Controllers
         }
 
         //Post: api/Category/Kid
-        [HttpPost("Kid")]
+        [HttpPost("kid")]
         public async Task<ActionResult<CategoryVM>> GetCategoryKid()
         {
             int categoryId = 3;

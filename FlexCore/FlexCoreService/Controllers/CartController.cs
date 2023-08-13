@@ -31,15 +31,73 @@ namespace FlexCoreService.Controllers
 		[HttpPost]
 		public async Task<ActionResult<IEnumerable<CartItemVM>>> GetCartItems()
 		{
-            var cartItems = await Task.Run(() => _service.GetCartItems(memberId).Select(x => x.ToViewModel()));
-            return Ok(cartItems);
-        }
+			var cartItems = await Task.Run(() => _service.GetCartItems(memberId).Select(x => x.ToViewModel()));
+			return Ok(cartItems);
+		}
 		// PUT: api/Cart/UpdateItem
 		[HttpPut("UpdateItem")]
 		public async Task<ActionResult<Result>> UpdateItem(CartItemVM vm)
 		{
-			var result = await Task.Run(() => _service.UpdateCartItemQty(vm.ToDto(),memberId));
+			var result = await Task.Run(() => _service.UpdateCartItemQty(vm.ToDto(), memberId));
 			return Ok(result);
+		}
+
+		// POST: api/Cart/Checkout
+		[HttpPost("Checkout")]
+		public async Task<ActionResult<CartContext>> Checkout()
+		{
+			try
+			{
+				var result = await Task.Run(() => _service.GetCartItems(memberId).Select(x => x.ToViewModel()));
+				CartContext checkOutResult = CheckoutProcess(result);
+				return Ok(checkOutResult);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return StatusCode(500, "An error occurred.");
+			}
+		}
+
+		private CartContext CheckoutProcess(IEnumerable<CartItemVM> cartItems)
+		{
+			CartContext cart = new CartContext(cartItems);
+			POS pos = new POS();
+			pos.ActivedRules.AddRange(LoadDiscount());
+			pos.CheckoutProcess(cart);
+			return cart;
+		}
+
+		private IEnumerable<BaseDiscountStrategy> LoadDiscount()
+		{
+			var vms = _service.GetActiveDiscounts().Select(x => x.ToViewModel());
+			foreach (var vm in vms)
+			{
+				// 折扣類型如為1是百分比折扣，0則是金額折扣
+				if (vm.DiscountType == 1)
+				{
+					// 門檻類型為1為數量門檻，0為金額門檻
+					if (vm.ConditionType == 1)
+					{
+						yield return new BuyMoreItemsPercentageDiscount(vm);
+					}
+					else
+					{
+						yield return new PercentageDiscount(vm);
+					}
+				}
+				else
+				{
+					if (vm.ConditionType == 1)
+					{
+						yield return new BuyMoreItemsAmountDiscount(vm);
+					}
+					else
+					{
+						yield return new AmountDiscount(vm);
+					}
+				}
+			}
 		}
 	}
 }

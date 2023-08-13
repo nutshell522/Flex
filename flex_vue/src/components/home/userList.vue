@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <ul class="userList-items">
-      <li class="mb-1"><a href="/user">個人資料</a></li>
+      <li class="mb-1"><router-link to="/user">個人資料</router-link></li>
 
       <li class="mb-1"><a href="/orders">訂單查詢/申請退貨</a></li>
 
@@ -24,18 +24,12 @@ import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 const getApiStore = useGetApiDataStore();
 const { handleLogout } = getApiStore; //function透過store取資料
-const { memberData } = storeToRefs(getApiStore); //定義好的資料都是透過storeToRefs取資料
 
 function logout() {
   // 登入狀態
-  console.log(memberData.value);
   localStorage.removeItem('loggedInUser');
-  //todo呼叫登出後端Logout()
-
   //呼叫 Pinia 的登出函數
   handleLogout();
-
-  window.location.href = '/';
 }
 </script>
 

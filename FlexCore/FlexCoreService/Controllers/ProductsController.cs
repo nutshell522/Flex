@@ -42,7 +42,7 @@ namespace FlexCoreService.Controllers
         //}
 
         // GET: api/Products/Men
-        [HttpGet("Men")]
+        [HttpGet("men")]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetMenProducts(string? categoryName = null, string? subCategoryName = null)
         {
             int salesId = 1;
@@ -50,13 +50,13 @@ namespace FlexCoreService.Controllers
             var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
             if (products.Count == 0)
             {
-                return NotFound();
+                return BadRequest();
             }
             return products;
         }
 
         // GET: api/Products/Women
-        [HttpGet("Women")]
+        [HttpGet("women")]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetWomenProducts(string? categoryName = null, string? subCategoryName = null)
         {
             int salesId = 2;
@@ -64,13 +64,13 @@ namespace FlexCoreService.Controllers
             var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
             if (products.Count == 0)
             {
-                return NotFound();
+                return BadRequest();
             }
             return products;
         }
 
         // GET: api/Products/Kid
-        [HttpGet("Kid")]
+        [HttpGet("kid")]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetKidProducts(string? categoryName = null, string? subCategoryName = null)
         {
             int salesId = 3;
@@ -78,7 +78,7 @@ namespace FlexCoreService.Controllers
             var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
             if (products.Count == 0)
             {
-                return NotFound();
+                return BadRequest();
             }
             return products;
         }
@@ -93,7 +93,23 @@ namespace FlexCoreService.Controllers
 
             if (products == null)
             {
-                return NotFound();
+                return BadRequest();
+            }
+
+            return Ok(products);
+        }
+
+        //GET: api/Products/Detial/productId
+        [HttpGet("Imgs/{productId}")]
+        public async Task<ActionResult<IEnumerable<ProductImgsVM>>> GetProductImgs(string productId)
+        {
+            var service = new ProductService(_repo);
+
+            var products = service.GetProductImgs(productId).Select(i => i.ToImgVM());
+
+            if (products == null)
+            {
+                return BadRequest();
             }
 
             return Ok(products);

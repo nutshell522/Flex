@@ -8,6 +8,8 @@ namespace FlexCoreService.ActivityCtrl.Interface
         ActivityInfoDto GetActivityInfo(int id);
 
         Task<MemberDTO> GetMembreInfoAsync(int id);
+
+        Task<IEnumerable<ActivityIndexDTO>> GetAllAsync();
     }
 
 }

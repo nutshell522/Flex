@@ -7,6 +7,13 @@ namespace FlexCoreService.CartCtrl.Exts
         public int Id;
         public string? Name;
         public string? Note;
-        public abstract IEnumerable<ProductDiscountVM> Process(CartContext cartItems);
+        public BaseDiscountStrategy(ProductDiscountVM vm)
+        {
+			this.Id = vm.DiscountId;
+			this.Name = vm.DiscountName;
+			this.Note = vm.DiscountDescription;
+		}
+        public abstract ItemDiscount Process(CartContext cartItems);
+        public string? Exclusivetag = null;
     }
 }

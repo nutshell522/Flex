@@ -17,6 +17,9 @@ VALUES
 ('九折優惠','此專區單件9折',16,1,10,0,0,'2023-01-01',null,1000,1), 
 ('夏秋特賣','此專區單件8折',15,1,20,0,0,'2023-08-01','2023-09-30',100,1) 
 
+select * from discounts as d
+where d.StartDate <= getdate() and ( d.EndDate > getdate() OR d.EndDate IS NULL) and d.status = 1
+
 -- cartitem sql select語法
 select 
 ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId, 
@@ -48,6 +51,8 @@ left join(
 ) AS pir ON pir.fk_ProductId = p.ProductId
 left join Discounts as d on d.fk_ProjectTagId = pti.fk_ProjectTagId
 where p.Status=0 and p.LogOut=0 and c.fk_MemberID = 1 
+AND (d.StartDate <= GETDATE() AND (d.EndDate > GETDATE() OR d.EndDate IS NULL) AND d.status = 1
+OR d.DiscountId IS NULL)
 GROUP BY
 ci.CartItemId, c.CartId, pg.ProductGroupId, ci.Qty, p.ProductId,
 p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
@@ -74,3 +79,4 @@ select * from CartItems
 select CartId
 from ShoppingCarts as sc
 where sc.fk_MemberID = 1
+

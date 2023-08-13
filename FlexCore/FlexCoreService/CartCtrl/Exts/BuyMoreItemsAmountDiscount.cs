@@ -1,18 +1,17 @@
 ﻿using FlexCoreService.CartCtrl.Models.vm;
-using Newtonsoft.Json.Linq;
 
 namespace FlexCoreService.CartCtrl.Exts
 {
-	public class PercentageDiscount : BaseDiscountStrategy
-	{
-		// 門檻金額
-		private readonly int _itemsAmount;
+    public class BuyMoreItemsAmountDiscount : BaseDiscountStrategy
+    {
+		// 門檻數量
+		private readonly int _itemsCount;
 		// 折扣, 20表示八折
-		private readonly int _percentOff;
-		public PercentageDiscount(ProductDiscountVM vm) : base(vm)
+		private readonly int _discountAmount;
+		public BuyMoreItemsAmountDiscount(ProductDiscountVM vm) : base(vm)
 		{
-			_itemsAmount = vm.ConditionValue.Value;
-			_percentOff = vm.DiscountValue.Value;
+			_itemsCount = vm.ConditionValue.Value;
+			_discountAmount = vm.DiscountValue.Value;
 		}
 
 		public override ItemDiscount Process(CartContext cart)
@@ -27,15 +26,14 @@ namespace FlexCoreService.CartCtrl.Exts
 					matchedProducts.Add(p);
 				}
 			}
-			var totalAmount = matchedProducts.Sum(x => x.SubTotal);
 
-			if (totalAmount >= _itemsAmount)
+			if (matchedProducts.Count >= _itemsCount)
 			{
 				return new ItemDiscount()
 				{
 					Rule = this,
 					Products = matchedProducts.Select(x => x.Product).ToArray(),
-					Amount = (decimal)matchedProducts.Sum(x => x.SubTotal) * _percentOff / 100
+					Amount = (decimal)matchedProducts.Sum(x => x.SubTotal) - _discountAmount
 				};
 			}
 			return null;

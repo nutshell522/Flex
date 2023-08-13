@@ -85,7 +85,7 @@ namespace FlexCoreService.Controllers
             if (userData == null)
             {
                 //欄位或帳號驗證失敗
-                return Ok("帳號錯誤");
+                return Ok(null);
             }
             else
             {                
@@ -120,15 +120,6 @@ namespace FlexCoreService.Controllers
             }
         }
 
-
-        //public void ss (LoginDto value)
-        //{
-        //    var Claim = _contextAccessor.HttpContext.User.Claims.First();
-        //    //var memId=Claim.Where(m=>m.Type=="MemberId").FirstOrDefault();
-        //    //12-3
-        //}
-
-
         /// <summary>
         /// 登出
         /// </summary>
@@ -138,6 +129,11 @@ namespace FlexCoreService.Controllers
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return "ok";
         }
+
+        /// <summary>
+        /// 測試登入狀態
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public bool IsLogin()
         {
@@ -154,5 +150,32 @@ namespace FlexCoreService.Controllers
             return "未登入";
         }
 
+
+        /// <summary>
+        /// 註冊
+        /// </summary>
+        /// <param name="regdto"></param>
+        /// <returns></returns>
+        [HttpPost("Register")]
+        public async Task<RegisterDto> Register([FromBody] RegisterDto regdto)
+        {
+            Member member = new Member
+            {
+                Account = regdto.Account,
+                EncryptedPassword = regdto.EncryptedPassword,
+                Email = regdto.Email,
+                Birthday = regdto.Birthday,
+                Mobile = regdto.Mobile,
+                Name = regdto.Name,
+                fk_LevelId = 1//一般會員
+            };
+            //todo發送驗證信
+
+
+
+            _db.Members.Add(member);
+            await _db.SaveChangesAsync();
+            return regdto;
+        }
     }
 }

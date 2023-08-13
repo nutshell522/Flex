@@ -46,25 +46,26 @@ namespace FlexCoreService
             builder.Services.AddScoped<ICartRepository, CartDapperRepository>();
             builder.Services.AddScoped<IShoesCategoryRepository, ShoesCategoryDPRepository>();
             builder.Services.AddScoped<ICustomerChooseRepository, ShoesChooseDPRepository>();
+            builder.Services.AddScoped<IReservationDPRepository, ReservationDPRepositorycs>();
 
 
             builder.Services.AddHttpContextAccessor();
 
 
 
-            ////builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
-            ////{
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            {
+                //���n�J�ɷ|�۰ʾɦV���}
+                //option.LoginPath = new PathString("/api/Users/NoLogin");
 
-            ////    option.LoginPath = new PathString("/api/Users/NoLogin");
+                option.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            });
 
-
-            ////    option.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            ////});
-
-            ////builder.Services.AddMvc(options =>
-            ////{
-            ////    options.Filters.Add(new AuthorizeFilter());
-            ////});
+            //����]�w�n�J����
+            //builder.Services.AddMvc(options =>
+            //{
+            //    options.Filters.Add(new AuthorizeFilter());
+            //});
 
             //Learn more about configuring Swagger / OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

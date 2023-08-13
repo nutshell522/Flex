@@ -38,18 +38,22 @@
               </div>
             </li>
           </router-link>
-          <li>
-            <div class="nav-list-item">
-              <div>Women</div>
-              <div>女款</div>
-            </div>
-          </li>
-          <li>
-            <div class="nav-list-item">
-              <div>Kid</div>
-              <div>兒童款</div>
-            </div>
-          </li>
+          <router-link to="/women" class="transetion">
+            <li>
+              <div class="nav-list-item">
+                <div>Women</div>
+                <div>女款</div>
+              </div>
+            </li>
+          </router-link>
+          <router-link to="/kid" class="transetion">
+            <li>
+              <div class="nav-list-item">
+                <div>Kid</div>
+                <div>兒童款</div>
+              </div>
+            </li>
+          </router-link>
           <li>
             <div class="nav-list-item">
               <div>Sale</div>
@@ -66,7 +70,7 @@
         <i class="bi bi-heart"></i>
         <i class="bi bi-bag"></i>
         <pre>
-          <p>{{ memberData.username }}</p>
+          <p>{{ memberInfo.username}}</p>
         </pre>
       </div>
     </div>
@@ -76,13 +80,16 @@
 <script setup>
 import { ref, watch } from 'vue';
 import userList from '../home/userList.vue';
+import Cookies from 'js-cookie';
 
 import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 const getApiStore = useGetApiDataStore();
-const { memberData } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
-
+const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
+const { memberInfo } = storeToRefs(getApiStore);
+const { setLoginSuccess } = getApiStore; //function透過store取資料
 const { getData } = getApiStore;
+
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const url = `${baseAddress}api/Users/Login`;
 function getApi() {
@@ -97,17 +104,15 @@ function hideList() {
   isListVisible.value = false;
 }
 
-//userIcon
-const loginSuccess = ref(false);
+watch(memberInfo, (newValue) => {
+  if (newValue) {
+    setLoginSuccess(true);
+    //console.log('人頭' + loginSuccess.value);
 
-watch(getApiStore.memberData, (newValue) => {
-  //登入
-  if (newValue.value != null) {
-    //console.log('Watch callback called.');
-    loginSuccess.value = false;
-  } else {
-    //未登入
     loginSuccess.value = true;
+  } else {
+    setLoginSuccess(false);
+    loginSuccess.value = false;
   }
 });
 </script>

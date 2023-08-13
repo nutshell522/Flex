@@ -11,8 +11,6 @@ namespace FlexCoreService.ProductCtrl.Models.VM
         public string ProductOrigin { get; set; }
         public int? UnitPrice { get; set; }
         public int SalesPrice { get; set; }
-
-        //public Dictionary<string,string> DefaultColorImg { get; set; }
         public Dictionary<string,List<ColorGroupDto>> ProductGroup { get; set; }
 
     }
