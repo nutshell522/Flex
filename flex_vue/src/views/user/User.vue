@@ -15,14 +15,13 @@
       </div>
     </div>
     <!-- 77gender資料繫結沒有成功 -->
-    <div class="gender">
+    <div class="input-group gender">
       <div class="radioBtn">
         <label for="genderInput" class="text">性別</label>
         <input
           class="form-check-input"
           type="radio"
           id="genderRadio1"
-          value="true"
           v-model="gender"
         />
         <label class="form-check-label ms-1" for="genderRadio1"> 生理男 </label>
@@ -32,7 +31,6 @@
           class="form-check-input"
           type="radio"
           id="genderRadio2"
-          value="flase"
           v-model="gender"
         />
         <label class="form-check-label ms-1" for="genderRadio2">生理女 </label>
@@ -93,21 +91,21 @@
           </button>
         </div>
       </div>
-      <!-- 77地址文字底下的備用地址要縮排 -->
       <div class="addressInput">
         <input
           type="text"
-          class="form-control addAddressInput1"
+          class="form-control addAddressInput"
           placeholder="alternate address"
-          v-model="alternateAddress"
+          v-model="alternateAddress1"
           v-if="addAddressInput1"
         />
       </div>
-      <div class="mb-3">
+      <div class="addressInput mb-3">
         <input
           type="text"
-          class="form-control addAddressInput2"
+          class="form-control addAddressInput"
           placeholder="alternate address"
+          v-model="alternateAddress2"
           v-if="addAddressInput2"
         />
       </div>
@@ -156,17 +154,20 @@ let email = ref('');
 let mobile = ref('');
 let gender = ref('');
 let commonAddress = ref('');
-let alternateAddress = ref('');
+const addAddressInput1 = ref(false);
+const addAddressInput2 = ref(false);
+const addressBtn = ref(false);
+let alternateAddress1 = ref('');
+let alternateAddress2 = ref('');
 let subscribeNews = ref('');
 
 const baseAddress = 'https://localhost:7183/api';
 const uri = `${baseAddress}/Users/${account.value}`;
-
 axios
   .get(uri)
   .then((res) => {
     userProfile.value = res.data;
-    console.log(userProfile);
+    //console.log(userProfile);
 
     id.value = res.data.memberId;
     //console.log(id);
@@ -178,21 +179,26 @@ axios
     mobile.value = res.data.mobile;
     gender.value = res.data.gender;
     commonAddress.value = res.data.commonAddress;
-    alternateAddress.value = res.data.alternateAddress1;
+    alternateAddress1.value = res.data.alternateAddress1;
+    alternateAddress2.value = res.data.alternateAddress2;
     subscribeNews.value = res.data.isSubscribeNews;
+    //console.log(alternateAddress1.value);
+    //console.log(alternateAddress2.value);
+    console.log(gender.value);
+    //console.log(subscribeNews.value);
+    if (alternateAddress1.value) {
+      addAddressInput1.value = true;
+    }
+    if (alternateAddress1.value && alternateAddress2.value) {
+      addAddressInput1.value = true;
+      addAddressInput2.value = true;
+    }
   })
   .catch((err) => {
     err;
   });
 
-const addAddressInput1 = ref(false);
-const addAddressInput2 = ref(false);
-const addressBtn = ref(false);
-
-//當值為?哪個選項被選到
-
 function addBtn() {
-  //關閉的時候
   if (addAddressInput1.value === false) {
     addAddressInput1.value = true;
     console.log('addAddressInput1');
@@ -212,9 +218,31 @@ function minusBtn() {
     console.log('addAddressInput2');
   }
 }
+const userData = ref([]);
+
 function save() {
+  alert('save');
   //todo檢查欄位有沒有確實填寫
   //todo檔案更新成功
+  var uri = `${baseAddress}/Users/${id.value}`;
+  var editUserProfile = {};
+  editUserProfile.Gender = gender.value;
+  editUserProfile.Email = email.value;
+  editUserProfile.Mobile = mobile.value;
+  editUserProfile.CommonAddress = commonAddress.value;
+  editUserProfile.AlternateAddress1 = alternateAddress1.value;
+  editUserProfile.alternateAddress2 = addAddressInput2.value;
+  editUserProfile.IsSubscribeNews = subscribeNews.value;
+
+  axios
+    .post(uri, editUserProfile)
+    .then((res) => {
+      userData.value = res.data;
+      console.log(userData.value);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   //todo傳給後端
 }
 
@@ -224,14 +252,14 @@ if (subscribeNews.value === true) {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .gender {
   display: flex;
   align-items: center;
   /* 77文字跟按鈕沒有水平 */
 }
 .text {
-  padding-right: 10px;
+  padding-right: 13px;
   font-size: 18px;
 }
 .addressBtn {
@@ -262,7 +290,10 @@ if (subscribeNews.value === true) {
   align-items: center;
   display: flex;
   width: 100%;
-  /* 77地址名稱水平排列 */
+  .addAddressInput {
+    border-radius: 0px;
+    margin-left: 47px;
+  }
 }
 .save {
   display: flex;

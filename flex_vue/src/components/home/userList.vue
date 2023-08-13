@@ -13,7 +13,7 @@
 
       <li class="mb-2"><a href="javascript:;">瀏覽紀錄</a></li>
 
-      <li class="mb-3"><a href="javascript:;">購物車</a></li>
+      <li class="mb-2"><a href="javascript:;">購物車</a></li>
     </ul>
     <button class="logout" type="submit" @click="logout">登出</button>
   </div>

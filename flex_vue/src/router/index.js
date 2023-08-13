@@ -69,14 +69,6 @@ const routes = [
     path: '/reservationIndex',
     component: ReservationIndex,
     meta: { title: `${webTitle}預約諮詢首頁` },
-<<<<<<< HEAD
-=======
-  },
-  {
-    //http://loaclhost/Login
-    path: '/login',
-    component: Login,
->>>>>>> cc841dd23eb1213cf026e61f6210816c0cd901a8
   },
   {
     //http://loaclhost/orders
@@ -297,7 +289,7 @@ router.beforeEach((to, from, next) => {
     console.log('nologin');
     next({ path: '/login' });
   } else {
-    console.log('login');
+    //console.log('login');
     next();
   }
 });

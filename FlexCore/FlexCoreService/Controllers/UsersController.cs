@@ -60,6 +60,7 @@ namespace FlexCoreService.Controllers
                 Birthday = m.Birthday,
                 CommonAddress = m.CommonAddress,
                 AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
+                AlternateAddress2 =m.AlternateAddress.AlternateAddress2,
                 IsSubscribeNews = m.IsSubscribeNews
             }).Single();
 
@@ -183,8 +184,8 @@ namespace FlexCoreService.Controllers
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        [HttpPost("account")]
-        public async Task<ProfileDto> EditUserProfile([FromBody] string account)
+        [HttpPost("{id}")]
+        public async Task<ProfileDto> EditUserProfile([FromBody] int id)
         {
             //檢查帳號是否存在
 
@@ -192,23 +193,24 @@ namespace FlexCoreService.Controllers
             {
                 return null;
             }
-            ProfileDto proDto = _db.Members.Where(m => m.Account == account).Select(m => new ProfileDto
+            ProfileDto proDto = _db.Members.Where(m => m.MemberId == id).Select(m => new ProfileDto
             {
-                MemberId = m.MemberId,
-                fk_Level = m.fk_LevelId,
-                LevelName = m.fk_Level.LevelName,
-                Name = m.Name,
+                //MemberId = m.MemberId,
+                //fk_Level = m.fk_LevelId,
+                //LevelName = m.fk_Level.LevelName,
+                //Name = m.Name,
                 Email = m.Email,
                 Mobile = m.Mobile,
                 Gender = m.Gender,
                 Birthday = m.Birthday,
                 CommonAddress = m.CommonAddress,
                 AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
+                AlternateAddress2 = m.AlternateAddress.AlternateAddress2,
                 IsSubscribeNews = m.IsSubscribeNews
             }).Single();
             //檢查資料都填寫
-            //存入資料庫
-
+            
+            _db.SaveChanges();
             //跳更新成功回到本頁
             return proDto;
         }

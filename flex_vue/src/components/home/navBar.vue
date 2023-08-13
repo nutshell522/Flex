@@ -11,7 +11,6 @@
           <a href="/orders" @mouseenter="showList"
             ><i class="bi bi-person-circle"></i
           ></a>
-          <!-- 77怎麼把文字及按鈕有效範圍變大 -->
           <userList v-if="isListVisible" @mouseleave="hideList"></userList>
         </li>
       </ul>
@@ -79,12 +78,13 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, defineComponent } from 'vue';
 import userList from '../home/userList.vue';
 import Cookies from 'js-cookie';
 
 import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+
 const getApiStore = useGetApiDataStore();
 const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
 const { memberInfo } = storeToRefs(getApiStore);
@@ -194,6 +194,9 @@ header {
         }
       }
     }
+  }
+  .userIcon {
+    font-size: 18px;
   }
 }
 
