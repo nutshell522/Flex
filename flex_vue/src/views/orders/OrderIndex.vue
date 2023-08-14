@@ -1,18 +1,18 @@
 <template>
   <OrdernavBar></OrdernavBar>
-  <dev id="searchorderout" class="container">
-    <dev id="srarchdate" class="col-3">
+  <div id="searchorderout" class="container">
+    <div id="srarchdate" class="col-3">
       <input type="text" v-model="begintime" @searchInputbegintime="inputbegintime" class="form-control datePicker"
         placeholder="輸入開始日期">
       ~
       <input type="text" v-model="endtime" @searchInputendtime="inputendtime" class="form-control datePicker"
         placeholder="輸入結束日期">
-    </dev>
+    </div>
     <div id="searchorder" class="col-3">
       <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control" placeholder="輸入名稱">
       <button class="button" @click="keywordSearch">搜尋</button>
     </div>
-  </dev>
+  </div>
   <div id="cate" class="container">
     <button @click="setTypeValue('1'); setostatusValue('')">商品</button>
 
@@ -317,7 +317,8 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               關閉
             </button>
-            <button type="button" class="btn btn-primary" @click="setreturndetalValue(item.id)">確定</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+              @click="setreturndetalValue(item.id)">確定</button>
           </div>
         </div>
       </div>
@@ -368,6 +369,7 @@ const ostatus = ref("");
 const returnaccount = ref("");
 const returnreason = ref("");
 const returnOrderId = ref("");
+const request = ref([]);
 
 const loadGetOrders = async () => {
   await axios
@@ -398,22 +400,10 @@ const setcancelIdValue = (paramValue) => {
 };
 const ReturnOrders = async () => {
   await axios
-    .put(`https://localhost:7183/api/Orders/return?id=${retrunId.value}`)
+    .put(`https://localhost:7183/api/Orders/return?orderid=${retrunId.value}`)
     .then((response) => {
       //console.log(response.data);
       alert(response.data);
-      loadGetOrders();
-    })
-    .catch((error) => {
-      alert(error);
-    });
-};
-const Returndetail = async () => {
-  await axios
-    .Post(`https://localhost:7183/api/Orders/NewReturn?orderid=${returnOrderId.value}`)
-    .then((response) => {
-      console.log(response.data);
-      //alert(response.data);
       loadGetOrders();
     })
     .catch((error) => {
@@ -424,8 +414,24 @@ const setreturnIdValue = (paramValue) => {
   retrunId.value = paramValue;
   ReturnOrders();
 };
+const Returndetail = async () => {
+  const requestData = {
+    退貨轉帳帳號: returnaccount.value,
+    退貨理由: returnreason.value,
+  };
+  await axios
+    .post(`https://localhost:7183/api/Orders/NewReturn?orderid=${retrunId.value}`, requestData)
+    .then((response) => {
+      console.log(response.data);
+      //alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
 const setreturndetalValue = (paramValue) => {
-  retrunId.value = paramValue;
+  returnOrderId.value = paramValue;
   Returndetail();
 };
 const formatOrderTime = (ordertime) => {
