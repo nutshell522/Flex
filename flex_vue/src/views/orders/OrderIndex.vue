@@ -60,7 +60,9 @@
                         @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
                       <button
                         v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setreturnIdValue(item.id)" class="btn btn-primary">退貨</button>
+                        @click="setreturnIdValue(item.id)" class="btn btn-primary"
+                        :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
+                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">退貨</button>
                     </div>
                   </td>
                 </tr>
@@ -145,7 +147,9 @@
                         @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
                       <button
                         v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setreturnIdValue(item.id)" class="btn btn-primary">退貨</button>
+                        @click="setreturnIdValue(item.id)" class="btn btn-primary"
+                        :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
+                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">退貨</button>
                     </div>
                   </td>
                 </tr>
@@ -290,7 +294,37 @@
       </tbody>
     </table>
   </div>
-  <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+  <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    按下去顯示Modal
+  </button> -->
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">退款帳號:</label>
+            <input type="text" class="form-control" v-model="returnaccount" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">退貨原因:</label>
+            <input type="text" class="form-control" v-model="returnreason" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            關閉
+          </button>
+          <button type="button" class="btn btn-primary">確定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
       <div class="modal-content">
@@ -314,7 +348,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 <script setup>
 import OrdernavBar from "@/components/Order/OrdernavBar.vue";
@@ -387,12 +421,11 @@ const Returndetail = async () => {
       alert(error);
     });
 };
-const showModal = () => {
-  ("#insertModal").modal('show');
-};
+// const showModal = () => {
+//   ("#insertModal").modal('show');
+// };
 const setreturnIdValue = (paramValue) => {
   retrunId.value = paramValue;
-  showModal();
   ReturnOrders();
 };
 const formatOrderTime = (ordertime) => {
