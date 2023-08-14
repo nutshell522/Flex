@@ -1,5 +1,8 @@
 <template>
-<div class="row">
+    <div class="container">
+
+    
+<div class="row main">
     <div class="col-md-8">左
         <div class="featured-img">
             <img :src='imgBaseUrl+"/Public/Img/"+speaker.speakerImg'
@@ -35,7 +38,7 @@
     </div>
 </div>
 
- 
+</div>
 </template>
   
 <script setup>
@@ -180,13 +183,14 @@ onMounted(()=>{
 </script>
   
 <style>
-        body {
+        .main{
             font-family: Arial, sans-serif;
             text-align: center;
+            
         }
-
-        h1 {
-            color: #333;
+        #schedule{
+            display: flex;
+            justify-content: center;
         }
 
         .schedule-table {
@@ -194,14 +198,14 @@ onMounted(()=>{
             margin: 20px auto;
         }
 
-        .schedule-table th,
-        .schedule-table td {
-            border: 1px solid #ccc;
+        #schedule .schedule-table th,
+        #schedule .schedule-table td {
+            border: 1px solid #111;
             padding: 10px;
             cursor: pointer;
         }
 
-        .schedule-table td.selected {
+        #schedule .schedule-table td.selected {
             background-color: green;
             color: white;
         }
