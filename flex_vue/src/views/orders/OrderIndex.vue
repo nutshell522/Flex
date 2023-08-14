@@ -294,36 +294,35 @@
       </tbody>
     </table>
   </div>
-  <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    按下去顯示Modal
-  </button> -->
 
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label">退款帳號:</label>
-            <input type="text" class="form-control" v-model="returnaccount" />
+  <template v-for="item in GetOrders" :key="item.id">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="form-group">
-            <label class="form-label">退貨原因:</label>
-            <input type="text" class="form-control" v-model="returnreason" />
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">退款帳號:</label>
+              <input type="text" class="form-control" v-model="returnaccount" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">退貨原因:</label>
+              <input type="text" class="form-control" v-model="returnreason" />
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            關閉
-          </button>
-          <button type="button" class="btn btn-primary">確定</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              關閉
+            </button>
+            <button type="button" class="btn btn-primary" @click="setreturndetalValue(item.id)">確定</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </template>
   <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
@@ -368,7 +367,7 @@ const retrunId = ref("");
 const ostatus = ref("");
 const returnaccount = ref("");
 const returnreason = ref("");
-const returnMemberId = ref("");
+const returnOrderId = ref("");
 
 const loadGetOrders = async () => {
   await axios
@@ -411,22 +410,23 @@ const ReturnOrders = async () => {
 };
 const Returndetail = async () => {
   await axios
-    .Post(`https://localhost:7183/api/Orders/NewReturn?orderid=${returnMemberId.value}`)
+    .Post(`https://localhost:7183/api/Orders/NewReturn?orderid=${returnOrderId.value}`)
     .then((response) => {
-      //console.log(response.data);
-      alert(response.data);
+      console.log(response.data);
+      //alert(response.data);
       loadGetOrders();
     })
     .catch((error) => {
       alert(error);
     });
 };
-// const showModal = () => {
-//   ("#insertModal").modal('show');
-// };
 const setreturnIdValue = (paramValue) => {
   retrunId.value = paramValue;
   ReturnOrders();
+};
+const setreturndetalValue = (paramValue) => {
+  retrunId.value = paramValue;
+  Returndetail();
 };
 const formatOrderTime = (ordertime) => {
   const dateTimeObject = new Date(ordertime);

@@ -144,6 +144,7 @@ namespace FlexCoreService.Controllers
 				await Return(new ReturnVM
 				{
 					退貨日期 = DateTime.Now,
+					退款狀態 = false,
 				}, id);
 				return "已申請退貨";
 			}
@@ -162,13 +163,13 @@ namespace FlexCoreService.Controllers
 				退貨日期 = DateTime.Now,
 				fk訂單 = orderid,
 				退貨轉帳帳號 = reDTO.退貨轉帳帳號,
-				退款狀態 = reDTO.退款狀態,
+				退款狀態 = false,
 				退貨理由 = reDTO.退貨理由,
 			};
 			_context.Returns.Add(re);
 			await _context.SaveChangesAsync();
 
-			return "新增成功";
+			return "輸入成功";
 		}
 	}
 
