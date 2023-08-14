@@ -1,54 +1,65 @@
 <template>
   <div class="container">
-    <div class="user-menu">
-      <ul class="userBar">
-        <li>
-          <router-link to="/user" @click="verifyAgain">個人資料</router-link>
+    <nav class="nav nav-justified">
+      <ul class="nav nav-tabs">
+        <li class="nav-item" aria-current="page">
+          <router-link to="/user">個人資料</router-link>
+        </li>
+        <!-- 77如果選到某一個怎麼換顏色 -->
+        <li class="nav-item"><a href="/orders">訂單查詢 / 申請退貨</a></li>
+
+        <li class="nav-item" aria-disabled="true">
+          <router-link to="/favorites">收藏清單</router-link>
         </li>
 
-        <li><a href="/orders">訂單查詢/申請退貨</a></li>
+        <li class="nav-item"><a href="javascript:;">積分中心</a></li>
 
-        <li><a href="javascript:;">收藏清單/購買清單</a></li>
+        <li class="nav-item"><a href="javascript:;">優惠券</a></li>
 
-        <li><a href="javascript:;">積分中心</a></li>
+        <li class="nav-item"><a href="javascript:;">瀏覽紀錄</a></li>
 
-        <li><a href="javascript:;">優惠券</a></li>
-
-        <li><a href="javascript:;">瀏覽紀錄</a></li>
-
-        <li><a href="javascript:;">購物車</a></li>
+        <li class="nav-item"><a href="javascript:;">購物車</a></li>
       </ul>
-    </div>
+    </nav>
   </div>
   <!-- <verify></verify> -->
 </template>
 
 <script>
-import verify from '@/components/user/verify.vue';
-
-export default {
-  methods: {
-    verifyAgain() {
-      //alert('要替換成再次驗證的畫面還沒出來!');
-      //this.verify = true;
-    },
-  },
-};
+import verify from "@/components/user/verify.vue";
 </script>
 
-<style>
-.user-menu ul {
+<style scoped>
+.nav {
+  background-color: #333; /* 這裡使用你想要的顏色值 */
+}
+
+.nav-justified {
+  margin-bottom: 50px;
+  display: flex;
+  justify-content: center;
+}
+.nav ul {
   background-color: #f5f5f5;
   border-bottom: solid 1px lightgray;
   padding: 15px;
   display: flex;
+  width: 100%;
+  align-items: center;
 }
-.userBar {
+.nav-tabs {
   padding: 20px;
   justify-content: center;
 }
 
-.userBar li {
+.nav-tabs li {
   margin-right: 50px;
+}
+
+.pills {
+  background-color: rebeccapurple;
+  width: 20%;
+  display: flex;
+  justify-content: center;
 }
 </style>

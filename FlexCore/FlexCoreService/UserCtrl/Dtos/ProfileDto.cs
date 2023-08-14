@@ -11,7 +11,8 @@
         public bool? Gender { get; set; }
         public DateTime? Birthday { get; set; }
         public string CommonAddress { get; set; }
-        public string AlternateAddress1 { get; set; }
+        public string? AlternateAddress1 { get; set; }
+        public string? AlternateAddress2 { get; set; }
         public bool? IsSubscribeNews { get; set; }
     
 

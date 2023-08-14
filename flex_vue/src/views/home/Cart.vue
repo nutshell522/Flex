@@ -3,6 +3,7 @@
   <main>
     <div class="container">
       <div class="row gx-4">
+        <!-- 購物車左側 -->
         <div class="left col-12 col-lg-8">
           <ul class="cart">
             <li v-for="cartItem in cartItems" :key="cartItem.cartItemId" class="cart-item">
@@ -21,6 +22,7 @@
                   </li>
                 </ul>
               </div>
+              <i class="bi bi-trash3"></i>
               <div>
                 <div class="d-flex">
                   <button @click="decrementCartItem(cartItem)"><i class="bi bi-dash-lg"></i></button>
@@ -35,8 +37,26 @@
             </li>
           </ul>
         </div>
+        <!-- 購物車右側 -->
         <div class="right col-12 col-lg-4">
-          <div class="bg-primary"></div>
+          <h3>摘要</h3>
+          <div class="d-flex justify-content-between">
+            <div>折扣後小計</div>
+            <div>{{ originalTotalAmount }}</div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <div>折扣金額</div>
+            <div>{{ discountCount }}</div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <div>運費</div>
+            <div>{{ deliveryFee }}</div>
+          </div>
+          <div class="d-flex justify-content-between border border-start-0 border-end-0 py-2 ">
+            <div>總計</div>
+            <div>{{ subTotal }}</div>
+          </div>
+          <button class="btn btn-dark w-100 my-3 py-3 rounded-5">結帳</button>
         </div>
       </div>
     </div>
@@ -48,99 +68,76 @@
 import NavBar from '@/components/home/navBar.vue';
 import HomeFooter from '@/components/home/footer.vue';
 import axios from "axios";
-import { onMounted, ref, computed, watchEffect, watch } from "vue";
-import { CartItem } from '@/types/type';
+import { ref, onMounted, computed } from "vue";
+import { CartItem, ShoppingCartItem } from '@/types/type';
 
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
 const imgBaseUrl = ref(baseAddress);
 const cartItems = ref<CartItem[]>([]);
+const originalTotalAmount = ref<number>();
+const subTotal = ref<number>();
+const deliveryFee = ref<number>();
 
+
+// 載入購物車
 const loadCartItems = async () => {
-  let url: string;
-  url = `${baseAddress}api/Cart`;
+  let url: string = `${baseAddress}api/Cart`;
   await axios
     .post<CartItem[]>(url)
     .then((response) => {
       cartItems.value = response.data;
-      console.log(cartItems.value);
+      // console.log(cartItems.value);
     })
     .catch((error) => {
       alert(error);
     });
 };
 
-loadCartItems();
+// 載入折扣後的結帳金額
+const loadTotal = async () => {
+  let url: string = `${baseAddress}api/Cart/Checkout`;
+  await axios
+    .post<number>(url)
+    .then((response) => {
+      originalTotalAmount.value = response.data.originalTotalAmount;
+      subTotal.value = response.data.totalPrice;
+      deliveryFee.value = response.data.deliveryFee;
+      console.log(subTotal.value);
+    })
+    .catch((error) => {
+      alert(error);
+    });
+}
 
+const discountCount = computed(() => {
+  return subTotal.value - deliveryFee.value - originalTotalAmount.value;
+});
 
+onMounted(() => {
+  loadCartItems();
+  loadTotal();
+});
 
-// 購物車物件
-class ShoppingCartItem {
-  private item: CartItem;
+// 定義callback函數類型
+type Callback = () => void;
 
-  constructor(cartitem: CartItem) {
-    this.item = cartitem;
-  }
-  addOneItem():void{
-    this.addItem(1);
-  }
-
-  addItem(qty: number): void {
-    this.item.qty += qty;
-    this.updateItemQty();
-  }
-  removeOneItem():void{
-    this.removeItem(1);
-  }
-
-  removeItem(qty: number): void {
-    if (this.item.qty >= qty) {
-      this.item.qty = Math.max(this.item.qty - qty , 0);
-      if(this.item.qty>0){
-        this.updateItemQty();
-      }
-      if(this.item.qty<=0){
-        const result = confirm("是否刪除此商品？");
-        if(result){
-          this.updateItemQty();
-        }
-        else{
-          this.item.qty=1;
-        }
-      }
-    }
-  }
-
-  getCartItemQty(): number {
-    return this.item.qty;
-  }
-
-  private updateItemQty = async () => {
-    let url: string = `${import.meta.env.VITE_API_BASEADDRESS}api/Cart/UpdateItem`;
-    await axios
-      .put(url,this.item)
-      .then((response) => {
-      })
-      .catch((error) => {
-        alert(error);
-      });
-  };
+function processCallbacks(...callbacks: Callback[]) {
+  callbacks.forEach(callback => callback());
 }
 
 const incrementCartItem = async (cartItem: CartItem) => {
   const shoppingCart = new ShoppingCartItem(cartItem)
-  await shoppingCart.addOneItem();
-  setTimeout(() => {
-    loadCartItems();
-  }, 1000);
+  await shoppingCart.addOneItem(() => {
+    processCallbacks(loadCartItems);
+  });
 };
 
 const decrementCartItem = async (cartItem: CartItem) => {
   const shoppingCart = new ShoppingCartItem(cartItem);
-  await shoppingCart.removeOneItem();
-  setTimeout(() => {
-    loadCartItems();
-  }, 1000);
+  await shoppingCart.removeOneItem(() => {
+    processCallbacks(loadCartItems);
+  });
 };
 
 const getCartItemQty = (cartItem: CartItem) => {

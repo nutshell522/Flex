@@ -8,8 +8,8 @@
 		{
 			// reset cart
 			cart.AppliedDiscounts.Clear();
-
-			cart.TotalPrice = (decimal)(cart.CartItems.Select(p => p.SubTotal.Value).Sum());
+			cart.OriginalTotalAmount = (decimal)(cart.CartItems.Select(p => p.SubTotal.Value).Sum());
+			cart.TotalPrice = cart.OriginalTotalAmount;
 			foreach (var rule in this.ActivedRules)
 			{
 				
@@ -20,6 +20,15 @@
 					cart.TotalPrice -= discounts.Amount;
 				}
 			}
+			if(cart.TotalPrice > 2000)
+			{
+				cart.DeliveryFee = 0;
+			}
+			if(cart.Coupon!= null)
+			{
+				cart.Coupon.Process(cart);
+			}
+			cart.TotalPrice += cart.DeliveryFee;
 			return true;
 		}
 	}

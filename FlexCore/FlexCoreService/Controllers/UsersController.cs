@@ -34,7 +34,7 @@ namespace FlexCoreService.Controllers
         /// <returns></returns>
         [HttpGet("{account}")]
         [Authorize]
-        public async Task<ProfileDto> GetUserProfil(string account)
+        public async Task<ProfileDto> GetUserProfile(string account)
         {
             //StringBuilder sb = new StringBuilder();
             //sb.AppendLine("<ul>");
@@ -60,6 +60,7 @@ namespace FlexCoreService.Controllers
                 Birthday = m.Birthday,
                 CommonAddress = m.CommonAddress,
                 AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
+                AlternateAddress2 =m.AlternateAddress.AlternateAddress2,
                 IsSubscribeNews = m.IsSubscribeNews
             }).Single();
 
@@ -176,6 +177,42 @@ namespace FlexCoreService.Controllers
             _db.Members.Add(member);
             await _db.SaveChangesAsync();
             return regdto;
+        }
+
+        /// <summary>
+        /// 編輯會員資料
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        [HttpPost("{id}")]
+        public async Task<ProfileDto> EditUserProfile([FromBody] int id)
+        {
+            //檢查帳號是否存在
+
+            if (_db.Members == null)
+            {
+                return null;
+            }
+            ProfileDto proDto = _db.Members.Where(m => m.MemberId == id).Select(m => new ProfileDto
+            {
+                //MemberId = m.MemberId,
+                //fk_Level = m.fk_LevelId,
+                //LevelName = m.fk_Level.LevelName,
+                //Name = m.Name,
+                Email = m.Email,
+                Mobile = m.Mobile,
+                Gender = m.Gender,
+                Birthday = m.Birthday,
+                CommonAddress = m.CommonAddress,
+                AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
+                AlternateAddress2 = m.AlternateAddress.AlternateAddress2,
+                IsSubscribeNews = m.IsSubscribeNews
+            }).Single();
+            //檢查資料都填寫
+            
+            _db.SaveChanges();
+            //跳更新成功回到本頁
+            return proDto;
         }
     }
 }

@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useGetApiDataStore } from '../stores/useGetApiDataStore';
 import { storeToRefs } from 'pinia';
-import Home from '../views/home/Home.vue';
 import User from '../views/user/User.vue';
+import Favorites from '../views/user/Favorites.vue';
 import Login from '../views/user/Login.vue';
 import ActivityInfo from '../views/activity/ActivityInfo.vue';
 import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
 import ActivityIndex from '../views/activity/ActivityIndex.vue';
 import ReservationIndex from '../views/reservation/ReservationIndex.vue';
+import SpeakerInfo from '../views/reservation/SpeakerInfo.vue';
 const webTitle = 'FLEX - ';
 
 // 路由設定
@@ -15,20 +16,32 @@ const routes = [
   {
     //http://loaclhost/
     path: '/',
-    component: Home,
+    component: () => import('@/views/home/Home.vue'),
     meta: { title: `${webTitle}首頁` },
   },
   {
-    //http://loaclhost/
+    //http://loaclhost/cart
     path: '/cart',
-    component: () => import('../views/home/Cart.vue'),
+    component: () => import('@/views/home/Cart.vue'),
     meta: { title: `${webTitle}購物車` },
+  },
+  {
+    //http://loaclhost/buy
+    path: '/buy',
+    component: () => import('@/views/home/Buy.vue'),
+    meta: { title: `${webTitle}結帳` },
   },
   {
     //http://loaclhost/User
     path: '/user',
     component: User,
-    meta: { title: `${webTitle}會員`, require: true },
+    meta: { title: `${webTitle}個人資料`, require: true },
+  },
+  {
+    //http://loaclhost/Favorites
+    path: '/favorites',
+    component: Favorites,
+    meta: { title: `${webTitle}收藏清單`, require: true },
   },
   {
     //http://loaclhost/Login
@@ -62,6 +75,11 @@ const routes = [
     path: '/reservationIndex',
     component: ReservationIndex,
     meta: { title: `${webTitle}預約諮詢首頁` },
+  },
+  {
+    path: '/speakerInfo/:id',
+    component: SpeakerInfo,
+    meta: { title: `${webTitle}講師資訊` },
   },
   {
     //http://loaclhost/Login
@@ -235,6 +253,11 @@ const routes = [
     ],
   },
   {
+    //http://loaclhost/CustomeShoes/detail/shoesProductId
+    path: '/CustomeShoes/detail/:shoesProductId',
+    component: () => import('../views/CustomeShoes/ShoesDetail.vue'),
+  },
+  {
     //http://loaclhost/CustomeShoes/Contact
     path: '/CustomeShoes/Contact',
     component: () => import('../views/CustomeShoes/Contact.vue'),
@@ -287,7 +310,7 @@ router.beforeEach((to, from, next) => {
     console.log('nologin');
     next({ path: '/login' });
   } else {
-    console.log('login');
+    //console.log('login');
     next();
   }
 });

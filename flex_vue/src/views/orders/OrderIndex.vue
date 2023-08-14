@@ -1,18 +1,18 @@
 <template>
   <OrdernavBar></OrdernavBar>
-  <dev id="searchorderout" class="container">
-    <dev id="srarchdate" class="col-3">
+  <div id="searchorderout" class="container">
+    <div id="srarchdate" class="col-3">
       <input type="text" v-model="begintime" @searchInputbegintime="inputbegintime" class="form-control datePicker"
         placeholder="輸入開始日期">
       ~
       <input type="text" v-model="endtime" @searchInputendtime="inputendtime" class="form-control datePicker"
         placeholder="輸入結束日期">
-    </dev>
+    </div>
     <div id="searchorder" class="col-3">
       <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control" placeholder="輸入名稱">
       <button class="button" @click="keywordSearch">搜尋</button>
     </div>
-  </dev>
+  </div>
   <div id="cate" class="container">
     <button @click="setTypeValue('1'); setostatusValue('')">商品</button>
 
@@ -60,7 +60,13 @@
                         @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
                       <button
                         v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setreturnIdValue(item.id)" class="btn btn-primary">退貨</button>
+                        @click="setreturnIdValue(item.id)" class="btn btn-primary"
+                        :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
+                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">退貨</button>
+                      <button v-if="item.order_status_Id == 9" type="button" class="btn btn-secondary"
+                        @click="setcancelreturnIdValue2(item.id)">
+                        取消
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -145,7 +151,9 @@
                         @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
                       <button
                         v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setreturnIdValue(item.id)" class="btn btn-primary">退貨</button>
+                        @click="setreturnIdValue(item.id)" class="btn btn-primary"
+                        :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
+                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">退貨</button>
                     </div>
                   </td>
                 </tr>
@@ -290,7 +298,37 @@
       </tbody>
     </table>
   </div>
-  <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+
+  <template v-for="item in GetOrders" :key="item.id">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">退款帳號:</label>
+              <input type="text" class="form-control" v-model="returnaccount" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">退貨原因:</label>
+              <input type="text" class="form-control" v-model="returnreason" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
+              關閉
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+              @click="setreturndetalValue()">確定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
       <div class="modal-content">
@@ -314,7 +352,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 <script setup>
 import OrdernavBar from "@/components/Order/OrdernavBar.vue";
@@ -334,7 +372,8 @@ const retrunId = ref("");
 const ostatus = ref("");
 const returnaccount = ref("");
 const returnreason = ref("");
-const returnMemberId = ref("");
+const returnOrderId = ref("");
+const request = ref([]);
 
 const loadGetOrders = async () => {
   await axios
@@ -365,7 +404,7 @@ const setcancelIdValue = (paramValue) => {
 };
 const ReturnOrders = async () => {
   await axios
-    .put(`https://localhost:7183/api/Orders/return?id=${retrunId.value}`)
+    .put(`https://localhost:7183/api/Orders/return?orderid=${retrunId.value}`)
     .then((response) => {
       //console.log(response.data);
       alert(response.data);
@@ -374,26 +413,52 @@ const ReturnOrders = async () => {
     .catch((error) => {
       alert(error);
     });
-};
-const Returndetail = async () => {
-  await axios
-    .Post(`https://localhost:7183/api/Orders/NewReturn?orderid=${returnMemberId.value}`)
-    .then((response) => {
-      //console.log(response.data);
-      alert(response.data);
-      loadGetOrders();
-    })
-    .catch((error) => {
-      alert(error);
-    });
-};
-const showModal = () => {
-  ("#insertModal").modal('show');
 };
 const setreturnIdValue = (paramValue) => {
   retrunId.value = paramValue;
-  showModal();
   ReturnOrders();
+};
+const CancelReturnOrders = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/cancelreturn?orderid=${retrunId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const setcancelreturnIdValue = (paramValue) => {
+  returnOrderId.value = paramValue;
+  CancelReturnOrders();
+};
+const setcancelreturnIdValue2 = (paramValue) => {
+  retrunId.value = paramValue;
+  CancelReturnOrders();
+};
+const Returndetail = async () => {
+  const requestData = {
+    退貨轉帳帳號: returnaccount.value,
+    退貨理由: returnreason.value,
+  };
+  await axios
+    .post(`https://localhost:7183/api/Orders/NewReturn?orderid=${retrunId.value}`, requestData)
+    .then((response) => {
+      alert("退款資訊已提交");
+      //alert(response.data);
+      loadGetOrders();
+      returnaccount.value = "";
+      returnreason.value = "";
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const setreturndetalValue = (paramValue) => {
+  returnOrderId.value = paramValue;
+  Returndetail();
 };
 const formatOrderTime = (ordertime) => {
   const dateTimeObject = new Date(ordertime);

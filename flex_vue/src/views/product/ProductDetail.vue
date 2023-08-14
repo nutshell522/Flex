@@ -63,7 +63,18 @@
             </div>
           </div>
           <div class="mt-3 d-flex mb-3">
-            <div>預計尺寸跟最愛</div>
+            <div class="text-center">
+              <button class="form-control" style="font-size: 20px">
+                尺寸表
+              </button>
+            </div>
+            <div class="ms-3 text-center">
+              <button class="form-control" style="font-size: 20px">
+                收藏在這，用v-if切換
+                <i class="bi bi-heart" style="color: red"></i
+                ><i class="bi bi-heart-fill" style="color: red"></i>
+              </button>
+            </div>
           </div>
           <hr />
           <div class="mt-3 mb-3 col-12 buy-height">
@@ -92,7 +103,6 @@
                   style="border-radius: 0"
                   v-model="buyQty"
                   @input="handleQyt"
-                  maxlength="2"
                 />
                 <button
                   @click="incrementProductQty()"
@@ -148,41 +158,97 @@
         </ul>
         <div class="tab-content mt-3" id="myTabContent">
           <div
-            class="tab-pane fade show active"
+            class="tab-pane fade show active commentDiv"
             id="home-tab-pane"
             role="tabpanel"
             aria-labelledby="home-tab"
             tabindex="0"
-            style="
-              align-items: center;
-              justify-content: center;
-              border: 1px solid black;
-            "
           >
-            <div style="width: 80%" class="p-3">
-              <div>產地:{{ productDetail.productOrigin }}</div>
-              <div>材質:{{ productDetail.productMaterial }}</div>
-              <div>描述:{{ productDetail.productDescription }}</div>
+            <div style="width: 95%; position: relative" class="p-3">
+              <h1 style="display: inline">商品資訊</h1>
+              <span style="right: 0%; position: absolute; font-size: 30px"
+                ><i
+                  class="bi bi-plus-lg"
+                  v-if="!showDetailDiv"
+                  @click="showDetailDiv = !showDetailDiv"
+                ></i
+                ><i
+                  class="bi bi-dash-lg"
+                  v-else
+                  @click="showDetailDiv = !showDetailDiv"
+                ></i
+              ></span>
+              <div class="mt-3 ms-3" v-if="showDetailDiv">
+                <div>產地:{{ productDetail.productOrigin }}</div>
+                <div>材質:{{ productDetail.productMaterial }}</div>
+                <div>描述:{{ productDetail.productDescription }}</div>
+              </div>
             </div>
           </div>
           <div
-            class="tab-pane fade"
+            class="tab-pane fade commentDiv"
             id="profile-tab-pane"
             role="tabpanel"
             aria-labelledby="profile-tab"
             tabindex="0"
-            style="
-              align-items: center;
-              justify-content: center;
-              border: 1px solid black;
-            "
+            v-if="productComment.length > 0"
           >
-            <div style="width: 80%" class="p-3">
-              <div>評論跑V-for</div>
-              <div>評論跑</div>
-              <div>我好累</div>
+            <div style="width: 95%; position: relative" class="p-3">
+              <h1 class="d-inline">
+                綜合評分 : <i class="bi bi-star-fill" style="color: gold"></i>
+                {{ productComment[0].averageScore }} / 5
+              </h1>
+              <span style="right: 0%; position: absolute; font-size: 30px"
+                ><i
+                  class="bi bi-plus-lg"
+                  v-if="!showCommentDiv"
+                  @click="showCommentDiv = !showCommentDiv"
+                ></i
+                ><i
+                  class="bi bi-dash-lg"
+                  v-else
+                  @click="showCommentDiv = !showCommentDiv"
+                ></i
+              ></span>
+              <div v-if="showCommentDiv">
+                <div
+                  v-for="comment in productComment"
+                  :key="comment.commentId"
+                  class="mb-3 ms-3"
+                >
+                  <div class="d-flex">
+                    <div>{{ comment.memberNameText }}</div>
+                    <div class="ms-3">
+                      <i
+                        v-for="i in comment.score"
+                        :key="i"
+                        class="bi bi-star-fill"
+                        style="color: gold"
+                      ></i>
+                    </div>
+                    <div class="ms-3">{{ comment.createTimeText }}</div>
+                  </div>
+                  <div>{{ comment.description }}</div>
+                  <hr />
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12">
+        <div class="container-body d-flex">
+          <ul class="d-flex flex-wrap">
+            <li
+              v-for="card in cards"
+              :key="card.productId"
+              class="card text-center"
+            >
+              <ProductCard :card="card"></ProductCard>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -201,109 +267,110 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import axios from "axios";
 import { computed, onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import ProductCard from "@/components/product/ProductCard.vue";
 
-export default {
-  setup() {
-    const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
-    const route = useRoute();
-    const productDetail = ref({});
-    const selectSizes = ref({});
-    const detailImg = ref("");
-    const colorActiveindex = ref(0);
-    const sizeActiveIndex = ref(0);
-    const buyQty = ref(1);
-    const productImgs = ref([]);
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const route = useRoute();
+const productDetail = ref({});
+const selectSizes = ref({});
+const detailImg = ref("");
+const colorActiveindex = ref(0);
+const sizeActiveIndex = ref(0);
+const buyQty = ref(1);
+const productImgs = ref([]);
+const productComment = ref([]);
+const showCommentDiv = ref(true);
+const showDetailDiv = ref(true);
+const cards = ref([]);
 
-    let getData = async () => {
-      await axios
-        .get(`${baseAddress}api/Products/Detail/${route.params.productId}`)
-        .then((response) => {
-          //console.log(response.data.productGroup);
-          productDetail.value = response.data;
-          const firstColor = Object.keys(productDetail.value.productGroup)[0];
-          //console.log(firstColor);
-          if (firstColor) {
-            selectSizes.value = productDetail.value.productGroup[firstColor];
-            detailImg.value = selectSizes.value[0].defaultColorImg;
-            //console.log(selectSizes.value[0].defaultColorImg);
-          }
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    };
-
-    let getImgs = async () => {
-      await axios
-        .get(`${baseAddress}api/Products/Imgs/${route.params.productId}`)
-        .then((response) => {
-          console.log(response.data);
-          productImgs.value = response.data;
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    };
-
-    let updateSizeList = (sizesDto, index) => {
-      colorActiveindex.value = index;
-      selectSizes.value = sizesDto;
-      detailImg.value = sizesDto[0].defaultColorImg;
-    };
-
-    let changeSize = (index) => {
-      sizeActiveIndex.value = index;
-    };
-
-    let handleQyt = (event) => {
-      buyQty.value = event.target.value.replace(/\D/g, "");
-      if (buyQty.value <= 1) {
-        buyQty.value = 1;
+let getData = async () => {
+  await axios
+    .get(`${baseAddress}api/Products/Detail/${route.params.productId}`)
+    .then((response) => {
+      //console.log(response.data.productGroup);
+      productDetail.value = response.data;
+      const firstColor = Object.keys(productDetail.value.productGroup)[0];
+      //console.log(firstColor);
+      if (firstColor) {
+        selectSizes.value = productDetail.value.productGroup[firstColor];
+        detailImg.value = selectSizes.value[0].defaultColorImg;
+        //console.log(selectSizes.value[0].defaultColorImg);
       }
-    };
-
-    let decrementProductQty = () => {
-      if (buyQty.value <= 1) {
-        buyQty.value = 1;
-      } else {
-        buyQty.value--;
-      }
-    };
-
-    let incrementProductQty = () => {
-      if (buyQty.value >= 99) {
-        buyQty.value = 99;
-      } else {
-        buyQty.value++;
-      }
-    };
-
-    onMounted(() => {
-      getData();
-      getImgs();
+    })
+    .catch((error) => {
+      alert(error);
     });
-
-    return {
-      productDetail,
-      selectSizes,
-      baseAddress,
-      detailImg,
-      colorActiveindex,
-      sizeActiveIndex,
-      buyQty,
-      productImgs,
-      updateSizeList,
-      changeSize,
-      handleQyt,
-      decrementProductQty,
-      incrementProductQty,
-    };
-  },
 };
+
+let getImgs = async () => {
+  await axios
+    .get(`${baseAddress}api/Products/Imgs/${route.params.productId}`)
+    .then((response) => {
+      //console.log(response.data);
+      productImgs.value = response.data;
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
+let getComment = async () => {
+  await axios
+    .get(`${baseAddress}api/Products/Comment/${route.params.productId}`)
+    .then((response) => {
+      console.log(response.data);
+      productComment.value = response.data;
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
+let updateSizeList = (sizesDto, index) => {
+  colorActiveindex.value = index;
+  selectSizes.value = sizesDto;
+  detailImg.value = sizesDto[0].defaultColorImg;
+};
+
+let changeSize = (index) => {
+  sizeActiveIndex.value = index;
+};
+
+let handleQyt = (event) => {
+  buyQty.value = event.target.value.replace(/\D/g, "");
+  if (buyQty.value <= 1) {
+    buyQty.value = 1;
+  }
+  if (buyQty.value >= 99) {
+    buyQty.value = 99;
+  }
+};
+
+let decrementProductQty = () => {
+  if (buyQty.value <= 1) {
+    buyQty.value = 1;
+  } else {
+    buyQty.value--;
+  }
+};
+
+let incrementProductQty = () => {
+  if (buyQty.value >= 99) {
+    buyQty.value = 99;
+  } else {
+    buyQty.value++;
+  }
+};
+
+onMounted(() => {
+  getData();
+  getImgs();
+  getComment();
+});
 </script>
 
 <style>
@@ -431,6 +498,16 @@ export default {
 .increaseAndDecrease:hover {
   background-color: #804040;
   border: 1px solid black;
+}
+
+.increaseAndDecrease:hover i {
   color: aliceblue;
+}
+
+.commentDiv {
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(185, 184, 184);
+  border-radius: 10px;
 }
 </style>

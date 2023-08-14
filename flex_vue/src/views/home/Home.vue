@@ -5,7 +5,7 @@
       <div class="text-carousel">
         <div class="text-carousel-items">
           <div class="text-carousel-title">免費寄送</div>
-          <div class="text-carousel-body">適用於 NT$1,000 以上的訂單。</div>
+          <div class="text-carousel-body">適用於 NT$2,000 以上的訂單。</div>
         </div>
         <div class="text-carousel-items">
           <div class="text-carousel-title">反詐騙提醒</div>
