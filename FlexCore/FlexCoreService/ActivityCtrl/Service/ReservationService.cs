@@ -35,5 +35,10 @@ namespace FlexCoreService.ActivityCtrl.Service
             return result;
 
         }
+
+        public async Task AddReservationAsync (AddReservationDTO dto)
+        {
+            
+        }
     }
 }

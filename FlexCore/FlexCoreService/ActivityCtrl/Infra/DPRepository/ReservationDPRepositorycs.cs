@@ -16,6 +16,27 @@ namespace FlexCoreService.ActivityCtrl.Infra.DPRepository
             _configuration = configuration;
             _connStr = _configuration.GetConnectionString("AppDbContext");
         }
+
+        public void AddReservation(AddReservationDTO dto)
+        {
+            string sql = @"INSERT INTO OneToOneReservations (fk_BookerId, ReservationStartTime, ReservationEndTime, fk_BranchId, fk_ReservationSpeakerId, fk_ReservationStatusId)
+                  VALUES (@bookerId, @startTime, @endTime, @branchId, @speakerId, @statusId);";
+
+            using (var conn = new SqlConnection(_connStr))
+            {
+                conn.Execute(sql, new
+                {
+                    bookerId = dto.fk_BookerId,
+                    startTime = dto.ReservationStartTime,
+                    endTime = dto.ReservationEndTime,
+                    branchId = dto.fk_BranchId,
+                    speakerId = dto.fk_ReservationSpeakerId,
+                    statusId = dto.fk_ReservationStatusId
+                });
+            }
+        }
+
+
         public async Task<IEnumerable<ReservationDTO>> GetAllAsync()
         {
             string sql = @"select SpeakerId, SpeakerName, FieldName, SpeakerImg 

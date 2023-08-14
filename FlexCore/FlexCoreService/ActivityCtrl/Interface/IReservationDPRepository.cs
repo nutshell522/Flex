@@ -11,5 +11,7 @@ namespace FlexCoreService.ActivityCtrl.Interface
         Task<SpeakerDetailDTO> GetSpeakerInfoAsync(int id);
 
         Task<IEnumerable<ReservationHistoryDTO>> GetReservationHistoryAsync(int id);
+
+        Task AddReservationAsync(AddReservationDTO dto);
     }
 }
