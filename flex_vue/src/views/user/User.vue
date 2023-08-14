@@ -263,7 +263,7 @@ function save() {
     editUserProfile.isSubscribeNews
   );
 
-  // 77資料沒辦法修改成功差一點點啊!
+  // 77新註冊的人都沒有辦法編輯成功!
   axios
     .put(uri, editUserProfile)
     .then((res) => {
@@ -278,7 +278,7 @@ function save() {
 }
 
 //還沒正確隱藏值
-if (isSubscribeNews.value === true) {
+if (isSubscribeNews.value == true) {
   isSubscribeNews.value = false;
 }
 </script>

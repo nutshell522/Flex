@@ -29,7 +29,7 @@
         placeholder="輸入6-20碼英數字"
       />
     </div>
-    <!-- <div><a href=""></a>忘記密碼</div> -->
+
     <div class="from-group mb-3" v-if="unValidated">
       <label>信箱</label>
       <input
@@ -86,6 +86,9 @@
       >
         登入
       </button>
+      <div class="forgetPwd" v-if="forgetPwd" @click="forgetPwdClick">
+        <a href=""></a>忘記密碼 ?
+      </div>
       <button
         type="submit"
         class="btn btn btn-outline-dark registerBtn"
@@ -115,6 +118,8 @@
       <a href="javascript:;">隱私權 與 網站使用條款</a>
     </div>
   </div>
+
+  <forgetPwdAndSetPwd></forgetPwdAndSetPwd>
 </template>
 
 <script setup>
@@ -122,6 +127,9 @@ import axios from 'axios';
 import navBar from '@/components/home/navBar.vue';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
+import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
+
+//pinia
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
@@ -162,6 +170,7 @@ const mobInput = ref(false);
 const nameInput = ref(false);
 const logAndRegBtn = ref(true);
 const registered = ref(true);
+const forgetPwd = ref(false);
 const unRegistered = ref(false);
 
 //登入表單
@@ -204,6 +213,8 @@ function ValidatedIdentity() {
           validated.value = true;
           accInput.value = false;
           registered.value = false;
+          //忘記密碼
+          forgetPwd.value = true;
         } else {
           //未註冊
           validated.value = false;
@@ -322,6 +333,8 @@ function register() {
       .catch((err) => {});
   }
 }
+
+function forgetPwdClick() {}
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap');
@@ -388,5 +401,10 @@ p::before {
 
 p::after {
   right: 0;
+}
+.forgetPwd {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }
 </style>
