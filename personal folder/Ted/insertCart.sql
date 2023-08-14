@@ -46,7 +46,9 @@ values
 (1,24,'2023-08-10 00:00:00','2023-08-10 00:00:00','2023-09-10 23:59:59',0,null),
 (1,25,'2023-08-10 00:00:00','2023-08-10 00:00:00','2023-09-10 23:59:59',0,null)
 
-select *
+select 
+c.CouponId as Id, c.fk_CouponCategoryId as CouponCategoryId, cs.SendingId, c.CouponName, c.MinimumPurchaseAmount,
+c.DiscountType, c.DiscountValue, cs.StartDate, cs.EndDate 
 from CouponSendings as cs
 inner join Coupons as c on c.CouponId = cs.fk_CouponId
 where cs.fk_MemberId = 1 and RedemptionStatus = 0
