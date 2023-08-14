@@ -130,6 +130,20 @@ namespace FlexCoreService.Controllers
         }
 
 
+        //GET: api/Products/Similar/productId
+        [HttpGet("Similar/{productId}")]
+        public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetSimilarProducts(string productId)
+        {
+            var server = new ProductService(_repo);
+            var products = server.GetSimilarProducts(productId);
+            if (products == null)
+            {
+                return BadRequest();
+            }
+            return Ok(products);
+        }
+
+
         //// GET: api/Products
         //[HttpGet]
         //public async Task<ActionResult<IEnumerable<Product>>> GetProducts()

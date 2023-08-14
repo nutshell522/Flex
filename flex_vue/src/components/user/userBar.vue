@@ -26,10 +26,10 @@
 </template>
 
 <script>
-import verify from '@/components/user/verify.vue';
+import verify from "@/components/user/verify.vue";
 </script>
 
-<style>
+<style scoped>
 .nav {
   background-color: #333; /* 這裡使用你想要的顏色值 */
 }
