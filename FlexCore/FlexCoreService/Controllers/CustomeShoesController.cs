@@ -1,6 +1,7 @@
 ﻿using EFModels.Models;
 using FlexCoreService.CustomeShoes.Exts;
 using FlexCoreService.CustomeShoes.Interface;
+using FlexCoreService.CustomeShoes.Models.Dtos;
 using FlexCoreService.CustomeShoes.Models.VMs;
 using FlexCoreService.CustomeShoes.Service;
 using Microsoft.AspNetCore.Cors;
@@ -50,7 +51,7 @@ namespace FlexCoreService.Controllers
 		}
 
         // GET: api/CustomizedShoesPo/5
-        [HttpGet("{id}")]
+        [HttpGet("shoes")]
         public async Task<ActionResult<CustomeShoesVM>> GetShoes(int id)
         {
             var server = new CustomeShoesService(_repo);
@@ -73,22 +74,43 @@ namespace FlexCoreService.Controllers
             return vm;
         }
 
-        [HttpGet("Detail/{ShoesProductId}")]
-        public async Task<ActionResult<CustomizedShoesPo>> GetShoesDetail(int shoesId)
+        [HttpGet("shoes/detail/{shoesProductId}")]
+        public async Task<ActionResult<ShoesDetailVM>> GetShoesDetail(int shoesProductId)
         {
-            if (_db.CustomizedShoesPos == null)
+            var server = new CustomeShoesService(_repo);
+
+            var shoes = server.GetShoesDetail(shoesProductId);
+
+            var chooseserver = new ShoesChoosesService(_chooserepo);
+
+            var chooses = chooseserver.GetSizes().ToList();
+            
+            var vm = shoes.ToDetailVM(chooses);
+
+            if (vm == null)
             {
                 return NotFound();
             }
-            var shoes = await _db.CustomizedShoesPos.FirstOrDefaultAsync(p => p.ShoesProductId == shoesId);
 
-            if (shoes == null)
-            {
-                return NotFound();
-            }
-
-            return shoes;
+            return vm;
         }
+
+        //[HttpGet("Detail/{ShoesProductId}")]
+        //public async Task<ActionResult<CustomizedShoesPo>> GetShoesDetail(int shoesId)
+        //{
+        //    if (_db.CustomizedShoesPos == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var shoes = await _db.CustomizedShoesPos.FirstOrDefaultAsync(p => p.ShoesProductId == shoesId);
+
+        //    if (shoes == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return shoes;
+        //}
 
         //// PUT: api/CustomizedShoesPo/5
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
