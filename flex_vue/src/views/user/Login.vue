@@ -29,7 +29,7 @@
         placeholder="輸入6-20碼英數字"
       />
     </div>
-    <div><a href=""></a>忘記密碼</div>
+    <!-- <div><a href=""></a>忘記密碼</div> -->
     <div class="from-group mb-3" v-if="unValidated">
       <label>信箱</label>
       <input

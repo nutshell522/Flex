@@ -1,6 +1,7 @@
 <template>
+  <!-- 77這邊的樣式不要寫在nav -->
   <div class="container">
-    <nav class="nav nav-justified">
+    <div class="nav nav-justified">
       <ul class="nav nav-tabs">
         <li class="nav-item" aria-current="page">
           <router-link to="/user">個人資料</router-link>
@@ -20,7 +21,7 @@
 
         <li class="nav-item"><a href="javascript:;">購物車</a></li>
       </ul>
-    </nav>
+    </div>
   </div>
   <!-- <verify></verify> -->
 </template>
@@ -29,7 +30,7 @@
 import verify from '@/components/user/verify.vue';
 </script>
 
-<style>
+<style scoped>
 .nav {
   background-color: #333; /* 這裡使用你想要的顏色值 */
 }

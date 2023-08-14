@@ -30,11 +30,11 @@ namespace FlexCoreService.Controllers
         /// <summary>
         /// 取得會員資料
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="account"></param>
         /// <returns></returns>
-        [HttpGet("{account}")]
+        [HttpGet("{memberId}")]
         [Authorize]
-        public async Task<ProfileDto> GetUserProfile(string account)
+        public async Task<ProfileDto> GetUserProfil(int memberId)
         {
             //StringBuilder sb = new StringBuilder();
             //sb.AppendLine("<ul>");
@@ -48,7 +48,7 @@ namespace FlexCoreService.Controllers
             {
                 return null;
             }
-            ProfileDto proDto = _db.Members.Include(m => m.fk_Level).Where(m => m.Account == account).Select(m => new ProfileDto
+            ProfileDto proDto = _db.Members.Include(m => m.fk_Level).Where(m => m.MemberId == memberId).Select(m => new ProfileDto
             {
                 MemberId = m.MemberId,
                 fk_Level = m.fk_LevelId,
@@ -60,11 +60,10 @@ namespace FlexCoreService.Controllers
                 Birthday = m.Birthday,
                 CommonAddress = m.CommonAddress,
                 AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
-                AlternateAddress2 =m.AlternateAddress.AlternateAddress2,
                 IsSubscribeNews = m.IsSubscribeNews
-            }).Single();
+            }).First();
 
-            
+
             return proDto;
         }
 
@@ -184,35 +183,57 @@ namespace FlexCoreService.Controllers
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        [HttpPost("{id}")]
-        public async Task<ProfileDto> EditUserProfile([FromBody] int id)
+        [HttpPut("Id")]
+        public async Task<ActionResult<string>> EditUserProfile(int id, ProfileDto prodto)
         {
             //檢查帳號是否存在
+            Member member = await _db.Members.FindAsync(id); //FindAsync 根據主键查找對應的紀錄
 
-            if (_db.Members == null)
+            if (member == null)
             {
-                return null;
+                return NotFound("找不到對應的會員資料");
             }
-            ProfileDto proDto = _db.Members.Where(m => m.MemberId == id).Select(m => new ProfileDto
+
+            member.Email = prodto.Email;
+            member.Mobile = prodto.Mobile;
+            member.Gender = prodto.Gender;
+            member.Birthday = prodto.Birthday;
+            member.CommonAddress = prodto.CommonAddress;
+            member.IsSubscribeNews = prodto.IsSubscribeNews;
+
+            // 更新 AlternateAddress 資料
+            if (member.AlternateAddress == null)
             {
-                //MemberId = m.MemberId,
-                //fk_Level = m.fk_LevelId,
-                //LevelName = m.fk_Level.LevelName,
-                //Name = m.Name,
-                Email = m.Email,
-                Mobile = m.Mobile,
-                Gender = m.Gender,
-                Birthday = m.Birthday,
-                CommonAddress = m.CommonAddress,
-                AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
-                AlternateAddress2 = m.AlternateAddress.AlternateAddress2,
-                IsSubscribeNews = m.IsSubscribeNews
-            }).Single();
+                member.AlternateAddress = new AlternateAddress(); // 建立新的 AlternateAddress 物件
+            }
+
+            member.AlternateAddress.AlternateAddress1 = prodto.AlternateAddress1;
+            member.AlternateAddress.AlternateAddress2 = prodto.AlternateAddress2;
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MemberExists(id))
+                {
+                    return "編輯會員資料失敗!";
+                }
+                else
+                {
+                    throw;
+                }
+            }
             //檢查資料都填寫
-            
-            _db.SaveChanges();
+
             //跳更新成功回到本頁
-            return proDto;
+            return Ok("編輯會員資料成功");
+        }
+
+        private bool MemberExists(int id)
+        {
+            return (_db.Members?.Any(e => e.MemberId == id)).GetValueOrDefault();
         }
     }
 }
