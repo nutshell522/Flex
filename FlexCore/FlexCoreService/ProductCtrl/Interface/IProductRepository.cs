@@ -12,5 +12,9 @@ namespace FlexCoreService.ProductCtrl.Interface
         IEnumerable<ProductImgsDto> GetProductImgs(string productId);
 
         IEnumerable<ProductCommentDto> GetProductComment(string productId);
+
+        IEnumerable<ProductCardDto> GetSimilarProducts(string productId,CategoryDto dto);
+
+        CategoryDto GetProdductCategories(string productId);
     }
 }
