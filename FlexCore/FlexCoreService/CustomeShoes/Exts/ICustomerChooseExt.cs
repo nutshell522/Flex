@@ -1,5 +1,6 @@
 ﻿using FlexCoreService.CustomeShoes.Models.Dtos;
 using FlexCoreService.CustomeShoes.Models.VMs;
+using FlexCoreService.ProductCtrl.Models.Dtos;
 
 namespace FlexCoreService.CustomeShoes.Exts
 {
@@ -19,6 +20,25 @@ namespace FlexCoreService.CustomeShoes.Exts
                 ShoesMaterials = dto3.ToList(),
 
             };
+        }
+
+        public static ShoesDetailVM ToDetailVM(this ShoesDetailDto dto, IEnumerable<ShoesSizeDto> dto1) 
+        {
+            return new ShoesDetailVM
+            {
+                ShoesProductId = dto.ShoesProductId,
+                ShoesName = dto.ShoesName,
+                ShoesCategoryName = dto.ShoesCategoryName, 
+                ShoesDescription = dto.ShoesDescription,
+                ColorName = dto.ColorName,
+                ColorCode = dto.ColorCode,
+                ShoesOrigin = dto.ShoesOrigin,
+                ShoesUnitPrice = dto.ShoesUnitPrice,
+                ShoesImgs = dto.ShoesImgs,
+                Qty = dto.Qty,
+                ShoesSize = dto1.ToList(),
+
+            };        
         }
     }
 }

@@ -17,7 +17,7 @@ namespace FlexCoreService.CustomeShoes.Infra.DPRepository
 			_connStr = _configuration.GetConnectionString("AppDbContext");
 		}
 
-        public IEnumerable<ShoesDetailDto> GetShoesDetail(string shoesproductId)
+        public ShoesDetailDto GetShoesDetail(int shoesproductId)
         {
 			string sql = @"select c.ShoesProductId, c.ShoesName, c.ShoesDescription, c.ShoesOrigin, c.ShoesUnitPrice, scc.ColorName, scc.ColorCode, sc.ShoesCategoryName, sp.ShoesPictureUrl as ShoesImgs
 from CustomizedShoesPo as c
@@ -28,7 +28,7 @@ where c.Status=0 and
 c.ShoesProductId=" + @shoesproductId;
 
             using IDbConnection dbConnection = new SqlConnection(_connStr);
-            var result = dbConnection.Query<ShoesDetailDto>(sql, new { shoesproductId });
+            var result = dbConnection.QueryFirstOrDefault<ShoesDetailDto>(sql, new { shoesproductId });
             return result;
         }
 

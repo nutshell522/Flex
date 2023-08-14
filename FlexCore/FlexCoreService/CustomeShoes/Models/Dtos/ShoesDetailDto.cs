@@ -22,5 +22,7 @@
         public int ShoesUnitPrice { get; set; }
 
         public string ShoesImgs { get; set; }
+
+        public int Qty { get; set; }
     }
 }

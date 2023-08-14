@@ -25,5 +25,14 @@ namespace FlexCoreService.CustomeShoes.Models.VMs
 
         public string ShoesImgs { get; set; }
 
+        public IEnumerable<ShoesSizeDto> ShoesSize { get; set; }
+
+        public int Qty { get; set; }
+
+        public ShoesDetailVM()
+        {
+            ShoesSize = new List<ShoesSizeDto>();
+        }
+
     }
 }

@@ -88,6 +88,7 @@
 </template>
 <script setup>
   import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
+  
   document.addEventListener('DOMContentLoaded', function() {
   const phoneNumberInput = document.getElementById('phonenumber');
   
