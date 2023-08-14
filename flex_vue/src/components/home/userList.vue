@@ -33,7 +33,7 @@ function logout() {
 }
 </script>
 
-<style>
+<style scoped>
 .list {
   background-color: #fff;
   z-index: 9999;

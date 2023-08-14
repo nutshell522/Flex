@@ -44,4 +44,7 @@ export const useGetApiDataStore = defineStore('getApiData', {
       this.memberInfo = memberInfo;
     },
   },
+  getters: {
+    getMemberId: (state) => state.memberInfo.memberId,
+  },
 });

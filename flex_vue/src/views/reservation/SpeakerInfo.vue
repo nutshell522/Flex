@@ -59,6 +59,13 @@ onMounted(() => {
   let newDateResult;
   let newTimeResult;
 
+  // 外層迴圈產生最左側的時間直行
+  for (const timeSlot of timeSlots) {
+    const row = document.createElement('tr');
+    const timeCell = document.createElement('td');
+    timeCell.textContent = timeSlot;
+    row.appendChild(timeCell);
+  }
 
 
 
