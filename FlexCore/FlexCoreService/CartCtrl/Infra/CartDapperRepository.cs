@@ -1,7 +1,9 @@
 ﻿using Dapper;
 using EFModels.Models;
 using FlexCoreService.CartCtrl.Interface;
+using FlexCoreService.CartCtrl.Models.Dtos;
 using FlexCoreService.CartCtrl.Models.vm;
+using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -220,6 +222,62 @@ and d.status = 1
 ";
 
 				return dbConnection.Query<ProductDiscountDto>(sql);
+			}
+		}
+
+		public IEnumerable<CouponDto> GetMemberCoupons(int memberId)
+		{
+			using (IDbConnection dbConnection = new SqlConnection(_connStr))
+			{
+				dbConnection.Open();
+				string sql = @"select 
+c.CouponId as Id, c.fk_CouponCategoryId as CouponCategoryId, cs.SendingId, c.CouponName, c.MinimumPurchaseAmount,
+c.DiscountType, c.DiscountValue, cs.StartDate, cs.EndDate 
+from CouponSendings as cs
+inner join Coupons as c on c.CouponId = cs.fk_CouponId
+where cs.fk_MemberId = @MemberId and RedemptionStatus = 0
+";
+				var parameters = new { MemberId = memberId };
+
+				return dbConnection.Query<CouponDto>(sql,parameters);
+			}
+		}
+
+		public CouponDto GetCouponById(int sendingId)
+		{
+			using (IDbConnection dbConnection = new SqlConnection(_connStr))
+			{
+				dbConnection.Open();
+				string sql = @"select 
+c.CouponId as Id, c.fk_CouponCategoryId as CouponCategoryId, cs.SendingId, c.CouponName, c.MinimumPurchaseAmount,
+c.DiscountType, c.DiscountValue, cs.StartDate, cs.EndDate 
+from CouponSendings as cs
+inner join Coupons as c on c.CouponId = cs.fk_CouponId
+where cs.SendingId = @SendingId
+";
+				var parameters = new { SendingId = sendingId };
+
+				return dbConnection.QueryFirstOrDefault<CouponDto>(sql, parameters);
+			}
+		}
+
+		public void UpdateCouponUsage(CouponDto dto, DateTime date)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+				string sql = @"
+UPDATE CouponSendings SET
+RedemptionStatus = 1,
+RedeemedDate = @RedeemedDate
+WHERE SendingId = @SendingId
+";
+				var parameters = new
+				{
+					SendingId = dto.SendingId,
+					RedeemedDate = date
+				};
+				connection.Execute(sql, parameters);
 			}
 		}
 	}

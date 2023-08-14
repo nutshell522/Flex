@@ -1,4 +1,5 @@
-﻿using FlexCoreService.CartCtrl.Models.vm;
+﻿using FlexCoreService.CartCtrl.Models.Dtos;
+using FlexCoreService.CartCtrl.Models.vm;
 using FlexCoreService.ProductCtrl.Models.Dtos;
 
 namespace FlexCoreService.CartCtrl.Interface
@@ -14,6 +15,9 @@ namespace FlexCoreService.CartCtrl.Interface
 		void DeleteCartItem(CartItemDto dto);
 		(bool DoesExist, int CartItemId) ExistsCartItem(int memberId, int productId);
 		IEnumerable<ProductDiscountDto> GetActiveDiscounts();
+		IEnumerable<CouponDto> GetMemberCoupons(int memberId);
+		CouponDto GetCouponById(int sendingId);
+		void UpdateCouponUsage(CouponDto dto, DateTime date);
 		
 	}
 }

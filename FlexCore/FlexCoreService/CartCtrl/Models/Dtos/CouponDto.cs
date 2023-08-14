@@ -1,6 +1,6 @@
-﻿namespace FlexCoreService.CartCtrl.Models.vm
+﻿namespace FlexCoreService.CartCtrl.Models.Dtos
 {
-    public class CouponVM
+    public class CouponDto
     {
         public int Id { get; set; }
         public int CouponCategoryId { get; set; }

@@ -1,5 +1,6 @@
 ﻿using EFModels.Models;
 using FlexCoreService.CartCtrl.Exts;
+using FlexCoreService.CartCtrl.Exts.Coupon_dll;
 using FlexCoreService.CartCtrl.Interface;
 using FlexCoreService.CartCtrl.Models.vm;
 using FlexCoreService.CartCtrl.Service;
@@ -98,6 +99,14 @@ namespace FlexCoreService.Controllers
 					}
 				}
 			}
+		}
+		private BaseCouponStrategy LoadCoupon(int sendingId)
+		{
+			var vm = _service.GetCouponById(sendingId).ToViewModel();
+			// 折扣類型如為1是百分比折扣，0則是金額折扣,2是免運費
+			if (vm.DiscountType == 1) return new PercentageCoupon(vm);
+			else if (vm.DiscountType == 2) return new FreeShippingCoupon(vm);
+			else return new AmountCoupon(vm);
 		}
 	}
 }
