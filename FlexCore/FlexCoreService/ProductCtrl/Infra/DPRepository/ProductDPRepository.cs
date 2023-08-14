@@ -16,6 +16,20 @@ namespace FlexCoreService.ProductCtrl.Infra.DPRepository
             _connStr = _configuration.GetConnectionString("AppDbContext");
         }
 
+        public CategoryDto GetProdductCategories(string productId)
+        {
+            string sql = @"select sc.SalesCategoryName,pc.ProductCategoryName,psc.ProductSubCategoryName 
+from Products as p 
+join ProductSubCategories as psc on psc.ProductSubCategoryId=p.fk_ProductSubCategoryId 
+join ProductCategories as pc on pc.ProductCategoryId=psc.fk_ProductCategoryId 
+join SalesCategories as sc on sc.SalesCategoryId=pc.fk_SalesCategoryId 
+where p.ProductId='"+ @productId + "'";
+
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.QueryFirst<CategoryDto>(sql, new { productId });
+            return result;
+        }
+
         public IEnumerable<ProductCommentDto> GetProductComment(string productId)
         {
             string sql = @"select pc.Id as CommentId,pc.Description,pc.Score,
@@ -66,19 +80,10 @@ where fk_ProductId='"+ @productId+"'";
 
         }
 
-        //        public IEnumerable<ProductCardDto> SearchProducts()
-        //        {
-        //            string sql = @"select p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, MIN(pi.ImgPath) AS FirstImgPath 
-        //from Products as p
-        //join ProductImgs as pi on p.ProductId = pi.fk_ProductId
-        //group by p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, p.Status, p.LogOut
-        //having p.Status=0 and p.LogOut=0
-        //order by p.ProductId";
-
-        //            using IDbConnection dbConnection = new SqlConnection(_connStr);
-        //            var result = dbConnection.Query<ProductCardDto>(sql);
-        //            return result;
-        //        }
+        public IEnumerable<ProductCardDto> GetSimilarProducts(string productId, CategoryDto dto)
+        {
+            throw new NotImplementedException();
+        }
 
         public IEnumerable<ProductCardDto> SearchProducts(int salesId, string? categoryName, string? subCategoryName)
         {
@@ -101,6 +106,22 @@ s.SalesCategoryId = " + @salesId +
             var result = dbConnection.Query<ProductCardDto>(sql, new { salesId , categoryName , subCategoryName });
             return result;
         }
+
+
+
+        //        public IEnumerable<ProductCardDto> SearchProducts()
+        //        {
+        //            string sql = @"select p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, MIN(pi.ImgPath) AS FirstImgPath 
+        //from Products as p
+        //join ProductImgs as pi on p.ProductId = pi.fk_ProductId
+        //group by p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, p.Status, p.LogOut
+        //having p.Status=0 and p.LogOut=0
+        //order by p.ProductId";
+
+        //            using IDbConnection dbConnection = new SqlConnection(_connStr);
+        //            var result = dbConnection.Query<ProductCardDto>(sql);
+        //            return result;
+        //        }
 
     }
 }

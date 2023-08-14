@@ -63,7 +63,18 @@
             </div>
           </div>
           <div class="mt-3 d-flex mb-3">
-            <div>預計尺寸跟最愛</div>
+            <div class="text-center">
+              <button class="form-control" style="font-size: 20px">
+                尺寸表
+              </button>
+            </div>
+            <div class="ms-3 text-center">
+              <button class="form-control" style="font-size: 20px">
+                收藏在這，用v-if切換
+                <i class="bi bi-heart" style="color: red"></i
+                ><i class="bi bi-heart-fill" style="color: red"></i>
+              </button>
+            </div>
           </div>
           <hr />
           <div class="mt-3 mb-3 col-12 buy-height">
@@ -92,7 +103,6 @@
                   style="border-radius: 0"
                   v-model="buyQty"
                   @input="handleQyt"
-                  maxlength="2"
                 />
                 <button
                   @click="incrementProductQty()"
@@ -229,6 +239,21 @@
     </div>
     <div class="row mt-3">
       <div class="col-12">
+        <div class="container-body d-flex">
+          <ul class="d-flex flex-wrap">
+            <li
+              v-for="card in cards"
+              :key="card.productId"
+              class="card text-center"
+            >
+              <ProductCard :card="card"></ProductCard>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12">
         <div class="detailImgboxs">
           <img
             v-for="datas in productImgs"
@@ -246,6 +271,7 @@
 import axios from "axios";
 import { computed, onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import ProductCard from "@/components/product/ProductCard.vue";
 
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
@@ -259,6 +285,7 @@ const productImgs = ref([]);
 const productComment = ref([]);
 const showCommentDiv = ref(true);
 const showDetailDiv = ref(true);
+const cards = ref([]);
 
 let getData = async () => {
   await axios
@@ -317,6 +344,9 @@ let handleQyt = (event) => {
   buyQty.value = event.target.value.replace(/\D/g, "");
   if (buyQty.value <= 1) {
     buyQty.value = 1;
+  }
+  if (buyQty.value >= 99) {
+    buyQty.value = 99;
   }
 };
 
