@@ -314,11 +314,11 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
               關閉
             </button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-              @click="setreturndetalValue(item.id)">確定</button>
+              @click="setreturndetalValue()">確定</button>
           </div>
         </div>
       </div>
@@ -414,6 +414,22 @@ const setreturnIdValue = (paramValue) => {
   retrunId.value = paramValue;
   ReturnOrders();
 };
+const CancelReturnOrders = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/cancelreturn?orderid=${retrunId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const setcancelreturnIdValue = (paramValue) => {
+  returnOrderId.value = paramValue;
+  CancelReturnOrders();
+};
 const Returndetail = async () => {
   const requestData = {
     退貨轉帳帳號: returnaccount.value,
@@ -422,9 +438,11 @@ const Returndetail = async () => {
   await axios
     .post(`https://localhost:7183/api/Orders/NewReturn?orderid=${retrunId.value}`, requestData)
     .then((response) => {
-      console.log(response.data);
+      alert("退款資訊已提交");
       //alert(response.data);
       loadGetOrders();
+      returnaccount.value = "";
+      returnreason.value = "";
     })
     .catch((error) => {
       alert(error);
