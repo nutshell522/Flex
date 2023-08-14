@@ -7,7 +7,7 @@
                 <h5 class="card-title">{{ speaker.speakerName }}</h5>
                 <!-- 使用計算屬性將日期格式化為所需形式 -->
                 <p class="card-text">{{ speaker.fieldName }}</p>
-                <a :href="'activityInfo/'+speaker.speakerId" class="btn btn-primary">預約諮詢</a>
+                <a :href="'speakerInfo/'+speaker.speakerId" class="btn btn-primary">預約諮詢</a>
             </div>
         </div>
     </div>
