@@ -70,6 +70,7 @@
                                     信用卡或金融簽帳卡
                                 </div>
                             </div>
+                            <h2>詳細付款資訊:</h2>
                             <div class="input-wrapper">
                                 <input type="text" name="phone" id="" placeholder="Name on card">
                                 <span>Name on card</span>
@@ -95,38 +96,62 @@
                             <button type="submit" class="next-step-btn">下訂單</button>
                         </div>
                     </form>
-                    <div>
-                        <div>
+                    <div class="sent-info-area">
+                        <div class="step-block">
                             <h2>寄送資訊</h2>
-                            <div>
+                            <div class="show-info">
                                 <!-- 姓名 -->
-                                <p></p>
+                                <p>殷易暄</p>
                                 <!-- 地址 -->
-                                <p></p>
+                                <p>新生路421號</p>
                                 <!-- Email -->
-                                <p></p>
+                                <p>jjboy830227@gmail.com</p>
                                 <!-- 電話 -->
-                                <p></p>
+                                <p>0987-654-321</p>
+                                <button class="info-edit-btn">編輯</button>
                             </div>
-                            <button>編輯</button>
                         </div>
-                        <div>
+                        <div class="step-block">
                             <h2>帳單</h2>
-                            <div>
+                            <div class="show-info">
                                 <!-- 姓名 -->
                                 <p></p>
                                 <!-- 地址 -->
                                 <p></p>
                                 <!-- 電話 -->
                                 <p></p>
+                                <button class="info-edit-btn">編輯</button>
                             </div>
                         </div>
-                        <div>
+                        <div class="step-block">
                             <h2>付款</h2>
                         </div>
                     </div>
                 </div>
-                <div class="buy-summary col-12 col-lg-5"></div>
+                <div class="buy-summary col-12 col-lg-5">
+                    <div>
+                        <h2>訂單摘要</h2>
+                        <div>
+                            <div>運費</div>
+                            <div></div>
+                        </div>
+                        <div>
+                            <div>總計</div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>訂單詳情</h2>
+                        <ul>
+                            <li>
+                                <div class="item-img-wrapper"></div>
+                                <div class="item-info">
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -136,7 +161,7 @@
 
 </script>
     
-<style lang="scss">
+<style scoped lang="scss">
 main {
     width: 70%;
     margin: auto;
@@ -269,6 +294,50 @@ main {
                                 border: 2.5px solid #333;
                             }
                         }
+                    }
+                }
+
+                .sent-info-area {
+                    margin-top: 30px;
+
+                    .step-block {
+                        padding: 30px 0;
+                        border-top: 1px solid #ccc;
+
+                        &.active>h2 {
+                            color: #333;
+                        }
+
+                        h2 {
+                            font-size: 28px;
+                            font-weight: 500;
+                            color: #999;
+                        }
+
+                        .show-info {
+                            position: relative;
+
+                            &>p {
+                                margin: 0;
+                                color: #999;
+                            }
+
+
+                            .info-edit-btn {
+                                position: absolute;
+                                right: 0;
+                                top: -50px;
+                                font-size: 20px;
+                                padding: 10px 30px;
+                                border: 1.5px solid #ccc;
+                                border-radius: 50px;
+
+                                &:hover {
+                                    background-color: #eee;
+                                }
+                            }
+                        }
+
                     }
                 }
             }
