@@ -152,8 +152,9 @@
   <homeFooter></homeFooter>
 </template>
 <script setup>
-import ShoesnavBar from '@/components/customeShoes/ShoesnavBar.vue';
-document.addEventListener('DOMContentLoaded', function () {
+  import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
+  
+  document.addEventListener('DOMContentLoaded', function() {
   const phoneNumberInput = document.getElementById('phonenumber');
 
   phoneNumberInput.addEventListener('input', function (event) {

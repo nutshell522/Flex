@@ -253,6 +253,11 @@ const routes = [
     ],
   },
   {
+    //http://loaclhost/CustomeShoes/detail/shoesProductId
+    path: '/CustomeShoes/detail/:shoesProductId',
+    component: () => import('../views/CustomeShoes/ShoesDetail.vue'),
+  },
+  {
     //http://loaclhost/CustomeShoes/Contact
     path: '/CustomeShoes/Contact',
     component: () => import('../views/CustomeShoes/Contact.vue'),

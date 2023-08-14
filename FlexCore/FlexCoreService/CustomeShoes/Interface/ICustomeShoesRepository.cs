@@ -1,4 +1,5 @@
 ﻿using FlexCoreService.CustomeShoes.Models.Dtos;
+using FlexCoreService.ProductCtrl.Models.Dtos;
 
 namespace FlexCoreService.CustomeShoes.Interface
 {
@@ -7,5 +8,8 @@ namespace FlexCoreService.CustomeShoes.Interface
 		IEnumerable<CustomeShoesDto> SearchCustomeShoes();
 
         CustomeShoesDto SearchOneCustomeShoes(int Id);
+
+        ShoesDetailDto GetShoesDetail(int shoesproductId);
     }
 }
+
