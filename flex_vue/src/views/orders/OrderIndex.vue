@@ -63,6 +63,10 @@
                         @click="setreturnIdValue(item.id)" class="btn btn-primary"
                         :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
                         :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">退貨</button>
+                      <button v-if="item.order_status_Id == 9" type="button" class="btn btn-secondary"
+                        @click="setcancelreturnIdValue2(item.id)">
+                        取消
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -428,6 +432,10 @@ const CancelReturnOrders = async () => {
 };
 const setcancelreturnIdValue = (paramValue) => {
   returnOrderId.value = paramValue;
+  CancelReturnOrders();
+};
+const setcancelreturnIdValue2 = (paramValue) => {
+  retrunId.value = paramValue;
   CancelReturnOrders();
 };
 const Returndetail = async () => {
