@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Cors;
 using static System.Net.WebRequestMethods;
 using FlexCoreService.ActivityCtrl.Models.Dtos;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
-using ECPay.Payment.Integration;
 
 
 namespace FlexCoreService.Controllers
