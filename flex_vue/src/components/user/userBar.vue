@@ -3,23 +3,27 @@
   <div class="container">
     <div class="nav nav-justified">
       <ul class="nav nav-tabs">
-        <li class="nav-item" aria-current="page">
+        <li class="nav-item active" :aria-current="page">
           <router-link to="/user">個人資料</router-link>
         </li>
         <!-- 77如果選到某一個怎麼換顏色 -->
-        <li class="nav-item"><a href="/orders">訂單查詢 / 申請退貨</a></li>
-
-        <li class="nav-item" aria-disabled="true">
-          <router-link to="/favorites">收藏清單</router-link>
+        <li class="nav-item">
+          <a name="order" href="/orders">訂單查詢 / 申請退貨</a>
         </li>
 
-        <li class="nav-item"><a href="javascript:;">積分中心</a></li>
+        <li class="nav-item" aria-disabled="true">
+          <router-link to="/favorites" name="favorit">收藏清單</router-link>
+        </li>
 
-        <li class="nav-item"><a href="javascript:;">優惠券</a></li>
+        <li class="nav-item"><a name="rank" :href="page">積分中心</a></li>
 
-        <li class="nav-item"><a href="javascript:;">瀏覽紀錄</a></li>
+        <li class="nav-item"><a name="free" :href="page">優惠券</a></li>
 
-        <li class="nav-item"><a href="javascript:;">購物車</a></li>
+        <li class="nav-item">
+          <a name="history" :href="page">瀏覽紀錄</a>
+        </li>
+
+        <li class="nav-item"><a name="kart" :href="page">購物車</a></li>
       </ul>
     </div>
   </div>
@@ -28,6 +32,8 @@
 
 <script>
 import verify from '@/components/user/verify.vue';
+import { ref } from 'vue';
+const page = ref('favorites');
 </script>
 
 <style scoped>

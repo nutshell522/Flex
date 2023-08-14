@@ -186,6 +186,7 @@ namespace FlexCoreService.Controllers
         [HttpPut("Id")]
         public async Task<ActionResult<string>> EditUserProfile(int id, ProfileDto prodto)
         {
+            
             //檢查帳號是否存在
             Member member = await _db.Members.FindAsync(id); //FindAsync 根據主键查找對應的紀錄
 

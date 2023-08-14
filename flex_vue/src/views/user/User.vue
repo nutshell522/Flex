@@ -7,14 +7,13 @@
     <div class="col-md-6 d-flex">
       <div class="input-group mb-2">
         <label for="nameInput" class="text">姓名</label>
-        <label for="">{{ name }}</label>
+        <label for="">{{ userProfile.name }}</label>
       </div>
       <div class="level mb-3">
         <!-- <label for="">{{ level }}</label> -->
-        <label for="">{{ levelName }}</label>
+        <label for="">{{ userProfile.levelName }}</label>
       </div>
     </div>
-    <!-- 77gender資料繫結沒有成功 -->
     <div class="input-group gender">
       <div class="radioBtn">
         <label for="genderRadio1" class="text">性別</label>
@@ -22,7 +21,7 @@
           class="form-check-input"
           type="radio"
           id="genderRadio1"
-          value="false"
+          :value="false"
           v-model="gender"
         />
         <label class="form-check-label ms-1" for="genderRadio1"> 生理男 </label>
@@ -33,7 +32,7 @@
           class="form-check-input"
           type="radio"
           id="genderRadio2"
-          value="true"
+          :value="true"
           v-model="gender"
         />
         <label class="form-check-label ms-1" for="genderRadio2">生理女 </label>
@@ -145,7 +144,7 @@
 <script setup>
 import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 import axios from 'axios';
@@ -182,14 +181,14 @@ axios
   .get(uri)
   .then((res) => {
     userProfile.value = res.data;
-    console.log(userProfile);
+    console.log(123, userProfile.value);
 
     id.value = res.data.memberId;
     //console.log(id);
 
     // level.value = res.data.fk_Level;
-    levelName.value = res.data.levelName;
-    name.value = res.data.name;
+    // levelName.value = res.data.levelName;
+    // name.value = res.data.name;
     email.value = res.data.email;
     mobile.value = res.data.mobile;
     gender.value = res.data.gender;
@@ -248,7 +247,7 @@ function save() {
   var editUserProfile = {};
 
   editUserProfile.gender = gender.value;
-  editUserProfile.email = email.value;
+  editUserProfile.email = userProfile.value.email;
   editUserProfile.mobile = mobile.value;
   editUserProfile.commonAddress = commonAddress.value;
   editUserProfile.alternateAddress1 = alternateAddress1.value;
@@ -263,7 +262,6 @@ function save() {
     editUserProfile.isSubscribeNews
   );
 
-  // 77新註冊的人都沒有辦法編輯成功!
   axios
     .put(uri, editUserProfile)
     .then((res) => {

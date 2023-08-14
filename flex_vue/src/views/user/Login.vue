@@ -87,7 +87,7 @@
         登入
       </button>
       <div class="forgetPwd" v-if="forgetPwd" @click="forgetPwdClick">
-        <a href=""></a>忘記密碼 ?
+        <a href="#" class="underline">忘記密碼 ?</a>
       </div>
       <button
         type="submit"
@@ -119,7 +119,7 @@
     </div>
   </div>
 
-  <forgetPwdAndSetPwd></forgetPwdAndSetPwd>
+  <forgetPwdAndSetPwd v-if="forgetPwdSetPwd"></forgetPwdAndSetPwd>
 </template>
 
 <script setup>
@@ -334,7 +334,9 @@ function register() {
   }
 }
 
-function forgetPwdClick() {}
+function forgetPwdClick() {
+  forgetPwdSetPwd.value = true;
+}
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap');
@@ -407,4 +409,12 @@ p::after {
   justify-content: center;
   margin-top: 10px;
 }
+.underline {
+  text-decoration-line: underline;
+  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+}
+/* .forgetPwd a {
+  cursor: pointer;
+  text-decoration: underline;
+} */
 </style>
