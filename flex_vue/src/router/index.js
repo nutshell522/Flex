@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useGetApiDataStore } from '../stores/useGetApiDataStore';
 import { storeToRefs } from 'pinia';
-import Home from '../views/home/Home.vue';
 import User from '../views/user/User.vue';
 import Favorites from '../views/user/Favorites.vue';
 import Login from '../views/user/Login.vue';
@@ -9,6 +8,7 @@ import ActivityInfo from '../views/activity/ActivityInfo.vue';
 import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
 import ActivityIndex from '../views/activity/ActivityIndex.vue';
 import ReservationIndex from '../views/reservation/ReservationIndex.vue';
+import SpeakerInfo from '../views/reservation/SpeakerInfo.vue';
 const webTitle = 'FLEX - ';
 
 // 路由設定
@@ -16,14 +16,20 @@ const routes = [
   {
     //http://loaclhost/
     path: '/',
-    component: Home,
+    component: () => import('@/views/home/Home.vue'),
     meta: { title: `${webTitle}首頁` },
   },
   {
-    //http://loaclhost/
+    //http://loaclhost/cart
     path: '/cart',
-    component: () => import('../views/home/Cart.vue'),
+    component: () => import('@/views/home/Cart.vue'),
     meta: { title: `${webTitle}購物車` },
+  },
+  {
+    //http://loaclhost/buy
+    path: '/buy',
+    component: () => import('@/views/home/Buy.vue'),
+    meta: { title: `${webTitle}結帳` },
   },
   {
     //http://loaclhost/User
@@ -69,6 +75,16 @@ const routes = [
     path: '/reservationIndex',
     component: ReservationIndex,
     meta: { title: `${webTitle}預約諮詢首頁` },
+  },
+  {
+    path: '/speakerInfo/:id',
+    component: SpeakerInfo,
+    meta: { title: `${webTitle}講師資訊` },
+  },
+  {
+    //http://loaclhost/Login
+    path: '/login',
+    component: Login,
   },
   {
     //http://loaclhost/orders

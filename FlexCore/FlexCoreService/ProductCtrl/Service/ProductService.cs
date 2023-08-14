@@ -37,5 +37,11 @@ namespace FlexCoreService.ProductCtrl.Service
             var imgs = _repo.GetProductImgs(productId);
             return imgs;
         }
+        
+        public IEnumerable<ProductCommentDto> GetProductComment(string productId)
+        {
+            var comment = _repo.GetProductComment(productId);
+            return comment;
+        }
     }
 }
