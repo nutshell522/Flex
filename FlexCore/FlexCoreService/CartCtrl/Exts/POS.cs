@@ -24,6 +24,10 @@
 			{
 				cart.DeliveryFee = 0;
 			}
+			if(cart.Coupon!= null)
+			{
+				cart.Coupon.Process(cart);
+			}
 			cart.TotalPrice += cart.DeliveryFee;
 			return true;
 		}
