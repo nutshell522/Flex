@@ -2,6 +2,7 @@
 using FlexCoreService.ActivityCtrl.Exts;
 using FlexCoreService.ActivityCtrl.Interface;
 using FlexCoreService.ActivityCtrl.Models.Dtos;
+using FlexCoreService.ActivityCtrl.Models.VM;
 using FlexCoreService.ActivityCtrl.Service;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -50,6 +51,23 @@ namespace FlexCoreService.Controllers
             }
             return Ok(result);     
             
+        }
+
+        [HttpGet("GetReservationHistory{id}")]
+        public async Task<IEnumerable<ReservationHistoryVM>> GetReservationHistory (int id)
+        {
+            var historyTime = await _service.GetReservationHistoryAsync(id);
+            var result = historyTime.Select(x => x.ToVM());
+            if (result.Count() == 0)
+            {
+                Enumerable.Empty<ReservationHistoryVM>();
+            }
+            return result;
+        }
+
+        public async Task AddReservation (int id)
+        {
+
         }
     }
 }

@@ -29,6 +29,16 @@ ON Speakers.fk_SpeakerFieldId = SpeakerFields.FieldId";
             }
         }
 
+        public async Task<IEnumerable<ReservationHistoryDTO>> GetReservationHistoryAsync(int id)
+        {
+            string sql = @"select ReservationStartTime From OneToOneReservations WHERE fk_ReservationSpeakerId = @id";
+
+            using (var conn = new SqlConnection(_connStr))
+            {
+                return await conn.QueryAsync<ReservationHistoryDTO>(sql, new {id});
+            }
+        }
+
         public async Task<SpeakerDetailDTO> GetSpeakerInfoAsync(int id)
         {
             string sql = @"select SpeakerId, SpeakerName, FieldName, SpeakerImg, SpeakerDescription, BranchName, BranchAddress

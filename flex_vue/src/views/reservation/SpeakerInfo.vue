@@ -46,6 +46,7 @@ import {onMounted, reactive, ref} from 'vue';
 import axios from 'axios';
 import {useRoute} from 'vue-router';
 
+
 const route=useRoute();
 const speakerId = route.params.id;
 console.log(speakerId);
@@ -57,6 +58,57 @@ onMounted(()=>{
         const nextButton = document.querySelector("#nextButton");
         const currentDateDisplay = document.querySelector("#currentDate");
         const schedule = document.querySelector("#schedule");
+        let newDateResult;
+        let newTimeResult;
+
+        
+        
+
+        const testTime = "2023-08-17T15:00:00"
+
+        //把資料庫傳來的時間格式化為【年/月/日】字串
+        const formatDate=(dateString)=>{
+                const date = new Date(dateString);
+                return date.toLocaleDateString(); // 格式化為本地化的日期字串
+        }
+        const hasDate = formatDate(testTime);
+        console.log(hasDate);
+
+        //把資料庫傳來的時間格式化為【數字】時間字串
+        const formatTime = (dateString)=>{
+            const date = new Date(dateString);
+            const hour = date.getHours();
+            return hour;
+        }
+        
+        const hasTime = formatTime(testTime);
+        console.log(hasTime);
+
+        //呼叫後端，從資料庫得到這位講師已經被預約的時間
+        const loadReservationHistory = async(id)=>{
+            axios.get(`https://localhost:7183/api/Reservation/GetReservationHistory${id}`)
+                .then(res=>{
+                    const result = res.data;
+                    console.log(result);
+                    
+                    newDateResult = result.map(element=>formatDate(element.reservationStartTime));
+                    console.log(newDateResult);
+
+                    newTimeResult = result.map(element=>formatTime(element.reservationStartTime));
+                    console.log(newTimeResult);
+                    
+                    updateCalendar();
+
+                    // console.log(formatDate(result[0].reservationStartTime));
+                   
+                    
+                })
+                .catch(err=>{
+                    console.log(err);
+                })
+        }
+        loadReservationHistory(speakerId);
+
 
         const timeSlots = [
             "11:00  - 12:00 ",
@@ -71,6 +123,10 @@ onMounted(()=>{
             "20:00  - 21:00 ",
             "21:00  - 22:00 "
         ];
+
+
+
+        
 
         let currentDate = new Date(); //創建一個包含right now日期和時間的 Date 物件
         console.log(currentDate);
@@ -125,10 +181,22 @@ onMounted(()=>{
                     const day = new Date(currentDate);//取得今天日期時間
                     day.setDate(currentDate.getDate() + i);
                     //使用 data- 屬性來在元素上儲存自定義的資料
-                    cell.dataset.date = day.toLocaleDateString();
-                    cell.dataset.time = timeSlot;
-                    cell.addEventListener("click", handleCellClick);
-                    row.appendChild(cell);
+                    cell.dataset.date = day.toLocaleDateString();;
+                    cell.dataset.time = timeSlot.substring(0,2); //取出開始時間點
+
+                    for (let i=0; i <newDateResult.length; i++){
+
+                        if (cell.dataset.date == newDateResult[i] && cell.dataset.time == newTimeResult[i]){
+                            cell.classList.add("unable");
+                            cell.removeEventListener("click", handleCellClick); // 移除click監聽事件
+                        }
+                        else{
+                            cell.addEventListener("click", handleCellClick);                                          
+                        }
+                            row.appendChild(cell);
+                    }
+                   
+                   
                 }
 
                 table.appendChild(row);
@@ -143,8 +211,17 @@ onMounted(()=>{
             if (confirm(`您想要預約 ${date} 的 ${time} 嗎？`)) {
                 this.classList.add("selected");
                 this.removeEventListener("click", handleCellClick);
+                const time2 = parseInt(time.substring(0,2));
+                const parts = date.split('/');
+                const year = parseInt(parts[0]);
+                const month = parseInt(parts[1]) - 1;
+                const day = parseInt(parts[2]);
+                const fullDateTime = new Date(year,month,day,time2);
+                alert(fullDateTime);
             }
         }
+
+        
 
         prevButton.addEventListener("click", () => {
             currentDate.setDate(currentDate.getDate() - 7);
@@ -161,7 +238,7 @@ onMounted(()=>{
             createSchedule();
         }
 
-        updateCalendar();
+        
 
         const loadSpeaker = async(id)=>{
             //呼叫controller得到講師資訊
@@ -177,6 +254,8 @@ onMounted(()=>{
        
         ////呼叫controller得到講師資訊
         loadSpeaker(speakerId);
+
+
 })
        
 
@@ -208,6 +287,9 @@ onMounted(()=>{
         #schedule .schedule-table td.selected {
             background-color: green;
             color: white;
+        }
+        .unable{
+            background-color: rosybrown;
         }
  
 </style>
