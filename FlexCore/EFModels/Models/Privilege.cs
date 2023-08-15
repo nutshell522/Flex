@@ -2,6 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -12,10 +15,16 @@ namespace EFModels.Models
             fk_Levels = new HashSet<MembershipLevel>();
         }
 
+        [Key]
         public int PrivilegeId { get; set; }
+        [Required]
+        [StringLength(30)]
         public string PrivilegeName { get; set; }
+        [StringLength(300)]
         public string Description { get; set; }
 
+        [ForeignKey("fk_PrivilegeId")]
+        [InverseProperty("fk_Privileges")]
         public virtual ICollection<MembershipLevel> fk_Levels { get; set; }
     }
 }

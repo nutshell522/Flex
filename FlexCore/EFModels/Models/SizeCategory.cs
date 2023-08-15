@@ -2,6 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -12,9 +15,13 @@ namespace EFModels.Models
             ProductGroups = new HashSet<ProductGroup>();
         }
 
+        [Key]
         public int SizeId { get; set; }
+        [Required]
+        [StringLength(50)]
         public string SizeName { get; set; }
 
+        [InverseProperty("fk_Size")]
         public virtual ICollection<ProductGroup> ProductGroups { get; set; }
     }
 }
