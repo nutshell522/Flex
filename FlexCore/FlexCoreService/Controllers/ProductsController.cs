@@ -118,7 +118,7 @@ namespace FlexCoreService.Controllers
 
         //GET: api/Products/Comment/productId
         [HttpGet("Comment/{productId}")]
-        public async Task<ActionResult<IEnumerable<ProductCommentVM>>> GetProductComment(string productId)
+        public async Task<ActionResult<IEnumerable<ProductCommentVM>>> GetProductComment(string productId,int page=1,int pageSize=3)
         {
             var service=new ProductService(_repo);
             var result = service.GetProductComment(productId).Select(c=>c.ToCommentVM());
@@ -126,6 +126,21 @@ namespace FlexCoreService.Controllers
             {
                 return BadRequest();
             }
+
+            int totalCount=result.Count();//總筆數
+            int totalPage = (int)Math.Ceiling((double)totalCount / pageSize);//頁數
+
+            result = result.Skip(pageSize * (page - 1)).Take(pageSize).ToList();
+            bool firstDefault = false;
+            foreach(var product in result)
+            {
+                if (!firstDefault)
+                {
+                    product.totalPage = totalPage;
+                    firstDefault=true;
+                }
+            }
+
             return Ok(result);
         }
 
