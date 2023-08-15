@@ -5,7 +5,7 @@
                 <div class="buy-info col-12 col-lg-7">
                     <form action="" method="post">
                         <!-- 寄送資訊 -->
-                        <div id="step-1-area">
+                        <div id="step-1-area" class="step-area">
                             <h2>輸入你的聯絡資訊:</h2>
                             <div class="input-wrapper">
                                 <input type="text" name="ContactInfo.ContactName" id="contact-name" placeholder="姓名">
@@ -31,7 +31,7 @@
                             <button type="button" class="next-step-btn">繼續</button>
                         </div>
                         <!-- 帳單 -->
-                        <div id="step-2-area">
+                        <div id="step-2-area" class="step-area">
                             <h2>輸入你的帳單地址:</h2>
                             <label class="same-address-label buy-label">
                                 <input type="checkbox" id="bill-same-address" class="buy-checkbox">
@@ -58,7 +58,7 @@
                             <button type="button" class="next-step-btn">繼續</button>
                         </div>
                         <!-- 付款 -->
-                        <div id="step-3-area">
+                        <div id="step-3-area" class="step-area">
                             <h2>使用優惠券?</h2>
                             <a href="javascript:;" class="choose-coupon">選擇優惠券</a>
                             <p class="show-coupon-info"></p>
@@ -158,7 +158,51 @@
 </template>
     
 <script setup lang='ts'>
-    
+import axios from "axios";
+import { ref, onMounted, computed } from "vue";
+class FlexCheckoutProcess{
+    private _step = 0 ;
+    // private _stepAreas = document.querySelectorAll('.step-area');
+    private _stepAreas: HTMLElement[] = [];
+
+    constructor() {
+    this._stepAreas.push(document.querySelector("#step-1-area")!);
+    this._stepAreas.push(document.querySelector("#step-2-area")!);
+    this._stepAreas.push(document.querySelector("#step-3-area")!);
+    }
+    get step(): number {
+        return this._step;
+    }
+    set step(nextStep: number) {
+        if (nextStep < 0) {
+            this._step = 0;
+        } 
+        else if(nextStep > 2){
+            this._step = 2;
+        }
+        else{
+            this._step = nextStep;
+        }
+    }
+    process():void
+    {
+        for(let i=0; i <= this._stepAreas.length ; i++ ){
+            if(i==this.step){
+                this._stepAreas[i].classList.add('d-block');
+                this._stepAreas[i].classList.remove('d-none');
+            }
+            else{
+                this._stepAreas[i].classList.remove('d-block');
+                this._stepAreas[i].classList.add('d-none');
+
+            }
+        }
+    }
+}
+onMounted(()=>{
+    let flexCheckout = new FlexCheckoutProcess();
+    flexCheckout.process();
+});
 </script>
     
 <style scoped lang="scss">
