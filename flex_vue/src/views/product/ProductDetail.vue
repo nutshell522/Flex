@@ -231,6 +231,50 @@
                   <div>{{ comment.description }}</div>
                   <hr />
                 </div>
+                <nav
+                  aria-label="Page navigation example"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <ul class="pagination">
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        aria-label="Previous"
+                        @click="decrementPage"
+                      >
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                    <li
+                      v-for="(value, index) in totalPages"
+                      class="page-item"
+                      :key="index"
+                      @click="clickHandler(value)"
+                    >
+                      <a
+                        :class="{
+                          pageHandle: thePage === value,
+                          'page-link': true,
+                        }"
+                        >{{ value }}</a
+                      >
+                    </li>
+
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        aria-label="Next"
+                        @click="incrementPage"
+                      >
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
             </div>
           </div>
@@ -242,10 +286,10 @@
         <div class="container-body">
           <div class="d-flex">
             <h1 class="me-auto">你可能會喜歡</h1>
-            <button class="me-3 similarBtn">
+            <button class="me-3 similarBtn" @click="prevCard">
               <i class="bi bi-chevron-left similarIcon"></i>
             </button>
-            <button class="me-5 similarBtn">
+            <button class="me-5 similarBtn" @click="nextCard">
               <i class="bi bi-chevron-right similarIcon"></i>
             </button>
           </div>
@@ -299,6 +343,10 @@ const cards = ref([]);
 const productStore = useProductRoute();
 const productName = ref("");
 const similarProducts = ref([]);
+const totalPages = ref(1);
+const thePage = ref(1);
+const currentIndex = ref(0);
+const visibleCards = ref([]);
 
 let getData = async () => {
   await axios
@@ -314,7 +362,7 @@ let getData = async () => {
         detailImg.value = selectSizes.value[0].defaultColorImg;
         //console.log(selectSizes.value[0].defaultColorImg);
       }
-      productStore.setProductName(productName);
+      productStore.setProductName(productName.value);
     })
     .catch((error) => {
       alert(error);
@@ -333,12 +381,64 @@ let getImgs = async () => {
     });
 };
 
+//分頁
+let clickHandler = (page) => {
+  //console.log(page);
+  thePage.value = page;
+  getComment();
+};
+
+let decrementPage = () => {
+  if (thePage.value > 1) {
+    thePage.value--;
+    getComment();
+  }
+};
+
+let incrementPage = () => {
+  if (thePage.value < totalPages.value) {
+    thePage.value++;
+    getComment();
+  }
+};
+
+let prevCard = () => {
+  currentIndex.value =
+    (currentIndex.value - 1 + similarProducts.value.length) %
+    similarProducts.value.length;
+  console.log(currentIndex.value);
+  updateVisibleCards();
+};
+
+let nextCard = () => {
+  currentIndex.value =
+    (currentIndex.value + 1 + similarProducts.value.length) %
+    similarProducts.value.length;
+  console.log(currentIndex.value);
+  updateVisibleCards();
+};
+
+let updateVisibleCards = () => {
+  const cardCount = 4; // 一次顯示的卡片數量
+  const totalCards = similarProducts.value.length;
+
+  for (let i = 0; i < cardCount; i++) {
+    const cardIndex = (currentIndex.value + i) % totalCards; // 循環索引
+    visibleCards.value.push(similarProducts.value[cardIndex]);
+  }
+  console.log(visibleCards.value);
+};
+
 let getComment = async () => {
   await axios
-    .get(`${baseAddress}api/Products/Comment/${route.params.productId}`)
+    .get(
+      `${baseAddress}api/Products/Comment/${route.params.productId}?page=${thePage.value}&pageSize=3`
+    )
     .then((response) => {
       //console.log(response.data);
       productComment.value = response.data;
+      totalPages.value = response.data[0].totalPage;
+      //console.log(totalPages);
     })
     .catch((error) => {
       alert(error);
@@ -410,6 +510,7 @@ onMounted(() => {
   getImgs();
   getComment();
   getSimilarProducts();
+  //updateVisibleCards();
 });
 </script>
 
@@ -563,6 +664,11 @@ onMounted(() => {
 }
 
 .similarBtn:hover .similarIcon {
+  color: white;
+}
+
+.pageHandle {
+  background-color: #706e6c;
   color: white;
 }
 </style>
