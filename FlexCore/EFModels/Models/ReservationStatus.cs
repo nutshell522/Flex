@@ -2,9 +2,13 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
+    [Index("ReservationStatusDescription", Name = "UQ__Reservat__ADF40EA6CB35C142", IsUnique = true)]
     public partial class ReservationStatus
     {
         public ReservationStatus()
@@ -12,9 +16,13 @@ namespace EFModels.Models
             OneToOneReservations = new HashSet<OneToOneReservation>();
         }
 
+        [Key]
         public int ReservationId { get; set; }
+        [Required]
+        [StringLength(10)]
         public string ReservationStatusDescription { get; set; }
 
+        [InverseProperty("fk_ReservationStatus")]
         public virtual ICollection<OneToOneReservation> OneToOneReservations { get; set; }
     }
 }

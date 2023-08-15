@@ -1,4 +1,5 @@
 <template>
+   <router-link :to="'/CustomeShoes' + '/detail/' + card.shoesProductId">
     <div class="img">
       <!-- <router-link to="/detail/123"> -->
       <img :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath" class="card-img-top mx-auto d-block"
@@ -10,9 +11,9 @@
       <div class="card-category">{{ card.shoesCategoryName }}</div>
       <span class="" v-if="card.shoesUnitPrice != null">
         NT:{{ card.shoesUnitPrice }}
-      </span>
-      
+      </span>      
     </div>
+  </router-link>
   </template>
   
   <script setup>

@@ -2,6 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -13,10 +16,15 @@ namespace EFModels.Models
             ProductImgs = new HashSet<ProductImg>();
         }
 
+        [Key]
         public int ColorId { get; set; }
+        [Required]
+        [StringLength(50)]
         public string ColorName { get; set; }
 
+        [InverseProperty("fk_Color")]
         public virtual ICollection<ProductGroup> ProductGroups { get; set; }
+        [InverseProperty("fk_Color")]
         public virtual ICollection<ProductImg> ProductImgs { get; set; }
     }
 }

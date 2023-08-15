@@ -14,5 +14,7 @@
         public string BranchName { get; set; }
 
         public string BranchAddress { get; set; }
+
+        public int BranchId { get; set; }
     }
 }
