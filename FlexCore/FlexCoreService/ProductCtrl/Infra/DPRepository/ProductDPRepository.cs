@@ -16,7 +16,7 @@ namespace FlexCoreService.ProductCtrl.Infra.DPRepository
             _connStr = _configuration.GetConnectionString("AppDbContext");
         }
 
-        public CategoryDto GetProdductCategories(string productId)
+        public CategoryDto GetProductCategories(string productId)
         {
             string sql = @"select sc.SalesCategoryName,pc.ProductCategoryName,psc.ProductSubCategoryName 
 from Products as p 
@@ -27,6 +27,29 @@ where p.ProductId='"+ @productId + "'";
 
             using IDbConnection dbConnection = new SqlConnection(_connStr);
             var result = dbConnection.QueryFirst<CategoryDto>(sql, new { productId });
+            return result;
+        }
+
+        public IEnumerable<ProductCardDto> GetSimilarProducts(string productId, CategoryDto dto)
+        {
+            string sql = @"select top 5
+p.ProductId, p.ProductName, p.UnitPrice,p.SalesPrice,sc.SalesCategoryName,
+pc.ProductCategoryName,psc.ProductSubCategoryName,sc.SalesCategoryId,MIN(pi.ImgPath) AS FirstImgPath 
+from Products as p
+join ProductSubCategories as psc on psc.ProductSubCategoryId=p.fk_ProductSubCategoryId
+join ProductCategories as pc on pc.ProductCategoryId=psc.fk_ProductCategoryId
+join SalesCategories as sc on sc.SalesCategoryId=pc.fk_SalesCategoryId
+join ProductImgs as pi on pi.fk_ProductId=p.ProductId
+group by p.ProductId, p.ProductName, p.UnitPrice,p.SalesPrice,sc.SalesCategoryName,
+pc.ProductCategoryName,psc.ProductSubCategoryName,p.Status,p.LogOut,sc.SalesCategoryId  
+having p.ProductId <> '" + @productId+ "' and "+
+"sc.SalesCategoryName='"+ dto.SalesCategoryName+"' and "+
+"pc.ProductCategoryName='"+ dto.ProductCategoryName+ "' and "+
+"psc.ProductSubCategoryName ='"+ dto.ProductSubCategoryName+ "' and "+
+"p.Status=0 and p.LogOut=0 order by NEWID();";
+
+            using IDbConnection dbConnection= new SqlConnection(_connStr);
+            var result = dbConnection.Query<ProductCardDto>(sql, new { productId });
             return result;
         }
 
@@ -80,25 +103,21 @@ where fk_ProductId='"+ @productId+"'";
 
         }
 
-        public IEnumerable<ProductCardDto> GetSimilarProducts(string productId, CategoryDto dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<ProductCardDto> SearchProducts(int salesId, string? categoryName, string? subCategoryName)
+        public IEnumerable<ProductCardDto> SearchProducts(int? salesId, string? categoryName, string? subCategoryName)
         {
             string sql = @"select p.ProductId, p.ProductName, p.UnitPrice,p.SalesPrice,s.SalesCategoryId,
-pc.ProductCategoryName,ps.ProductSubCategoryName,MIN(pi.ImgPath) AS FirstImgPath 
+pc.ProductCategoryName,ps.ProductSubCategoryName,s.SalesCategoryName,
+MIN(pi.ImgPath) AS FirstImgPath 
 from Products as p
 join ProductImgs as pi on p.ProductId = pi.fk_ProductId
 join ProductSubCategories as ps on ps.ProductSubCategoryId=p.fk_ProductSubCategoryId
 join ProductCategories as pc on pc.ProductCategoryId=ps.fk_ProductCategoryId
 join SalesCategories as s on s.SalesCategoryId=pc.fk_SalesCategoryId
 group by p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, p.Status,
-p.LogOut,s.SalesCategoryId,pc.ProductCategoryName,ps.ProductSubCategoryName
-having p.Status=0 and p.LogOut=0 and 
-s.SalesCategoryId = " + @salesId +
-" and pc.ProductCategoryName like '%" + @categoryName + "%'" +
+p.LogOut,s.SalesCategoryId,pc.ProductCategoryName,ps.ProductSubCategoryName,s.SalesCategoryName 
+having p.Status=0 and p.LogOut=0 "+
+(salesId.HasValue ? " and s.SalesCategoryId = " + @salesId : "") +
+" and  pc.ProductCategoryName like '%" + @categoryName + "%'" +
 " and ps.ProductSubCategoryName like '%" + @subCategoryName + "%'" +
 " order by p.SalesPrice";
 
