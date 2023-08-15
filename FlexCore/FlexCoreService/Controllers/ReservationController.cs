@@ -79,7 +79,7 @@ namespace FlexCoreService.Controllers
             dto.fk_ReservationStatusId = 0;
 
             await _service.AddReservationAsync(dto);
-            return Ok("成功");
+            return Ok("成功預約!");
 
         }
     }

@@ -68,7 +68,7 @@ ON Speakers.fk_SpeakerFieldId = SpeakerFields.FieldId";
 
         public async Task<SpeakerDetailDTO> GetSpeakerInfoAsync(int id)
         {
-            string sql = @"select SpeakerId, SpeakerName, FieldName, SpeakerImg, SpeakerDescription, BranchName, BranchAddress
+            string sql = @"select SpeakerId, SpeakerName, FieldName, SpeakerImg, SpeakerDescription, BranchName, BranchAddress, BranchId
 From Speakers
 Join SpeakerFields
 ON Speakers.fk_SpeakerFieldId = SpeakerFields.FieldId

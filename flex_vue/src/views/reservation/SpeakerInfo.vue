@@ -50,7 +50,7 @@ import {useRoute} from 'vue-router';
 const route=useRoute();
 const speakerId = route.params.id;
 console.log(speakerId);
-const speaker = ref([]);
+const speaker = ref({});
 const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
 onMounted(()=>{
   const datePicker = document.querySelector("#datePicker");
@@ -58,9 +58,26 @@ onMounted(()=>{
       const nextButton = document.querySelector("#nextButton");
       const currentDateDisplay = document.querySelector("#currentDate");
       const schedule = document.querySelector("#schedule");
+      
       let newDateResult;
       let newTimeResult;
 
+      const loadSpeaker = async(id)=>{
+          //呼叫controller得到講師資訊
+          axios.get(`https://localhost:7183/api/Reservation/id?id=${id}`)
+                      .then(res=>{
+                          console.log(res.data);
+                          speaker.value= res.data;
+                          console.log(speaker.value.branchId);
+                          console.log(speaker.value.speakerDescription);
+                      })
+                      .catch(err=>{
+                          console.log(err);
+                      })
+      }
+     
+      ////呼叫controller得到講師資訊
+      loadSpeaker(speakerId);
       
       
 
@@ -188,10 +205,11 @@ onMounted(()=>{
 
                       if (cell.dataset.date == newDateResult[i] && cell.dataset.time == newTimeResult[i]){
                           cell.classList.add("unable");
-                          cell.removeEventListener("click", handleCellClick); // 移除click監聽事件
+                          
                       }
                       else{
-                          cell.addEventListener("click", handleCellClick);                                          
+                          cell.addEventListener("click", handleCellClick); 
+                                                                   
                       }
                           row.appendChild(cell);
                   }
@@ -205,9 +223,12 @@ onMounted(()=>{
           schedule.appendChild(table);
       }
 
+     
+
       function handleCellClick() {
           const date = this.dataset.date;
           const time = this.dataset.time;
+      
           if (confirm(`您想要預約 ${date} 的 ${time} 嗎？`)) {
               this.classList.add("selected");
               this.removeEventListener("click", handleCellClick);
@@ -219,10 +240,18 @@ onMounted(()=>{
               const fullDateTime = new Date(year,month,day,time2);
               // alert(fullDateTime);
 
-              axios.post()
-                    .then()
+              axios.post("https://localhost:7183/api/Reservation/AddReservation", {
+                        fk_BookerId:4,
+                        ReservationStartTime:fullDateTime,
+                        fk_ReservationSpeakerId:speakerId,
+                        fk_BranchId:speaker.value.branchId
+                    })
+                    .then(res=>{
+                      console.log(res.data);
+                    })
                     .catch(err=>{
                       console.log(err);
+                     
                     })
           }
       }
@@ -246,20 +275,8 @@ onMounted(()=>{
 
       
 
-      const loadSpeaker = async(id)=>{
-          //呼叫controller得到講師資訊
-          axios.get(`https://localhost:7183/api/Reservation/id?id=${id}`)
-                      .then(res=>{
-                          console.log(res.data);
-                          speaker.value = res.data;
-                      })
-                      .catch(err=>{
-                          console.log(err);
-                      })
-      }
-     
-      ////呼叫controller得到講師資訊
-      loadSpeaker(speakerId);
+
+      
 
 
 })
@@ -296,6 +313,7 @@ onMounted(()=>{
       }
       .unable{
           background-color: rosybrown;
+          pointer-events: none;
       }
 
 </style>
