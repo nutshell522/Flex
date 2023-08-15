@@ -1,6 +1,7 @@
 ﻿using EFModels.Models;
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.CustomeShoes.Models.Dtos;
+using FlexCoreService.ProductCtrl.Models.Dtos;
 
 namespace FlexCoreService.CustomeShoes.Service
 {
@@ -29,6 +30,12 @@ namespace FlexCoreService.CustomeShoes.Service
         {
             var shoesDetails = _repo.GetShoesDetail(shoesproductId);
             return shoesDetails;
+        }
+
+        public IEnumerable<ShoesImgsDto> GetShoesImgs(int shoesproductId)
+        {
+            var imgs = _repo.GetShoesImgs(shoesproductId);
+            return imgs;
         }
     }
 }
