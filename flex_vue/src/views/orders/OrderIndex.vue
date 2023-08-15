@@ -56,16 +56,17 @@
                   <td colspan="4" style="text-align: right;">
                     <div style="text-align: right;">
                       <button
-                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
+                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8 && item.close !== true"
+                        @click="setcancelIdValue(item.id)" class="btn btn-primary"
+                        style="margin-right: 30px;">申請取消</button>
                       <button
-                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
+                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8 && item.close !== true"
                         @click="setreturnIdValue(item.id)" class="btn btn-primary"
                         :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
-                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">退貨</button>
+                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">申請退貨</button>
                       <button v-if="item.order_status_Id == 9" type="button" class="btn btn-secondary"
                         @click="setcancelreturnIdValue2(item.id)">
-                        取消
+                        取消退貨
                       </button>
                     </div>
                   </td>
@@ -148,12 +149,13 @@
                     <div style="text-align: right;">
                       <button
                         v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px;">取消</button>
+                        @click="setcancelIdValue(item.id)" class="btn btn-primary"
+                        style="margin-right: 30px;">申請取消</button>
                       <button
                         v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
                         @click="setreturnIdValue(item.id)" class="btn btn-primary"
                         :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
-                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">退貨</button>
+                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">申請退貨</button>
                     </div>
                   </td>
                 </tr>
@@ -236,7 +238,7 @@
                           <div>訂單編號:{{ item.id }}</div>
                           <div>發票編號{{ item.receipt }}</div>
                           <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
-                            @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
+                            @click="setcancelIdValue(item.id)" class="btn btn-success">申請取消</button>
                         </td>
                       </tr>
                     </table>
@@ -285,7 +287,7 @@
                           <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
                           <div>訂單編號:{{ item.id }}</div>
                           <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
-                            @click="setcancelIdValue(item.id)" class="btn btn-success">取消</button>
+                            @click="setcancelIdValue(item.id)" class="btn btn-success">申請取消</button>
                         </td>
                       </tr>
                     </table>
@@ -380,6 +382,12 @@ const reReason = ref([]);
 
 
 const loadGetOrders = async () => {
+  const begintimeValue = begintime.value;
+  const endtimeValue = endtime.value;
+  if (begintimeValue > endtimeValue) {
+    alert("時間錯誤：開始時間不能大於結束時間");
+    return;
+  }
   await axios
     .get(`https://localhost:7183/api/Orders/GetOrders?begintime=${begintime.value}&endtime=${endtime.value}&keyword=${keyword.value}&typeId=${Type.value}&ostatusId=${ostatus.value}`)
     .then((response) => {
@@ -539,6 +547,7 @@ onMounted(() => {
   Type.value = 1;
   flatpickr(".datePicker", {
     enableTime: false,
+    maxDate: "today",
     dateFormat: "Y-m-d",
   });
   loadGetOrders();
