@@ -1,31 +1,42 @@
 <template>
-  <div class="row">
-    <div class="col-md-8">
-      左
-      <div class="featured-img">
-        <img
-          :src="imgBaseUrl + '/Public/Img/' + speaker.speakerImg"
-          alt="Featured 1"
-          class="featured-big"
-        />
+  <div class="container">
+
+
+    <div class="row main">
+      <div class="col-md-8">左
+        <div class="featured-img">
+          <img :src='imgBaseUrl + "/Public/Img/" + speaker.speakerImg' alt="Featured 1" class="featured-big">
+        </div>
+
+        <p>講師姓名：{{ speaker.speakerName }}</p>
+        <p>擅長領域：{{ speaker.fieldName }}</p>
+        <p>講師描述：{{ speaker.speakerDescription }}</p>
+        <p>駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})</p>
+
+
+
+
+        <p>講師姓名：{{ speaker.speakerName }}</p>
+        <p>擅長領域：{{ speaker.fieldName }}</p>
+        <p>講師描述：{{ speaker.speakerDescription }}</p>
+        <p>駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})</p>
+
+        <!-- 預約系統 -->
+        <p>預約時間表</p>
+        <div id="datePicker">
+          <button id="prevButton">前一周</button>
+          <span id="currentDate"></span>
+          <button id="nextButton">後一周</button>
+        </div>
+        <div id="schedule"></div>
       </div>
 
-      <p>講師姓名：{{ speaker.speakerName }}</p>
-      <p>擅長領域：{{ speaker.fieldName }}</p>
-      <p>講師描述：{{ speaker.speakerDescription }}</p>
-      <p>駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})</p>
 
-      <!-- 預約系統 -->
-      <p>預約時間表</p>
-      <div id="datePicker">
-        <button id="prevButton">前一周</button>
-        <span id="currentDate"></span>
-        <button id="nextButton">後一周</button>
+      <div class="col-md-4">
+        右
       </div>
-      <div id="schedule"></div>
     </div>
 
-    <div class="col-md-4">右</div>
   </div>
 </template>
 
@@ -45,6 +56,64 @@ onMounted(() => {
   const nextButton = document.querySelector("#nextButton");
   const currentDateDisplay = document.querySelector("#currentDate");
   const schedule = document.querySelector("#schedule");
+  let newDateResult;
+  let newTimeResult;
+
+  // 外層迴圈產生最左側的時間直行
+  for (const timeSlot of timeSlots) {
+    const row = document.createElement('tr');
+    const timeCell = document.createElement('td');
+    timeCell.textContent = timeSlot;
+    row.appendChild(timeCell);
+  }
+
+
+
+  const testTime = "2023-08-17T15:00:00"
+
+  //把資料庫傳來的時間格式化為【年/月/日】字串
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(); // 格式化為本地化的日期字串
+  }
+  const hasDate = formatDate(testTime);
+  console.log(hasDate);
+
+  //把資料庫傳來的時間格式化為【數字】時間字串
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    const hour = date.getHours();
+    return hour;
+  }
+
+  const hasTime = formatTime(testTime);
+  console.log(hasTime);
+
+  //呼叫後端，從資料庫得到這位講師已經被預約的時間
+  const loadReservationHistory = async (id) => {
+    axios.get(`https://localhost:7183/api/Reservation/GetReservationHistory${id}`)
+      .then(res => {
+        const result = res.data;
+        console.log(result);
+
+        newDateResult = result.map(element => formatDate(element.reservationStartTime));
+        console.log(newDateResult);
+
+        newTimeResult = result.map(element => formatTime(element.reservationStartTime));
+        console.log(newTimeResult);
+
+        updateCalendar();
+
+        // console.log(formatDate(result[0].reservationStartTime));
+
+
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+  loadReservationHistory(speakerId);
+
 
   const timeSlots = [
     "11:00  - 12:00 ",
@@ -59,6 +128,10 @@ onMounted(() => {
     "20:00  - 21:00 ",
     "21:00  - 22:00 ",
   ];
+
+
+
+
 
   let currentDate = new Date(); //創建一個包含right now日期和時間的 Date 物件
   console.log(currentDate);
@@ -117,12 +190,34 @@ onMounted(() => {
         cell.addEventListener("click", handleCellClick);
         row.appendChild(cell);
       }
+    }
+    for (let i = 0; i < 7; i++) {
+      const cell = document.createElement("td");
+      cell.classList.add("schedule-cell");
+      const day = new Date(currentDate);//取得今天日期時間
+      day.setDate(currentDate.getDate() + i);
+      //使用 data- 屬性來在元素上儲存自定義的資料
+      cell.dataset.date = day.toLocaleDateString();;
+      cell.dataset.time = timeSlot.substring(0, 2); //取出開始時間點
 
-      table.appendChild(row);
+      for (let i = 0; i < newDateResult.length; i++) {
+
+        if (cell.dataset.date == newDateResult[i] && cell.dataset.time == newTimeResult[i]) {
+          cell.classList.add("unable");
+          cell.removeEventListener("click", handleCellClick); // 移除click監聽事件
+        }
+        else {
+          cell.addEventListener("click", handleCellClick);
+        }
+        row.appendChild(cell);
+      }
+
+
     }
 
     schedule.appendChild(table);
   }
+
 
   function handleCellClick() {
     const date = this.dataset.date;
@@ -130,16 +225,20 @@ onMounted(() => {
     if (confirm(`您想要預約 ${date} 的 ${time} 嗎？`)) {
       this.classList.add("selected");
       this.removeEventListener("click", handleCellClick);
+      const time2 = parseInt(time.substring(0, 2));
+      const parts = date.split('/');
+      const year = parseInt(parts[0]);
+      const month = parseInt(parts[1]) - 1;
+      const day = parseInt(parts[2]);
+      const fullDateTime = new Date(year, month, day, time2);
+      alert(fullDateTime);
     }
   }
 
+
+
   prevButton.addEventListener("click", () => {
     currentDate.setDate(currentDate.getDate() - 7);
-    updateCalendar();
-  });
-
-  nextButton.addEventListener("click", () => {
-    currentDate.setDate(currentDate.getDate() + 7);
     updateCalendar();
   });
 
@@ -150,48 +249,55 @@ onMounted(() => {
 
   updateCalendar();
 
+
+
   const loadSpeaker = async (id) => {
     //呼叫controller得到講師資訊
-    axios
-      .get(`https://localhost:7183/api/Reservation/id?id=${id}`)
-      .then((res) => {
+    axios.get(`https://localhost:7183/api/Reservation/id?id=${id}`)
+      .then(res => {
         console.log(res.data);
         speaker.value = res.data;
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
-      });
-  };
+      })
+  }
+
 
   ////呼叫controller得到講師資訊
   loadSpeaker(speakerId);
 });
 </script>
-
-<style scoped>
-body {
+  
+<style>
+.main {
   font-family: Arial, sans-serif;
   text-align: center;
+
+}
+
+#schedule {
+  display: flex;
+  justify-content: center;
 }
 
 h1 {
   color: #333;
 }
 
-.schedule-table {
-  border-collapse: collapse;
-  margin: 20px auto;
-}
-
-.schedule-table th,
-.schedule-table td {
-  border: 1px solid #ccc;
+#schedule .schedule-table th,
+#schedule .schedule-table td {
+  border: 1px solid #111;
   padding: 10px;
   cursor: pointer;
 }
 
-.schedule-table td.selected {
+#schedule .schedule-table td.selected {
   background-color: green;
   color: white;
+}
+
+.unable {
+  background-color: rosybrown;
 }
 </style>

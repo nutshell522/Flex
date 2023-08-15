@@ -20,14 +20,16 @@
 					cart.TotalPrice -= discounts.Amount;
 				}
 			}
-			if(cart.TotalPrice > 2000)
-			{
-				cart.DeliveryFee = 0;
-			}
-			if(cart.Coupon!= null)
+			if (cart.Coupon != null)
 			{
 				cart.Coupon.Process(cart);
 			}
+
+			if (cart.TotalPrice > 2000)
+			{
+				cart.DeliveryFee = 0;
+			}
+			
 			cart.TotalPrice += cart.DeliveryFee;
 			return true;
 		}
