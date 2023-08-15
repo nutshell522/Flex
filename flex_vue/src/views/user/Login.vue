@@ -9,7 +9,9 @@
         <span v-for="error in errors" class="text-danger">{{ error }}</span>
       </ul>
     </div>
+    <!-- 欄位 -->
     <div class="from-group mb-3">
+      <label class="mb-1" v-if="accInput">帳號</label>
       <input
         type="text"
         name="account"
@@ -29,7 +31,15 @@
         placeholder="輸入6-20碼英數字"
       />
     </div>
-
+    <div class="from-group mb-3" v-if="nameInput">
+      <label>姓名</label>
+      <input
+        type="text"
+        v-model="name"
+        class="form-control"
+        placeholder="姓名"
+      />
+    </div>
     <div class="from-group mb-3" v-if="unValidated">
       <label>信箱</label>
       <input
@@ -59,15 +69,16 @@
         placeholder="手機"
       />
     </div>
-    <div class="from-group mb-3" v-if="nameInput">
-      <label>姓名</label>
+    <div class="from-group mb-3" v-if="addressInput">
+      <label>收件住址</label>
       <input
         type="text"
-        v-model="name"
+        v-model="address"
         class="form-control"
-        placeholder="姓名"
+        placeholder="收件住址"
       />
     </div>
+    <!-- 按鈕 -->
     <div class="from-group mb-3">
       <button
         type="submit"
@@ -111,14 +122,13 @@
       </button>
     </div>
     <div class="secret">
-      <div>
-        <span>擁有帳號即表示你同意</span>
-      </div>
-      <a href="javascript:;">會員權益聲明</a>
-      <a href="javascript:;">隱私權 與 網站使用條款</a>
+      <div>擁有帳號即表示你同意</div>
+      <a href="#" class="underline">會員權益聲明</a>
+      <a href="#">與</a>
+      <a href="#" class="underline">隱私權及網站使用條款</a>
     </div>
   </div>
-
+  <!-- 忘記密碼畫面 -->
   <forgetPwdAndSetPwd
     v-if="forgetPwdSetPwd"
     :email="email"
@@ -440,9 +450,18 @@ p::after {
 .underline {
   text-decoration-line: underline;
   color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+  display: flex;
+  justify-content: center;
 }
-/* .forgetPwd a {
-  cursor: pointer;
-  text-decoration: underline;
-} */
+.secret {
+  margin: auto;
+}
+.secret div {
+  display: flex;
+  justify-content: center;
+}
+.secret a {
+  display: flex;
+  justify-content: center;
+}
 </style>

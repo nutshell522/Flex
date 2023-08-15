@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using System.Text;
+using System.Net.Mail;
+using System.Net;
 
 namespace FlexCoreService.Controllers
 {
@@ -246,6 +248,43 @@ namespace FlexCoreService.Controllers
             //跳更新成功回到本頁
             return Ok("編輯會員資料成功");
         }
+
+        /// <summary>
+        /// 註冊驗證信
+        /// </summary>
+        /// <param name="email"></param>
+        //[HttpGet]
+        //public void SendEmail(string email)
+        //{
+        //    var senderEmail = "";
+        //    var password = "";
+        //    //var senderEmail = _congig["Gmail:fuen28flex@gmail.com"];
+        //    //var password = _congig["Gmail:flexfuen28"];
+
+        //    MailMessage mms = new MailMessage();
+        //    mms.From = new MailAddress(senderEmail);
+        //    mms.To.Add(email);
+        //    mms.Subject = "Flex 註冊驗證信";
+        //    mms.Body = "感謝您註冊成為 Flex 的會員!請點擊連結...來啟用您的帳戶";
+
+        //    //設定郵件主機
+        //    SmtpClient client = new SmtpClient("flex.gmail.com");
+        //    client.Port = 587;
+        //    client.Credentials = new NetworkCredential(senderEmail, password);
+        //    client.EnableSsl = true;
+
+        //    //寄出郵件
+        //    try
+        //    {
+        //        client.Send(mms);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        Console.WriteLine(ex.ToString());
+        //    }
+
+        //}
+
 
         private bool MemberExists(int id)
         {
