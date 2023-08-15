@@ -314,7 +314,9 @@
             </div>
             <div class="form-group">
               <label class="form-label">退貨原因:</label>
-              <input type="text" class="form-control" v-model="returnreason" />
+              <select class="form-control" v-model="returnreason">
+                <option v-for="reason in reReason" :key="reason.id" :value="reason.id">{{ reason.退貨理由 }}</option>
+              </select>
             </div>
           </div>
           <div class="modal-footer">
@@ -374,6 +376,8 @@ const returnaccount = ref("");
 const returnreason = ref("");
 const returnOrderId = ref("");
 const request = ref([]);
+const reReason = ref([]);
+
 
 const loadGetOrders = async () => {
   await axios
@@ -439,6 +443,7 @@ const setcancelreturnIdValue2 = (paramValue) => {
   CancelReturnOrders();
 };
 const Returndetail = async () => {
+  alert(returnreason.value);
   const requestData = {
     退貨轉帳帳號: returnaccount.value,
     退貨理由: returnreason.value,
@@ -447,7 +452,6 @@ const Returndetail = async () => {
     .post(`https://localhost:7183/api/Orders/NewReturn?orderid=${retrunId.value}`, requestData)
     .then((response) => {
       alert("退款資訊已提交");
-      //alert(response.data);
       loadGetOrders();
       returnaccount.value = "";
       returnreason.value = "";
@@ -460,6 +464,30 @@ const setreturndetalValue = (paramValue) => {
   returnOrderId.value = paramValue;
   Returndetail();
 };
+const fetchReturnReasons = async () => {
+  await axios.get('https://localhost:7183/api/Orders/ReturnReasons')
+    .then((response) => {
+      reReason.value = response.data;
+      console.log(reReason.value);
+    }).catch((error) => {
+      alert(error);
+    })
+}
+// const ReturnReason = async () => {
+//   if (this.selectedReason === null) {
+//     alert('请选择退货原因');
+//     return;
+//   }
+//   await axios
+//     .put(`https://localhost:7183/api/Orders/ReturnReason?id=${selectedReason.value}`)
+//     .then((response) => {
+//       alert(response.data);
+//       //loadGetOrders();
+//     })
+//     .catch((error) => {
+//       alert(error);
+//     });
+// };
 const formatOrderTime = (ordertime) => {
   const dateTimeObject = new Date(ordertime);
   const year = dateTimeObject.getFullYear();
@@ -514,6 +542,7 @@ onMounted(() => {
     dateFormat: "Y-m-d",
   });
   loadGetOrders();
+  fetchReturnReasons();
 });
 </script>
 <style scoped>

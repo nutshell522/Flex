@@ -188,11 +188,33 @@ namespace FlexCoreService.Controllers
 
 			return "輸入成功";
 		}
-		//[HttpGet("ReturnReason")]
-		//public async Task<int> ReturnReason()
-		//{
-		
-		//}
+		[HttpGet("ReturnReason")]
+		public async Task<IEnumerable<ReturnReaasonVM>> ReturnReason(int id)
+		{
+			var db = _context;
+			var Reason = db.ReturnResons
+				.AsNoTracking()
+				.Where(x => x.ID == id)
+				.Select(o => new ReturnReaasonVM
+				{
+					ID = o.ID,
+					退貨理由 = o.退貨理由,
+				});
+			return Reason;
+		}
+		[HttpGet("ReturnReasons")] 
+		public async Task<IEnumerable<ReturnReaasonVM>> GetReturnReasons() 
+		{
+			var db = _context;
+			var Reasons = db.ReturnResons
+				.AsNoTracking()
+				.Select(o => new ReturnReaasonVM
+				{
+					ID = o.ID,
+					退貨理由 = o.退貨理由,
+				});
+			return Reasons;
+		}
 	}
 	
 
