@@ -8,24 +8,24 @@
                         <div id="step-1-area">
                             <h2>輸入你的聯絡資訊:</h2>
                             <div class="input-wrapper">
-                                <input type="text" name="contact-name" id="contact-name" placeholder="姓名">
+                                <input type="text" name="ContactInfo.ContactName" id="contact-name" placeholder="姓名">
                                 <span>姓名</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="text" class="readonly" name="postal-code" id="postal-code" placeholder="郵遞區號" readonly>
+                                <input type="text" name="ContactInfo.PostalCode" id="postal-code" placeholder="郵遞區號">
                                 <span>郵遞區號</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="text" class="readonly" name="address" id="address" placeholder="地址" readonly>
+                                <input type="text" name="ContactInfo.Address" id="address" placeholder="地址">
                                 <span>地址</span>
                                 <button type="button">變更地址</button>
                             </div>
                             <div class="input-wrapper">
-                                <input type="email" name="email" id="email" placeholder="電子郵件">
+                                <input type="email" name="ContactInfo.Email" id="email" placeholder="電子郵件">
                                 <span>電子郵件</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="tel" name="phone" id="phone" placeholder="電話號碼">
+                                <input type="tel" name="ContactInfo.Phone" id="phone" placeholder="電話號碼">
                                 <span>電話號碼</span>
                             </div>
                             <button type="button" class="next-step-btn">繼續</button>
@@ -39,19 +39,19 @@
                             </label>
                             <div class="different-address-area">
                                 <div class="input-wrapper">
-                                    <input type="text" name="bill-name" id="bill-name" placeholder="姓名">
+                                    <input type="text" name="BillingAddress.Name" id="bill-name" placeholder="姓名">
                                     <span>姓名</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="text" name="bill-postal-code" id="bill-postal-code" placeholder="郵遞區號">
+                                    <input type="text" name="BillingAddress.PostalCode" id="bill-postal-code" placeholder="郵遞區號">
                                     <span>郵遞區號</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="text" name="bill-address" id="bill-address" placeholder="地址">
+                                    <input type="text" name="BillingAddress.Address" id="bill-address" placeholder="地址">
                                     <span>地址</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="tel" name="bill-phone" id="bill-phone" placeholder="電話號碼">
+                                    <input type="tel" name="BillingAddress.Phone" id="bill-phone" placeholder="電話號碼">
                                     <span>電話號碼</span>
                                 </div>
                             </div>
@@ -72,20 +72,20 @@
                             </div>
                             <h2>詳細付款資訊:</h2>
                             <div class="input-wrapper">
-                                <input type="text" name="card-name" id="card-name" placeholder="Name on card">
+                                <input type="text" name="PaymentInfo.CardName" id="card-name" placeholder="Name on card">
                                 <span>Name on card</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="tel" name="card-number" id="card-number" placeholder="Card Number">
+                                <input type="tel" name="PaymentInfo.CardNumber" id="card-number" placeholder="Card Number">
                                 <span>Card Number</span>
                             </div>
                             <div class="row row-cols-2">
                                 <div class="input-wrapper">
-                                    <input type="text" name="expiration" id="expiration" placeholder="MM/YY">
+                                    <input type="text" name="PaymentInfo.Expiration" id="expiration" placeholder="MM/YY">
                                     <span>MM/YY</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="tel" name="cvv" id="cvv" placeholder="CVV">
+                                    <input type="tel" name="PaymentInfo.CVV" id="cvv" placeholder="CVV">
                                     <span>CVV</span>
                                 </div>
                             </div>
