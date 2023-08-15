@@ -2,6 +2,7 @@
 using FlexCoreService.ActivityCtrl.Models.Dtos;
 using FlexCoreService.ActivityCtrl.Models.VM;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace FlexCoreService.ActivityCtrl.Exts
 {
@@ -17,7 +18,8 @@ namespace FlexCoreService.ActivityCtrl.Exts
                 SpeakerImg = dto.SpeakerImg,
                 FieldName = dto.FieldName,
                 BranchName = dto.BranchName,
-                BranchAddress = dto.BranchAddress
+                BranchAddress = dto.BranchAddress,
+                BranchId = dto.BranchId
             };
         }
 
