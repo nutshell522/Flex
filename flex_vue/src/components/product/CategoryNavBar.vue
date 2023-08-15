@@ -57,7 +57,7 @@ if (route.path.includes("/men")) {
 //取得原始路徑
 const originalPath = localStorage.getItem(localStorageKey);
 
-console.log(originalPath);
+//console.log(originalPath);
 let getCategory = async () => {
   await axios
     .post(`${baseAddress}api/Category${originalPath}`)
