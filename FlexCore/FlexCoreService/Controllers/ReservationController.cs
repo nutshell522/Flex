@@ -67,16 +67,20 @@ namespace FlexCoreService.Controllers
 
         // 琬馨記警告2
 
-        //public async Task AddReservationAsync(AddReservationVM vm)
-        //{
-        //    AddReservationDTO dto = new AddReservationDTO();
-        //    dto.fk_BookerId = vm.fk_BookerId;
-        //    dto.ReservationStartTime = vm.ReservationStartTime;
-        //    dto.ReservationEndTime = vm.ReservationStartTime.AddHours(2);
-        //    dto.fk_ReservationSpeakerId = vm.fk_ReservationSpeakerId;
-        //    dto.fk_BranchId = vm.fk_BranchId;
-        //    dto.fk_ReservationStatusId = 0;
+        [HttpPost("AddReservation")]
+        public async Task<IActionResult> AddReservationAsync(AddReservationVM vm)
+        {
+            AddReservationDTO dto = new AddReservationDTO();
+            dto.fk_BookerId = vm.fk_BookerId;
+            dto.ReservationStartTime = vm.ReservationStartTime;
+            dto.ReservationEndTime = vm.ReservationStartTime.AddHours(2);
+            dto.fk_ReservationSpeakerId = vm.fk_ReservationSpeakerId;
+            dto.fk_BranchId = vm.fk_BranchId;
+            dto.fk_ReservationStatusId = 0;
 
-        //}
+            await _service.AddReservationAsync(dto);
+            return Ok("成功預約!");
+
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FlexCoreService.CustomeShoes.Models.Dtos;
 using FlexCoreService.CustomeShoes.Models.VMs;
 using FlexCoreService.ProductCtrl.Models.Dtos;
+using FlexCoreService.ProductCtrl.Models.VM;
 
 namespace FlexCoreService.CustomeShoes.Exts
 {
@@ -39,6 +40,16 @@ namespace FlexCoreService.CustomeShoes.Exts
                 ShoesSize = dto1.ToList(),
 
             };        
+        }
+
+        public static ShoesImgsVM ToImgVM(this ShoesImgsDto dto)
+        {
+            var vm = new ShoesImgsVM
+            {
+                ShoesPicture_Id = dto.ShoesPicture_Id,
+                ShoesPictureUrl = dto.ShoesPictureUrl,
+            };
+            return vm;
         }
     }
 }
