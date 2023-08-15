@@ -147,7 +147,7 @@ const routes = [
         beforeEnter(to, from, next) {
           // const productStore = useProductRoute();
           // const productName = productStore.productName;
-          document.title = `${webTitle}${to.params.productId}`; //productName
+          document.title = `${webTitle}男裝`; //productName ${to.params.productId}
           next();
         },
       },
@@ -188,7 +188,7 @@ const routes = [
         component: () => import("../views/product/ProductDetail.vue"),
         meta: {},
         beforeEnter(to, from, next) {
-          document.title = `${webTitle}${to.params.productId}`;
+          document.title = `${webTitle}女裝`; //${to.params.productId}
           next();
         },
       },
@@ -229,7 +229,7 @@ const routes = [
         component: () => import("../views/product/ProductDetail.vue"),
         meta: {},
         beforeEnter(to, from, next) {
-          document.title = `${webTitle}${to.params.productId}`;
+          document.title = `${webTitle}童裝`; //${to.params.productId}
           next();
         },
       },
@@ -257,8 +257,8 @@ const routes = [
   },
   {
     //http://loaclhost/CustomeShoes/detail/shoesProductId
-    path: '/CustomeShoes/detail/:shoesProductId',
-    component: () => import('../views/CustomeShoes/ShoesDetail.vue'),
+    path: "/CustomeShoes/detail/:shoesProductId",
+    component: () => import("../views/CustomeShoes/ShoesDetail.vue"),
   },
   {
     //http://loaclhost/CustomeShoes/Contact

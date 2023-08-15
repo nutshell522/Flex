@@ -18,6 +18,7 @@ namespace FlexCoreService.Controllers
 		{
 			_context = context;
 		}
+
 		[HttpGet("GetOrders")]
 		public async Task<IEnumerable<OrdersIndexVM>> GetOrders(string? keyword, int? typeId, DateTime? begintime, DateTime? endtime, int? ostatusId)
 		{
@@ -74,7 +75,7 @@ namespace FlexCoreService.Controllers
 				total_price = p.total_price,
 				fk_typeId = p.fk_typeId,
 				orderItems = (List<OrderItemsVM>)GetOrderItemsIndex(p.Id)
-			});
+			}).ToList();
 		}
 		private static IEnumerable<OrderItemsVM> GetOrderItemsIndex(int orderId)
 		{

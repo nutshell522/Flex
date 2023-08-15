@@ -123,16 +123,16 @@
 </template>
 
 <script setup>
-import axios from 'axios';
-import navBar from '@/components/home/navBar.vue';
-import { ref } from 'vue';
-import { onMounted } from 'vue';
-import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
+import axios from "axios";
+import navBar from "@/components/home/navBar.vue";
+import { ref } from "vue";
+import { onMounted } from "vue";
+import forgetPwdAndSetPwd from "@/components/user/forgetPwdAndSetPwd.vue";
 
 //pinia
-import { useRouter } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
 
 axios.defaults.withCredentials = true;
 
@@ -145,7 +145,7 @@ const loggedInUser = ref(null);
 
 onMounted(() => {
   //檢查本地儲存是否有登錄信息
-  const storedUser = localStorage.getItem('loggedInUser');
+  const storedUser = localStorage.getItem("loggedInUser");
   //console.log(storedUser);
 
   if (storedUser) {
@@ -153,8 +153,8 @@ onMounted(() => {
     // 同步到 pinia store
     getApiStore.setMemberUsername(loggedInUser.value.username);
     getApiStore.setMemberUsername(loggedInUser.value.memberId);
-    console.log('onMountedusername', loggedInUser.value.username);
-    console.log('onMountedmemberId', loggedInUser.value.memberId);
+    console.log("onMountedusername", loggedInUser.value.username);
+    console.log("onMountedmemberId", loggedInUser.value.memberId);
     setLoginSuccess(true);
   }
 });
@@ -174,26 +174,26 @@ const forgetPwd = ref(false);
 const unRegistered = ref(false);
 
 //登入表單
-const account = ref('');
-const password = ref('');
+const account = ref("");
+const password = ref("");
 
 //註冊表單
-const email = ref('');
-const birthday = ref('');
-const mobile = ref('');
-const name = ref('');
+const email = ref("");
+const birthday = ref("");
+const mobile = ref("");
+const name = ref("");
 //--一般會員
 
-const baseAddress = 'https://localhost:7183';
+const baseAddress = "https://localhost:7183";
 const uri = `${baseAddress}/api/Users/Login`;
 var loginData = {}; //儲存傳給後端的登入資料
 
 function ValidatedIdentity() {
   //alert('loginAndRegister');
   //未填寫
-  if (account.value === '') {
+  if (account.value === "") {
     errors.value = [];
-    errors.value.push('沒有填誰知道你是誰');
+    errors.value.push("沒有填誰知道你是誰");
   } else {
     //已填寫
     errors.value = [];
@@ -222,7 +222,7 @@ function ValidatedIdentity() {
           logAndRegBtn.value = false;
 
           errors.value = [];
-          errors.value.push('484沒有註冊');
+          errors.value.push("484沒有註冊");
           validated.value = true;
           unValidated.value = true; //信箱
           birInput.value = true;
@@ -235,7 +235,7 @@ function ValidatedIdentity() {
         }
       })
       .catch((err) => {
-        alert('API請求失敗：' + err.message);
+        alert("API請求失敗：" + err.message);
       });
   }
 }
@@ -247,9 +247,9 @@ function Login() {
   //console.log(loginData);
 
   //未填寫密碼
-  if (password.value === '') {
+  if (password.value === "") {
     errors.value = [];
-    errors.value.push('密碼沒有填想怎樣');
+    errors.value.push("密碼沒有填想怎樣");
     return;
   }
 
@@ -258,7 +258,7 @@ function Login() {
     .then((res) => {
       const jsonData = res.data;
       const userPassword = jsonData.find(
-        (claim) => claim.Type === 'UserPassword'
+        (claim) => claim.Type === "UserPassword"
       );
       //console.log(userPassword.Value);
 
@@ -267,8 +267,8 @@ function Login() {
         errors.value = [];
 
         //取得登入者資料
-        const userName = jsonData.find((claim) => claim.Type === 'FullName');
-        const userId = jsonData.find((claim) => claim.Type === 'MemberId');
+        const userName = jsonData.find((claim) => claim.Type === "FullName");
+        const userId = jsonData.find((claim) => claim.Type === "MemberId");
 
         //登入者資料包成物件
         const memberInfo = {
@@ -282,7 +282,7 @@ function Login() {
         }
         //alert('登入成功啦港動~~~');
         handleSuccessfulLogin(memberInfo);
-        router.replace({ path: '/' });
+        router.replace({ path: "/" });
       }
     })
     .catch((err) => {
@@ -296,7 +296,7 @@ function Login() {
 
 function handleSuccessfulLogin(memberInfo) {
   // 將用戶信息轉成字串儲存到本地存儲中
-  localStorage.setItem('loggedInUser', JSON.stringify(memberInfo));
+  localStorage.setItem("loggedInUser", JSON.stringify(memberInfo));
 
   // 同步用戶信息到 pinia store
   loggedInUser.value = memberInfo;
@@ -309,9 +309,9 @@ var registerData = {};
 function register() {
   //alert('register');
   //todo檢查信箱格式
-  if (email.value === '') {
+  if (email.value === "") {
     errors.value = [];
-    errors.value.push('給我確實填寫喔');
+    errors.value.push("給我確實填寫喔");
   } else {
     //格式驗證通過
     errors.value = [];
@@ -339,7 +339,7 @@ function forgetPwdClick() {
 }
 </script>
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap");
 .loginBox {
   width: 23%;
   justify-content: center;
@@ -352,7 +352,7 @@ function forgetPwdClick() {
   justify-content: center;
 }
 .loginText > h4 {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: "Bebas Neue", sans-serif;
   font-weight: bold;
   font-size: 40px;
 }
@@ -389,7 +389,7 @@ p {
 
 p::before,
 p::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   width: 150px; /* 調整線段的長度 */
