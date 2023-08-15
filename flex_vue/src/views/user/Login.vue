@@ -5,7 +5,7 @@
       <h4>Flex Your Journey. Join us!</h4>
     </div>
     <div class="from-group" v-if="errors.length">
-      <ul class="mb-3 errsText">
+      <ul class="mb-3 errorsText">
         <span v-for="error in errors" class="text-danger">{{ error }}</span>
       </ul>
     </div>
@@ -119,14 +119,16 @@
     </div>
   </div>
 
-  <forgetPwdAndSetPwd v-if="forgetPwdSetPwd"></forgetPwdAndSetPwd>
+  <forgetPwdAndSetPwd
+    v-if="forgetPwdSetPwd"
+    :email="email"
+  ></forgetPwdAndSetPwd>
 </template>
 
 <script setup>
 import axios from 'axios';
 import navBar from '@/components/home/navBar.vue';
-import { ref } from 'vue';
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
 
 //pinia
@@ -141,12 +143,13 @@ const { setMemberUsername } = getApiStore;
 const { setLoginSuccess } = getApiStore;
 const router = useRouter();
 
+const userAcc = ref(null);
 const loggedInUser = ref(null);
 
 onMounted(() => {
   //檢查本地儲存是否有登錄信息
   const storedUser = localStorage.getItem('loggedInUser');
-  //console.log(storedUser);
+  //console.log('storedUser', storedUser);
 
   if (storedUser) {
     loggedInUser.value = JSON.parse(storedUser);
@@ -184,16 +187,20 @@ const mobile = ref('');
 const name = ref('');
 //--一般會員
 
-const baseAddress = 'https://localhost:7183';
-const uri = `${baseAddress}/api/Users/Login`;
+const baseAddress = 'https://localhost:7183/api';
+const uri = `${baseAddress}/Users/Login`;
 var loginData = {}; //儲存傳給後端的登入資料
 
 function ValidatedIdentity() {
+  //存入帳號
+  localStorage.setItem('userAcc', account.value);
+
+  //載入開始
   //alert('loginAndRegister');
   //未填寫
   if (account.value === '') {
     errors.value = [];
-    errors.value.push('沒有填誰知道你是誰');
+    errors.value.push('沒有填誰知道你是誰'); //結束載入
   } else {
     //已填寫
     errors.value = [];
@@ -203,6 +210,7 @@ function ValidatedIdentity() {
     axios
       .post(uri, loginData)
       .then((res) => {
+        //結束載入
         userData.value = res.data;
         //console.log('帳號' + userData.value); //後端return的訊息
 
@@ -235,6 +243,7 @@ function ValidatedIdentity() {
         }
       })
       .catch((err) => {
+        //結束載入
         alert('API請求失敗：' + err.message);
       });
   }
@@ -303,7 +312,7 @@ function handleSuccessfulLogin(memberInfo) {
   //console.log(loggedInUser.value);
 }
 
-const regUri = `${baseAddress}/api/Users/Register`;
+const regUri = `${baseAddress}/Users/Register`;
 var registerData = {};
 
 function register() {
@@ -334,8 +343,27 @@ function register() {
   }
 }
 
+const forgetPwdSetPwd = ref(false);
+userAcc.value = localStorage.getItem('userAcc');
+//console.log('userAcc', userAcc.value);
+
 function forgetPwdClick() {
   forgetPwdSetPwd.value = true;
+  //呼叫api取得信箱
+  if (userAcc.value) {
+    const forgetUri = `${baseAddress}/Users/account/` + userAcc.value;
+    console.log(forgetUri);
+    // 呼叫 API 取得信箱
+    axios
+      .get(forgetUri)
+      .then((res) => {
+        email.value = res.data; // 回傳信箱
+        //console.log('Email:', email.value);
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
+  }
 }
 </script>
 <style scoped>
@@ -356,7 +384,7 @@ function forgetPwdClick() {
   font-weight: bold;
   font-size: 40px;
 }
-.errsText {
+.errorsText {
   display: flex;
   justify-content: center;
   padding: 0px;

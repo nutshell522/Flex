@@ -28,20 +28,34 @@ namespace FlexCoreService.Controllers
         }
 
         /// <summary>
-        /// 取得會員資料
+        /// 取得會員信箱
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
+        [HttpGet("account/{account}")]
+        public async Task<ActionResult<string>> GetUserEmail(string account)
+        {
+            //檢查帳號是否存在
+            Member member = await _db.Members.FirstOrDefaultAsync(x => x.Account == account);
+
+            if (_db.Members == null)
+            {
+                return NotFound();
+            }
+
+            string userEmail = member.Email; 
+            return Ok(userEmail); 
+        }
+
+        /// <summary>
+            /// 取得會員資料
+            /// </summary>
+            /// <param name="account"></param>
+            /// <returns></returns>
         [HttpGet("{memberId}")]
         [Authorize]
         public async Task<ProfileDto> GetUserProfil(int memberId)
-        {
-            //StringBuilder sb = new StringBuilder();
-            //sb.AppendLine("<ul>");
-            //foreach (Claim claim in HttpContext.User.Claims)
-            //{
-            //    sb.AppendLine($@"<li> claim.Type:{claim.Type} , claim.Value:{claim.Value}</li>");
-            //}
+        {            
             ClaimsPrincipal user = HttpContext.User;
 
             if (_db.Members == null)
@@ -150,7 +164,6 @@ namespace FlexCoreService.Controllers
             return "未登入";
         }
 
-
         /// <summary>
         /// 註冊
         /// </summary>
@@ -187,7 +200,7 @@ namespace FlexCoreService.Controllers
         public async Task<ActionResult<string>> EditUserProfile(int id, ProfileDto prodto)
         {
             
-            //檢查帳號是否存在
+            //檢查id是否存在
             Member member = await _db.Members.FindAsync(id); //FindAsync 根據主键查找對應的紀錄
 
             if (member == null)
@@ -202,14 +215,16 @@ namespace FlexCoreService.Controllers
             member.CommonAddress = prodto.CommonAddress;
             member.IsSubscribeNews = prodto.IsSubscribeNews;
 
-            // 更新 AlternateAddress 資料
+            //AlternateAddress 
             if (member.AlternateAddress == null)
             {
                 member.AlternateAddress = new AlternateAddress(); // 建立新的 AlternateAddress 物件
             }
 
-            member.AlternateAddress.AlternateAddress1 = prodto.AlternateAddress1;
-            member.AlternateAddress.AlternateAddress2 = prodto.AlternateAddress2;
+
+            AlternateAddress address = await _db.AlternateAddresses.FirstOrDefaultAsync(x => x.fk_MemberId == id);
+            address.AlternateAddress1 = prodto.AlternateAddress1;
+            address.AlternateAddress2 = prodto.AlternateAddress2;
 
             try
             {
