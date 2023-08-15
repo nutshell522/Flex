@@ -21,9 +21,10 @@
           <!-- 預約系統 -->
           <p>預約時間表</p>
           <div id="datePicker">
-              <button id="prevButton">前一周</button>
+         
+              <button id="prevButton"><font-awesome-icon icon="fa-solid fa-angles-left" beat-fade /></button>
               <span id="currentDate"></span>
-              <button id="nextButton">後一周</button>
+              <button id="nextButton"><font-awesome-icon icon="fa-solid fa-angles-right" beat-fade /></button>
           </div>
           <div id="schedule">
 
@@ -45,6 +46,13 @@
 import {onMounted, reactive, ref} from 'vue';
 import axios from 'axios';
 import {useRoute} from 'vue-router';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+library.add(fas)
+
+
+
 
 
 const route=useRoute();
@@ -161,6 +169,7 @@ onMounted(()=>{
       }
 
       function createSchedule() {
+
           schedule.innerHTML = "";
 
           const table = document.createElement("table");
@@ -191,6 +200,7 @@ onMounted(()=>{
               const timeCell = document.createElement("td");
               timeCell.textContent = timeSlot;
               row.appendChild(timeCell);
+              
 
               for (let i = 0; i < 7; i++) {
                   const cell = document.createElement("td");
@@ -204,17 +214,14 @@ onMounted(()=>{
                   for (let i=0; i <newDateResult.length; i++){
 
                       if (cell.dataset.date == newDateResult[i] && cell.dataset.time == newTimeResult[i]){
-                          cell.classList.add("unable");
-                          
+                          cell.classList.add("unable");                        
                       }
                       else{
-                          cell.addEventListener("click", handleCellClick); 
-                                                                   
+                          cell.addEventListener("click", handleCellClick);                                                                         
                       }
                           row.appendChild(cell);
                   }
-                 
-                 
+                                  
               }
 
               table.appendChild(row);
@@ -248,11 +255,14 @@ onMounted(()=>{
                     })
                     .then(res=>{
                       console.log(res.data);
+                    
                     })
                     .catch(err=>{
                       console.log(err);
                      
                     })
+                  
+                 
           }
       }
 
@@ -271,12 +281,8 @@ onMounted(()=>{
       function updateCalendar() {
           showCurrentDate();
           createSchedule();
+          
       }
-
-      
-
-
-      
 
 
 })
@@ -314,6 +320,10 @@ onMounted(()=>{
       .unable{
           background-color: rosybrown;
           pointer-events: none;
+      }
+
+      #currentDate{
+        margin: 15px;
       }
 
 </style>
