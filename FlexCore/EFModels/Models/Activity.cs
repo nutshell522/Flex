@@ -2,6 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -12,23 +15,39 @@ namespace EFModels.Models
             ActivityImgs = new HashSet<ActivityImg>();
         }
 
+        [Key]
         public int ActivityId { get; set; }
+        [Required]
+        [StringLength(50)]
         public string ActivityName { get; set; }
         public int fk_ActivityCategoryId { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime ActivityDate { get; set; }
         public int fk_SpeakerId { get; set; }
+        [Required]
+        [StringLength(100)]
         public string ActivityPlace { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime ActivityBookStartTime { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime ActivityBookEndTime { get; set; }
         public byte ActivityAge { get; set; }
         public int ActivitySalePrice { get; set; }
         public int ActivityOriginalPrice { get; set; }
+        [StringLength(300)]
         public string ActivityDescription { get; set; }
         public int fk_ActivityStatusId { get; set; }
 
+        [ForeignKey("fk_ActivityCategoryId")]
+        [InverseProperty("Activities")]
         public virtual ActivityCategory fk_ActivityCategory { get; set; }
+        [ForeignKey("fk_ActivityStatusId")]
+        [InverseProperty("Activities")]
         public virtual ActivityStatus fk_ActivityStatus { get; set; }
+        [ForeignKey("fk_SpeakerId")]
+        [InverseProperty("Activities")]
         public virtual Speaker fk_Speaker { get; set; }
+        [InverseProperty("fk_Activity")]
         public virtual ICollection<ActivityImg> ActivityImgs { get; set; }
     }
 }

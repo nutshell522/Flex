@@ -92,22 +92,6 @@ namespace EFModels.Models
         {
             modelBuilder.Entity<Activity>(entity =>
             {
-                entity.Property(e => e.ActivityBookEndTime).HasColumnType("datetime");
-
-                entity.Property(e => e.ActivityBookStartTime).HasColumnType("datetime");
-
-                entity.Property(e => e.ActivityDate).HasColumnType("datetime");
-
-                entity.Property(e => e.ActivityDescription).HasMaxLength(300);
-
-                entity.Property(e => e.ActivityName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.ActivityPlace)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
                 entity.Property(e => e.fk_ActivityStatusId).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.fk_ActivityCategory)
@@ -129,21 +113,8 @@ namespace EFModels.Models
                     .HasConstraintName("FK__Activitie__fk_Sp__3F115E1A");
             });
 
-            modelBuilder.Entity<ActivityCategory>(entity =>
-            {
-                entity.Property(e => e.ActivityCategoryName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-            });
-
             modelBuilder.Entity<ActivityImg>(entity =>
             {
-                entity.ToTable("ActivityImg");
-
-                entity.Property(e => e.ImgPath)
-                    .IsRequired()
-                    .HasMaxLength(300);
-
                 entity.HasOne(d => d.fk_Activity)
                     .WithMany(p => p.ActivityImgs)
                     .HasForeignKey(d => d.fk_ActivityId)
@@ -151,25 +122,10 @@ namespace EFModels.Models
                     .HasConstraintName("FK__ActivityI__fk_Ac__4F47C5E3");
             });
 
-            modelBuilder.Entity<ActivityStatus>(entity =>
-            {
-                entity.HasIndex(e => e.ActivityStatusDescription, "UQ__Activity__732635EC111BBE49")
-                    .IsUnique();
-
-                entity.Property(e => e.ActivityStatusDescription).HasMaxLength(50);
-            });
-
             modelBuilder.Entity<AlternateAddress>(entity =>
             {
                 entity.HasKey(e => e.AddressId)
-                    .HasName("PK__Alternat__091C2AFB733EDA27");
-
-                entity.HasIndex(e => e.fk_MemberId, "UQ__Alternat__3B54230CF1D83EDC")
-                    .IsUnique();
-
-                entity.Property(e => e.AlternateAddress1).HasMaxLength(300);
-
-                entity.Property(e => e.AlternateAddress2).HasMaxLength(300);
+                    .HasName("PK__Alternat__091C2AFBD3B2ED1E");
 
                 entity.HasOne(d => d.fk_Member)
                     .WithOne(p => p.AlternateAddress)
@@ -179,43 +135,14 @@ namespace EFModels.Models
 
             modelBuilder.Entity<BlackList>(entity =>
             {
-                entity.Property(e => e.Behavior)
-                    .IsRequired()
-                    .HasMaxLength(30);
-
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-            });
-
-            modelBuilder.Entity<Branch>(entity =>
-            {
-                entity.HasIndex(e => e.BranchName, "UQ__Branches__3903DB03C031A7E9")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.BranchAddress, "UQ__Branches__F50DE17A28D21082")
-                    .IsUnique();
-
-                entity.Property(e => e.BranchAddress)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.BranchName)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
             });
 
             modelBuilder.Entity<CartItem>(entity =>
             {
-                entity.Property(e => e.CartItemId).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasMaxLength(700);
-
-                entity.HasOne(d => d.CartItemNavigation)
-                    .WithOne(p => p.CartItem)
-                    .HasForeignKey<CartItem>(d => d.CartItemId)
+                entity.HasOne(d => d.fk_Card)
+                    .WithMany(p => p.CartItems)
+                    .HasForeignKey(d => d.fk_CardId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CartItem_CartItem");
 
@@ -230,26 +157,10 @@ namespace EFModels.Models
             {
                 entity.HasKey(e => e.ColorId)
                     .HasName("PK_ColorCategory");
-
-                entity.Property(e => e.ColorName)
-                    .IsRequired()
-                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<Coupon>(entity =>
             {
-                entity.Property(e => e.CouponCode).HasMaxLength(50);
-
-                entity.Property(e => e.CouponDescription).HasMaxLength(100);
-
-                entity.Property(e => e.CouponName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
-
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
-
                 entity.Property(e => e.Status).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.fk_CouponCategory)
@@ -267,20 +178,12 @@ namespace EFModels.Models
             modelBuilder.Entity<CouponCategory>(entity =>
             {
                 entity.Property(e => e.CouponCategoryId).ValueGeneratedNever();
-
-                entity.Property(e => e.CouponCategoryName)
-                    .IsRequired()
-                    .HasMaxLength(20);
             });
 
             modelBuilder.Entity<CouponSending>(entity =>
             {
                 entity.HasKey(e => e.SendingId)
                     .HasName("PK_CouponSending");
-
-                entity.Property(e => e.RedeemedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.SentDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.fk_Coupon)
                     .WithMany(p => p.CouponSendings)
@@ -296,18 +199,7 @@ namespace EFModels.Models
             modelBuilder.Entity<CustomizedOrder>(entity =>
             {
                 entity.HasKey(e => e.Customized_Id)
-                    .HasName("PK__Customiz__AFADABDD61BD39C2");
-
-                entity.Property(e => e.Customized_number)
-                    .IsRequired()
-                    .HasMaxLength(6000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.OrderCreateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.OrderEditTime).HasColumnType("datetime");
-
-                entity.Property(e => e.Remark).HasMaxLength(254);
+                    .HasName("PK__Customiz__AFADABDDC2C98250");
 
                 entity.HasOne(d => d.Customized_EdgeProtectionNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_EdgeProtectionNavigations)
@@ -350,31 +242,11 @@ namespace EFModels.Models
                 entity.HasKey(e => e.ShoesProductId)
                     .HasName("PK__Customiz__D7D2FD91792B994F");
 
-                entity.ToTable("CustomizedShoesPo");
+                entity.Property(e => e.DataCreateTime).HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.DataCreateTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.DataEditTime).HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.DataEditTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.EndTime).HasColumnType("datetime");
-
-                entity.Property(e => e.ShoesDescription).HasMaxLength(254);
-
-                entity.Property(e => e.ShoesName)
-                    .IsRequired()
-                    .HasMaxLength(254);
-
-                entity.Property(e => e.ShoesOrigin).HasMaxLength(50);
-
-                entity.Property(e => e.StartTime).HasColumnType("datetime");
-
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasDefaultValueSql("('false')");
+                entity.Property(e => e.Status).HasDefaultValueSql("('false')");
 
                 entity.HasOne(d => d.fk_ShoesCategory)
                     .WithMany(p => p.CustomizedShoesPos)
@@ -390,30 +262,11 @@ namespace EFModels.Models
             modelBuilder.Entity<Customized_material>(entity =>
             {
                 entity.HasKey(e => e.Shoesmaterial_Id)
-                    .HasName("PK__Customiz__06EFE12DCBE6C80D");
-
-                entity.Property(e => e.material_Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<Department>(entity =>
-            {
-                entity.Property(e => e.DepartmentName).HasMaxLength(50);
+                    .HasName("PK__Customiz__06EFE12D27ABA59E");
             });
 
             modelBuilder.Entity<Discount>(entity =>
             {
-                entity.Property(e => e.DiscountDescription).HasMaxLength(100);
-
-                entity.Property(e => e.DiscountName)
-                    .IsRequired()
-                    .HasMaxLength(20);
-
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
-
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
-
                 entity.Property(e => e.Status).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.fk_ProjectTag)
@@ -427,58 +280,11 @@ namespace EFModels.Models
             {
                 entity.HasKey(e => e.TitleId)
                     .HasName("PK__JobTitle__75758986DFA010AD");
-
-                entity.HasIndex(e => e.TitleName, "UQ__JobTitle__252BE89C516695E0")
-                    .IsUnique();
-
-                entity.Property(e => e.TitleName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Member>(entity =>
             {
-                entity.HasIndex(e => e.Mobile, "UQ__Members__6FAE0782E1A56EB7")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.Email, "UQ__Members__A9D1053442354E1D")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.Account, "UQ__Members__B0C3AC46ED2152FF")
-                    .IsUnique();
-
-                entity.Property(e => e.Account)
-                    .IsRequired()
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Birthday).HasColumnType("date");
-
-                entity.Property(e => e.CommonAddress).HasMaxLength(100);
-
-                entity.Property(e => e.ConfirmCode)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(300);
-
-                entity.Property(e => e.EncryptedPassword)
-                    .IsRequired()
-                    .HasMaxLength(70)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Mobile)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(30);
-
-                entity.Property(e => e.Registration)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.Registration).HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.fk_BlackList)
                     .WithMany(p => p.Members)
@@ -497,9 +303,6 @@ namespace EFModels.Models
                 entity.HasKey(e => e.MemberPointsId)
                     .HasName("PK__MemberPo__8D672C97D8EFE351");
 
-                entity.HasIndex(e => e.fk_MemberId, "UQ__MemberPo__3B54230C8C81DA21")
-                    .IsUnique();
-
                 entity.HasOne(d => d.fk_Member)
                     .WithOne(p => p.MemberPoint)
                     .HasForeignKey<MemberPoint>(d => d.fk_MemberId)
@@ -512,17 +315,6 @@ namespace EFModels.Models
                 entity.HasKey(e => e.LevelId)
                     .HasName("PK__Membersh__09F03C26F7CA5148");
 
-                entity.Property(e => e.Description).HasMaxLength(300);
-
-                entity.Property(e => e.LevelName)
-                    .IsRequired()
-                    .HasMaxLength(10);
-
-                entity.Property(e => e.MinSpending)
-                    .IsRequired()
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
                 entity.HasMany(d => d.fk_Privileges)
                     .WithMany(p => p.fk_Levels)
                     .UsingEntity<Dictionary<string, object>>(
@@ -531,7 +323,7 @@ namespace EFModels.Models
                         r => r.HasOne<MembershipLevel>().WithMany().HasForeignKey("fk_LevelId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Membershi__fk_Le__01D345B0"),
                         j =>
                         {
-                            j.HasKey("fk_LevelId", "fk_PrivilegeId").HasName("PK__Membersh__580C8EAAEC8146BF");
+                            j.HasKey("fk_LevelId", "fk_PrivilegeId").HasName("PK__Membersh__580C8EAA6AE32338");
 
                             j.ToTable("MembershipLevelPrivileges");
                         });
@@ -540,15 +332,9 @@ namespace EFModels.Models
             modelBuilder.Entity<OneToOneReservation>(entity =>
             {
                 entity.HasKey(e => e.ReservationId)
-                    .HasName("PK__OneToOne__B7EE5F2488C19DA1");
+                    .HasName("PK__OneToOne__B7EE5F24C5E3DB1B");
 
-                entity.Property(e => e.ReservationCreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.ReservationEndTime).HasColumnType("datetime");
-
-                entity.Property(e => e.ReservationStartTime).HasColumnType("datetime");
+                entity.Property(e => e.ReservationCreatedDate).HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.fk_Booker)
                     .WithMany(p => p.OneToOneReservations)
@@ -577,9 +363,7 @@ namespace EFModels.Models
 
             modelBuilder.Entity<PointHistory>(entity =>
             {
-                entity.Property(e => e.EffectiveDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.EffectiveDate).HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.fk_Member)
                     .WithMany(p => p.PointHistories)
@@ -604,10 +388,6 @@ namespace EFModels.Models
 
             modelBuilder.Entity<PointManage>(entity =>
             {
-                entity.ToTable("PointManage");
-
-                entity.Property(e => e.PointExpirationDate).HasColumnType("datetime");
-
                 entity.HasOne(d => d.fk_Type)
                     .WithMany(p => p.PointManages)
                     .HasForeignKey(d => d.fk_TypeId)
@@ -617,25 +397,7 @@ namespace EFModels.Models
 
             modelBuilder.Entity<PointTradeIn>(entity =>
             {
-                entity.ToTable("PointTradeIn");
-
-                entity.Property(e => e.EffectiveDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.ExpirationDate).HasColumnType("datetime");
-
-                entity.Property(e => e.GetPoints)
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.GiftThreshold)
-                    .IsRequired()
-                    .HasMaxLength(30);
-
-                entity.Property(e => e.MaxGetPoints)
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
+                entity.Property(e => e.EffectiveDate).HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.fk_Member)
                     .WithMany(p => p.PointTradeIns)
@@ -649,51 +411,15 @@ namespace EFModels.Models
                     .HasConstraintName("FK_PointTradeIn_orders");
             });
 
-            modelBuilder.Entity<Privilege>(entity =>
-            {
-                entity.Property(e => e.Description).HasMaxLength(300);
-
-                entity.Property(e => e.PrivilegeName)
-                    .IsRequired()
-                    .HasMaxLength(30);
-            });
-
             modelBuilder.Entity<Product>(entity =>
             {
-                entity.Property(e => e.ProductId)
-                    .HasMaxLength(254)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("('unique')");
+                entity.Property(e => e.ProductId).HasDefaultValueSql("('unique')");
 
-                entity.Property(e => e.CreateTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.CreateTime).HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.EditTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.EditTime).HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.EndTime).HasColumnType("datetime");
-
-                entity.Property(e => e.ProductDescription).IsRequired();
-
-                entity.Property(e => e.ProductMaterial).HasMaxLength(50);
-
-                entity.Property(e => e.ProductName)
-                    .IsRequired()
-                    .HasMaxLength(254);
-
-                entity.Property(e => e.ProductOrigin)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.StartTime).HasColumnType("datetime");
-
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasDefaultValueSql("('false')");
-
-                entity.Property(e => e.Tag).HasMaxLength(100);
+                entity.Property(e => e.Status).HasDefaultValueSql("('false')");
 
                 entity.HasOne(d => d.fk_ProductSubCategory)
                     .WithMany(p => p.Products)
@@ -704,14 +430,6 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ProductCategory>(entity =>
             {
-                entity.Property(e => e.CategoryPath)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.ProductCategoryName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
                 entity.HasOne(d => d.fk_SalesCategory)
                     .WithMany(p => p.ProductCategories)
                     .HasForeignKey(d => d.fk_SalesCategoryId)
@@ -721,17 +439,7 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ProductComment>(entity =>
             {
-                entity.HasNoKey();
-
-                entity.ToTable("ProductComment");
-
-                entity.Property(e => e.CreateTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasMaxLength(1000);
+                entity.Property(e => e.CreateTime).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
@@ -750,11 +458,6 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ProductGroup>(entity =>
             {
-                entity.Property(e => e.fk_ProductId)
-                    .IsRequired()
-                    .HasMaxLength(254)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.fk_Color)
                     .WithMany(p => p.ProductGroups)
                     .HasForeignKey(d => d.fk_ColorId)
@@ -776,15 +479,6 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ProductImg>(entity =>
             {
-                entity.Property(e => e.ImgPath)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.fk_ProductId)
-                    .IsRequired()
-                    .HasMaxLength(254)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.fk_Color)
                     .WithMany(p => p.ProductImgs)
                     .HasForeignKey(d => d.fk_ColorId)
@@ -799,14 +493,6 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ProductSubCategory>(entity =>
             {
-                entity.Property(e => e.ProductSubCategoryName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.SubCategoryPath)
-                    .IsRequired()
-                    .HasMaxLength(150);
-
                 entity.HasOne(d => d.fk_ProductCategory)
                     .WithMany(p => p.ProductSubCategories)
                     .HasForeignKey(d => d.fk_ProductCategoryId)
@@ -816,17 +502,7 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ProjectTag>(entity =>
             {
-                entity.Property(e => e.CreateAt).HasColumnType("datetime");
-
-                entity.Property(e => e.ModifiedAt).HasColumnType("datetime");
-
-                entity.Property(e => e.ProjectTagName)
-                    .IsRequired()
-                    .HasMaxLength(30);
-
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
+                entity.Property(e => e.Status).HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<ProjectTagItem>(entity =>
@@ -834,45 +510,23 @@ namespace EFModels.Models
                 entity.HasKey(e => new { e.fk_ProjectTagId, e.fk_ProductId })
                     .HasName("PK_discount_group_item");
 
-                entity.Property(e => e.fk_ProductId)
-                    .HasMaxLength(254)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.fk_Product)
                     .WithMany(p => p.ProjectTagItems)
                     .HasForeignKey(d => d.fk_ProductId)
                     .HasConstraintName("FK_discount_group_item_discount_group");
             });
 
-            modelBuilder.Entity<ReservationImg>(entity =>
-            {
-                entity.ToTable("ReservationImg");
-
-                entity.Property(e => e.ImgPath)
-                    .IsRequired()
-                    .HasMaxLength(300);
-            });
-
             modelBuilder.Entity<ReservationStatus>(entity =>
             {
                 entity.HasKey(e => e.ReservationId)
-                    .HasName("PK__Reservat__B7EE5F24C3452E4E");
-
-                entity.HasIndex(e => e.ReservationStatusDescription, "UQ__Reservat__ADF40EA6B047BBA1")
-                    .IsUnique();
+                    .HasName("PK__Reservat__B7EE5F24D6F7E297");
 
                 entity.Property(e => e.ReservationId).ValueGeneratedNever();
-
-                entity.Property(e => e.ReservationStatusDescription)
-                    .IsRequired()
-                    .HasMaxLength(10);
             });
 
             modelBuilder.Entity<Return>(entity =>
             {
-                //entity.Property(e => e.ID).ValueGeneratedNever();
-
-                entity.Property(e => e.退貨日期).HasColumnType("datetime");
+                entity.Property(e => e.ID).ValueGeneratedNever();
 
                 entity.HasOne(d => d.fk訂單Navigation)
                     .WithMany(p => p.Returns)
@@ -889,44 +543,13 @@ namespace EFModels.Models
             {
                 entity.Property(e => e.ID).ValueGeneratedNever();
 
-                entity.Property(e => e.退貨理由)
-                    .HasMaxLength(20)
-                    .IsFixedLength();
-            });
-
-            modelBuilder.Entity<SalesCategory>(entity =>
-            {
-                entity.Property(e => e.SalesCategoryName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<ShoesCategory>(entity =>
-            {
-                entity.Property(e => e.ShoesCategoryName)
-                    .IsRequired()
-                    .HasMaxLength(254);
-            });
-
-            modelBuilder.Entity<ShoesChoose>(entity =>
-            {
-                entity.HasKey(e => e.OptionId);
-
-                entity.Property(e => e.OptinName)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.退貨理由).IsFixedLength();
             });
 
             modelBuilder.Entity<ShoesColorCategory>(entity =>
             {
                 entity.HasKey(e => e.ShoesColorId)
-                    .HasName("PK__ShoesCol__BB1469D4DC113ADB");
-
-                entity.Property(e => e.ColorCode).HasMaxLength(100);
-
-                entity.Property(e => e.ColorName)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                    .HasName("PK__ShoesCol__BB1469D4F8D858C7");
             });
 
             modelBuilder.Entity<ShoesGroup>(entity =>
@@ -964,8 +587,6 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ShoesOrder>(entity =>
             {
-                entity.Property(e => e.Remark).HasMaxLength(300);
-
                 entity.HasOne(d => d.fk_ShoesSize)
                     .WithMany(p => p.ShoesOrders)
                     .HasForeignKey(d => d.fk_ShoesSizeId)
@@ -976,9 +597,7 @@ namespace EFModels.Models
             modelBuilder.Entity<ShoesPicture>(entity =>
             {
                 entity.HasKey(e => e.ShoesPicture_Id)
-                    .HasName("PK__ShoesPic__DF35EBA4F9F09421");
-
-                entity.Property(e => e.ShoesPictureUrl).HasMaxLength(4000);
+                    .HasName("PK__ShoesPic__DF35EBA49163BC9B");
 
                 entity.HasOne(d => d.fk_ShoesPictureProduct)
                     .WithMany(p => p.ShoesPictures)
@@ -989,11 +608,7 @@ namespace EFModels.Models
             modelBuilder.Entity<ShoesSize>(entity =>
             {
                 entity.HasKey(e => e.SizeId)
-                    .HasName("PK__ShoesSiz__83BD097A5F357B23");
-
-                entity.Property(e => e.SizeName)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                    .HasName("PK__ShoesSiz__83BD097A090A5366");
             });
 
             modelBuilder.Entity<ShoppingCart>(entity =>
@@ -1007,31 +622,8 @@ namespace EFModels.Models
                     .HasConstraintName("FK_ShoppingCarts_Members");
             });
 
-            modelBuilder.Entity<SizeCategory>(entity =>
-            {
-                entity.HasKey(e => e.SizeId);
-
-                entity.Property(e => e.SizeName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-            });
-
             modelBuilder.Entity<Speaker>(entity =>
             {
-                entity.Property(e => e.SpeakerDescription).HasMaxLength(500);
-
-                entity.Property(e => e.SpeakerImg)
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SpeakerName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.SpeakerPhone)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.fk_SpeakerBranch)
                     .WithMany(p => p.Speakers)
                     .HasForeignKey(d => d.fk_SpeakerBranchId)
@@ -1047,46 +639,12 @@ namespace EFModels.Models
             modelBuilder.Entity<SpeakerField>(entity =>
             {
                 entity.HasKey(e => e.FieldId)
-                    .HasName("PK__SpeakerF__C8B6FF0740DF9FEF");
-
-                entity.Property(e => e.FieldName)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                    .HasName("PK__SpeakerF__C8B6FF0718A27852");
             });
 
             modelBuilder.Entity<Staff>(entity =>
             {
-                entity.Property(e => e.Account)
-                    .IsRequired()
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Birthday).HasColumnType("date");
-
-                entity.Property(e => e.ConfirmCode)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DueDate)
-                    .HasColumnType("date")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(300);
-
-                entity.Property(e => e.Mobile)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(30);
-
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(70)
-                    .IsUnicode(false);
+                entity.Property(e => e.DueDate).HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.fk_Department)
                     .WithMany(p => p.Staff)
@@ -1111,74 +669,10 @@ namespace EFModels.Models
             {
                 entity.HasKey(e => e.PermissionsId)
                     .HasName("PK__StaffPer__1EDAF9A81349059A");
-
-                entity.HasIndex(e => e.LevelName, "UQ__StaffPer__9EF3BE7B6829F02D")
-                    .IsUnique();
-
-                entity.Property(e => e.LevelName).HasMaxLength(30);
-            });
-
-            modelBuilder.Entity<Supplier>(entity =>
-            {
-                entity.HasIndex(e => e.SupplierCompanyNumber, "UQ__Supplier__AE8E9B417D20735C")
-                    .IsUnique();
-
-                entity.Property(e => e.SupplierCompanyAddress).HasMaxLength(250);
-
-                entity.Property(e => e.SupplierCompanyEmail).HasMaxLength(250);
-
-                entity.Property(e => e.SupplierCompanyName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.SupplierStartDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Supply_Material).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<Type>(entity =>
-            {
-                entity.ToTable("Type");
-
-                entity.Property(e => e.TypeName)
-                    .IsRequired()
-                    .HasMaxLength(20);
-            });
-
-            modelBuilder.Entity<logistics_company>(entity =>
-            {
-                entity.Property(e => e.logistics_description).HasMaxLength(50);
-
-                entity.Property(e => e.name).HasMaxLength(50);
-
-                entity.Property(e => e.tel)
-                    .HasMaxLength(12)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<order>(entity =>
             {
-                entity.Property(e => e.cellphone)
-                    .IsRequired()
-                    .HasMaxLength(12)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.close_time).HasColumnType("datetime");
-
-                entity.Property(e => e.coupon_name).HasMaxLength(50);
-
-                entity.Property(e => e.order_description).HasMaxLength(50);
-
-                entity.Property(e => e.ordertime).HasColumnType("datetime");
-
-                entity.Property(e => e.receipt)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.receiver).HasMaxLength(50);
-
-                entity.Property(e => e.recipient_address).HasMaxLength(50);
-
                 entity.HasOne(d => d.fk_member)
                     .WithMany(p => p.orders)
                     .HasForeignKey(d => d.fk_member_Id)
@@ -1217,39 +711,16 @@ namespace EFModels.Models
 
             modelBuilder.Entity<orderItem>(entity =>
             {
-                entity.Property(e => e.Items_description).HasMaxLength(50);
-
-                entity.Property(e => e.discount_name).HasMaxLength(50);
-
-                entity.Property(e => e.product_name).HasMaxLength(50);
-
+                entity.HasOne(d => d.fk_type)
+                    .WithMany(p => p.orderItems)
+                    .HasForeignKey(d => d.fk_typeId)
+                    .HasConstraintName("FK_orderItems_Type");
 
                 entity.HasOne(d => d.order)
                     .WithMany(p => p.orderItems)
                     .HasForeignKey(d => d.order_Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__orderItem__order__1B9317B3");
-            });
-
-            modelBuilder.Entity<order_status>(entity =>
-            {
-                entity.Property(e => e.order_status1)
-                    .HasMaxLength(50)
-                    .HasColumnName("order_status");
-            });
-
-            modelBuilder.Entity<pay_method>(entity =>
-            {
-                entity.Property(e => e.pay_method1)
-                    .HasMaxLength(50)
-                    .HasColumnName("pay_method");
-            });
-
-            modelBuilder.Entity<pay_status>(entity =>
-            {
-                entity.Property(e => e.pay_status1)
-                    .HasMaxLength(50)
-                    .HasColumnName("pay_status");
             });
 
             OnModelCreatingPartial(modelBuilder);

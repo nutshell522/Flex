@@ -2,15 +2,22 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
     public partial class ShoesPicture
     {
+        [Key]
         public int ShoesPicture_Id { get; set; }
+        [StringLength(4000)]
         public string ShoesPictureUrl { get; set; }
         public int fk_ShoesPictureProduct_Id { get; set; }
 
+        [ForeignKey("fk_ShoesPictureProduct_Id")]
+        [InverseProperty("ShoesPictures")]
         public virtual CustomizedShoesPo fk_ShoesPictureProduct { get; set; }
     }
 }
