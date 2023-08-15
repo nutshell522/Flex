@@ -162,14 +162,11 @@ import axios from "axios";
 import { ref, onMounted, computed } from "vue";
 class FlexCheckoutProcess{
     private _step = 0 ;
-    // private _stepAreas = document.querySelectorAll('.step-area');
-    private _stepAreas: HTMLElement[] = [];
+    private _stepAreas = document.querySelectorAll('.step-area');
+    private _showInfos = document.querySelectorAll('.show-info');
+    private _stepBlock = document.querySelectorAll('.step-block');
+    
 
-    constructor() {
-    this._stepAreas.push(document.querySelector("#step-1-area")!);
-    this._stepAreas.push(document.querySelector("#step-2-area")!);
-    this._stepAreas.push(document.querySelector("#step-3-area")!);
-    }
     get step(): number {
         return this._step;
     }
@@ -186,16 +183,26 @@ class FlexCheckoutProcess{
     }
     process():void
     {
-        for(let i=0; i <= this._stepAreas.length ; i++ ){
+        for(let i=0; i < this._stepAreas.length ; i++ ){
             if(i==this.step){
                 this._stepAreas[i].classList.add('d-block');
                 this._stepAreas[i].classList.remove('d-none');
+                this._stepBlock[i].classList.add('active');
             }
             else{
                 this._stepAreas[i].classList.remove('d-block');
                 this._stepAreas[i].classList.add('d-none');
-
+                this._stepBlock[i].classList.remove('active');
             }
+            if(i!=this._stepAreas.length-1 && i < this.step){
+                this._showInfos[i].classList.add('d-block');
+                this._showInfos[i].classList.remove('d-none');
+            }
+            else if(i!=this._stepAreas.length-1 && i >= this.step){
+                this._showInfos[i].classList.remove('d-block');
+                this._showInfos[i].classList.add('d-none');
+            }
+
         }
     }
 }
