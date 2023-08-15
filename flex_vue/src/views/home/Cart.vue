@@ -87,6 +87,7 @@ const loadCartItems = async () => {
     .post<CartItem[]>(url)
     .then((response) => {
       cartItems.value = response.data;
+      loadTotal();
       // console.log(cartItems.value);
     })
     .catch((error) => {
@@ -103,7 +104,7 @@ const loadTotal = async () => {
       originalTotalAmount.value = response.data.originalTotalAmount;
       subTotal.value = response.data.totalPrice;
       deliveryFee.value = response.data.deliveryFee;
-      console.log(subTotal.value);
+      // console.log(subTotal.value);
     })
     .catch((error) => {
       alert(error);
@@ -116,7 +117,6 @@ const discountCount = computed(() => {
 
 onMounted(() => {
   loadCartItems();
-  loadTotal();
 });
 
 // 定義callback函數類型

@@ -2,6 +2,7 @@
 using FlexCoreService.Orders;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
@@ -20,12 +21,20 @@ namespace FlexCoreService.Controllers
 		}
 
 		[HttpGet("GetOrders")]
-		public async Task<IEnumerable<OrdersIndexVM>> GetOrders(string? keyword, int? typeId, DateTime? begintime, DateTime? endtime, int? ostatusId)
+		public async Task<ActionResult<IEnumerable<OrdersIndexVM>>> GetOrders(string? keyword, int? typeId, DateTime? begintime, DateTime? endtime, int? ostatusId)
 		{
 			var db = _context;
 			if (_context.orders == null)
 			{
-				return null;
+				return Ok(null);
+			}
+			if (begintime.HasValue && endtime.HasValue && begintime.Value > endtime.Value)
+			{
+
+				ModelState.AddModelError("begintime", "開始時間不能大於結束時間");
+
+				begintime = null;
+				endtime = null;
 			}
 			var orderStatuses = db.order_statuses.AsNoTracking().ToDictionary(os => os.Id, os => os.order_status1);
 			var paymethods = db.pay_methods.AsNoTracking().ToDictionary(pd => pd.Id, pd => pd.pay_method1);
@@ -46,12 +55,13 @@ namespace FlexCoreService.Controllers
 			}
 			if (begintime.HasValue && endtime.HasValue)
 			{
-				query = query.Where(o =>
+				
+					query = query.Where(o =>
 					o.ordertime >= begintime.Value && o.ordertime <= endtime.Value
 				);
+				
 			}
-
-			return query.Select(p => new OrdersIndexVM
+			var result=query.Select(p => new OrdersIndexVM
 			{
 				Id = p.Id,
 				ordertime = p.ordertime,
@@ -75,7 +85,8 @@ namespace FlexCoreService.Controllers
 				total_price = p.total_price,
 				fk_typeId = p.fk_typeId,
 				orderItems = (List<OrderItemsVM>)GetOrderItemsIndex(p.Id)
-			}).ToList();
+			});
+			return Ok(result);
 		}
 		private static IEnumerable<OrderItemsVM> GetOrderItemsIndex(int orderId)
 		{
@@ -118,6 +129,9 @@ namespace FlexCoreService.Controllers
 				emp.order_status_Id = 7;
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
+			     emp.close = true;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
 				return "已取消訂單";
 			}
 			else
@@ -158,18 +172,26 @@ namespace FlexCoreService.Controllers
 				return null;
 			}
 			order emp = await _context.orders.FindAsync(orderid);
-
+			//if (emp.order_status_Id == 9)
+			//{
+			//	await Task.Delay(TimeSpan.FromMinutes(1));
+			//	emp.close = true;
+			//	_context.Entry(emp).State = EntityState.Modified;
+			//	await _context.SaveChangesAsync();
+			//}
 			if (emp.order_status_Id == 9)
 			{
 				emp.order_status_Id = 6;
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
+
 				return "已取消退貨";
 			}
 			else
 			{
 				return "訂單尚未領取";
 			}
+			
 		}
 
 		[HttpPost("NewReturn")]
@@ -189,11 +211,33 @@ namespace FlexCoreService.Controllers
 
 			return "輸入成功";
 		}
-		//[HttpGet("ReturnReason")]
-		//public async Task<int> ReturnReason()
-		//{
-		
-		//}
+		[HttpGet("ReturnReason")]
+		public async Task<IEnumerable<ReturnReaasonVM>> ReturnReason(int id)
+		{
+			var db = _context;
+			var Reason = db.ReturnResons
+				.AsNoTracking()
+				.Where(x => x.ID == id)
+				.Select(o => new ReturnReaasonVM
+				{
+					ID = o.ID,
+					退貨理由 = o.退貨理由,
+				});
+			return Reason;
+		}
+		[HttpGet("ReturnReasons")] 
+		public async Task<IEnumerable<ReturnReaasonVM>> GetReturnReasons() 
+		{
+			var db = _context;
+			var Reasons = db.ReturnResons
+				.AsNoTracking()
+				.Select(o => new ReturnReaasonVM
+				{
+					ID = o.ID,
+					退貨理由 = o.退貨理由,
+				});
+			return Reasons;
+		}
 	}
 	
 

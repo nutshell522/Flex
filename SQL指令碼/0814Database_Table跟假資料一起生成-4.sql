@@ -4528,9 +4528,63 @@ values
 
 insert into CustomizedShoesPo (ShoesName,ShoesDescription,ShoesOrigin,ShoesUnitPrice,StartTime,EndTime,fk_ShoesCategoryId,fk_ShoesColorId,DataCreateTime,DataEditTime)
 values
-('BS00101','專為您訂製最舒適的籃球鞋，於籃球場上揮灑您的青春汗水','台灣',5000,GETDATE(),null,3,2,GETDATE(),GETDATE()),
-('LF00101','適用於多種場合，為您訂製屬於自己的都市風格','台灣',4000,GETDATE(),null,1,5,GETDATE(),GETDATE()),
-('RN00101','訂製專屬於您的跑步鞋，用力奔跑，繼續於前進的道路上發揚夢想','台灣',4500,GETDATE(),null,2,1,GETDATE(),GETDATE())
+('BS00101','專為您訂製最舒適的籃球鞋，於籃球場上揮灑您的青春汗水。','台灣',5000,GETDATE(),null,3,1,GETDATE(),GETDATE()),
+('BS00102','隨時展開冒險。 採用天候防護皮革與耐久設計，不只好看，更為你的創作增添質感和實用性。','台灣',5000,GETDATE(),null,3,2,GETDATE(),GETDATE()),
+('BS00103','你今天擁抱你的雙腳了嗎？ 別停下腳步。 為這雙舒適非凡的經典鞋款添加個性色彩，帶動全世界的好心情。','台灣',5000,GETDATE(),null,3,8,GETDATE(),GETDATE()),
+('LF00101','適用於多種場合，為您訂製屬於自己的都市風格。','台灣',4000,GETDATE(),null,1,1,GETDATE(),GETDATE()),
+('LF00102','隨時展開冒險。 採用天候防護皮革與耐久設計，不只好看，更為你的創作增添質感和實用性。','台灣',4000,GETDATE(),null,1,2,GETDATE(),GETDATE()),
+('LF00103','你今天擁抱你的雙腳了嗎？ 別停下腳步。 為這雙舒適非凡的經典鞋款添加個性色彩，帶動全世界的好心情。','台灣',4000,GETDATE(),null,1,5,GETDATE(),GETDATE()),
+('RN00101','訂製專屬於您的跑步鞋，用力奔跑，繼續於前進的道路上發揚夢想。','台灣',4500,GETDATE(),null,2,1,GETDATE(),GETDATE()),
+('RN00102','隨時展開冒險。 採用天候防護皮革與耐久設計，不只好看，更為你的創作增添質感和實用性。','台灣',4500,GETDATE(),null,2,2,GETDATE(),GETDATE()),
+('RN00103','你今天擁抱你的雙腳了嗎？ 別停下腳步。 為這雙舒適非凡的經典鞋款添加個性色彩，帶動全世界的好心情。','台灣',4500,GETDATE(),null,2,8,GETDATE(),GETDATE()),
+('SK00101','在球場盡情奔馳，隨時展現你的厲害球技。','台灣',6000,GETDATE(),null,4,1,GETDATE(),GETDATE()),
+('SK00102','隨時展開冒險。 採用天候防護皮革與耐久設計，不只好看，更為你的創作增添質感和實用性。','台灣',6000,GETDATE(),null,4,2,GETDATE(),GETDATE()),
+('SK00103','你今天擁抱你的雙腳了嗎？ 別停下腳步。 為這雙舒適非凡的經典鞋款添加個性色彩，帶動全世界的好心情。','台灣',6000,GETDATE(),null,4,8,GETDATE(),GETDATE()),
+('TR00101','在訓練的途中，隨時保護您的足部，避免訓練的挫傷。','台灣',5500,GETDATE(),null,5,1,GETDATE(),GETDATE()),
+('TR00102','隨時展開冒險。 採用天候防護皮革與耐久設計，不只好看，更為你的創作增添質感和實用性。','台灣',5500,GETDATE(),null,5,2,GETDATE(),GETDATE()),
+('TR00103','你今天擁抱你的雙腳了嗎？ 別停下腳步。 為這雙舒適非凡的經典鞋款添加個性色彩，帶動全世界的好心情。','台灣',5500,GETDATE(),null,5,8,GETDATE(),GETDATE()),
+('TF00101','超強的耐久設計，讓您於各項賽事無往不利！','台灣',4500,GETDATE(),null,6,1,GETDATE(),GETDATE()),
+('TF00102','隨時展開冒險。 採用天候防護皮革與耐久設計，不只好看，更為你的創作增添質感和實用性。','台灣',4500,GETDATE(),null,6,2,GETDATE(),GETDATE()),
+('TF00103','你今天擁抱你的雙腳了嗎？ 別停下腳步。 為這雙舒適非凡的經典鞋款添加個性色彩，帶動全世界的好心情。','台灣',4500,GETDATE(),null,6,8,GETDATE(),GETDATE())
+
+insert into ShoesPictures(fk_ShoesPictureProduct_Id,ShoesPictureUrl)
+values
+(1,'SH_11GM235109.jpg'),
+(1,'SH_11GM235114.jpg'),
+(2,'SH_11GT220129.jpg'),
+(2,'SH_11GT221029.jpg'),
+(3,'SH_61GA234014.jpg'),
+(3,'SH_61GA234062.jpg'),
+(4,'SH_71GA231325.jpg'),
+(4,'SH_71GA231322.jpg'),
+(5,'SH_71GA234006.jpg'),
+(5,'SH_71GA234002.jpg'),
+(6,'SH_J1GC223453.jpg'),
+(6,'SH_J1GC227852.jpg'),
+(7,'SH_J1GC230951.jpg'),
+(7,'SH_J1GC230953.jpg'),
+(8,'SH_J1GC231102.jpg'),
+(8,'SH_J1GC231101.jpg'),
+(9,'SH_K1GA220311.jpg'),
+(9,'SH_K1GA220343.jpg'),
+(10,'SH_U1GA204052.jpg'),
+(10,'SH_U1GA213002.jpg'),
+(11,'SH_U1GA213002.jpg'),
+(11,'SH_U1GA204052.jpg'),
+(12,'SH_U1GA232404.jpg'),
+(12,'SH_U1GA233002.jpg'),
+(13,'SH_Q1GA230373.jpg'),
+(13,'SH_Q1GA230381.jpg'),
+(14,'SH_Q1GA230381.jpg'),
+(14,'SH_Q1GA230373.jpg'),
+(15,'SH_P1GG222600.jpg'),
+(15,'SH_P1GG236509.jpg'),
+(16,'SH_P1GA232550.jpg'),
+(16,'SH_P1GA232504.jpg'),
+(17,'SH_P1GA232504.jpg'),
+(17,'SH_P1GA232550.jpg'),
+(18,'SH_P1GA236501.jpg'),
+(18,'SH_P1GA236509.jpg')
 
 --品瑩**************************************************************************--
 
