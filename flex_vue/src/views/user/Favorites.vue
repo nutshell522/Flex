@@ -9,4 +9,4 @@ import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
 </script>
 
-<style></style>
+<style scoped></style>

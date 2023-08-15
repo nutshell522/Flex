@@ -24,5 +24,11 @@ namespace FlexCoreService.CustomeShoes.Service
             var onecustomeshoes = _repo.SearchOneCustomeShoes(Id);
             return onecustomeshoes;
         }
+
+        public ShoesDetailDto GetShoesDetail(int shoesproductId)
+        {
+            var shoesDetails = _repo.GetShoesDetail(shoesproductId);
+            return shoesDetails;
+        }
     }
 }

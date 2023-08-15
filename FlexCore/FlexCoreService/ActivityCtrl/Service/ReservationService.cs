@@ -28,5 +28,17 @@ namespace FlexCoreService.ActivityCtrl.Service
             return speaker;
 
         }
+
+        public async Task<IEnumerable<ReservationHistoryDTO>> GetReservationHistoryAsync (int id)
+        {
+            var result = await _repo.GetReservationHistoryAsync(id);
+            return result;
+
+        }
+
+        public async Task AddReservationAsync (AddReservationDTO dto)
+        {
+            
+        }
     }
 }

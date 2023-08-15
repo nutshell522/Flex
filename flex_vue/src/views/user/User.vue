@@ -7,30 +7,32 @@
     <div class="col-md-6 d-flex">
       <div class="input-group mb-2">
         <label for="nameInput" class="text">姓名</label>
-        <label for="">{{ name }}</label>
+        <label for="">{{ userProfile.name }}</label>
       </div>
       <div class="level mb-3">
         <!-- <label for="">{{ level }}</label> -->
-        <label for="">{{ levelName }}</label>
+        <label for="">{{ userProfile.levelName }}</label>
       </div>
     </div>
-    <!-- 77gender資料繫結沒有成功 -->
     <div class="input-group gender">
       <div class="radioBtn">
-        <label for="genderInput" class="text">性別</label>
+        <label for="genderRadio1" class="text">性別</label>
         <input
           class="form-check-input"
           type="radio"
           id="genderRadio1"
+          :value="false"
           v-model="gender"
         />
         <label class="form-check-label ms-1" for="genderRadio1"> 生理男 </label>
       </div>
-      <div>
+
+      <div class="radioBtn">
         <input
           class="form-check-input"
           type="radio"
           id="genderRadio2"
+          :value="true"
           v-model="gender"
         />
         <label class="form-check-label ms-1" for="genderRadio2">生理女 </label>
@@ -49,7 +51,7 @@
         />
       </div>
     </div>
-    <!-- 77手機信箱左邊的框框圓角 -->
+    <!-- 77手機信箱input右邊的圓角 -->
     <div class="col-md-6">
       <div class="input-group">
         <label for="mobileInput" class="text">手機</label>
@@ -64,7 +66,7 @@
     </div>
 
     <div class="col-md-6">
-      <div class="addressInput">
+      <div class="input-group">
         <label for="addressInput" class="text">地址</label>
         <input
           type="text"
@@ -119,18 +121,20 @@
     <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="取貨店鋪預約" />
     </div> -->
-
-    <label class="text">訂閱電子報</label>
-    <div class="form-check form-check-inline">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        id="subscribeBtn"
-        v-model="subscribeNews"
-        v-if="subscribeNews"
-      />
-      <label class="form-check-label" for="subscribeBtn">訂閱</label>
+    <div class="subscribe">
+      <label class="text">訂閱電子報</label>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="subscribeBtn"
+          v-model="isSubscribeNews"
+          v-if="isSubscribeNews"
+        />
+      </div>
+      <div class="form-check-label" for="subscribeBtn">訂閱</div>
     </div>
+
     <div class="btn btn-outline-info save">
       <button type="button" @click="save">儲存</button>
     </div>
@@ -140,58 +144,73 @@
 <script setup>
 import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
-
+import { ref, reactive } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 import axios from 'axios';
-import { ref } from 'vue';
+
+const getApiStore = useGetApiDataStore();
+const { memberInfo } = storeToRefs(getApiStore);
 
 const userProfile = ref([]);
-const account = ref('a123'); // 初始化為空字符串
-let id = ref('');
+const account = ref(''); // 初始化為空字符串
+const id = ref('');
 // let level = ref('');
-let levelName = ref('');
-let name = ref('');
-let email = ref('');
-let mobile = ref('');
-let gender = ref('');
-let commonAddress = ref('');
-const addAddressInput1 = ref(false);
-const addAddressInput2 = ref(false);
+const levelName = ref('');
+const name = ref('');
+const email = ref('');
+const mobile = ref('');
+const gender = ref(false);
+const commonAddress = ref('');
+const addAddressInput1 = ref('');
+const addAddressInput2 = ref('');
 const addressBtn = ref(false);
-let alternateAddress1 = ref('');
-let alternateAddress2 = ref('');
-let subscribeNews = ref('');
+const alternateAddress1 = ref(null);
+const alternateAddress2 = ref(null);
+const isSubscribeNews = ref(true);
+
+const memberId = getApiStore.getMemberId;
+//console.log('memberId:', memberId);
 
 const baseAddress = 'https://localhost:7183/api';
-const uri = `${baseAddress}/Users/${account.value}`;
+const uri = `${baseAddress}/Users/` + memberId;
+
+//console.log('uri', uri);
+
 axios
   .get(uri)
   .then((res) => {
     userProfile.value = res.data;
-    //console.log(userProfile);
+    console.log(123, userProfile.value);
 
     id.value = res.data.memberId;
     //console.log(id);
 
     // level.value = res.data.fk_Level;
-    levelName.value = res.data.levelName;
-    name.value = res.data.name;
+    // levelName.value = res.data.levelName;
+    // name.value = res.data.name;
     email.value = res.data.email;
     mobile.value = res.data.mobile;
     gender.value = res.data.gender;
     commonAddress.value = res.data.commonAddress;
     alternateAddress1.value = res.data.alternateAddress1;
     alternateAddress2.value = res.data.alternateAddress2;
-    subscribeNews.value = res.data.isSubscribeNews;
+    isSubscribeNews.value = res.data.isSubscribeNews;
     //console.log(alternateAddress1.value);
-    //console.log(alternateAddress2.value);
-    console.log(gender.value);
-    //console.log(subscribeNews.value);
+    console.log(alternateAddress2.value);
+    console.log('gender', gender.value);
+    //console.log(isSubscribeNews.value);
+
+    //顯示控制項
     if (alternateAddress1.value) {
       addAddressInput1.value = true;
     }
     if (alternateAddress1.value && alternateAddress2.value) {
       addAddressInput1.value = true;
       addAddressInput2.value = true;
+    }
+    if (isSubscribeNews.value != true) {
+      isSubscribeNews.value = true;
     }
   })
   .catch((err) => {
@@ -203,7 +222,7 @@ function addBtn() {
     addAddressInput1.value = true;
     console.log('addAddressInput1');
   } else {
-    addAddressInput2.value = true;
+    addAddressInput2.value = true; //多一個輸入框
     console.log('addAddressInput2');
     addressBtn.value = true;
   }
@@ -211,33 +230,43 @@ function addBtn() {
 function minusBtn() {
   if (addAddressInput1.value === true) {
     addAddressInput2.value = false;
-    console.log('addAddressInput1');
+    console.log('addAddressInput11111');
     addressBtn.value = false;
   } else {
     addAddressInput1.value = false;
-    console.log('addAddressInput2');
+    console.log('addAddressInput222222');
   }
 }
 const userData = ref([]);
 
 function save() {
-  alert('save');
+  //alert('save');
   //todo檢查欄位有沒有確實填寫
   //todo檔案更新成功
-  var uri = `${baseAddress}/Users/${id.value}`;
+  var uri = `${baseAddress}/Users/Id?id=${id.value}`;
   var editUserProfile = {};
-  editUserProfile.Gender = gender.value;
-  editUserProfile.Email = email.value;
-  editUserProfile.Mobile = mobile.value;
-  editUserProfile.CommonAddress = commonAddress.value;
-  editUserProfile.AlternateAddress1 = alternateAddress1.value;
-  editUserProfile.alternateAddress2 = addAddressInput2.value;
-  editUserProfile.IsSubscribeNews = subscribeNews.value;
+
+  editUserProfile.gender = gender.value;
+  editUserProfile.email = userProfile.value.email;
+  editUserProfile.mobile = mobile.value;
+  editUserProfile.commonAddress = commonAddress.value;
+  editUserProfile.alternateAddress1 = alternateAddress1.value;
+  editUserProfile.alternateAddress2 = alternateAddress2.value;
+  editUserProfile.isSubscribeNews = isSubscribeNews.value;
+  console.log(
+    'editUserProfile.alternateAddress2',
+    editUserProfile.alternateAddress2
+  );
+  console.log(
+    'editUserProfile.isSubscribeNews',
+    editUserProfile.isSubscribeNews
+  );
 
   axios
-    .post(uri, editUserProfile)
+    .put(uri, editUserProfile)
     .then((res) => {
       userData.value = res.data;
+      console.log('uri', uri);
       console.log(userData.value);
     })
     .catch((err) => {
@@ -247,8 +276,8 @@ function save() {
 }
 
 //還沒正確隱藏值
-if (subscribeNews.value === true) {
-  subscribeNews.value = false;
+if (isSubscribeNews.value == true) {
+  isSubscribeNews.value = false;
 }
 </script>
 
@@ -297,12 +326,17 @@ if (subscribeNews.value === true) {
 }
 .save {
   display: flex;
-  width: 6%;
-  height: 6%;
   justify-content: center;
+  width: 8%;
+  height: 6%;
   margin: 20px 0px;
 }
 .radioBtn {
   margin-right: 10px;
+}
+.subscribe {
+  margin: 0px;
+  display: flex;
+  align-items: center;
 }
 </style>

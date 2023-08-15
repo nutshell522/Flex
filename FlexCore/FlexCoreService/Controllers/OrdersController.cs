@@ -125,34 +125,52 @@ namespace FlexCoreService.Controllers
 
 			}
 		}
+
 		[HttpPut("return")]
-		public async Task<string> ReturnOrders(int id)
+		public async Task<string> ReturnOrders(int orderid)
 		{
 			var db = _context;
 			if (_context.orders == null)
 			{
 				return null;
 			}
-			order emp = await _context.orders.FindAsync(id);
-
+			order emp = await _context.orders.FindAsync(orderid);
 
 			if (emp.order_status_Id == 6)
 			{
 				emp.order_status_Id = 9;
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
-				await Return(new ReturnVM
-				{
-					退貨日期 = DateTime.Now,
-				}, id);
 				return "已申請退貨";
 			}
 			else
 			{
 				return "訂單尚未領取";
-
 			}
 		}
+		[HttpPut("cancelreturn")]
+		public async Task<string> CancelReturn(int orderid)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(orderid);
+
+			if (emp.order_status_Id == 9)
+			{
+				emp.order_status_Id = 6;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已取消退貨";
+			}
+			else
+			{
+				return "訂單尚未領取";
+			}
+		}
+
 		[HttpPost("NewReturn")]
 		public async Task<string> Return(ReturnVM reDTO, int orderid)
 		{
@@ -162,14 +180,20 @@ namespace FlexCoreService.Controllers
 				退貨日期 = DateTime.Now,
 				fk訂單 = orderid,
 				退貨轉帳帳號 = reDTO.退貨轉帳帳號,
-				退款狀態 = reDTO.退款狀態,
+				退款狀態 = false,
 				退貨理由 = reDTO.退貨理由,
 			};
 			_context.Returns.Add(re);
 			await _context.SaveChangesAsync();
 
-			return "新增成功";
+			return "輸入成功";
 		}
+		//[HttpGet("ReturnReason")]
+		//public async Task<int> ReturnReason()
+		//{
+		
+		//}
 	}
+	
 
 }

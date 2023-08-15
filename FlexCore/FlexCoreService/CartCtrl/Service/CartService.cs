@@ -1,4 +1,5 @@
 ﻿using FlexCoreService.CartCtrl.Interface;
+using FlexCoreService.CartCtrl.Models.Dtos;
 using FlexCoreService.CartCtrl.Models.vm;
 using FlexCoreService.ProductCtrl.Exts;
 
@@ -52,6 +53,25 @@ namespace FlexCoreService.CartCtrl.Service
 		public IEnumerable<ProductDiscountDto> GetActiveDiscounts()
 		{
 			return _repo.GetActiveDiscounts();
+		}
+
+		public IEnumerable<CouponDto> GetMemberCoupons(int MemberId)
+		{
+			return _repo.GetMemberCoupons(MemberId);
+		}
+		public CouponDto GetCouponById(int SendingId)
+		{
+			return _repo.GetCouponById(SendingId);
+		}
+		public Result ChangeCouponUseageStatus(CouponDto dto,int MemberId)
+		{
+			// TODO 驗證券是否是該會員的
+
+			// TODO 驗證券是否過期
+
+			DateTime date = DateTime.Now;
+			_repo.UpdateCouponUsage(dto, date);
+			return Result.Success();
 		}
 	}
 }

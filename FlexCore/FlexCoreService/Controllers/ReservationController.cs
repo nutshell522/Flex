@@ -2,6 +2,7 @@
 using FlexCoreService.ActivityCtrl.Exts;
 using FlexCoreService.ActivityCtrl.Interface;
 using FlexCoreService.ActivityCtrl.Models.Dtos;
+using FlexCoreService.ActivityCtrl.Models.VM;
 using FlexCoreService.ActivityCtrl.Service;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -51,5 +52,31 @@ namespace FlexCoreService.Controllers
             return Ok(result);     
             
         }
+
+        [HttpGet("GetReservationHistory{id}")]
+        public async Task<IEnumerable<ReservationHistoryVM>> GetReservationHistory (int id)
+        {
+            var historyTime = await _service.GetReservationHistoryAsync(id);
+            var result = historyTime.Select(x => x.ToVM());
+            if (result.Count() == 0)
+            {
+                Enumerable.Empty<ReservationHistoryVM>();
+            }
+            return result;
+        }
+
+        // 琬馨記警告2
+
+        //public async Task AddReservationAsync(AddReservationVM vm)
+        //{
+        //    AddReservationDTO dto = new AddReservationDTO();
+        //    dto.fk_BookerId = vm.fk_BookerId;
+        //    dto.ReservationStartTime = vm.ReservationStartTime;
+        //    dto.ReservationEndTime = vm.ReservationStartTime.AddHours(2);
+        //    dto.fk_ReservationSpeakerId = vm.fk_ReservationSpeakerId;
+        //    dto.fk_BranchId = vm.fk_BranchId;
+        //    dto.fk_ReservationStatusId = 0;
+
+        //}
     }
 }

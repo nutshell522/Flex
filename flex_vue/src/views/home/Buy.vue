@@ -3,29 +3,29 @@
         <div class="container">
             <div class="row gx-4">
                 <div class="buy-info col-12 col-lg-7">
-                    <form action="post">
+                    <form action="" method="post">
                         <!-- 寄送資訊 -->
                         <div id="step-1-area">
                             <h2>輸入你的聯絡資訊:</h2>
                             <div class="input-wrapper">
-                                <input type="text" name="name" id="" placeholder="姓名">
+                                <input type="text" name="contact-name" id="contact-name" placeholder="姓名">
                                 <span>姓名</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="text" class="readonly" name="name" id="" placeholder="郵遞區號" readonly>
+                                <input type="text" class="readonly" name="postal-code" id="postal-code" placeholder="郵遞區號" readonly>
                                 <span>郵遞區號</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="text" class="readonly" name="name" id="" placeholder="地址" readonly>
+                                <input type="text" class="readonly" name="address" id="address" placeholder="地址" readonly>
                                 <span>地址</span>
                                 <button type="button">變更地址</button>
                             </div>
                             <div class="input-wrapper">
-                                <input type="email" name="email" id="" placeholder="電子郵件">
+                                <input type="email" name="email" id="email" placeholder="電子郵件">
                                 <span>電子郵件</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="phone" name="phone" id="" placeholder="電話號碼">
+                                <input type="tel" name="phone" id="phone" placeholder="電話號碼">
                                 <span>電話號碼</span>
                             </div>
                             <button type="button" class="next-step-btn">繼續</button>
@@ -39,19 +39,19 @@
                             </label>
                             <div class="different-address-area">
                                 <div class="input-wrapper">
-                                    <input type="text" name="name" id="" placeholder="姓名">
+                                    <input type="text" name="bill-name" id="bill-name" placeholder="姓名">
                                     <span>姓名</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="text" name="name" id="" placeholder="郵遞區號">
+                                    <input type="text" name="bill-postal-code" id="bill-postal-code" placeholder="郵遞區號">
                                     <span>郵遞區號</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="text" name="name" id="" placeholder="地址">
+                                    <input type="text" name="bill-address" id="bill-address" placeholder="地址">
                                     <span>地址</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="tel" name="phone" id="" placeholder="電話號碼">
+                                    <input type="tel" name="bill-phone" id="bill-phone" placeholder="電話號碼">
                                     <span>電話號碼</span>
                                 </div>
                             </div>
@@ -62,9 +62,9 @@
                             <h2>使用優惠券?</h2>
                             <a href="javascript:;" class="choose-coupon">選擇優惠券</a>
                             <p class="show-coupon-info"></p>
-                            <input type="hidden" name="couponid">
+                            <input type="hidden" name="coupon-id">
                             <h2>付款方式</h2>
-                            <input type="hidden" name="payBy" id="payBy">
+                            <input type="hidden" name="payment-method" id="payment-method">
                             <div class="pay-by-select">
                                 <div class="pay-by-btn active" data-value="credit-card"><i class="bi bi-credit-card"></i>
                                     信用卡或金融簽帳卡
@@ -72,20 +72,20 @@
                             </div>
                             <h2>詳細付款資訊:</h2>
                             <div class="input-wrapper">
-                                <input type="text" name="phone" id="" placeholder="Name on card">
+                                <input type="text" name="card-name" id="card-name" placeholder="Name on card">
                                 <span>Name on card</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="tel" name="phone" id="" placeholder="Card Number">
+                                <input type="tel" name="card-number" id="card-number" placeholder="Card Number">
                                 <span>Card Number</span>
                             </div>
                             <div class="row row-cols-2">
                                 <div class="input-wrapper">
-                                    <input type="text" name="phone" id="" placeholder="MM/YY">
+                                    <input type="text" name="expiration" id="expiration" placeholder="MM/YY">
                                     <span>MM/YY</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="tel" name="phone" id="" placeholder="CVV">
+                                    <input type="tel" name="cvv" id="cvv" placeholder="CVV">
                                     <span>CVV</span>
                                 </div>
                             </div>
@@ -158,7 +158,7 @@
 </template>
     
 <script setup lang='ts'>
-
+    
 </script>
     
 <style scoped lang="scss">
