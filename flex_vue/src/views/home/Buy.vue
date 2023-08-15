@@ -5,33 +5,33 @@
                 <div class="buy-info col-12 col-lg-7">
                     <form action="" method="post">
                         <!-- 寄送資訊 -->
-                        <div id="step-1-area">
+                        <div id="step-1-area" class="step-area">
                             <h2>輸入你的聯絡資訊:</h2>
                             <div class="input-wrapper">
-                                <input type="text" name="contact-name" id="contact-name" placeholder="姓名">
+                                <input type="text" name="ContactInfo.ContactName" id="contact-name" placeholder="姓名">
                                 <span>姓名</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="text" class="readonly" name="postal-code" id="postal-code" placeholder="郵遞區號" readonly>
+                                <input type="text" name="ContactInfo.PostalCode" id="postal-code" placeholder="郵遞區號">
                                 <span>郵遞區號</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="text" class="readonly" name="address" id="address" placeholder="地址" readonly>
+                                <input type="text" name="ContactInfo.Address" id="address" placeholder="地址">
                                 <span>地址</span>
                                 <button type="button">變更地址</button>
                             </div>
                             <div class="input-wrapper">
-                                <input type="email" name="email" id="email" placeholder="電子郵件">
+                                <input type="email" name="ContactInfo.Email" id="email" placeholder="電子郵件">
                                 <span>電子郵件</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="tel" name="phone" id="phone" placeholder="電話號碼">
+                                <input type="tel" name="ContactInfo.Phone" id="phone" placeholder="電話號碼">
                                 <span>電話號碼</span>
                             </div>
                             <button type="button" class="next-step-btn">繼續</button>
                         </div>
                         <!-- 帳單 -->
-                        <div id="step-2-area">
+                        <div id="step-2-area" class="step-area">
                             <h2>輸入你的帳單地址:</h2>
                             <label class="same-address-label buy-label">
                                 <input type="checkbox" id="bill-same-address" class="buy-checkbox">
@@ -39,26 +39,26 @@
                             </label>
                             <div class="different-address-area">
                                 <div class="input-wrapper">
-                                    <input type="text" name="bill-name" id="bill-name" placeholder="姓名">
+                                    <input type="text" name="BillingAddress.Name" id="bill-name" placeholder="姓名">
                                     <span>姓名</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="text" name="bill-postal-code" id="bill-postal-code" placeholder="郵遞區號">
+                                    <input type="text" name="BillingAddress.PostalCode" id="bill-postal-code" placeholder="郵遞區號">
                                     <span>郵遞區號</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="text" name="bill-address" id="bill-address" placeholder="地址">
+                                    <input type="text" name="BillingAddress.Address" id="bill-address" placeholder="地址">
                                     <span>地址</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="tel" name="bill-phone" id="bill-phone" placeholder="電話號碼">
+                                    <input type="tel" name="BillingAddress.Phone" id="bill-phone" placeholder="電話號碼">
                                     <span>電話號碼</span>
                                 </div>
                             </div>
                             <button type="button" class="next-step-btn">繼續</button>
                         </div>
                         <!-- 付款 -->
-                        <div id="step-3-area">
+                        <div id="step-3-area" class="step-area">
                             <h2>使用優惠券?</h2>
                             <a href="javascript:;" class="choose-coupon">選擇優惠券</a>
                             <p class="show-coupon-info"></p>
@@ -72,20 +72,20 @@
                             </div>
                             <h2>詳細付款資訊:</h2>
                             <div class="input-wrapper">
-                                <input type="text" name="card-name" id="card-name" placeholder="Name on card">
+                                <input type="text" name="PaymentInfo.CardName" id="card-name" placeholder="Name on card">
                                 <span>Name on card</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="tel" name="card-number" id="card-number" placeholder="Card Number">
+                                <input type="tel" name="PaymentInfo.CardNumber" id="card-number" placeholder="Card Number">
                                 <span>Card Number</span>
                             </div>
                             <div class="row row-cols-2">
                                 <div class="input-wrapper">
-                                    <input type="text" name="expiration" id="expiration" placeholder="MM/YY">
+                                    <input type="text" name="PaymentInfo.Expiration" id="expiration" placeholder="MM/YY">
                                     <span>MM/YY</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="tel" name="cvv" id="cvv" placeholder="CVV">
+                                    <input type="tel" name="PaymentInfo.CVV" id="cvv" placeholder="CVV">
                                     <span>CVV</span>
                                 </div>
                             </div>
@@ -158,7 +158,51 @@
 </template>
     
 <script setup lang='ts'>
-    
+import axios from "axios";
+import { ref, onMounted, computed } from "vue";
+class FlexCheckoutProcess{
+    private _step = 0 ;
+    // private _stepAreas = document.querySelectorAll('.step-area');
+    private _stepAreas: HTMLElement[] = [];
+
+    constructor() {
+    this._stepAreas.push(document.querySelector("#step-1-area")!);
+    this._stepAreas.push(document.querySelector("#step-2-area")!);
+    this._stepAreas.push(document.querySelector("#step-3-area")!);
+    }
+    get step(): number {
+        return this._step;
+    }
+    set step(nextStep: number) {
+        if (nextStep < 0) {
+            this._step = 0;
+        } 
+        else if(nextStep > 2){
+            this._step = 2;
+        }
+        else{
+            this._step = nextStep;
+        }
+    }
+    process():void
+    {
+        for(let i=0; i <= this._stepAreas.length ; i++ ){
+            if(i==this.step){
+                this._stepAreas[i].classList.add('d-block');
+                this._stepAreas[i].classList.remove('d-none');
+            }
+            else{
+                this._stepAreas[i].classList.remove('d-block');
+                this._stepAreas[i].classList.add('d-none');
+
+            }
+        }
+    }
+}
+onMounted(()=>{
+    let flexCheckout = new FlexCheckoutProcess();
+    flexCheckout.process();
+});
 </script>
     
 <style scoped lang="scss">

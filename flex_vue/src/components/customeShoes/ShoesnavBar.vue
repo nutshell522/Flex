@@ -33,16 +33,20 @@
                 </div>
               </li>
             </router-link>
-            <li>
-              <div class="nav-list-item">
-                <div>合作洽詢</div>
-              </div>
-            </li>
-            <li>
-              <div class="nav-list-item">
-                <div>常見問題</div>
-              </div>
-            </li>
+            <router-link to="/CustomeShoes/Contact" class="transetion">
+              <li>
+                <div class="nav-list-item">
+                  <div>合作洽詢</div>
+                </div>
+              </li>
+            </router-link>
+            <router-link to="/CustomeShoes/FAQ" class="transetion">
+              <li>
+                <div class="nav-list-item">
+                  <div>常見問題</div>
+                </div>
+              </li>
+            </router-link>
           </ul>
         </div>
         <div class="right">

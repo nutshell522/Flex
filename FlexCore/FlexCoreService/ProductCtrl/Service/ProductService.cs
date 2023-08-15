@@ -20,7 +20,7 @@ namespace FlexCoreService.ProductCtrl.Service
         //    return products;
         //}
 
-        public IEnumerable<ProductCardDto> SearchProducts(int salesId, string? categoryName, string? subCategoryName)
+        public IEnumerable<ProductCardDto> SearchProducts(int? salesId, string? categoryName, string? subCategoryName)
         {
             var products = _repo.SearchProducts(salesId, categoryName, subCategoryName);
             return products;
@@ -46,7 +46,7 @@ namespace FlexCoreService.ProductCtrl.Service
 
         public IEnumerable<ProductCardDto> GetSimilarProducts(string productId)
         {
-            var categor = _repo.GetProdductCategories(productId);
+            var categor = _repo.GetProductCategories(productId);
             var result = _repo.GetSimilarProducts(productId, categor);
             return result;
         }

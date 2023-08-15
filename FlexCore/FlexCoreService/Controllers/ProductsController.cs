@@ -135,7 +135,7 @@ namespace FlexCoreService.Controllers
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetSimilarProducts(string productId)
         {
             var server = new ProductService(_repo);
-            var products = server.GetSimilarProducts(productId);
+            var products = server.GetSimilarProducts(productId).Select(p=>p.ToCardVM());
             if (products == null)
             {
                 return BadRequest();

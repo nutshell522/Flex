@@ -2,7 +2,7 @@
 using FlexCoreService.CartCtrl.Models.vm;
 using Microsoft.AspNetCore.Routing;
 
-namespace FlexCoreService.CartCtrl.Exts
+namespace FlexCoreService.CartCtrl.Exts.Discount_dll
 {
     public class ItemDiscount
     {

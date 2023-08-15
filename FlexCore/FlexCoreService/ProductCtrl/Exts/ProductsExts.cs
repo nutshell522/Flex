@@ -14,6 +14,10 @@ namespace FlexCoreService.ProductCtrl.Exts
                 ProductName = dto.ProductName,
                 UnitPrice = dto.UnitPrice,
                 SalesPrice = dto.SalesPrice,
+                SalesCategoryId = dto.SalesCategoryId,
+                SalesCategoryName = dto.SalesCategoryName,
+                ProductCategoryName=dto.ProductCategoryName,
+                ProductSubCategoryName = dto.ProductSubCategoryName,
                 FirstImgPath = dto.FirstImgPath,
             };
         }

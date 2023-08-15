@@ -1,9 +1,10 @@
-﻿using FlexCoreService.CartCtrl.Models.vm;
+﻿using FlexCoreService.CartCtrl.Exts.Discount_dll;
+using FlexCoreService.CartCtrl.Models.vm;
 using Newtonsoft.Json.Linq;
 
 namespace FlexCoreService.CartCtrl.Exts
 {
-	public class PercentageDiscount : BaseDiscountStrategy
+    public class PercentageDiscount : BaseDiscountStrategy
 	{
 		// 門檻金額
 		private readonly int _itemsAmount;

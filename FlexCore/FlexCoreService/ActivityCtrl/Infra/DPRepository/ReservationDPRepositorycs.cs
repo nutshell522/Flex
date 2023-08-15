@@ -17,30 +17,31 @@ namespace FlexCoreService.ActivityCtrl.Infra.DPRepository
             _connStr = _configuration.GetConnectionString("AppDbContext");
         }
 
-        public void AddReservation(AddReservationDTO dto)
+        public async Task AddReservationAsync(AddReservationDTO dto)
         {
-            string sql = @"INSERT INTO OneToOneReservations (fk_BookerId, ReservationStartTime, ReservationEndTime, fk_BranchId, fk_ReservationSpeakerId, fk_ReservationStatusId)
+            await Task.Run(() =>
+            {
+                string sql = @"INSERT INTO OneToOneReservations (fk_BookerId, ReservationStartTime, ReservationEndTime, fk_BranchId, fk_ReservationSpeakerId, fk_ReservationStatusId)
                   VALUES (@bookerId, @startTime, @endTime, @branchId, @speakerId, @statusId);";
 
-            using (var conn = new SqlConnection(_connStr))
-            {
-                conn.Execute(sql, new
+                using (var conn = new SqlConnection(_connStr))
                 {
-                    bookerId = dto.fk_BookerId,
-                    startTime = dto.ReservationStartTime,
-                    endTime = dto.ReservationEndTime,
-                    branchId = dto.fk_BranchId,
-                    speakerId = dto.fk_ReservationSpeakerId,
-                    statusId = dto.fk_ReservationStatusId
-                });
-            }
+                    conn.Execute(sql, new
+                    {
+                        bookerId = dto.fk_BookerId,
+                        startTime = dto.ReservationStartTime,
+                        endTime = dto.ReservationEndTime,
+                        branchId = dto.fk_BranchId,
+                        speakerId = dto.fk_ReservationSpeakerId,
+                        statusId = dto.fk_ReservationStatusId
+                    });
+                }
+            });
+           
         }
 
-        // 琬馨記警告1
-		public Task AddReservationAsync(AddReservationDTO dto)
-		{
-			throw new NotImplementedException();
-		}
+     
+	
 
 		public async Task<IEnumerable<ReservationDTO>> GetAllAsync()
         {
@@ -67,7 +68,7 @@ ON Speakers.fk_SpeakerFieldId = SpeakerFields.FieldId";
 
         public async Task<SpeakerDetailDTO> GetSpeakerInfoAsync(int id)
         {
-            string sql = @"select SpeakerId, SpeakerName, FieldName, SpeakerImg, SpeakerDescription, BranchName, BranchAddress
+            string sql = @"select SpeakerId, SpeakerName, FieldName, SpeakerImg, SpeakerDescription, BranchName, BranchAddress, BranchId
 From Speakers
 Join SpeakerFields
 ON Speakers.fk_SpeakerFieldId = SpeakerFields.FieldId

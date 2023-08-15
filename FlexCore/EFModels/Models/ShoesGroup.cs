@@ -2,11 +2,15 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
     public partial class ShoesGroup
     {
+        [Key]
         public int ShoesGroupId { get; set; }
         public int fk_ShoesMainId { get; set; }
         public int fk_OptionId { get; set; }
@@ -14,10 +18,20 @@ namespace EFModels.Models
         public int fk_ShoesColorId { get; set; }
         public int fk_CustomerOrderId { get; set; }
 
+        [ForeignKey("fk_CustomerOrderId")]
+        [InverseProperty("ShoesGroups")]
         public virtual ShoesOrder fk_CustomerOrder { get; set; }
+        [ForeignKey("fk_MaterialId")]
+        [InverseProperty("ShoesGroups")]
         public virtual Customized_material fk_Material { get; set; }
+        [ForeignKey("fk_OptionId")]
+        [InverseProperty("ShoesGroups")]
         public virtual ShoesChoose fk_Option { get; set; }
+        [ForeignKey("fk_ShoesColorId")]
+        [InverseProperty("ShoesGroups")]
         public virtual ShoesColorCategory fk_ShoesColor { get; set; }
+        [ForeignKey("fk_ShoesMainId")]
+        [InverseProperty("ShoesGroups")]
         public virtual CustomizedShoesPo fk_ShoesMain { get; set; }
     }
 }

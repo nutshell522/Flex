@@ -2,9 +2,13 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
+    [Index("fk_MemberId", Name = "UQ__MemberPo__3B54230C8C81DA21", IsUnique = true)]
     public partial class MemberPoint
     {
         public MemberPoint()
@@ -12,11 +16,15 @@ namespace EFModels.Models
             PointHistories = new HashSet<PointHistory>();
         }
 
+        [Key]
         public int MemberPointsId { get; set; }
         public int PointSubtotal { get; set; }
         public int fk_MemberId { get; set; }
 
+        [ForeignKey("fk_MemberId")]
+        [InverseProperty("MemberPoint")]
         public virtual Member fk_Member { get; set; }
+        [InverseProperty("fk_MemberPoints")]
         public virtual ICollection<PointHistory> PointHistories { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using EFModels.Models;
 using FlexCoreService.CartCtrl.Exts.Coupon_dll;
+using FlexCoreService.CartCtrl.Exts.Discount_dll;
 using FlexCoreService.CartCtrl.Models.vm;
 
 namespace FlexCoreService.CartCtrl.Exts

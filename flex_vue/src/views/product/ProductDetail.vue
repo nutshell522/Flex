@@ -239,10 +239,19 @@
     </div>
     <div class="row mt-3">
       <div class="col-12">
-        <div class="container-body d-flex">
-          <ul class="d-flex flex-wrap">
+        <div class="container-body">
+          <div class="d-flex">
+            <h1 class="me-auto">你可能會喜歡</h1>
+            <button class="me-3 similarBtn">
+              <i class="bi bi-chevron-left similarIcon"></i>
+            </button>
+            <button class="me-5 similarBtn">
+              <i class="bi bi-chevron-right similarIcon"></i>
+            </button>
+          </div>
+          <ul class="d-flex flex-wrap mt-3">
             <li
-              v-for="card in cards"
+              v-for="card in similarProducts"
               :key="card.productId"
               class="card text-center"
             >
@@ -269,9 +278,10 @@
 
 <script setup>
 import axios from "axios";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import ProductCard from "@/components/product/ProductCard.vue";
+import { useProductRoute } from "@/stores/useProductRoute.js";
 
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
@@ -286,13 +296,17 @@ const productComment = ref([]);
 const showCommentDiv = ref(true);
 const showDetailDiv = ref(true);
 const cards = ref([]);
+const productStore = useProductRoute();
+const productName = ref("");
+const similarProducts = ref([]);
 
 let getData = async () => {
   await axios
     .get(`${baseAddress}api/Products/Detail/${route.params.productId}`)
     .then((response) => {
-      //console.log(response.data.productGroup);
+      //console.log(response.data.productName);
       productDetail.value = response.data;
+      productName.value = response.data.productName;
       const firstColor = Object.keys(productDetail.value.productGroup)[0];
       //console.log(firstColor);
       if (firstColor) {
@@ -300,6 +314,7 @@ let getData = async () => {
         detailImg.value = selectSizes.value[0].defaultColorImg;
         //console.log(selectSizes.value[0].defaultColorImg);
       }
+      productStore.setProductName(productName);
     })
     .catch((error) => {
       alert(error);
@@ -322,8 +337,20 @@ let getComment = async () => {
   await axios
     .get(`${baseAddress}api/Products/Comment/${route.params.productId}`)
     .then((response) => {
-      console.log(response.data);
+      //console.log(response.data);
       productComment.value = response.data;
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
+let getSimilarProducts = async () => {
+  await axios
+    .get(`${baseAddress}api/Products/Similar/${route.params.productId}`)
+    .then((response) => {
+      //console.log(response.data);
+      similarProducts.value = response.data;
     })
     .catch((error) => {
       alert(error);
@@ -366,10 +393,23 @@ let incrementProductQty = () => {
   }
 };
 
+watch(
+  () => route.params.productId,
+  (newProductId) => {
+    if (newProductId != undefined) {
+      getData();
+      getImgs();
+      getComment();
+      getSimilarProducts();
+    }
+  }
+);
+
 onMounted(() => {
   getData();
   getImgs();
   getComment();
+  getSimilarProducts();
 });
 </script>
 
@@ -509,5 +549,20 @@ onMounted(() => {
   justify-content: center;
   border: 1px solid rgb(185, 184, 184);
   border-radius: 10px;
+}
+
+.similarBtn {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  border-radius: 50%;
+  background-color: #dbdbdb;
+}
+.similarBtn:hover {
+  background-color: #ababab;
+}
+
+.similarBtn:hover .similarIcon {
+  color: white;
 }
 </style>

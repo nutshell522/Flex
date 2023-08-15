@@ -4,6 +4,8 @@ using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.CustomeShoes.Models.Dtos;
 using FlexCoreService.CustomeShoes.Models.VMs;
 using FlexCoreService.CustomeShoes.Service;
+using FlexCoreService.ProductCtrl.Models.VM;
+using FlexCoreService.ProductCtrl.Service;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -93,6 +95,22 @@ namespace FlexCoreService.Controllers
             }
 
             return vm;
+        }
+
+        //GET: api/Products/Detial/productId
+        [HttpGet("Imgs/{shoesProductId}")]
+        public async Task<ActionResult<IEnumerable<ShoesImgsVM>>> GetShoesImgs(int shoesProductId)
+        {
+            var service = new CustomeShoesService(_repo);
+
+            var shoes = service.GetShoesImgs(shoesProductId).Select(i => i.ToImgVM());
+
+            if (shoes == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(shoes);
         }
 
         //[HttpGet("Detail/{ShoesProductId}")]

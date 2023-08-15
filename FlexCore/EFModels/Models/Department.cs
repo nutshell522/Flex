@@ -2,6 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -12,9 +15,12 @@ namespace EFModels.Models
             Staff = new HashSet<Staff>();
         }
 
+        [Key]
         public int DepartmentId { get; set; }
+        [StringLength(50)]
         public string DepartmentName { get; set; }
 
+        [InverseProperty("fk_Department")]
         public virtual ICollection<Staff> Staff { get; set; }
     }
 }
