@@ -1,5 +1,5 @@
 <template>
-  <div class="container verify">
+  <div class="container verify" v-if="verifyArea">
     <div class="col-md-6 pwdInput">
       <div class="mb-1">
         <label for="verify">會員驗證</label>
@@ -27,18 +27,21 @@
       </div>
     </div>
     <button type="button">
-      <i class="bi bi-plus-square-fill icon-size" @click="close"></i>
+      <i class="bi bi-plus-square-fill icon-size" @click="closeBtn"></i>
     </button>
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref, inject } from 'vue';
 import axios from 'axios';
 
 const errors = ref([]);
-//const props = defineProps(['password']);
 const password = ref(null);
+const verifyArea = inject('verifyArea');
+const close = () => {
+  verifyArea.value = false;
+};
 
 const baseAddress = 'https://localhost:7183/api';
 const verifyUri = `${baseAddress}/Users/Verify`;
@@ -60,14 +63,19 @@ function send() {
     axios
       .post(verifyUri, userInfo)
       .then((res) => {
-        console.log(res.data);
+        if (res.data) {
+          verifyArea.value = false;
+          //console.log(res.data);
+        }
       })
       .catch((err) => {
-        console.log(err);
+        errors.value = [];
+        errors.value.push('你是誰!');
+        //console.log(err);
       });
   }
 }
-function close() {
+function closeBtn() {
   //alert('close');
 }
 </script>

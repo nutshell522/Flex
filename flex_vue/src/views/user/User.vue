@@ -3,7 +3,7 @@
   <div>
     <userBar></userBar>
   </div>
-  <div class="container userDatas" v-eles>
+  <div class="container userDatas" v-if="showUserData">
     <div class="col-md-6 d-flex">
       <div class="input-group mb-2">
         <label for="nameInput" class="text">姓名</label>
@@ -151,14 +151,14 @@
   </div>
 
   <!-- 驗證畫面 -->
-  <verify class="verify" v-if="verifyArea" :password="password"></verify>
+  <verify class="verify" v-if="verifyArea"></verify>
 </template>
 
 <script setup>
 import verify from '@/components/user/verify.vue';
 import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
-import { ref, onMounted } from 'vue';
+import { ref, watch, provide } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 import axios from 'axios';
@@ -183,63 +183,66 @@ const alternateAddress1 = ref(null);
 const alternateAddress2 = ref(null);
 const isSubscribeNews = ref(true);
 
-const password = ref(null);
 const memberId = getApiStore.getMemberId;
-
 const verifyArea = ref(true);
+provide('verifyArea', verifyArea);
 
-//如果從verify得到密碼
-if (password.value) {
-  verifyArea.value = false;
-} else {
-  const baseAddress = 'https://localhost:7183/api';
-  const uri = `${baseAddress}/Users/` + memberId;
-  //console.log('uri', uri);
+const showUserData = ref(false);
 
-  //就撈出資料
-  axios
-    .get(uri)
-    .then((res) => {
-      userProfile.value = res.data;
-      //console.log('userProfile', userProfile.value);
+const baseAddress = 'https://localhost:7183/api';
+const uri = `${baseAddress}/Users/` + memberId;
+//console.log('uri', uri);
 
-      id.value = res.data.memberId;
-      //console.log(id);
+axios
+  .get(uri)
+  .then((res) => {
+    userProfile.value = res.data;
+    //console.log('userProfile', userProfile.value);
 
-      // level.value = res.data.fk_Level;
-      // levelName.value = res.data.levelName;
-      // name.value = res.data.name;
-      email.value = res.data.email;
-      mobile.value = res.data.mobile;
-      gender.value = res.data.gender;
-      commonAddress.value = res.data.commonAddress;
-      alternateAddress1.value = res.data.alternateAddress1;
-      alternateAddress2.value = res.data.alternateAddress2;
-      isSubscribeNews.value = res.data.isSubscribeNews;
-      //console.log(alternateAddress1.value);
-      //console.log(alternateAddress2.value);
-      //console.log('gender', gender.value);
-      //console.log(isSubscribeNews.value);
+    id.value = res.data.memberId;
+    //console.log(id);
 
-      //顯示控制項
-      if (alternateAddress1.value) {
-        addAddressInput1.value = true;
-      } else if (alternateAddress2.value) {
-        addAddressInput2.value = true;
-      }
-      if (alternateAddress1.value && alternateAddress2.value) {
-        addAddressInput1.value = true;
-        addAddressInput2.value = true;
-        addressBtn.value = true;
-      }
-      if (isSubscribeNews.value != true) {
-        isSubscribeNews.value = true;
-      }
-    })
-    .catch((err) => {
-      err;
-    });
-}
+    // level.value = res.data.fk_Level;
+    // levelName.value = res.data.levelName;
+    // name.value = res.data.name;
+    email.value = res.data.email;
+    mobile.value = res.data.mobile;
+    gender.value = res.data.gender;
+    commonAddress.value = res.data.commonAddress;
+    alternateAddress1.value = res.data.alternateAddress1;
+    alternateAddress2.value = res.data.alternateAddress2;
+    isSubscribeNews.value = res.data.isSubscribeNews;
+    //console.log(alternateAddress1.value);
+    //console.log(alternateAddress2.value);
+    //console.log('gender', gender.value);
+    //console.log(isSubscribeNews.value);
+
+    //顯示控制項
+    if (alternateAddress1.value) {
+      addAddressInput1.value = true;
+    } else if (alternateAddress2.value) {
+      addAddressInput2.value = true;
+    }
+    if (alternateAddress1.value && alternateAddress2.value) {
+      addAddressInput1.value = true;
+      addAddressInput2.value = true;
+      addressBtn.value = true;
+    }
+    if (isSubscribeNews.value != true) {
+      isSubscribeNews.value = true;
+    }
+  })
+  .catch((err) => {
+    err;
+  });
+
+// 這裡執行 watch 邏輯
+watch(verifyArea, (newValue) => {
+  if (!newValue) {
+    showUserData.value = true;
+  }
+});
+
 // 77地址增減怪怪的
 function addBtn() {
   if (commonAddress.value && addAddressInput1.value == false) {
@@ -314,7 +317,6 @@ function save() {
   //todo傳給後端
 }
 
-//還沒正確隱藏值
 if (isSubscribeNews.value == true) {
   isSubscribeNews.value = false;
 }
@@ -377,16 +379,16 @@ if (isSubscribeNews.value == true) {
 }
 .changePhoto {
   position: absolute;
-  top: 495px;
-  left: 1250px;
+  top: 300px;
+  left: 950px;
 }
 .userImg {
   position: absolute;
-  top: 330px;
-  left: 1150px;
+  top: 80px;
+  left: 900px;
   background-color: rebeccapurple;
   width: 15%;
-  height: 15%;
+  height: 50%;
 }
 .radioBtn {
   margin-right: 10px;
