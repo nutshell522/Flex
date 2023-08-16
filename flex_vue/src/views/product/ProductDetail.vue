@@ -69,10 +69,13 @@
               </button>
             </div>
             <div class="ms-3 text-center">
-              <button class="form-control" style="font-size: 20px">
-                收藏在這，用v-if切換
-                <i class="bi bi-heart" style="color: red"></i
-                ><i class="bi bi-heart-fill" style="color: red"></i>
+              <button
+                class="form-control"
+                style="font-size: 20px"
+                @click="collect"
+              >
+                <i class="bi bi-heart" style="color: red" v-if="!like"></i
+                ><i class="bi bi-heart-fill" style="color: red" v-if="like"></i>
               </button>
             </div>
           </div>
@@ -321,17 +324,17 @@
 </template>
 
 <script setup>
-import axios from "axios";
-import { computed, onMounted, ref, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import ProductCard from "@/components/product/ProductCard.vue";
-import { useProductRoute } from "@/stores/useProductRoute.js";
+import axios from 'axios';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import ProductCard from '@/components/product/ProductCard.vue';
+import { useProductRoute } from '@/stores/useProductRoute.js';
 
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
 const productDetail = ref({});
 const selectSizes = ref({});
-const detailImg = ref("");
+const detailImg = ref('');
 const colorActiveindex = ref(0);
 const sizeActiveIndex = ref(0);
 const buyQty = ref(1);
@@ -341,12 +344,13 @@ const showCommentDiv = ref(true);
 const showDetailDiv = ref(true);
 const cards = ref([]);
 const productStore = useProductRoute();
-const productName = ref("");
+const productName = ref('');
 const similarProducts = ref([]);
 const totalPages = ref(1);
 const thePage = ref(1);
 const currentIndex = ref(0);
 const visibleCards = ref([]);
+const like = ref(false);
 
 let getData = async () => {
   await axios
@@ -468,7 +472,7 @@ let changeSize = (index) => {
 };
 
 let handleQyt = (event) => {
-  buyQty.value = event.target.value.replace(/\D/g, "");
+  buyQty.value = event.target.value.replace(/\D/g, '');
   if (buyQty.value <= 1) {
     buyQty.value = 1;
   }
@@ -512,6 +516,13 @@ onMounted(() => {
   getSimilarProducts();
   //updateVisibleCards();
 });
+
+function collect() {
+  //alert('天阿!好喜翻呀~~~');
+  like.value = !like.value;
+  //喜歡的狀態要一直存在
+  //並加入收藏清單
+}
 </script>
 
 <style>
