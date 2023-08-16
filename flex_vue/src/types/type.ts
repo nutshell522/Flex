@@ -23,6 +23,20 @@ export interface CartItemProduct {
     imgPath: string;
     salesCategoryName: string;
     salesCategoryNameStr: string;
+    tagsValue: string;
+}
+
+export interface AppliedDiscount {
+    id: number;
+    rule: any; // 需要確定 rule 的型別
+    products: CartItemProduct[];
+    amount: number;
+}
+
+export interface Coupon {
+    id: number;
+    name: string;
+    sendingId: number;
 }
 
 // 購物車項目
@@ -35,6 +49,33 @@ export interface CartItem {
     subTotal: number;
     unitSubTotal: number;
 }
+
+// 購物車
+export interface ShoppingCart {
+    cartItems: CartItem[];
+    appliedDiscounts: AppliedDiscount[];
+    coupon: Coupon;
+    originalTotalAmount: number;
+    deliveryFee: number;
+    couponValue: number;
+    totalPrice: number;
+}
+// 會員資料
+export interface Member {
+    memberId: number;
+    fk_Level: number;
+    levelName: string;
+    name: string;
+    email: string;
+    mobile: string;
+    gender: boolean;
+    birthday: string;
+    commonAddress: string;
+    alternateAddress1: string;
+    alternateAddress2: string;
+    isSubscribeNews: boolean;
+}
+
 
 // 購物車物件
 export class ShoppingCartItem {

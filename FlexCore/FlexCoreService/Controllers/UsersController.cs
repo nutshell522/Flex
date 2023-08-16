@@ -55,7 +55,7 @@ namespace FlexCoreService.Controllers
             /// <param name="account"></param>
             /// <returns></returns>
         [HttpGet("{memberId}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ProfileDto> GetUserProfil(int memberId)
         {            
             ClaimsPrincipal user = HttpContext.User;
