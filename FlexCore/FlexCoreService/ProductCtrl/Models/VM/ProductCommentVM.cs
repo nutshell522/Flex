@@ -28,5 +28,6 @@
                 return CreateTime.ToString("d");
             }
         }
+        public int? totalPage { get; set; }
     }
 }

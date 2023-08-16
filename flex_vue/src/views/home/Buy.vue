@@ -43,7 +43,8 @@
                                     <span>姓名</span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="text" name="BillingAddress.PostalCode" id="bill-postal-code" placeholder="郵遞區號">
+                                    <input type="text" name="BillingAddress.PostalCode" id="bill-postal-code"
+                                        placeholder="郵遞區號">
                                     <span>郵遞區號</span>
                                 </div>
                                 <div class="input-wrapper">
@@ -160,49 +161,93 @@
 <script setup lang='ts'>
 import axios from "axios";
 import { ref, onMounted, computed } from "vue";
-class FlexCheckoutProcess{
-    private _step = 0 ;
-    // private _stepAreas = document.querySelectorAll('.step-area');
-    private _stepAreas: HTMLElement[] = [];
+class FlexCheckoutProcess {
+    private _step = 0;
+    private _stepAreas = document.querySelectorAll('.step-area');
+    private _showInfos = document.querySelectorAll('.show-info');
+    private _stepBlock = document.querySelectorAll('.step-block');
 
-    constructor() {
-    this._stepAreas.push(document.querySelector("#step-1-area")!);
-    this._stepAreas.push(document.querySelector("#step-2-area")!);
-    this._stepAreas.push(document.querySelector("#step-3-area")!);
-    }
+
     get step(): number {
         return this._step;
     }
     set step(nextStep: number) {
         if (nextStep < 0) {
             this._step = 0;
-        } 
-        else if(nextStep > 2){
+        }
+        else if (nextStep > 2) {
             this._step = 2;
         }
-        else{
+        else {
             this._step = nextStep;
         }
     }
-    process():void
-    {
-        for(let i=0; i <= this._stepAreas.length ; i++ ){
-            if(i==this.step){
+    process(): void {
+        for (let i = 0; i < this._stepAreas.length; i++) {
+            if (i == this.step) {
                 this._stepAreas[i].classList.add('d-block');
                 this._stepAreas[i].classList.remove('d-none');
+                this._stepBlock[i].classList.add('active');
             }
-            else{
+            else {
                 this._stepAreas[i].classList.remove('d-block');
                 this._stepAreas[i].classList.add('d-none');
-
+                this._stepBlock[i].classList.remove('active');
+            }
+            if (i != this._stepAreas.length - 1 && i < this.step) {
+                this._showInfos[i].classList.add('d-block');
+                this._showInfos[i].classList.remove('d-none');
+            }
+            else if (i != this._stepAreas.length - 1 && i >= this.step) {
+                this._showInfos[i].classList.remove('d-block');
+                this._showInfos[i].classList.add('d-none');
             }
         }
     }
 }
-onMounted(()=>{
+
+onMounted(() => {
+    const textInputs = document.querySelectorAll('.input-wrapper > input') as NodeListOf<HTMLInputElement>;
+    const textTitles = document.querySelectorAll('.input-wrapper > span');
+
+    textInputs.forEach((input, index) => {
+        const originalPlaceholder = input.getAttribute('placeholder')!;
+        const title = textTitles[index] as HTMLElement;
+
+        updateTitleVisibility(input, title, originalPlaceholder);
+        attachInputEventHandlers(input, title, originalPlaceholder);
+    });
+
     let flexCheckout = new FlexCheckoutProcess();
     flexCheckout.process();
 });
+
+// 判斷input的title是否秀出來
+function updateTitleVisibility(input: HTMLInputElement, title: HTMLElement, originalPlaceholder: string) {
+    title.innerHTML = originalPlaceholder;
+
+    if (input.value !== '') {
+        title.classList.add('d-block');
+        title.classList.remove('d-none');
+    } else {
+        title.classList.remove('d-block');
+        title.classList.add('d-none');
+    }
+}
+
+// 處理input的聚焦及失焦事件
+function attachInputEventHandlers(input: HTMLInputElement, title: HTMLElement, originalPlaceholder: string) {
+    input.addEventListener('focus', function () {
+        input.removeAttribute('placeholder');
+        title.classList.add('d-block');
+        title.classList.remove('d-none');
+    });
+
+    input.addEventListener('blur', function () {
+        input.setAttribute('placeholder', originalPlaceholder);
+        updateTitleVisibility(input, title, originalPlaceholder);
+    });
+}
 </script>
     
 <style scoped lang="scss">

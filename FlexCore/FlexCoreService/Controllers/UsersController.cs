@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using System.Text;
+using System.Net.Mail;
+using System.Net;
 
 namespace FlexCoreService.Controllers
 {
@@ -28,20 +30,34 @@ namespace FlexCoreService.Controllers
         }
 
         /// <summary>
-        /// 取得會員資料
+        /// 取得會員信箱
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
+        [HttpGet("account/{account}")]
+        public async Task<ActionResult<string>> GetUserEmail(string account)
+        {
+            //檢查帳號是否存在
+            Member member = await _db.Members.FirstOrDefaultAsync(x => x.Account == account);
+
+            if (_db.Members == null)
+            {
+                return NotFound();
+            }
+
+            string userEmail = member.Email; 
+            return Ok(userEmail); 
+        }
+
+        /// <summary>
+            /// 取得會員資料
+            /// </summary>
+            /// <param name="account"></param>
+            /// <returns></returns>
         [HttpGet("{memberId}")]
         [Authorize]
         public async Task<ProfileDto> GetUserProfil(int memberId)
-        {
-            //StringBuilder sb = new StringBuilder();
-            //sb.AppendLine("<ul>");
-            //foreach (Claim claim in HttpContext.User.Claims)
-            //{
-            //    sb.AppendLine($@"<li> claim.Type:{claim.Type} , claim.Value:{claim.Value}</li>");
-            //}
+        {            
             ClaimsPrincipal user = HttpContext.User;
 
             if (_db.Members == null)
@@ -150,7 +166,6 @@ namespace FlexCoreService.Controllers
             return "未登入";
         }
 
-
         /// <summary>
         /// 註冊
         /// </summary>
@@ -187,7 +202,7 @@ namespace FlexCoreService.Controllers
         public async Task<ActionResult<string>> EditUserProfile(int id, ProfileDto prodto)
         {
             
-            //檢查帳號是否存在
+            //檢查id是否存在
             Member member = await _db.Members.FindAsync(id); //FindAsync 根據主键查找對應的紀錄
 
             if (member == null)
@@ -202,14 +217,16 @@ namespace FlexCoreService.Controllers
             member.CommonAddress = prodto.CommonAddress;
             member.IsSubscribeNews = prodto.IsSubscribeNews;
 
-            // 更新 AlternateAddress 資料
+            //AlternateAddress 
             if (member.AlternateAddress == null)
             {
                 member.AlternateAddress = new AlternateAddress(); // 建立新的 AlternateAddress 物件
             }
 
-            member.AlternateAddress.AlternateAddress1 = prodto.AlternateAddress1;
-            member.AlternateAddress.AlternateAddress2 = prodto.AlternateAddress2;
+
+            AlternateAddress address = await _db.AlternateAddresses.FirstOrDefaultAsync(x => x.fk_MemberId == id);
+            address.AlternateAddress1 = prodto.AlternateAddress1;
+            address.AlternateAddress2 = prodto.AlternateAddress2;
 
             try
             {
@@ -231,6 +248,43 @@ namespace FlexCoreService.Controllers
             //跳更新成功回到本頁
             return Ok("編輯會員資料成功");
         }
+
+        /// <summary>
+        /// 註冊驗證信
+        /// </summary>
+        /// <param name="email"></param>
+        //[HttpGet]
+        //public void SendEmail(string email)
+        //{
+        //    var senderEmail = "";
+        //    var password = "";
+        //    //var senderEmail = _congig["Gmail:fuen28flex@gmail.com"];
+        //    //var password = _congig["Gmail:flexfuen28"];
+
+        //    MailMessage mms = new MailMessage();
+        //    mms.From = new MailAddress(senderEmail);
+        //    mms.To.Add(email);
+        //    mms.Subject = "Flex 註冊驗證信";
+        //    mms.Body = "感謝您註冊成為 Flex 的會員!請點擊連結...來啟用您的帳戶";
+
+        //    //設定郵件主機
+        //    SmtpClient client = new SmtpClient("flex.gmail.com");
+        //    client.Port = 587;
+        //    client.Credentials = new NetworkCredential(senderEmail, password);
+        //    client.EnableSsl = true;
+
+        //    //寄出郵件
+        //    try
+        //    {
+        //        client.Send(mms);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        Console.WriteLine(ex.ToString());
+        //    }
+
+        //}
+
 
         private bool MemberExists(int id)
         {

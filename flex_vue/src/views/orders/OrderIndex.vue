@@ -2,28 +2,72 @@
   <OrdernavBar></OrdernavBar>
   <div id="searchorderout" class="container">
     <div id="srarchdate" class="col-3">
-      <input type="text" v-model="begintime" @searchInputbegintime="inputbegintime" class="form-control datePicker"
-        placeholder="輸入開始日期">
+      <input
+        type="text"
+        v-model="begintime"
+        @searchInputbegintime="inputbegintime"
+        class="form-control datePicker"
+        placeholder="輸入開始日期"
+      />
       ~
-      <input type="text" v-model="endtime" @searchInputendtime="inputendtime" class="form-control datePicker"
-        placeholder="輸入結束日期">
+      <input
+        type="text"
+        v-model="endtime"
+        @searchInputendtime="inputendtime"
+        class="form-control datePicker"
+        placeholder="輸入結束日期"
+      />
     </div>
     <div id="searchorder" class="col-3">
-      <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control" placeholder="輸入名稱">
+      <input
+        type="text"
+        v-model="keyword"
+        @searchInput="inputhandler"
+        class="form-control"
+        placeholder="輸入名稱"
+      />
       <button class="button" @click="keywordSearch">搜尋</button>
     </div>
   </div>
   <div id="cate" class="container">
-    <button @click="setTypeValue('1'); setostatusValue('')">商品</button>
+    <button
+      @click="
+        setTypeValue('1');
+        setostatusValue('');
+      "
+    >
+      商品
+    </button>
 
-    <button @click="setTypeValue('4'); setostatusValue('')">客製化</button>
+    <button
+      @click="
+        setTypeValue('4');
+        setostatusValue('');
+      "
+    >
+      客製化
+    </button>
 
-    <button @click="setTypeValue('2'); setostatusValue('1')">活動</button>
+    <button
+      @click="
+        setTypeValue('2');
+        setostatusValue('1');
+      "
+    >
+      活動
+    </button>
 
-    <button @click="setTypeValue('3'); setostatusValue('1')">課程</button>
+    <button
+      @click="
+        setTypeValue('3');
+        setostatusValue('1');
+      "
+    >
+      課程
+    </button>
   </div>
   <div class="container" v-if="Type == 1">
-    <table class="table" style="width: 100%;">
+    <table class="table" style="width: 100%">
       <thead>
         <tr>
           <th></th>
@@ -50,22 +94,63 @@
           </tr>
           <tr>
             <td colspan="8">
-              <table class="table " style="text-align: left;border:2px solid black;"
-                v-show="expandedItems.includes(item.id)">
+              <table
+                class="table"
+                style="text-align: left; border: 2px solid black"
+                v-show="expandedItems.includes(item.id)"
+              >
                 <tr>
-                  <td colspan="4" style="text-align: right;">
-                    <div style="text-align: right;">
+                  <td colspan="4" style="text-align: right">
+                    <div style="text-align: right">
                       <button
-                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8 && item.close !== true"
-                        @click="setcancelIdValue(item.id)" class="btn btn-primary"
-                        style="margin-right: 30px;">申請取消</button>
+                        v-if="
+                          item.order_status_Id !== 7 &&
+                          item.order_status_Id !== 9 &&
+                          item.order_status_Id !== 8
+                        "
+                        @click="setcancelIdValue(item.id)"
+                        class="btn btn-primary"
+                        style="margin-right: 30px"
+                      >
+                        取消
+                      </button>
                       <button
-                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8 && item.close !== true"
-                        @click="setreturnIdValue(item.id)" class="btn btn-primary"
-                        :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
-                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">申請退貨</button>
-                      <button v-if="item.order_status_Id == 9" type="button" class="btn btn-secondary"
-                        @click="setcancelreturnIdValue2(item.id)">
+                        v-if="
+                          item.order_status_Id !== 7 &&
+                          item.order_status_Id !== 9 &&
+                          item.order_status_Id !== 8 &&
+                          item.close !== true
+                        "
+                        @click="setcancelIdValue(item.id)"
+                        class="btn btn-primary"
+                        style="margin-right: 30px"
+                      >
+                        申請取消
+                      </button>
+                      <button
+                        v-if="
+                          item.order_status_Id !== 7 &&
+                          item.order_status_Id !== 9 &&
+                          item.order_status_Id !== 8 &&
+                          item.close !== true
+                        "
+                        @click="setreturnIdValue(item.id)"
+                        class="btn btn-primary"
+                        :data-bs-toggle="
+                          item.order_status_Id === 6 ? 'modal' : null
+                        "
+                        :data-bs-target="
+                          item.order_status_Id === 6 ? '#exampleModal' : null
+                        "
+                      >
+                        申請退貨
+                      </button>
+                      <button
+                        v-if="item.order_status_Id == 9"
+                        type="button"
+                        class="btn btn-secondary"
+                        @click="setcancelreturnIdValue2(item.id)"
+                      >
                         取消退貨
                       </button>
                     </div>
@@ -77,21 +162,34 @@
                   <td>價格：{{ orderItem.per_price }}</td>
                   <td>規格：{{ orderItem.items_description }}</td>
                 </tr>
-                <hr>
-                <tr style="justify-content: center;">
+                <hr />
+                <tr style="justify-content: center">
                   <td colspan="8">
-                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
+                    <table
+                      class=""
+                      style="text-align: left"
+                      v-show="expandedItems.includes(item.id)"
+                    >
                       <tr>
-                        <td style="padding:0 200px 80px 20px;border-right:2px solid black;width: 500px;">
+                        <td
+                          style="
+                            padding: 0 200px 80px 20px;
+                            border-right: 2px solid black;
+                            width: 500px;
+                          "
+                        >
                           <h3>收件資訊</h3>
-                          <br>
+                          <br />
                           <div>地址：{{ item.recipient_address }}</div>
-                          <br>
+                          <br />
                           <div>姓名:{{ item.receiver }}</div>
-                          <br>
+                          <br />
                           <div>電話:{{ item.cellphone }}</div>
                         </td>
-                        <td id="orderItemDetail" style="padding-left: 30px;width: 800px;">
+                        <td
+                          id="orderItemDetail"
+                          style="padding-left: 30px; width: 800px"
+                        >
                           <h6>運費</h6>
                           <div>{{ item.freight }}</div>
                           <h6>運費折扣</h6>
@@ -114,7 +212,7 @@
     </table>
   </div>
   <div class="container" v-if="Type == 4">
-    <table class="table" style="width: 100%;">
+    <table class="table" style="width: 100%">
       <thead>
         <tr>
           <th></th>
@@ -129,7 +227,6 @@
       </thead>
       <tbody>
         <template v-for="item in GetOrders" :key="item.id">
-
           <tr>
             <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
             <td>{{ formatOrderTime(item.ordertime) }}</td>
@@ -142,20 +239,43 @@
           </tr>
           <tr>
             <td colspan="8">
-              <table class="table " style=" text-align: left;border:2px solid black;"
-                v-show="expandedItems.includes(item.id)">
+              <table
+                class="table"
+                style="text-align: left; border: 2px solid black"
+                v-show="expandedItems.includes(item.id)"
+              >
                 <tr>
-                  <td colspan="4" style="text-align: right;">
-                    <div style="text-align: right;">
+                  <td colspan="4" style="text-align: right">
+                    <div style="text-align: right">
                       <button
-                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setcancelIdValue(item.id)" class="btn btn-primary"
-                        style="margin-right: 30px;">申請取消</button>
+                        v-if="
+                          item.order_status_Id !== 7 &&
+                          item.order_status_Id !== 9 &&
+                          item.order_status_Id !== 8
+                        "
+                        @click="setcancelIdValue(item.id)"
+                        class="btn btn-primary"
+                        style="margin-right: 30px"
+                      >
+                        申請取消
+                      </button>
                       <button
-                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setreturnIdValue(item.id)" class="btn btn-primary"
-                        :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
-                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">申請退貨</button>
+                        v-if="
+                          item.order_status_Id !== 7 &&
+                          item.order_status_Id !== 9 &&
+                          item.order_status_Id !== 8
+                        "
+                        @click="setreturnIdValue(item.id)"
+                        class="btn btn-primary"
+                        :data-bs-toggle="
+                          item.order_status_Id === 6 ? 'modal' : null
+                        "
+                        :data-bs-target="
+                          item.order_status_Id === 6 ? '#exampleModal' : null
+                        "
+                      >
+                        申請退貨
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -165,20 +285,33 @@
                   <td>價格：{{ orderItem.per_price }}</td>
                   <td>規格：{{ orderItem.items_description }}</td>
                 </tr>
-                <hr>
-                <tr style="justify-content: center;">
+                <hr />
+                <tr style="justify-content: center">
                   <td colspan="8">
-                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
+                    <table
+                      class=""
+                      style="text-align: left"
+                      v-show="expandedItems.includes(item.id)"
+                    >
                       <tr>
-                        <td style="padding:0 200px 80px 20px;border-right:2px solid black;width: 500px;">
+                        <td
+                          style="
+                            padding: 0 200px 80px 20px;
+                            border-right: 2px solid black;
+                            width: 500px;
+                          "
+                        >
                           <h3>收件資訊</h3>
                           <div>地址：{{ item.recipient_address }}</div>
-                          <br>
+                          <br />
                           <div>姓名:{{ item.receiver }}</div>
-                          <br>
+                          <br />
                           <div>電話{{ item.cellphone }}</div>
                         </td>
-                        <td id="orderItemDetail" style="padding-left: 30px;width: 800px;">
+                        <td
+                          id="orderItemDetail"
+                          style="padding-left: 30px; width: 800px"
+                        >
                           <h6>運費</h6>
                           <div>{{ item.freight }}</div>
                           <h6>運費折扣</h6>
@@ -201,7 +334,7 @@
     </table>
   </div>
   <div class="container" v-if="Type == 2">
-    <table class="table" style="width: 100%;">
+    <table class="table" style="width: 100%">
       <div id="cateorder" class="container">
         <button @click="setostatusValue('1')">即將開始</button>
 
@@ -215,7 +348,7 @@
       <tbody>
         <template v-for="item in GetOrders" :key="item.id">
           <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-            <td style=" text-align: left;">
+            <td style="text-align: left">
               <div>活動名稱：{{ orderItem.product_name }}</div>
               <div>活動時間:{{ item.order_description }}</div>
               <div>活動地點：{{ item.recipient_address }}</div>
@@ -226,19 +359,36 @@
           </tr>
           <tr>
             <td colspan="8">
-              <table class="table " style=" text-align: left;border:2px solid black;"
-                v-show="expandedItems.includes(item.id)">
-                <tr style="justify-content: center;">
+              <table
+                class="table"
+                style="text-align: left; border: 2px solid black"
+                v-show="expandedItems.includes(item.id)"
+              >
+                <tr style="justify-content: center">
                   <td colspan="8">
-                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
+                    <table
+                      class=""
+                      style="text-align: left"
+                      v-show="expandedItems.includes(item.id)"
+                    >
                       <tr>
-                        <td style="padding:10px 200px 20px 20px;width: 500px;">
+                        <td style="padding: 10px 200px 20px 20px; width: 500px">
                           <h3>訂單詳請</h3>
-                          <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
+                          <div>
+                            購買時間：{{ formatOrderTime(item.ordertime) }}
+                          </div>
                           <div>訂單編號:{{ item.id }}</div>
                           <div>發票編號{{ item.receipt }}</div>
-                          <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
-                            @click="setcancelIdValue(item.id)" class="btn btn-success">申請取消</button>
+                          <button
+                            v-if="
+                              item.order_status_Id !== 7 &&
+                              item.order_status_Id !== 6
+                            "
+                            @click="setcancelIdValue(item.id)"
+                            class="btn btn-success"
+                          >
+                            申請取消
+                          </button>
                         </td>
                       </tr>
                     </table>
@@ -252,7 +402,7 @@
     </table>
   </div>
   <div class="container" v-if="Type == 3">
-    <table class="table" style="width: 100%;">
+    <table class="table" style="width: 100%">
       <div id="cateorder" class="container">
         <button @click="setostatusValue('1')">即將開始</button>
 
@@ -266,7 +416,7 @@
       <tbody>
         <template v-for="item in GetOrders" :key="item.id">
           <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-            <td style=" text-align: left;">
+            <td style="text-align: left">
               <div>課程名稱：{{ orderItem.product_name }}</div>
               <div>課程時間:{{ item.order_description }}</div>
               <div>課程地點：{{ item.recipient_address }}</div>
@@ -276,18 +426,35 @@
           </tr>
           <tr>
             <td colspan="8">
-              <table class="table " style=" text-align: left;border:2px solid black;"
-                v-show="expandedItems.includes(item.id)">
-                <tr style="justify-content: center;">
+              <table
+                class="table"
+                style="text-align: left; border: 2px solid black"
+                v-show="expandedItems.includes(item.id)"
+              >
+                <tr style="justify-content: center">
                   <td colspan="8">
-                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
+                    <table
+                      class=""
+                      style="text-align: left"
+                      v-show="expandedItems.includes(item.id)"
+                    >
                       <tr>
-                        <td style="padding:10px 200px 20px 20px;width: 500px;">
+                        <td style="padding: 10px 200px 20px 20px; width: 500px">
                           <h3>訂單詳請</h3>
-                          <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
+                          <div>
+                            購買時間：{{ formatOrderTime(item.ordertime) }}
+                          </div>
                           <div>訂單編號:{{ item.id }}</div>
-                          <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
-                            @click="setcancelIdValue(item.id)" class="btn btn-success">申請取消</button>
+                          <button
+                            v-if="
+                              item.order_status_Id !== 7 &&
+                              item.order_status_Id !== 6
+                            "
+                            @click="setcancelIdValue(item.id)"
+                            class="btn btn-success"
+                          >
+                            申請取消
+                          </button>
                         </td>
                       </tr>
                     </table>
@@ -302,12 +469,23 @@
   </div>
 
   <template v-for="item in GetOrders" :key="item.id">
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div class="modal-body">
             <div class="form-group">
@@ -317,16 +495,33 @@
             <div class="form-group">
               <label class="form-label">退貨原因:</label>
               <select class="form-control" v-model="returnreason">
-                <option v-for="reason in reReason" :key="reason.id" :value="reason.id">{{ reason.退貨理由 }}</option>
+                <option
+                  v-for="reason in reReason"
+                  :key="reason.id"
+                  :value="reason.id"
+                >
+                  {{ reason.退貨理由 }}
+                </option>
               </select>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              @click="setcancelreturnIdValue()"
+            >
               關閉
             </button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-              @click="setreturndetalValue()">確定</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              @click="setreturndetalValue()"
+            >
+              確定
+            </button>
           </div>
         </div>
       </div>
@@ -365,6 +560,7 @@ import axios from "axios";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const GetOrders = ref([]);
 const Type = ref("");
 const keyword = ref("");
@@ -380,7 +576,6 @@ const returnOrderId = ref("");
 const request = ref([]);
 const reReason = ref([]);
 
-
 const loadGetOrders = async () => {
   const begintimeValue = begintime.value;
   const endtimeValue = endtime.value;
@@ -389,9 +584,11 @@ const loadGetOrders = async () => {
     return;
   }
   await axios
-    .get(`https://localhost:7183/api/Orders/GetOrders?begintime=${begintime.value}&endtime=${endtime.value}&keyword=${keyword.value}&typeId=${Type.value}&ostatusId=${ostatus.value}`)
+    .get(
+      `${baseAddress}api/Orders/GetOrders?begintime=${begintime.value}&endtime=${endtime.value}&keyword=${keyword.value}&typeId=${Type.value}&ostatusId=${ostatus.value}`
+    )
     .then((response) => {
-      //console.log(response.data);
+      console.log(response.data);
       GetOrders.value = response.data;
     })
     .catch((error) => {
@@ -432,7 +629,9 @@ const setreturnIdValue = (paramValue) => {
 };
 const CancelReturnOrders = async () => {
   await axios
-    .put(`https://localhost:7183/api/Orders/cancelreturn?orderid=${retrunId.value}`)
+    .put(
+      `https://localhost:7183/api/Orders/cancelreturn?orderid=${retrunId.value}`
+    )
     .then((response) => {
       //console.log(response.data);
       alert(response.data);
@@ -457,7 +656,10 @@ const Returndetail = async () => {
     退貨理由: returnreason.value,
   };
   await axios
-    .post(`https://localhost:7183/api/Orders/NewReturn?orderid=${retrunId.value}`, requestData)
+    .post(
+      `https://localhost:7183/api/Orders/NewReturn?orderid=${retrunId.value}`,
+      requestData
+    )
     .then((response) => {
       alert("退款資訊已提交");
       loadGetOrders();
@@ -473,14 +675,16 @@ const setreturndetalValue = (paramValue) => {
   Returndetail();
 };
 const fetchReturnReasons = async () => {
-  await axios.get('https://localhost:7183/api/Orders/ReturnReasons')
+  await axios
+    .get("https://localhost:7183/api/Orders/ReturnReasons")
     .then((response) => {
       reReason.value = response.data;
       console.log(reReason.value);
-    }).catch((error) => {
-      alert(error);
     })
-}
+    .catch((error) => {
+      alert(error);
+    });
+};
 // const ReturnReason = async () => {
 //   if (this.selectedReason === null) {
 //     alert('请选择退货原因');
@@ -514,7 +718,7 @@ const setostatusValue = (paramValue) => {
   loadGetOrders();
 };
 
-const emit = defineEmits(["searchInput"])
+const emit = defineEmits(["searchInput"]);
 const inputhandler = () => {
   emit1("searchInput", keyword.value);
   loadGetOrders();
@@ -541,7 +745,7 @@ const toggleDetails = (itemId) => {
   } else {
     expandedItems.value.push(itemId);
   }
-}
+};
 
 onMounted(() => {
   Type.value = 1;
@@ -555,21 +759,21 @@ onMounted(() => {
 });
 </script>
 <style scoped>
-#orderItemDetail>h6 {
+#orderItemDetail > h6 {
   color: red;
 }
 
-.table>thead>tr>th {
+.table > thead > tr > th {
   background-color: maroon;
   color: white;
   text-align: center;
 }
 
-.table>tbody>tr>td {
+.table > tbody > tr > td {
   text-align: center;
 }
 
-#cate>button {
+#cate > button {
   text-align: center;
   padding-right: 20px;
   margin-right: 80px;
@@ -588,7 +792,7 @@ onMounted(() => {
   width: 60%;
 }
 
-#cateorder>button {
+#cateorder > button {
   text-align: center;
   padding-right: 20px;
   margin-right: 80px;
@@ -603,13 +807,13 @@ onMounted(() => {
   align-items: center;
 }
 
-#searchorder>input {
+#searchorder > input {
   margin: 20px;
   padding: 10px;
   width: 300px;
 }
 
-#searchorder>button {
+#searchorder > button {
   margin: 20px;
   padding: 10px;
   width: 60px;
@@ -624,7 +828,7 @@ onMounted(() => {
   align-items: center;
 }
 
-#srarchdate>input {
+#srarchdate > input {
   margin: 20px;
   padding: 10px;
   width: 300px;
