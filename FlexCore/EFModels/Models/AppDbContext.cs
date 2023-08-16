@@ -526,7 +526,7 @@ namespace EFModels.Models
 
             modelBuilder.Entity<Return>(entity =>
             {
-                entity.Property(e => e.ID).ValueGeneratedNever();
+               entity.Property(e => e.ID).ValueGeneratedNever();
 
                 entity.HasOne(d => d.fk訂單Navigation)
                     .WithMany(p => p.Returns)
