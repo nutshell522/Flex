@@ -53,20 +53,66 @@
               :class="{
                 sizeboxsetting: true,
                 sizeActive: sizeActiveIndex === index,
+                zeroInventory: size.qty === 0,
               }"
               :key="size.productGroupId"
               :title="size.sizeName"
               :data-productGroupId="size.productGroupId"
-              @click="changeSize(index)"
+              @click="handleSizeClick(index, size.qty)"
             >
               {{ size.sizeName }}
             </div>
           </div>
           <div class="mt-3 d-flex mb-3">
             <div class="text-center">
-              <button class="form-control" style="font-size: 20px">
+              <button
+                type="button"
+                class="form-control btn btn-secondary"
+                style="font-size: 20px"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                v-if="productDetail.salesCategoryName !== '配件'"
+              >
                 尺寸表
               </button>
+            </div>
+            <div
+              class="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      尺寸表
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body modal-dialog modal-dialog-scrollable">
+                    <img :src="baseAddress + 'Public/Img/' + sizeTable" />
+                    <p>※ 本尺寸表會因商品素材不同，可能與實際尺寸略有誤差。</p>
+                    <p>※ 尺寸表為商品平放測量，以公分(cm)為單位。</p>
+                    <img :src="baseAddress + 'Public/Img/' + sizeImg" />
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      關閉
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="ms-3 text-center">
               <button class="form-control" style="font-size: 20px">
@@ -347,6 +393,8 @@ const totalPages = ref(1);
 const thePage = ref(1);
 const currentIndex = ref(0);
 const visibleCards = ref([]);
+const sizeImg = ref("");
+const sizeTable = ref("");
 
 let getData = async () => {
   await axios
@@ -363,6 +411,84 @@ let getData = async () => {
         //console.log(selectSizes.value[0].defaultColorImg);
       }
       productStore.setProductName(productName.value);
+
+      if (
+        response.data.productCategoryName == "上衣" &&
+        response.data.salesCategoryName == "男裝"
+      ) {
+        sizeTable.value = "男裝上衣尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "上衣" &&
+        response.data.salesCategoryName == "女裝"
+      ) {
+        sizeTable.value = "女裝上衣尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "上衣" &&
+        response.data.salesCategoryName == "童裝"
+      ) {
+        sizeTable.value = "童裝上衣尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "男裝" &&
+        response.data.productSubCategoryName == "短褲"
+      ) {
+        sizeTable.value = "男裝褲子短褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "男裝" &&
+        response.data.productSubCategoryName == "長褲"
+      ) {
+        sizeTable.value = "男裝褲子長褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "女裝" &&
+        response.data.productSubCategoryName == "短褲"
+      ) {
+        sizeTable.value = "女裝褲子短褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "女裝" &&
+        response.data.productSubCategoryName == "長褲"
+      ) {
+        sizeTable.value = "女裝褲子長褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "童裝" &&
+        response.data.productSubCategoryName == "短褲"
+      ) {
+        sizeTable.value = "童裝褲子短褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "童裝" &&
+        response.data.productSubCategoryName == "長褲"
+      ) {
+        sizeTable.value = "童裝褲子長褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "鞋子" &&
+        response.data.salesCategoryName == "男裝"
+      ) {
+        sizeTable.value = "成人鞋子尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "鞋子" &&
+        response.data.salesCategoryName == "女裝"
+      ) {
+        sizeTable.value = "成人鞋子尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "鞋子" &&
+        response.data.salesCategoryName == "童裝"
+      ) {
+        sizeTable.value = "童裝鞋子尺寸表.jpg";
+      }
+
+      // console.log(sizeTable.value);
+
+      if (response.data.productCategoryName == "上衣") {
+        sizeImg.value = "上衣說明表.jpg";
+      } else if (response.data.productCategoryName == "褲子") {
+        sizeImg.value = "下身說明表.jpg";
+      } else if (response.data.productCategoryName == "鞋子") {
+        sizeImg.value = "鞋子說明表.jpg";
+      }
     })
     .catch((error) => {
       alert(error);
@@ -426,7 +552,7 @@ let updateVisibleCards = () => {
     const cardIndex = (currentIndex.value + i) % totalCards; // 循環索引
     visibleCards.value.push(similarProducts.value[cardIndex]);
   }
-  console.log(visibleCards.value);
+  //console.log(visibleCards.value);
 };
 
 let getComment = async () => {
@@ -465,6 +591,12 @@ let updateSizeList = (sizesDto, index) => {
 
 let changeSize = (index) => {
   sizeActiveIndex.value = index;
+};
+
+let handleSizeClick = (index, qty) => {
+  if (qty > 0) {
+    changeSize(index);
+  }
 };
 
 let handleQyt = (event) => {
@@ -670,5 +802,11 @@ onMounted(() => {
 .pageHandle {
   background-color: #706e6c;
   color: white;
+}
+
+.zeroInventory {
+  background-color: white;
+  color: #acaba9;
+  border: 1px dotted #acaba9;
 }
 </style>
