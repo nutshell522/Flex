@@ -1,6 +1,6 @@
 <template>
   <navBar></navBar>
-  <div class="container loginBox">
+  <div class="container loginBox" v-if="loginBox">
     <div class="loginText">
       <h4>Flex Your Journey. Join us!</h4>
     </div>
@@ -11,71 +11,79 @@
     </div>
     <!-- 欄位 -->
     <div class="from-group mb-3">
-      <label class="mb-1" v-if="accInput">帳號</label>
+      <label for="account" class="mb-1" v-if="accInput">帳號</label>
       <input
         type="text"
         name="account"
         v-if="accInput"
+        id="account"
         v-model="account"
         class="form-control"
         placeholder="手機號碼/帳號/Email"
       />
     </div>
     <div class="from-group mb-3" v-if="validated">
-      <label class="mb-1">密碼</label>
+      <label for="password" class="mb-1">密碼</label>
       <input
         type="password"
         name="password"
+        id="password"
         v-model="password"
         class="form-control"
         placeholder="輸入6-20碼英數字"
       />
     </div>
+    <!-- 00再次輸入確認密碼 -->
     <div class="from-group mb-3" v-if="nameInput">
-      <label>姓名</label>
+      <label for="name">姓名</label>
       <input
         type="text"
+        id="name"
         v-model="name"
         class="form-control"
-        placeholder="姓名"
+        placeholder="ex.吳哈哈"
       />
     </div>
     <div class="from-group mb-3" v-if="unValidated">
-      <label>信箱</label>
+      <label for="email">信箱</label>
       <input
         type="email"
         name="email"
+        id="email"
         v-model="email"
         class="form-control"
-        placeholder="信箱"
+        placeholder="ex.fuen28flex@gmail.com"
       />
     </div>
     <div class="from-group mb-3" v-if="birInput">
-      <label>生日</label>
+      <label for="birthday">生日</label>
       <input
         type="text"
         name="birthday"
+        id="birthday"
         v-model="birthday"
         class="form-control"
-        placeholder="生日"
+        placeholder="生日套用日期插件阿"
       />
     </div>
     <div class="from-group mb-3" v-if="mobInput">
-      <label>手機</label>
+      <label for="mobile">手機</label>
       <input
         type="text"
+        id="mobile"
         v-model="mobile"
         class="form-control"
-        placeholder="手機"
+        placeholder="ex.0912345678"
       />
     </div>
     <div class="from-group mb-3" v-if="addressInput">
-      <label>收件住址</label>
+      <label for="address">收件地址</label>
       <input
         type="text"
+        id="address"
         v-model="address"
         class="form-control"
-        placeholder="收件住址"
+        placeholder="收件地址套用選項按鈕阿"
       />
     </div>
     <!-- 按鈕 -->
@@ -128,11 +136,13 @@
       <a href="#" class="underline">隱私權及網站使用條款</a>
     </div>
   </div>
-  <!-- 忘記密碼畫面 -->
+  <!-- 忘記密碼請收驗證信 -->
   <forgetPwdAndSetPwd
     v-if="forgetPwdSetPwd"
     :email="email"
   ></forgetPwdAndSetPwd>
+  <!-- 收完驗證信重新設定密碼 -->
+  <!-- <resetPwd></resetPwd> -->
 </template>
 
 <script setup>
@@ -140,11 +150,12 @@ import axios from 'axios';
 import navBar from '@/components/home/navBar.vue';
 import { ref, onMounted } from 'vue';
 import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
+// import resetPwd from '@/components/user/resetPwd.vue';
 
 //pinia
-import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
+import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 
 axios.defaults.withCredentials = true;
 
@@ -166,8 +177,8 @@ onMounted(() => {
     // 同步到 pinia store
     getApiStore.setMemberUsername(loggedInUser.value.username);
     getApiStore.setMemberUsername(loggedInUser.value.memberId);
-    console.log("onMountedusername", loggedInUser.value.username);
-    console.log("onMountedmemberId", loggedInUser.value.memberId);
+    console.log('onMountedusername', loggedInUser.value.username);
+    console.log('onMountedmemberId', loggedInUser.value.memberId);
     setLoginSuccess(true);
   }
 });
@@ -178,24 +189,25 @@ const accInput = ref(true);
 const validated = ref(false); //初始化狀態為不顯示
 const unValidated = ref(false);
 
+const nameInput = ref(false);
 const birInput = ref(false);
 const mobInput = ref(false);
-const nameInput = ref(false);
+const addressInput = ref(false);
 const logAndRegBtn = ref(true);
 const registered = ref(true);
 const forgetPwd = ref(false);
 const unRegistered = ref(false);
 
 //登入表單
-const account = ref("");
-const password = ref("");
+const account = ref('');
+const password = ref('');
 
 //註冊表單
-const email = ref("");
-const birthday = ref("");
-const mobile = ref("");
-const name = ref("");
-//--一般會員
+const name = ref('');
+const email = ref('');
+const birthday = ref('');
+const mobile = ref('');
+const address = ref('');
 
 const baseAddress = 'https://localhost:7183/api';
 const uri = `${baseAddress}/Users/Login`;
@@ -208,7 +220,7 @@ function ValidatedIdentity() {
   //載入開始
   //alert('loginAndRegister');
   //未填寫
-  if (account.value === "") {
+  if (account.value === '') {
     errors.value = [];
     errors.value.push('沒有填誰知道你是誰'); //結束載入
   } else {
@@ -240,12 +252,13 @@ function ValidatedIdentity() {
           logAndRegBtn.value = false;
 
           errors.value = [];
-          errors.value.push("484沒有註冊");
+          errors.value.push('484沒有註冊');
           validated.value = true;
           unValidated.value = true; //信箱
+          nameInput.value = true;
           birInput.value = true;
           mobInput.value = true;
-          nameInput.value = true;
+          addressInput.value = true;
           unRegistered.value = true;
 
           //todo驗證帳號是否唯一
@@ -266,9 +279,9 @@ function Login() {
   //console.log(loginData);
 
   //未填寫密碼
-  if (password.value === "") {
+  if (password.value === '') {
     errors.value = [];
-    errors.value.push("密碼沒有填想怎樣");
+    errors.value.push('密碼沒有填想怎樣');
     return;
   }
 
@@ -277,7 +290,7 @@ function Login() {
     .then((res) => {
       const jsonData = res.data;
       const userPassword = jsonData.find(
-        (claim) => claim.Type === "UserPassword"
+        (claim) => claim.Type === 'UserPassword'
       );
       //console.log(userPassword.Value);
 
@@ -286,8 +299,8 @@ function Login() {
         errors.value = [];
 
         //取得登入者資料
-        const userName = jsonData.find((claim) => claim.Type === "FullName");
-        const userId = jsonData.find((claim) => claim.Type === "MemberId");
+        const userName = jsonData.find((claim) => claim.Type === 'FullName');
+        const userId = jsonData.find((claim) => claim.Type === 'MemberId');
 
         //登入者資料包成物件
         const memberInfo = {
@@ -301,7 +314,7 @@ function Login() {
         }
         //alert('登入成功啦港動~~~');
         handleSuccessfulLogin(memberInfo);
-        router.replace({ path: "/" });
+        router.replace({ path: '/' });
       }
     })
     .catch((err) => {
@@ -315,7 +328,7 @@ function Login() {
 
 function handleSuccessfulLogin(memberInfo) {
   // 將用戶信息轉成字串儲存到本地存儲中
-  localStorage.setItem("loggedInUser", JSON.stringify(memberInfo));
+  localStorage.setItem('loggedInUser', JSON.stringify(memberInfo));
 
   // 同步用戶信息到 pinia store
   loggedInUser.value = memberInfo;
@@ -328,19 +341,20 @@ var registerData = {};
 function register() {
   //alert('register');
   //todo檢查信箱格式
-  if (email.value === "") {
+  if (email.value === '') {
     errors.value = [];
-    errors.value.push("給我確實填寫喔");
+    errors.value.push('給我確實填寫喔');
   } else {
     //格式驗證通過
     errors.value = [];
     registerData.Account = account.value;
     registerData.EncryptedPassword = password.value;
+    registerData.Name = name.value;
     registerData.Email = email.value;
     registerData.Birthday = birthday.value;
     registerData.Mobile = mobile.value;
-    registerData.Name = name.value;
-    //console.log(registerData);
+    registerData.CommonAddress = address.value;
+    console.log(registerData);
     axios
       .post(regUri, registerData)
       .then((res) => {
@@ -352,17 +366,18 @@ function register() {
       .catch((err) => {});
   }
 }
-
+const loginBox = ref(true);
 const forgetPwdSetPwd = ref(false);
 userAcc.value = localStorage.getItem('userAcc');
 //console.log('userAcc', userAcc.value);
 
 function forgetPwdClick() {
+  loginBox.value = false;
   forgetPwdSetPwd.value = true;
   //呼叫api取得信箱
   if (userAcc.value) {
     const forgetUri = `${baseAddress}/Users/account/` + userAcc.value;
-    console.log(forgetUri);
+    //console.log(forgetUri);
     // 呼叫 API 取得信箱
     axios
       .get(forgetUri)
@@ -377,20 +392,21 @@ function forgetPwdClick() {
 }
 </script>
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap');
 .loginBox {
   width: 23%;
   justify-content: center;
   align-items: center;
   padding: 45px;
-  margin-top: 80px;
+  margin-top: 150px;
+  border: solid 1px;
 }
 .loginText {
   display: flex;
   justify-content: center;
 }
 .loginText > h4 {
-  font-family: "Bebas Neue", sans-serif;
+  font-family: 'Bebas Neue', sans-serif;
   font-weight: bold;
   font-size: 40px;
 }
@@ -427,7 +443,7 @@ p {
 
 p::before,
 p::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   width: 150px; /* 調整線段的長度 */

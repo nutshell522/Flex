@@ -3,7 +3,7 @@
   <div>
     <userBar></userBar>
   </div>
-  <div class="container">
+  <div class="container userDatas" v-if="showUserData">
     <div class="col-md-6 d-flex">
       <div class="input-group mb-2">
         <label for="nameInput" class="text">姓名</label>
@@ -67,7 +67,7 @@
 
     <div class="col-md-6">
       <div class="input-group">
-        <label for="addressInput" class="text">地址</label>
+        <label for="addressInput" class="text">常用地址</label>
         <input
           type="text"
           class="form-control"
@@ -93,6 +93,7 @@
           </button>
         </div>
       </div>
+      <!-- 備用地址 -->
       <div class="addressInput">
         <input
           type="text"
@@ -134,17 +135,30 @@
       </div>
       <div class="form-check-label" for="subscribeBtn">訂閱</div>
     </div>
-
+    <!-- 按鈕 -->
     <div class="btn btn-outline-info save">
       <button type="button" @click="save">儲存</button>
     </div>
+    <!-- 77絕對定位的樣式 -->
+    <div class="col-md-6">
+      <div class="userImg">
+        <img src="" alt="" />
+      </div>
+      <div class="btn btn-info changePhoto">
+        <button type="button" @click="changePhoto">選擇圖片</button>
+      </div>
+    </div>
   </div>
+
+  <!-- 驗證畫面 -->
+  <verify class="verify" v-if="verifyArea"></verify>
 </template>
 
 <script setup>
+import verify from '@/components/user/verify.vue';
 import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
-import { ref, reactive } from 'vue';
+import { ref, watch, provide } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 import axios from 'axios';
@@ -162,26 +176,28 @@ const email = ref('');
 const mobile = ref('');
 const gender = ref(false);
 const commonAddress = ref('');
-const addAddressInput1 = ref('');
-const addAddressInput2 = ref('');
+const addAddressInput1 = ref(false);
+const addAddressInput2 = ref(false);
 const addressBtn = ref(false);
 const alternateAddress1 = ref(null);
 const alternateAddress2 = ref(null);
 const isSubscribeNews = ref(true);
 
 const memberId = getApiStore.getMemberId;
-//console.log('memberId:', memberId);
+const verifyArea = ref(true);
+provide('verifyArea', verifyArea);
+
+const showUserData = ref(false);
 
 const baseAddress = 'https://localhost:7183/api';
 const uri = `${baseAddress}/Users/` + memberId;
-
 //console.log('uri', uri);
 
 axios
   .get(uri)
   .then((res) => {
     userProfile.value = res.data;
-    console.log(123, userProfile.value);
+    //console.log('userProfile', userProfile.value);
 
     id.value = res.data.memberId;
     //console.log(id);
@@ -197,17 +213,20 @@ axios
     alternateAddress2.value = res.data.alternateAddress2;
     isSubscribeNews.value = res.data.isSubscribeNews;
     //console.log(alternateAddress1.value);
-    console.log(alternateAddress2.value);
-    console.log('gender', gender.value);
+    //console.log(alternateAddress2.value);
+    //console.log('gender', gender.value);
     //console.log(isSubscribeNews.value);
 
     //顯示控制項
     if (alternateAddress1.value) {
       addAddressInput1.value = true;
+    } else if (alternateAddress2.value) {
+      addAddressInput2.value = true;
     }
     if (alternateAddress1.value && alternateAddress2.value) {
       addAddressInput1.value = true;
       addAddressInput2.value = true;
+      addressBtn.value = true;
     }
     if (isSubscribeNews.value != true) {
       isSubscribeNews.value = true;
@@ -217,26 +236,49 @@ axios
     err;
   });
 
+// 這裡執行 watch 邏輯
+watch(verifyArea, (newValue) => {
+  if (!newValue) {
+    showUserData.value = true;
+  }
+});
+
+// 77地址增減怪怪的
 function addBtn() {
-  if (addAddressInput1.value === false) {
+  if (commonAddress.value && addAddressInput1.value == false) {
     addAddressInput1.value = true;
-    console.log('addAddressInput1');
-  } else {
-    addAddressInput2.value = true; //多一個輸入框
-    console.log('addAddressInput2');
+    console.log('增加備用地址1');
+  }
+  if (commonAddress.value && alternateAddress1.value) {
+    addAddressInput2.value = true;
+    console.log('有三個地址，-按鈕');
+    addressBtn.value = true;
+  }
+  if (commonAddress.value && !alternateAddress1.value) {
     addressBtn.value = true;
   }
 }
 function minusBtn() {
-  if (addAddressInput1.value === true) {
+  if (!alternateAddress2.value) {
     addAddressInput2.value = false;
-    console.log('addAddressInput11111');
+    console.log('常用跟備用1，+按鈕');
     addressBtn.value = false;
-  } else {
+  }
+  if (!alternateAddress1.value) {
+    addressBtn.value = false;
+    console.log('常用地址，-按鈕');
+  }
+  if (!alternateAddress1.value && !alternateAddress2.value) {
     addAddressInput1.value = false;
-    console.log('addAddressInput222222');
+    console.log('常用地址，+按鈕');
+    addressBtn.value = false;
   }
 }
+
+function changePhoto() {
+  alert('changePhoto');
+}
+
 const userData = ref([]);
 
 function save() {
@@ -257,16 +299,16 @@ function save() {
     'editUserProfile.alternateAddress2',
     editUserProfile.alternateAddress2
   );
-  console.log(
-    'editUserProfile.isSubscribeNews',
-    editUserProfile.isSubscribeNews
-  );
+  // console.log(
+  //   'isSubscribeNews',
+  //   editUserProfile.isSubscribeNews
+  // );
 
   axios
     .put(uri, editUserProfile)
     .then((res) => {
       userData.value = res.data;
-      console.log('uri', uri);
+      //console.log('uri', uri);
       console.log(userData.value);
     })
     .catch((err) => {
@@ -275,7 +317,6 @@ function save() {
   //todo傳給後端
 }
 
-//還沒正確隱藏值
 if (isSubscribeNews.value == true) {
   isSubscribeNews.value = false;
 }
@@ -324,12 +365,30 @@ if (isSubscribeNews.value == true) {
     margin-left: 47px;
   }
 }
+.userDatas {
+  position: relative;
+}
+// 77按鈕的儲存字歪歪的
 .save {
-  display: flex;
-  justify-content: center;
   width: 8%;
-  height: 6%;
+  height: 12%;
   margin: 20px 0px;
+  position: absolute;
+  top: 350px;
+  left: 550px;
+}
+.changePhoto {
+  position: absolute;
+  top: 300px;
+  left: 950px;
+}
+.userImg {
+  position: absolute;
+  top: 80px;
+  left: 900px;
+  background-color: rebeccapurple;
+  width: 15%;
+  height: 50%;
 }
 .radioBtn {
   margin-right: 10px;
@@ -338,5 +397,8 @@ if (isSubscribeNews.value == true) {
   margin: 0px;
   display: flex;
   align-items: center;
+}
+.verify {
+  z-index: 1;
 }
 </style>
