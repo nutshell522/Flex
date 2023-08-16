@@ -1,5 +1,5 @@
 <template>
-  <div class="container area">
+  <div class="container area" v-if="forgetArea">
     <div class="checkText">
       <label for="">請至 {{ props.email }} 信箱收取驗證信</label>
     </div>
@@ -27,11 +27,14 @@
       <label for="">沒收到驗證信 ?</label>
     </div>
   </div>
+  <!-- 重新設定登入密碼 -->
+  <resetPwd v-if="reset"></resetPwd>
 </template>
 
 <script setup>
 import router from '@/router/index.js';
 import { ref, onMounted, defineProps } from 'vue';
+import resetPwd from '@/components/user/resetPwd.vue';
 
 const props = defineProps(['email']);
 //const email = ref(props);
@@ -48,6 +51,8 @@ onMounted(() => {
 
 const errors = ref([]);
 const checkNum = ref('');
+const reset = ref(false);
+const forgetArea = ref(true);
 
 function nextBtn() {
   if (checkNum.value == '') {
@@ -55,14 +60,16 @@ function nextBtn() {
 
     errors.value = [];
     errors.value.push('就跟你說了收信');
-
-    //驗證碼正確
-    //進入重新設定密碼
-
-    //新密碼設定密碼完成，導入登入畫面
-    router.push({ path: '/login' });
-    //驗證碼錯誤重新寄發
-    //回到驗整碼畫面
+  } else if (checkNum.value) {
+    errors.value = [];
+    // 驗證碼正確
+    // 進入重新設定密碼
+    forgetArea.value = false;
+    reset.value = true;
+  } else {
+    //驗證碼錯誤重新寄發;
+    //停留驗整碼畫面
+    console.log('驗證密碼錯誤');
   }
 }
 </script>
@@ -72,6 +79,7 @@ function nextBtn() {
   border: 1px solid;
   max-width: 20%;
   padding: 30px;
+  margin-top: 200px;
 }
 .checkNum {
   margin-bottom: 5px;

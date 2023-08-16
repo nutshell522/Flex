@@ -20,7 +20,9 @@ namespace FlexCoreService.CustomeShoes.Models.VMs
 
         public IEnumerable<CustomizedMaterialsDto> ShoesMaterials { get; set; }
 
-        public CustomeShoesVM()
+		public string Remark { get; set; }
+
+		public CustomeShoesVM()
         {
             ShoesColors = new List<ShoesColorCategoriesDto>();
             ShoesOptions = new List<ShoesOptionsDto>();

@@ -115,10 +115,13 @@
               </div>
             </div>
             <div class="ms-3 text-center">
-              <button class="form-control" style="font-size: 20px">
-                收藏在這，用v-if切換
-                <i class="bi bi-heart" style="color: red"></i
-                ><i class="bi bi-heart-fill" style="color: red"></i>
+              <button
+                class="form-control"
+                style="font-size: 20px"
+                @click="collect"
+              >
+                <i class="bi bi-heart" style="color: red" v-if="!like"></i
+                ><i class="bi bi-heart-fill" style="color: red" v-if="like"></i>
               </button>
             </div>
           </div>
@@ -395,7 +398,9 @@ const currentIndex = ref(0);
 const visibleCards = ref([]);
 const sizeImg = ref("");
 const sizeTable = ref("");
+const like = ref(false);
 
+//基本資料
 let getData = async () => {
   await axios
     .get(`${baseAddress}api/Products/Detail/${route.params.productId}`)
@@ -495,6 +500,7 @@ let getData = async () => {
     });
 };
 
+//抓照片
 let getImgs = async () => {
   await axios
     .get(`${baseAddress}api/Products/Imgs/${route.params.productId}`)
@@ -513,14 +519,14 @@ let clickHandler = (page) => {
   thePage.value = page;
   getComment();
 };
-
+//上一頁
 let decrementPage = () => {
   if (thePage.value > 1) {
     thePage.value--;
     getComment();
   }
 };
-
+//下一頁
 let incrementPage = () => {
   if (thePage.value < totalPages.value) {
     thePage.value++;
@@ -555,6 +561,7 @@ let updateVisibleCards = () => {
   //console.log(visibleCards.value);
 };
 
+//留言
 let getComment = async () => {
   await axios
     .get(
@@ -571,6 +578,7 @@ let getComment = async () => {
     });
 };
 
+//相似商品
 let getSimilarProducts = async () => {
   await axios
     .get(`${baseAddress}api/Products/Similar/${route.params.productId}`)
@@ -583,22 +591,26 @@ let getSimilarProducts = async () => {
     });
 };
 
+//更新size+照片
 let updateSizeList = (sizesDto, index) => {
   colorActiveindex.value = index;
   selectSizes.value = sizesDto;
   detailImg.value = sizesDto[0].defaultColorImg;
 };
 
+//被選重要加入樣式
 let changeSize = (index) => {
   sizeActiveIndex.value = index;
 };
 
+//被選重要加入樣式
 let handleSizeClick = (index, qty) => {
   if (qty > 0) {
     changeSize(index);
   }
 };
 
+//購買數量(手輸)
 let handleQyt = (event) => {
   buyQty.value = event.target.value.replace(/\D/g, "");
   if (buyQty.value <= 1) {
@@ -609,6 +621,7 @@ let handleQyt = (event) => {
   }
 };
 
+//購買數量(--)
 let decrementProductQty = () => {
   if (buyQty.value <= 1) {
     buyQty.value = 1;
@@ -617,6 +630,7 @@ let decrementProductQty = () => {
   }
 };
 
+//購買數量(++)
 let incrementProductQty = () => {
   if (buyQty.value >= 99) {
     buyQty.value = 99;
@@ -644,6 +658,13 @@ onMounted(() => {
   getSimilarProducts();
   //updateVisibleCards();
 });
+
+function collect() {
+  //alert('天阿!好喜翻呀~~~');
+  like.value = !like.value;
+  //喜歡的狀態要一直存在
+  //並加入收藏清單
+}
 </script>
 
 <style>

@@ -80,7 +80,12 @@
                   <i class="bi bi-plus-lg"></i>
                 </button>
               </div>
-              <div class="col-6">
+                <div class="col-6">
+                  <div class="form-control">
+                    <span>總金額${{ totalPrice }}</span>
+                  </div>
+                </div>
+              <div class="col-6 mt-5 ms-6">
                 <button class="form-control">進入客製化頁面</button>
               </div>
             </div>
@@ -161,7 +166,7 @@
 
 <script setup>
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
@@ -174,6 +179,9 @@ import homeFooter from "@/components/home/footer.vue";
     const buyQty = ref(1);
     const showDetailDiv = ref(true);
     const shoesImgs = ref([]);
+    const totalPrice = computed(() => {
+        return buyQty.value * shoesDetail.value.shoesUnitPrice;
+      });
 
 const handleSizeChange = () => {
       console.log('Selected size changed:', selectedSize.value);

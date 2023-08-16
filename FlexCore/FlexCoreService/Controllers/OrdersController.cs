@@ -82,10 +82,11 @@ namespace FlexCoreService.Controllers
 				recipient_address = p.recipient_address,
 				order_description = p.order_description,
 				close = (bool)p.close,
+				close_time=p.close_time,
 				total_price = p.total_price,
 				fk_typeId = p.fk_typeId,
 				orderItems = (List<OrderItemsVM>)GetOrderItemsIndex(p.Id)
-			});
+			});		
 			return Ok(result);
 		}
 		private static IEnumerable<OrderItemsVM> GetOrderItemsIndex(int orderId)
@@ -126,6 +127,13 @@ namespace FlexCoreService.Controllers
 
 			if (emp.order_status_Id == 1 || emp.order_status_Id == 2)
 			{
+				DateTime currentTime = DateTime.Now;
+				TimeSpan timeDifference = (TimeSpan)(currentTime - emp.close_time);
+
+				if (timeDifference.TotalDays <= 3)
+				{
+					return "已過退費時間，無法取消";
+				}
 				emp.order_status_Id = 7;
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
@@ -172,19 +180,12 @@ namespace FlexCoreService.Controllers
 				return null;
 			}
 			order emp = await _context.orders.FindAsync(orderid);
-			//if (emp.order_status_Id == 9)
-			//{
-			//	await Task.Delay(TimeSpan.FromMinutes(1));
-			//	emp.close = true;
-			//	_context.Entry(emp).State = EntityState.Modified;
-			//	await _context.SaveChangesAsync();
-			//}
+
 			if (emp.order_status_Id == 9)
 			{
 				emp.order_status_Id = 6;
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
-
 				return "已取消退貨";
 			}
 			else
@@ -193,13 +194,28 @@ namespace FlexCoreService.Controllers
 			}
 			
 		}
+		[HttpPut("setclose")]
+		public async Task<string> Setclose(int orderid)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(orderid);
 
+				await Task.Delay(TimeSpan.FromSeconds(10));
+				emp.close = true;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已過鑑賞期";
+			
+		}
 		[HttpPost("NewReturn")]
 		public async Task<string> Return(ReturnVM reDTO, int orderid)
 		{
 			var re = new Return
 			{
-				ID = reDTO.ID,
 				退貨日期 = DateTime.Now,
 				fk訂單 = orderid,
 				退貨轉帳帳號 = reDTO.退貨轉帳帳號,

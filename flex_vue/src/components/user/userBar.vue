@@ -27,11 +27,9 @@
       </ul>
     </div>
   </div>
-  <!-- <verify></verify> -->
 </template>
 
 <script>
-import verify from '@/components/user/verify.vue';
 import { ref } from 'vue';
 const page = ref('favorites');
 </script>
@@ -71,4 +69,5 @@ const page = ref('favorites');
   width: 20%;
   display: flex;
   justify-content: center;
-}</style>
+}
+</style>

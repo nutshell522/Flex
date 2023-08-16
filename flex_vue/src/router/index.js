@@ -239,6 +239,7 @@ const routes = [
     //http://loaclhost/CustomeShoes
     path: "/CustomeShoes",
     component: () => import("../views/CustomeShoes/CustomeShoesLayout.vue"),
+    meta: { title: `${webTitle}客製化商品` },
     children: [
       {
         path: "",
@@ -261,7 +262,7 @@ const routes = [
     component: () => import("../views/CustomeShoes/ShoesDetail.vue"),
     meta: {},
     beforeEnter(to, from, next) {
-      document.title = `${webTitle}${to.params.shoesProductId}`;
+      document.title = `${webTitle}商品詳細資訊${to.params.shoesProductId}`;
       next();
     },
   },
@@ -269,6 +270,7 @@ const routes = [
     //http://loaclhost/CustomeShoes/Contact
     path: "/CustomeShoes/Contact",
     component: () => import("../views/CustomeShoes/Contact.vue"),
+    meta: { title: `${webTitle}合作洽詢` },
     children: [
       {
         path: ":shoescategoryName",
@@ -286,6 +288,7 @@ const routes = [
     //http://loaclhost/CustomeShoes/Contact
     path: "/CustomeShoes/FAQ",
     component: () => import("../views/CustomeShoes/FAQ.vue"),
+    meta: { title: `${webTitle}常見問題` },
     children: [
       {
         //http://loaclhost/Login
