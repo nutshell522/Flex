@@ -13,8 +13,8 @@
         type="text"
         class="form-control input"
         id="verify"
-        :value="password"
         placeholder="請輸入登入密碼"
+        v-model="password"
       />
       <button type="button" class="btn btn-info" @click="send">送出</button>
     </div>
@@ -34,29 +34,37 @@
 
 <script setup>
 import { ref, defineProps } from 'vue';
+import axios from 'axios';
 
 const errors = ref([]);
-const props = defineProps(['password']);
+//const props = defineProps(['password']);
+const password = ref(null);
 
 const baseAddress = 'https://localhost:7183/api';
-// const verifyUri = `${baseAddress}/Users/` + memberId;
+const verifyUri = `${baseAddress}/Users/Verify`;
 
 function send() {
   //alert('send');
-  if ((password.value = '')) {
+  if (!password.value) {
     errors.value = [];
-    errors.value.push('填啦填啦'); //結束載入
+    errors.value.push('填啦填啦');
   } else {
-    //取得使用者id跟輸入的密碼送到後端驗證身分
-    // axios
-    //   .post(verifyUri, userInfo)
-    //   .then((res) => {
-    //     res.data;
-    //     verifyArea.value = false;
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    //取得本機儲存使用者id跟輸入的密碼送到後端驗證身分
+    const userAcc = localStorage.getItem('userAcc');
+    const userInfo = {
+      Account: userAcc,
+      EncryptedPassword: password.value,
+    };
+    //console.log('userInfo', userInfo);
+
+    axios
+      .post(verifyUri, userInfo)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 function close() {

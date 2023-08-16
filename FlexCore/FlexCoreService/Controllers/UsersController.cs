@@ -189,7 +189,7 @@ namespace FlexCoreService.Controllers
                 fk_LevelId = 1//一般會員
             };
 
-          
+
 
             //todo發送驗證信
 
@@ -234,13 +234,13 @@ namespace FlexCoreService.Controllers
             //沒有新增備用地址
             if (address == null)
             {
-                
+
             }
             else
             {
                 //新增備用地址
-            address.AlternateAddress1 = prodto.AlternateAddress1;
-            address.AlternateAddress2 = prodto.AlternateAddress2;
+                address.AlternateAddress1 = prodto.AlternateAddress1;
+                address.AlternateAddress2 = prodto.AlternateAddress2;
             }
 
             try
@@ -273,20 +273,19 @@ namespace FlexCoreService.Controllers
         public async Task<ActionResult<string>> ResetPwd(LoginDto logindto)
         {
             var member = (from m in _db.Members
-                            where m.Account == logindto.Account
-                            select m).SingleOrDefault();
+                          where m.Account == logindto.Account
+                          select m).SingleOrDefault();
 
 
-            //Member member = await _db.Members.FindAsync(logindto.Account);
             if (member == null)
             {
                 return NotFound("找不到對應的會員資料");
             }
-            
+
             member.EncryptedPassword = logindto.EncryptedPassword;
 
             try
-            {         
+            {
                 //雜湊密碼
                 await _db.SaveChangesAsync();
             }
@@ -302,6 +301,30 @@ namespace FlexCoreService.Controllers
                 }
             }
             return Ok("重設密碼成功");
+        }
+
+        /// <summary>
+        /// 驗證會員身分
+        /// </summary>
+        /// <param name="logindto"></param>
+        /// <returns></returns>
+        [HttpPost("Verify")]
+        public async Task<ActionResult<string>> VerifyUser(LoginDto logindto)
+        {
+            Member member = await _db.Members.FirstOrDefaultAsync(x => x.Account == logindto.Account);
+            if (member == null)
+            {
+                return NotFound("找不到對應的會員資料");
+            }
+            else if (member.EncryptedPassword == logindto.EncryptedPassword)
+            {
+                return Ok("驗證通過");
+            }
+            else
+            {
+                return BadRequest("密碼不正確");
+            }
+
         }
 
         /// <summary>
@@ -340,7 +363,6 @@ namespace FlexCoreService.Controllers
 
         //}
 
-
         private bool MemberExists(int id)
         {
             return (_db.Members?.Any(e => e.MemberId == id)).GetValueOrDefault();
@@ -348,7 +370,7 @@ namespace FlexCoreService.Controllers
         private bool MemberExists(string account)
         {
             return (_db.Members?.Any(e => e.Account == account)).GetValueOrDefault();
-        }              
+        }
 
     }
 }
