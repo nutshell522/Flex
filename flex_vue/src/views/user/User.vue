@@ -3,7 +3,7 @@
   <div>
     <userBar></userBar>
   </div>
-  <div class="container userDatas">
+  <div class="container userDatas" v-eles>
     <div class="col-md-6 d-flex">
       <div class="input-group mb-2">
         <label for="nameInput" class="text">姓名</label>
@@ -139,22 +139,26 @@
     <div class="btn btn-outline-info save">
       <button type="button" @click="save">儲存</button>
     </div>
-  </div>
-  <!-- 77絕對定位的樣式 -->
-  <div class="col-md-6">
-    <div class="userImg">
-      <img src="" alt="" />
+    <!-- 77絕對定位的樣式 -->
+    <div class="col-md-6">
+      <div class="userImg">
+        <img src="" alt="" />
+      </div>
+      <div class="btn btn-info changePhoto">
+        <button type="button" @click="changePhoto">選擇圖片</button>
+      </div>
     </div>
-    <div class="btn btn-info changePhoto">
-      <button type="button" @click="changePhoto">選擇圖片</button>
-    </div>
   </div>
+
+  <!-- 驗證畫面 -->
+  <verify class="verify" v-if="verifyArea" :password="password"></verify>
 </template>
 
 <script setup>
+import verify from '@/components/user/verify.vue';
 import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
-import { ref, reactive } from 'vue';
+import { ref, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 import axios from 'axios';
@@ -179,56 +183,63 @@ const alternateAddress1 = ref(null);
 const alternateAddress2 = ref(null);
 const isSubscribeNews = ref(true);
 
+const password = ref(null);
 const memberId = getApiStore.getMemberId;
-//console.log('memberId:', memberId);
 
-const baseAddress = 'https://localhost:7183/api';
-const uri = `${baseAddress}/Users/` + memberId;
+const verifyArea = ref(true);
 
-//console.log('uri', uri);
+//如果從verify得到密碼
+if (password.value) {
+  verifyArea.value = false;
+} else {
+  const baseAddress = 'https://localhost:7183/api';
+  const uri = `${baseAddress}/Users/` + memberId;
+  //console.log('uri', uri);
 
-axios
-  .get(uri)
-  .then((res) => {
-    userProfile.value = res.data;
-    console.log('userProfile', userProfile.value);
+  //就撈出資料
+  axios
+    .get(uri)
+    .then((res) => {
+      userProfile.value = res.data;
+      //console.log('userProfile', userProfile.value);
 
-    id.value = res.data.memberId;
-    //console.log(id);
+      id.value = res.data.memberId;
+      //console.log(id);
 
-    // level.value = res.data.fk_Level;
-    // levelName.value = res.data.levelName;
-    // name.value = res.data.name;
-    email.value = res.data.email;
-    mobile.value = res.data.mobile;
-    gender.value = res.data.gender;
-    commonAddress.value = res.data.commonAddress;
-    alternateAddress1.value = res.data.alternateAddress1;
-    alternateAddress2.value = res.data.alternateAddress2;
-    isSubscribeNews.value = res.data.isSubscribeNews;
-    //console.log(alternateAddress1.value);
-    console.log(alternateAddress2.value);
-    //console.log('gender', gender.value);
-    //console.log(isSubscribeNews.value);
+      // level.value = res.data.fk_Level;
+      // levelName.value = res.data.levelName;
+      // name.value = res.data.name;
+      email.value = res.data.email;
+      mobile.value = res.data.mobile;
+      gender.value = res.data.gender;
+      commonAddress.value = res.data.commonAddress;
+      alternateAddress1.value = res.data.alternateAddress1;
+      alternateAddress2.value = res.data.alternateAddress2;
+      isSubscribeNews.value = res.data.isSubscribeNews;
+      //console.log(alternateAddress1.value);
+      //console.log(alternateAddress2.value);
+      //console.log('gender', gender.value);
+      //console.log(isSubscribeNews.value);
 
-    //顯示控制項
-    if (alternateAddress1.value) {
-      addAddressInput1.value = true;
-    } else if (alternateAddress2.value) {
-      addAddressInput2.value = true;
-    }
-    if (alternateAddress1.value && alternateAddress2.value) {
-      addAddressInput1.value = true;
-      addAddressInput2.value = true;
-      addressBtn.value = true;
-    }
-    if (isSubscribeNews.value != true) {
-      isSubscribeNews.value = true;
-    }
-  })
-  .catch((err) => {
-    err;
-  });
+      //顯示控制項
+      if (alternateAddress1.value) {
+        addAddressInput1.value = true;
+      } else if (alternateAddress2.value) {
+        addAddressInput2.value = true;
+      }
+      if (alternateAddress1.value && alternateAddress2.value) {
+        addAddressInput1.value = true;
+        addAddressInput2.value = true;
+        addressBtn.value = true;
+      }
+      if (isSubscribeNews.value != true) {
+        isSubscribeNews.value = true;
+      }
+    })
+    .catch((err) => {
+      err;
+    });
+}
 // 77地址增減怪怪的
 function addBtn() {
   if (commonAddress.value && addAddressInput1.value == false) {
@@ -355,6 +366,7 @@ if (isSubscribeNews.value == true) {
 .userDatas {
   position: relative;
 }
+// 77按鈕的儲存字歪歪的
 .save {
   width: 8%;
   height: 12%;
@@ -383,5 +395,8 @@ if (isSubscribeNews.value == true) {
   margin: 0px;
   display: flex;
   align-items: center;
+}
+.verify {
+  z-index: 1;
 }
 </style>
