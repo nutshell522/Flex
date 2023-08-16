@@ -172,19 +172,12 @@ namespace FlexCoreService.Controllers
 				return null;
 			}
 			order emp = await _context.orders.FindAsync(orderid);
-			//if (emp.order_status_Id == 9)
-			//{
-			//	await Task.Delay(TimeSpan.FromMinutes(1));
-			//	emp.close = true;
-			//	_context.Entry(emp).State = EntityState.Modified;
-			//	await _context.SaveChangesAsync();
-			//}
+
 			if (emp.order_status_Id == 9)
 			{
 				emp.order_status_Id = 6;
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
-
 				return "已取消退貨";
 			}
 			else
@@ -193,13 +186,28 @@ namespace FlexCoreService.Controllers
 			}
 			
 		}
+		[HttpPut("setclose")]
+		public async Task<string> Setclose(int orderid)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(orderid);
 
+				await Task.Delay(TimeSpan.FromSeconds(5));
+				emp.close = true;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已過鑑賞期";
+			
+		}
 		[HttpPost("NewReturn")]
 		public async Task<string> Return(ReturnVM reDTO, int orderid)
 		{
 			var re = new Return
 			{
-				ID = reDTO.ID,
 				退貨日期 = DateTime.Now,
 				fk訂單 = orderid,
 				退貨轉帳帳號 = reDTO.退貨轉帳帳號,
