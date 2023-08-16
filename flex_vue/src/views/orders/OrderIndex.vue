@@ -255,7 +255,7 @@
           <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
             <td style="text-align: left">
               <div>活動名稱：{{ orderItem.product_name }}</div>
-              <div>活動時間:{{ item.order_description }}</div>
+              <div>活動時間:{{ formatOrderTime(item.close_time) }}</div>
               <div>活動地點：{{ item.recipient_address }}</div>
               <div>活動講師:{{ item.receiver }}</div>
               <div>費用：{{ orderItem.per_price }}</div>
@@ -311,7 +311,7 @@
           <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
             <td style="text-align: left">
               <div>課程名稱：{{ orderItem.product_name }}</div>
-              <div>課程時間:{{ item.order_description }}</div>
+              <div>課程時間:{{ formatOrderTime(item.close_time) }}</div>
               <div>課程地點：{{ item.recipient_address }}</div>
               <div>課程講師:{{ item.receiver }}</div>
             </td>

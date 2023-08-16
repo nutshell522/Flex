@@ -82,10 +82,11 @@ namespace FlexCoreService.Controllers
 				recipient_address = p.recipient_address,
 				order_description = p.order_description,
 				close = (bool)p.close,
+				close_time=p.close_time,
 				total_price = p.total_price,
 				fk_typeId = p.fk_typeId,
 				orderItems = (List<OrderItemsVM>)GetOrderItemsIndex(p.Id)
-			});
+			});		
 			return Ok(result);
 		}
 		private static IEnumerable<OrderItemsVM> GetOrderItemsIndex(int orderId)
@@ -126,6 +127,13 @@ namespace FlexCoreService.Controllers
 
 			if (emp.order_status_Id == 1 || emp.order_status_Id == 2)
 			{
+				DateTime currentTime = DateTime.Now;
+				TimeSpan timeDifference = (TimeSpan)(currentTime - emp.close_time);
+
+				if (timeDifference.TotalDays <= 3)
+				{
+					return "已過退費時間，無法取消";
+				}
 				emp.order_status_Id = 7;
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
