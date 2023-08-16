@@ -27,11 +27,14 @@
       <label for="">沒收到驗證信 ?</label>
     </div>
   </div>
+  <!-- 重新設定登入密碼 -->
+  <resetPwd v-if="reset"></resetPwd>
 </template>
 
 <script setup>
 import router from '@/router/index.js';
 import { ref, onMounted, defineProps } from 'vue';
+import resetPwd from '@/components/user/resetPwd.vue';
 
 const props = defineProps(['email']);
 //const email = ref(props);
@@ -48,6 +51,7 @@ onMounted(() => {
 
 const errors = ref([]);
 const checkNum = ref('');
+const reset = ref(false);
 
 function nextBtn() {
   if (checkNum.value == '') {
@@ -55,14 +59,15 @@ function nextBtn() {
 
     errors.value = [];
     errors.value.push('就跟你說了收信');
-
-    //驗證碼正確
-    //進入重新設定密碼
-
-    //新密碼設定密碼完成，導入登入畫面
-    router.push({ path: '/login' });
-    //驗證碼錯誤重新寄發
-    //回到驗整碼畫面
+  } else if (checkNum.value) {
+    errors.value = [];
+    // 驗證碼正確
+    // 進入重新設定密碼
+    reset.value = true;
+  } else {
+    //驗證碼錯誤重新寄發;
+    //停留驗整碼畫面
+    console.log('驗證密碼錯誤');
   }
 }
 </script>

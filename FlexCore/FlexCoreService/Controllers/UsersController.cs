@@ -13,6 +13,8 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Net.Mail;
 using System.Net;
+using System.Security.Principal;
+using Newtonsoft.Json.Linq;
 
 namespace FlexCoreService.Controllers
 {
@@ -45,19 +47,19 @@ namespace FlexCoreService.Controllers
                 return NotFound();
             }
 
-            string userEmail = member.Email; 
-            return Ok(userEmail); 
+            string userEmail = member.Email;
+            return Ok(userEmail);
         }
 
         /// <summary>
-            /// 取得會員資料
-            /// </summary>
-            /// <param name="account"></param>
-            /// <returns></returns>
+        /// 取得會員資料
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         [HttpGet("{memberId}")]
         [Authorize]
         public async Task<ProfileDto> GetUserProfil(int memberId)
-        {            
+        {
             ClaimsPrincipal user = HttpContext.User;
 
             if (_db.Members == null)
@@ -96,7 +98,7 @@ namespace FlexCoreService.Controllers
                             select m).SingleOrDefault();
 
             var userPassword = string.Empty;
-            
+
 
             if (userData == null)
             {
@@ -104,7 +106,7 @@ namespace FlexCoreService.Controllers
                 return Ok(null);
             }
             else
-            {                
+            {
                 //驗證密碼
                 userPassword = userData.EncryptedPassword;
 
@@ -129,9 +131,9 @@ namespace FlexCoreService.Controllers
 
                     //控制登入狀態
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                    
+
                     return Ok(JsonConvert.SerializeObject(claims));
-                }               
+                }
                 return Ok(userData.Account);
             }
         }
@@ -201,7 +203,7 @@ namespace FlexCoreService.Controllers
         [HttpPut("Id")]
         public async Task<ActionResult<string>> EditUserProfile(int id, ProfileDto prodto)
         {
-            
+
             //檢查id是否存在
             Member member = await _db.Members.FindAsync(id); //FindAsync 根據主键查找對應的紀錄
 
@@ -250,7 +252,47 @@ namespace FlexCoreService.Controllers
         }
 
         /// <summary>
-        /// 註冊驗證信
+        /// 重新設定密碼
+        /// </summary>
+        /// <param name="logindto"></param>
+        /// <returns></returns>
+        [HttpPut("ResetPwd")]
+        public async Task<ActionResult<string>> ResetPwd(LoginDto logindto)
+        {
+            var member = (from m in _db.Members
+                            where m.Account == logindto.Account
+                            select m).SingleOrDefault();
+
+
+            //Member member = await _db.Members.FindAsync(logindto.Account);
+            if (member == null)
+            {
+                return NotFound("找不到對應的會員資料");
+            }
+            
+            member.EncryptedPassword = logindto.EncryptedPassword;
+
+            try
+            {         
+                //雜湊密碼
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MemberExists(member.Account))
+                {
+                    return "重設密碼失敗!";
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return Ok("重設密碼成功");
+        }
+
+        /// <summary>
+        /// 註冊驗證信(改成忘記密碼驗證信?)
         /// </summary>
         /// <param name="email"></param>
         //[HttpGet]
@@ -290,5 +332,10 @@ namespace FlexCoreService.Controllers
         {
             return (_db.Members?.Any(e => e.MemberId == id)).GetValueOrDefault();
         }
+        private bool MemberExists(string account)
+        {
+            return (_db.Members?.Any(e => e.Account == account)).GetValueOrDefault();
+        }              
+
     }
 }
