@@ -19,7 +19,7 @@ namespace FlexCoreService.CustomeShoes.Exts
                 ShoesOptions = dto1.ToList(),
                 ShoesColors = dto2.ToList(),
                 ShoesMaterials = dto3.ToList(),
-
+                Remark = dto.Remark,
             };
         }
 
