@@ -196,7 +196,7 @@ namespace FlexCoreService.Controllers
 			}
 			order emp = await _context.orders.FindAsync(orderid);
 
-				await Task.Delay(TimeSpan.FromSeconds(5));
+				await Task.Delay(TimeSpan.FromSeconds(10));
 				emp.close = true;
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
