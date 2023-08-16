@@ -1,5 +1,5 @@
 <template>
-  <div class="container area">
+  <div class="container area" v-if="forgetArea">
     <div class="checkText">
       <label for="">請至 {{ props.email }} 信箱收取驗證信</label>
     </div>
@@ -52,6 +52,7 @@ onMounted(() => {
 const errors = ref([]);
 const checkNum = ref('');
 const reset = ref(false);
+const forgetArea = ref(true);
 
 function nextBtn() {
   if (checkNum.value == '') {
@@ -63,6 +64,7 @@ function nextBtn() {
     errors.value = [];
     // 驗證碼正確
     // 進入重新設定密碼
+    forgetArea.value = false;
     reset.value = true;
   } else {
     //驗證碼錯誤重新寄發;
@@ -77,6 +79,7 @@ function nextBtn() {
   border: 1px solid;
   max-width: 20%;
   padding: 30px;
+  margin-top: 200px;
 }
 .checkNum {
   margin-bottom: 5px;

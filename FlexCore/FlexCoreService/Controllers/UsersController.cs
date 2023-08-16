@@ -78,6 +78,7 @@ namespace FlexCoreService.Controllers
                 Birthday = m.Birthday,
                 CommonAddress = m.CommonAddress,
                 AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
+                AlternateAddress2 = m.AlternateAddress.AlternateAddress2,
                 IsSubscribeNews = m.IsSubscribeNews
             }).First();
 
@@ -180,15 +181,17 @@ namespace FlexCoreService.Controllers
             {
                 Account = regdto.Account,
                 EncryptedPassword = regdto.EncryptedPassword,
+                Name = regdto.Name,
                 Email = regdto.Email,
                 Birthday = regdto.Birthday,
                 Mobile = regdto.Mobile,
-                Name = regdto.Name,
+                CommonAddress = regdto.CommonAddress,
                 fk_LevelId = 1//一般會員
             };
+
+          
+
             //todo發送驗證信
-
-
 
             _db.Members.Add(member);
             await _db.SaveChangesAsync();
@@ -227,8 +230,18 @@ namespace FlexCoreService.Controllers
 
 
             AlternateAddress address = await _db.AlternateAddresses.FirstOrDefaultAsync(x => x.fk_MemberId == id);
+
+            //沒有新增備用地址
+            if (address == null)
+            {
+                
+            }
+            else
+            {
+                //新增備用地址
             address.AlternateAddress1 = prodto.AlternateAddress1;
             address.AlternateAddress2 = prodto.AlternateAddress2;
+            }
 
             try
             {

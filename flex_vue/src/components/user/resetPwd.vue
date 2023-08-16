@@ -70,6 +70,7 @@ function finish() {
   border: 1px solid;
   max-width: 20%;
   padding: 30px;
+  margin-top: 200px;
 }
 .resetPwd {
   margin-bottom: 5px;

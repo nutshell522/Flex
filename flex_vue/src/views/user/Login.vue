@@ -1,6 +1,6 @@
 <template>
   <navBar></navBar>
-  <div class="container loginBox">
+  <div class="container loginBox" v-if="loginBox">
     <div class="loginText">
       <h4>Flex Your Journey. Join us!</h4>
     </div>
@@ -33,6 +33,7 @@
         placeholder="輸入6-20碼英數字"
       />
     </div>
+    <!-- 00再次輸入確認密碼 -->
     <div class="from-group mb-3" v-if="nameInput">
       <label for="name">姓名</label>
       <input
@@ -40,7 +41,7 @@
         id="name"
         v-model="name"
         class="form-control"
-        placeholder="姓名"
+        placeholder="ex.吳哈哈"
       />
     </div>
     <div class="from-group mb-3" v-if="unValidated">
@@ -51,7 +52,7 @@
         id="email"
         v-model="email"
         class="form-control"
-        placeholder="信箱"
+        placeholder="ex.fuen28flex@gmail.com"
       />
     </div>
     <div class="from-group mb-3" v-if="birInput">
@@ -62,7 +63,7 @@
         id="birthday"
         v-model="birthday"
         class="form-control"
-        placeholder="生日"
+        placeholder="生日套用日期插件阿"
       />
     </div>
     <div class="from-group mb-3" v-if="mobInput">
@@ -72,17 +73,17 @@
         id="mobile"
         v-model="mobile"
         class="form-control"
-        placeholder="手機"
+        placeholder="ex.0912345678"
       />
     </div>
     <div class="from-group mb-3" v-if="addressInput">
-      <label for="address">收件住址</label>
+      <label for="address">收件地址</label>
       <input
         type="text"
         id="address"
         v-model="address"
         class="form-control"
-        placeholder="收件住址"
+        placeholder="收件地址套用選項按鈕阿"
       />
     </div>
     <!-- 按鈕 -->
@@ -188,9 +189,10 @@ const accInput = ref(true);
 const validated = ref(false); //初始化狀態為不顯示
 const unValidated = ref(false);
 
+const nameInput = ref(false);
 const birInput = ref(false);
 const mobInput = ref(false);
-const nameInput = ref(false);
+const addressInput = ref(false);
 const logAndRegBtn = ref(true);
 const registered = ref(true);
 const forgetPwd = ref(false);
@@ -201,11 +203,11 @@ const account = ref('');
 const password = ref('');
 
 //註冊表單
+const name = ref('');
 const email = ref('');
 const birthday = ref('');
 const mobile = ref('');
-const name = ref('');
-//--一般會員
+const address = ref('');
 
 const baseAddress = 'https://localhost:7183/api';
 const uri = `${baseAddress}/Users/Login`;
@@ -253,9 +255,10 @@ function ValidatedIdentity() {
           errors.value.push('484沒有註冊');
           validated.value = true;
           unValidated.value = true; //信箱
+          nameInput.value = true;
           birInput.value = true;
           mobInput.value = true;
-          nameInput.value = true;
+          addressInput.value = true;
           unRegistered.value = true;
 
           //todo驗證帳號是否唯一
@@ -346,11 +349,12 @@ function register() {
     errors.value = [];
     registerData.Account = account.value;
     registerData.EncryptedPassword = password.value;
+    registerData.Name = name.value;
     registerData.Email = email.value;
     registerData.Birthday = birthday.value;
     registerData.Mobile = mobile.value;
-    registerData.Name = name.value;
-    //console.log(registerData);
+    registerData.CommonAddress = address.value;
+    console.log(registerData);
     axios
       .post(regUri, registerData)
       .then((res) => {
@@ -362,12 +366,13 @@ function register() {
       .catch((err) => {});
   }
 }
-
+const loginBox = ref(true);
 const forgetPwdSetPwd = ref(false);
 userAcc.value = localStorage.getItem('userAcc');
 //console.log('userAcc', userAcc.value);
 
 function forgetPwdClick() {
+  loginBox.value = false;
   forgetPwdSetPwd.value = true;
   //呼叫api取得信箱
   if (userAcc.value) {
@@ -393,7 +398,8 @@ function forgetPwdClick() {
   justify-content: center;
   align-items: center;
   padding: 45px;
-  margin-top: 80px;
+  margin-top: 150px;
+  border: solid 1px;
 }
 .loginText {
   display: flex;
