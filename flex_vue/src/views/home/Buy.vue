@@ -39,7 +39,39 @@
                   v-model="cart.checkoutData.contactInfo.address"
                 />
                 <span></span>
-                <button type="button">變更地址</button>
+                <div class="address-area">
+                  <button id="address-btn" type="button">變更地址</button>
+                  <ul id="address-box">
+                    <li><h2>已儲存地址</h2></li>
+                    <li
+                      class="address-option"
+                      v-if="
+                        addresses.commonAddress != '' &&
+                        addresses.commonAddress != null
+                      "
+                    >
+                      {{ addresses.commonAddress }}
+                    </li>
+                    <li
+                      class="address-option"
+                      v-if="
+                        addresses.alternateAddress1 != '' &&
+                        addresses.alternateAddress1 != null
+                      "
+                    >
+                      {{ addresses.alternateAddress1 }}
+                    </li>
+                    <li
+                      class="address-option"
+                      v-if="
+                        addresses.alternateAddress2 != '' &&
+                        addresses.alternateAddress2 != null
+                      "
+                    >
+                      {{ addresses.alternateAddress2 }}
+                    </li>
+                  </ul>
+                </div>
               </div>
               <div class="input-wrapper">
                 <input
@@ -277,7 +309,6 @@ import { ref, onMounted, onUpdated, computed } from "vue";
 import { ShoppingCart, Member } from "@/types/type";
 import { storeToRefs } from "pinia";
 import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
-import { log } from "console";
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
 const getApiStore = useGetApiDataStore();
@@ -325,6 +356,7 @@ const loadMember = async (): Promise<void> => {
       addresses.value.alternateAddress1 = response.data.alternateAddress1;
       addresses.value.alternateAddress2 = response.data.alternateAddress2;
       console.log(cart.value);
+      console.log(addresses.value);
 
       console.log(response.data);
     })
@@ -400,6 +432,18 @@ function updateBillingAddressFromContactInfo() {
       cart.value.checkoutData.billingAddress.phone = billPhone.value;
     }
   }
+}
+function showAddressBoxEventHandler() {
+  const addressBox = document.querySelector("#address-box")!;
+  addressBox.classList.add("active");
+}
+function hideAddressBoxEventHandler() {
+  const addressBox = document.querySelector("#address-box")!;
+  addressBox.classList.remove("active");
+}
+function toggleAddressBoxEventHandler() {
+  const addressBox = document.querySelector("#address-box")!;
+  addressBox.classList.toggle("active");
 }
 class FlexCheckoutProcess {
   private _step = 0;
@@ -564,9 +608,9 @@ class FlexCheckoutProcess {
 
 onMounted(() => {
   loadCart(loadMember);
-
   const nextStepBtn2 = document.querySelector("#next-step-btn-2");
   nextStepBtn2?.addEventListener("click", updateBillingAddressFromContactInfo);
+
   let flexCheckout = new FlexCheckoutProcess();
   flexCheckout.process();
 });
@@ -579,9 +623,21 @@ onUpdated(() => {
   textInputs.forEach((input, index) => {
     const originalPlaceholder = input.getAttribute("placeholder")!;
     const title = textTitles[index] as HTMLElement;
-
     updateTitleVisibility(input, title, originalPlaceholder);
     attachInputEventHandlers(input, title, originalPlaceholder);
+  });
+  const addressBtn = document.querySelector("#address-btn");
+  addressBtn?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleAddressBoxEventHandler();
+  });
+  const addressOption = document.querySelectorAll(".address-option");
+  const addressInput = document.querySelector("#address") as HTMLInputElement;
+  addressOption.forEach((option) => {
+    option.addEventListener("click", () => {
+      addressInput.value = option.innerHTML;
+      hideAddressBoxEventHandler();
+    });
   });
 });
 </script>
@@ -643,15 +699,51 @@ main {
               }
             }
 
-            & > button {
-              margin: 10px;
-              padding: 10px 25px;
-              background-color: #fff;
-              border: 1.5px solid #ccc;
-              border-radius: 50px;
+            .address-area {
+              button {
+                margin: 10px;
+                padding: 10px 25px;
+                background-color: #fff;
+                border: 1.5px solid #ccc;
+                border-radius: 50px;
 
-              &:hover {
-                background-color: #eee;
+                &:hover {
+                  background-color: #eee;
+                }
+              }
+              ul {
+                background: #fff;
+                border: 2px solid rgba($color: #000000, $alpha: 0);
+                border-radius: 10px;
+                overflow: hidden;
+                width: 100%;
+                max-height: 0;
+                font-size: 18px;
+                transition: max-height 0.6s;
+                &.active {
+                  border: 2px solid #999;
+                  max-height: 500px;
+                  &:hover {
+                    border: 2px solid #000;
+                  }
+                }
+
+                li {
+                  padding: 20px 15px;
+                  width: 100%;
+                  h2 {
+                    padding: 0;
+                    margin: 0;
+                  }
+                  &.address-option {
+                    cursor: pointer;
+                    padding: 20px 45px;
+                    border-radius: 10px;
+                    &:hover {
+                      background: #ccc;
+                    }
+                  }
+                }
               }
             }
           }
