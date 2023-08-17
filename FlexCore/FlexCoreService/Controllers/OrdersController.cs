@@ -14,7 +14,6 @@ namespace FlexCoreService.Controllers
 	public class OrdersController : ControllerBase
 	{
 		private readonly AppDbContext _context;
-
 		public OrdersController(AppDbContext context)
 		{
 			_context = context;
@@ -256,11 +255,12 @@ namespace FlexCoreService.Controllers
 			{
 				return null;
 			}
-			order emp = await _context.orders.FindAsync(orderid);
+			//order emp = await _context.orders.FindAsync(orderid);
 
-				await Task.Delay(TimeSpan.FromSeconds(10));
-				emp.close = true;
-				_context.Entry(emp).State = EntityState.Modified;
+			await Task.Delay(TimeSpan.FromSeconds(10));
+			order emp = await _context.orders.FindAsync(orderid);
+			emp.close = true;
+			_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
 				return "已過鑑賞期";
 			
