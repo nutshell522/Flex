@@ -3,13 +3,19 @@
     public class CheckoutDataVM
     {
         // 寄送資訊
-        public ContactInfoVM ContactInfo { get; set; }
+        public ContactInfoVM? ContactInfo { get; set; }
 
         // 帳單
-        public BillingAddressVM BillingAddress { get; set; }
+        public BillingAddressVM? BillingAddress { get; set; }
 
         // 付款
         public PaymentInfoVM? PaymentInfo { get; set; }
+        public CheckoutDataVM()
+        {
+            ContactInfo = new ContactInfoVM();
+            BillingAddress = new BillingAddressVM();
+            PaymentInfo = new PaymentInfoVM();
+        }
     }
 
     public class ContactInfoVM
