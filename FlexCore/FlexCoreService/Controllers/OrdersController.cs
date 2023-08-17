@@ -224,6 +224,28 @@ namespace FlexCoreService.Controllers
 				return "訂單尚未領取";
 			}
 		}
+		[HttpPut("Change")]
+		public async Task<string> ChangeOrders(int orderid)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(orderid);
+
+			if (emp.order_status_Id == 6)
+			{
+				emp.order_status_Id = 10;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已申請換貨";
+			}
+			else
+			{
+				return "訂單尚未領取";
+			}
+		}
 		[HttpPut("cancelreturn")]
 		public async Task<string> CancelReturn(int orderid)
 		{
@@ -246,6 +268,29 @@ namespace FlexCoreService.Controllers
 				return "訂單尚未領取";
 			}
 			
+		}
+		[HttpPut("cancelreturn")]
+		public async Task<string> CancelChange(int orderid)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(orderid);
+
+			if (emp.order_status_Id == 10)
+			{
+				emp.order_status_Id = 6;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已取消換貨";
+			}
+			else
+			{
+				return "訂單尚未領取";
+			}
+
 		}
 		[HttpPut("setclose")]
 		public async Task<string> Setclose(int orderid)

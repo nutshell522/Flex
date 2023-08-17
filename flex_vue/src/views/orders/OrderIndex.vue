@@ -178,17 +178,23 @@
                     <div style="text-align: right">
                       <button v-if="item.order_status_Id !== 7 &&
                         item.order_status_Id !== 9 &&
-                        item.order_status_Id !== 8
+                        item.order_status_Id !== 8 &&
+                        item.order_status_Id !== 10 &&
+                        item.close !== true
                         " @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px">
                         申請取消
                       </button>
                       <button v-if="item.order_status_Id !== 7 &&
                         item.order_status_Id !== 9 &&
-                        item.order_status_Id !== 8
-                        " @click="setreturnIdValue(item.id)" class="btn btn-primary" :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null
-    " :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null
-    ">
-                        申請退貨
+                        item.order_status_Id !== 8 &&
+                        item.order_status_Id !== 10 &&
+                        item.close !== true
+                        " @click="setchangeIdValue(item.id)" class="btn btn-primary">
+                        申請換貨
+                      </button>
+                      <button v-if="item.order_status_Id == 10" type="button" class="btn btn-secondary"
+                        @click="setcancelreturnIdValue3(item.id)">
+                        取消換貨
                       </button>
                     </div>
                   </td>
@@ -529,6 +535,20 @@ const CancelReturnOrders = async () => {
       alert(error);
     });
 };
+const CancelChangeOrders = async () => {
+  await axios
+    .put(
+      `https://localhost:7183/api/Orders/cancelChange?orderid=${retrunId.value}`
+    )
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
 const SetOrdersclose = async () => {
   await axios
     .put(
@@ -549,6 +569,11 @@ const setcancelreturnIdValue = async (paramValue) => {
 const setcancelreturnIdValue2 = async (paramValue) => {
   retrunId.value = paramValue;
   await CancelReturnAndCloseOrders();
+};
+const setcancelreturnIdValue3 = async (paramValue) => {
+  retrunId.value = paramValue;
+  await CancelChangeOrders();
+  await SetOrdersclose();
 };
 const CancelReturnAndCloseOrders = async () => {
   await CancelReturnOrders();
@@ -599,6 +624,22 @@ const activityclose = async () => {
     .catch((error) => {
       alert(error);
     });
+};
+const ChangeOrders = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/Change?orderid=${retrunId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const setchangeIdValue = (paramValue) => {
+  retrunId.value = paramValue;
+  ChangeOrders();
 };
 // const ReturnReason = async () => {
 //   if (this.selectedReason === null) {
