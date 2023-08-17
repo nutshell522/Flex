@@ -2,8 +2,12 @@
   <navBar></navBar>
   <userBar></userBar>
   <div class="container">
-    <div class="col-md-6 likeProductCard">
-      <label for="">{{ likeProductName }}</label>
+    <div
+      class="col-md-6 likeProductCard"
+      v-for="(productName, index) in likeProductNames"
+      :key="index"
+    >
+      <label>{{ productName }}</label>
     </div>
   </div>
 </template>
@@ -13,17 +17,15 @@ import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
 import { ref, onMounted } from 'vue';
 
-const likeProductName = ref('');
+const likeProductNames = ref([]);
 
-//判斷使用者id從localstorege撈出來
+// 判斷使用者id從 localstorage 撈出來
 onMounted(() => {
   const savedLikeProduct = localStorage.getItem('likeProduct');
-  if (likeProductName) {
-    likeProductName.value = savedLikeProduct;
+  if (savedLikeProduct) {
+    likeProductNames.value = JSON.parse(savedLikeProduct);
   }
-  //console.log('savedLikeProduct', savedLikeProduct);
 });
-//顯示
 </script>
 
 <style scoped>

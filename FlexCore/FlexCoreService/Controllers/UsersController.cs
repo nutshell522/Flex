@@ -328,6 +328,24 @@ namespace FlexCoreService.Controllers
         }
 
         /// <summary>
+        /// 收藏喜愛商品
+        /// </summary>
+        /// <param name="favoritesdto"></param>
+        /// <returns></returns>
+        //public async Task<ActionResult<string>> SaveFavorites(FavoritesDto favoritesdto)
+        //{
+        //    Member member = await _db.Members.FirstOrDefaultAsync(x => x.MemberId == favoritesdto.MemberId);
+        //    Product product = await _db.Products.FirstOrDefaultAsync(p=>p.ProductId== favoritesdto.ProductId);
+
+        //    Favorites favorites = new Favorites
+        //    {
+        //        member.MemberId = favoritesdto.MemberId,
+        //        product.ProductId = favorites.ProductId;
+        //    }
+        //    return Ok("喜愛商品收藏成功");
+        //}
+
+        /// <summary>
         /// 註冊驗證信(改成忘記密碼驗證信?)
         /// </summary>
         /// <param name="email"></param>
