@@ -148,6 +148,33 @@ namespace FlexCoreService.Controllers
 
 			}
 		}
+		[HttpPut("cancelProduct")]
+		public async Task<string> CancellProductOrders(int id)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(id);
+
+
+			if (emp.order_status_Id == 1 || emp.order_status_Id == 2)
+			{
+				emp.order_status_Id = 7;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				emp.close = true;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已取消訂單";
+			}
+			else
+			{
+				return "訂單已寄出，無法取消";
+
+			}
+		}
 
 		[HttpPut("return")]
 		public async Task<string> ReturnOrders(int orderid)
@@ -254,7 +281,27 @@ namespace FlexCoreService.Controllers
 				});
 			return Reasons;
 		}
+	[HttpPut("activitycolse")]
+	public async Task<string> Activitycolse()
+	{
+		var allOrders = await _context.orders.ToListAsync();
+
+		// 獲取目前時間
+		DateTime currentTime = DateTime.Now;
+
+		foreach (var order in allOrders)
+		{
+			// 判斷是否有 close_time 值且該值小於目前時間
+			if (order.close_time.HasValue && order.close_time.Value < currentTime)
+			{
+				// 將 order_status_Id 改成 6
+				order.order_status_Id = 6;
+			}
+		}
+		// 儲存變更回資料庫
+		await _context.SaveChangesAsync();
+		return "活動已結束";
+		}
 	}
-	
 
 }

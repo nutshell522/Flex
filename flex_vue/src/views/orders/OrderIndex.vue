@@ -78,7 +78,7 @@
                         item.order_status_Id !== 9 &&
                         item.order_status_Id !== 8 &&
                         item.close !== true
-                        " @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px">
+                        " @click="setcancelProductIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px">
                         申請取消
                       </button>
                       <button v-if="item.order_status_Id !== 7 &&
@@ -360,7 +360,7 @@
           <div class="modal-body">
             <div class="form-group">
               <label class="form-label">退款帳號:</label>
-              <input type="text" class="form-control" v-model="returnaccount" />
+              <input type="text" class="form-control" v-model="returnaccount" maxlength="16" />
             </div>
             <div class="form-group">
               <label class="form-label">退貨原因:</label>
@@ -463,9 +463,25 @@ const CancelOrders = async () => {
       alert(error);
     });
 };
+const CancelProductOrders = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/cancelProduct?id=${cancelId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
 const setcancelIdValue = (paramValue) => {
   cancelId.value = paramValue;
   CancelOrders();
+};
+const setcancelProductIdValue = (paramValue) => {
+  cancelId.value = paramValue;
+  CancelProductOrders();
 };
 const ReturnOrders = async () => {
   await axios
@@ -557,6 +573,17 @@ const fetchReturnReasons = async () => {
       alert(error);
     });
 };
+const activityclose = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/activitycolse`)
+    .then((response) => {
+      //console.log(response.data);
+      //loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
 // const ReturnReason = async () => {
 //   if (this.selectedReason === null) {
 //     alert('请选择退货原因');
@@ -581,11 +608,11 @@ const formatOrderTime = (ordertime) => {
   const minutes = dateTimeObject.getMinutes().toString().padStart(2, "0");
   return year + "-" + month + "-" + dates + " " + hours + ":" + minutes + "";
 };
-const setTypeValue = (paramValue) => {
+const setTypeValue = async (paramValue) => {
   Type.value = paramValue;
-  loadGetOrders();
+  //loadGetOrders();
 };
-const setostatusValue = (paramValue) => {
+const setostatusValue = async (paramValue) => {
   ostatus.value = paramValue;
   loadGetOrders();
 };
@@ -626,6 +653,7 @@ onMounted(() => {
     maxDate: "today",
     dateFormat: "Y-m-d",
   });
+  activityclose();
   loadGetOrders();
   fetchReturnReasons();
 });
