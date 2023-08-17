@@ -38,7 +38,18 @@
         <div class="media-element d-flex justify-content-between"></div>
         <div class="countdown">
           <!-- 倒數計時器 -->
-          <p>倒數計時器</p>
+          <h5>距離報名結束還有
+            <FlipDown
+              :endDate=endDate
+              :theme="2"
+              :type="4"
+              :timeUnit="['天','時','分','秒']"
+              
+              @timeUp="func"            
+            />
+
+            
+          </h5>
         </div>
         <!-- 手刀報名按鈕 -->
         <div class="text-end">
@@ -88,7 +99,10 @@ import axios from "axios";
 import { ref, reactive } from "vue";
 import AOS from "aos";
 import { useRoute } from "vue-router";
+import FlipDown from 'vue-flip-down';
 
+const bookingTime = ref([]);
+const endDate = new Date("2023/8/18 10:50:35");
 const route = useRoute();
 const activityId = route.params.id;
 const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
@@ -108,6 +122,30 @@ const activities = reactive({
   activitySalePrice: 0,
   activityOriginalPrice: 0,
 });
+
+
+const formatDateTime = (dateString) => {
+    const date = new Date(dateString);
+    
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+
+    // 組裝成我要的格式
+    const formattedDateTime = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+    return formattedDateTime;
+}
+
+console.log(formatCustomDateTime("2023-08-18T10:50:35")); // 示例日期时间
+
+
+console.log( formatDate("2023-03-25T05:25:00"));
+
+
 const loadActivities = async (id) => {
   axios
     .get(`https://localhost:7183/api/Activity/${id}`)
@@ -132,6 +170,19 @@ const loadActivities = async (id) => {
     });
 };
 loadActivities(activityId);
+
+//從後端獲得報名起訖時間
+const getActivityBookingTime = async(id)=>{
+  axios.get(`https://localhost:7183/api/Activity/GetActivityBookingTime?id=${id}`)
+      .then(res=>{
+        console.log(res.data);
+        bookingTime.value = res.data;    
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+}
+getActivityBookingTime(activityId);
 </script>
 
 <style>
