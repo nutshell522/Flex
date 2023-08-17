@@ -2,9 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -15,14 +12,10 @@ namespace EFModels.Models
             CartItems = new HashSet<CartItem>();
         }
 
-        [Key]
         public int CartId { get; set; }
         public int fk_MemberID { get; set; }
 
-        [ForeignKey("fk_MemberID")]
-        [InverseProperty("ShoppingCarts")]
         public virtual Member fk_Member { get; set; }
-        [InverseProperty("fk_Card")]
         public virtual ICollection<CartItem> CartItems { get; set; }
     }
 }

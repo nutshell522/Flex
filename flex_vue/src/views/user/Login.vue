@@ -319,6 +319,8 @@ function Login() {
     })
     .catch((err) => {
       errors.value = [];
+      errors.value.push('密碼累計錯誤1次');
+
       //errors.value.push('密碼錯誤');
 
       console.error(err);

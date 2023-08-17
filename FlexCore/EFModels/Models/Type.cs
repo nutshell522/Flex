@@ -2,13 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
-    [Table("Type")]
     public partial class Type
     {
         public Type()
@@ -19,19 +15,12 @@ namespace EFModels.Models
             orders = new HashSet<order>();
         }
 
-        [Key]
         public int TypeId { get; set; }
-        [Required]
-        [StringLength(20)]
         public string TypeName { get; set; }
 
-        [InverseProperty("fk_Type")]
         public virtual ICollection<PointHistory> PointHistories { get; set; }
-        [InverseProperty("fk_Type")]
         public virtual ICollection<PointManage> PointManages { get; set; }
-        [InverseProperty("fk_type")]
         public virtual ICollection<orderItem> orderItems { get; set; }
-        [InverseProperty("fk_type")]
         public virtual ICollection<order> orders { get; set; }
     }
 }
