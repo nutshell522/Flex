@@ -1,19 +1,26 @@
 <template>
   <navBar></navBar>
   <userBar></userBar>
-  <div class="container">
+  <div class="container likeProductCard">
     <div
-      class="col-md-6 likeProductCard"
+      class="likeProduct"
       v-for="(product, index) in likeProducts"
       :key="index"
     >
-      <label>{{ product.productName }}</label>
-      <p>Unit Price: {{ product.unitPrice }}</p>
-      <p>Sales Price: {{ product.salesPrice }}</p>
-      <p>{{ product.firstImgPath }}</p>
-      <img
-        src="https://localhost:7183/Public/Img/550af4ee0a2047d69bf578c0bbe63fa7.jpg"
-      />
+      <div>
+        <label>{{ product.productName }}</label>
+      </div>
+      <div>
+        <label>價格: {{ product.unitPrice }}</label>
+      </div>
+      <div>
+        <label>Sales Price: {{ product.salesPrice }}</label>
+      </div>
+      <div class="detailImgList">
+        <img
+          src="https://localhost:7183/Public/Img/550af4ee0a2047d69bf578c0bbe63fa7.jpg"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -65,7 +72,16 @@ onMounted(() => {
 
 <style scoped>
 .likeProductCard {
+  display: flex;
+}
+.likeProduct {
   border: 1px solid;
-  width: 50%;
+  align-items: center;
+  display: flex;
+}
+.detailImgList {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 </style>

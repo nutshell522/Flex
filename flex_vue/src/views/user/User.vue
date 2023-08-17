@@ -64,7 +64,7 @@
         />
       </div>
     </div>
-
+    <!-- 地址 -->
     <div class="col-md-6">
       <div class="input-group">
         <label for="addressInput" class="text">常用地址</label>
@@ -113,7 +113,30 @@
         />
       </div>
     </div>
-    <!-- 還有基本欄位還沒做 -->
+    <div class="col-md-6">
+      <div class="input-group">
+        <label for="editPwdInput" class="text">修改密碼</label>
+        <input
+          type="password"
+          class="form-control"
+          id="editPwdInput"
+          placeholder="editPwd"
+          v-model="editPwd"
+        />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="input-group">
+        <label for="checkPwdInput" class="text">確認密碼</label>
+        <input
+          type="password"
+          class="form-control"
+          id="checkPwdInput"
+          placeholder="checkPwd"
+          v-model="checkPwd"
+        />
+      </div>
+    </div>
     <!-- 之後增加 -->
     <!-- <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="載具先不寫" />
@@ -176,11 +199,13 @@ const email = ref('');
 const mobile = ref('');
 const gender = ref(false);
 const commonAddress = ref('');
+const addressBtn = ref(false);
 const addAddressInput1 = ref(false);
 const addAddressInput2 = ref(false);
-const addressBtn = ref(false);
 const alternateAddress1 = ref(null);
 const alternateAddress2 = ref(null);
+const editPwd = ref('');
+const checkPwd = ref('');
 const isSubscribeNews = ref(true);
 
 const memberId = getApiStore.getMemberId;
@@ -284,25 +309,25 @@ const userData = ref([]);
 function save() {
   //alert('save');
   //todo檢查欄位有沒有確實填寫
-  //todo檔案更新成功
-  var uri = `${baseAddress}/Users/Id?id=${id.value}`;
-  var editUserProfile = {};
+  if (editPwd.value == checkPwd.value) {
+    var uri = `${baseAddress}/Users/Id?id=${id.value}`;
+    var editUserProfile = {};
 
-  editUserProfile.gender = gender.value;
-  editUserProfile.email = userProfile.value.email;
-  editUserProfile.mobile = mobile.value;
-  editUserProfile.commonAddress = commonAddress.value;
-  editUserProfile.alternateAddress1 = alternateAddress1.value;
-  editUserProfile.alternateAddress2 = alternateAddress2.value;
-  editUserProfile.isSubscribeNews = isSubscribeNews.value;
-  console.log(
-    'editUserProfile.alternateAddress2',
-    editUserProfile.alternateAddress2
-  );
-  // console.log(
-  //   'isSubscribeNews',
-  //   editUserProfile.isSubscribeNews
-  // );
+    editUserProfile.gender = gender.value;
+    editUserProfile.email = userProfile.value.email;
+    editUserProfile.mobile = mobile.value;
+    editUserProfile.commonAddress = commonAddress.value;
+    editUserProfile.alternateAddress1 = alternateAddress1.value;
+    editUserProfile.alternateAddress2 = alternateAddress2.value;
+    editUserProfile.EncryptedPassword = checkPwd.value;
+    editUserProfile.isSubscribeNews = isSubscribeNews.value;
+    console.log(
+      'editUserProfile.alternateAddress2',
+      editUserProfile.alternateAddress2
+    );
+  }
+
+  //todo檔案更新成功
 
   axios
     .put(uri, editUserProfile)
