@@ -2,8 +2,18 @@
   <navBar></navBar>
   <userBar></userBar>
   <div class="container">
-    <div class="col-md-6 likeProductCard">
-      <label>{{ productName }}</label>
+    <div
+      class="col-md-6 likeProductCard"
+      v-for="(product, index) in likeProducts"
+      :key="index"
+    >
+      <label>{{ product.productName }}</label>
+      <p>Unit Price: {{ product.unitPrice }}</p>
+      <p>Sales Price: {{ product.salesPrice }}</p>
+      <p>{{ product.firstImgPath }}</p>
+      <img
+        src="https://localhost:7183/Public/Img/550af4ee0a2047d69bf578c0bbe63fa7.jpg"
+      />
     </div>
   </div>
 </template>
@@ -14,8 +24,8 @@ import userBar from '@/components/user/userBar.vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
-const likeProductNames = ref([]);
-
+//const likeProductNames = ref([]);
+const likeProducts = ref([]);
 onMounted(() => {
   // 判斷使用者id從 localstorage 撈出來
   // const savedLikeProduct = localStorage.getItem('likeProduct');
@@ -29,21 +39,22 @@ onMounted(() => {
   if (storedUser) {
     //呼叫api把喜愛商品Id取出來
     const baseAddress = 'https://localhost:7183/api';
-    const uri = `${baseAddress}/Users/Favorites?memberId=${userObject.memberId}`;
-    axios
-      .get(uri)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        err;
-      });
+    // const uri = `${baseAddress}/Users/SaveFavorites?memberId=${userObject.memberId}`;
+    // axios
+    //   .get(uri)
+    //   .then((res) => {
+    //     console.log('喜愛商品的id', res.data);
+    //   })
+    //   .catch((err) => {
+    //     err;
+    //   });
     //呼叫api透過喜愛商品Id把商品湯圓取出來
-    const setUri = ``;
-    axios
-      .get()
+    const getLikeProductUri = `${baseAddress}/Users/GetFavorites?memberId=${userObject.memberId}`;
+    https: axios
+      .get(getLikeProductUri)
       .then((res) => {
-        res.data;
+        likeProducts.value = res.data;
+        //console.log('商品湯圓', likeProducts);
       })
       .catch((err) => {
         err;

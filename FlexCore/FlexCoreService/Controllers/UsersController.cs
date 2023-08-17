@@ -339,7 +339,7 @@ namespace FlexCoreService.Controllers
         /// </summary>
         /// <param name="favoritesdto"></param>
         /// <returns></returns>
-        [HttpPost("Favorites")]
+        [HttpPost("SaveFavorites")]
 
         public async Task<ActionResult<string>> SaveFavorites(FavoritesDto favoritesdto)
         {
@@ -362,7 +362,7 @@ namespace FlexCoreService.Controllers
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        [HttpGet("Favorites")]
+        [HttpGet("GetFavorites")]
         public async Task<ActionResult<IEnumerable<ProductCardDto>>> GetFavorites(int memberId)
         {
             //List<string> favoriteProductIds = await _db.Favorites.Where(f=>f.fk_memberId == memberId).Select(f=>f.fk_productId).ToListAsync();

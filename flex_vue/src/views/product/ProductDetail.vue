@@ -678,7 +678,7 @@ function collect() {
 
       //呼叫api(memberId、productId)存進去
       const baseAddress = 'https://localhost:7183/api';
-      const uri = `${baseAddress}/Users/Favorites`;
+      const uri = `${baseAddress}/Users/SaveFavorites`;
 
       const data = {
         MemberId: userObject.memberId,
@@ -689,11 +689,11 @@ function collect() {
         .post(uri, data)
         .then((res) => {
           //alert(res.data);
+          console.log(res.data);
         })
         .catch((err) => {
           err;
         });
-      //console.log(likeProduct.value);
     } else {
       //alert('我不喜翻');
       //點選不喜歡，把它從localstorege移除
