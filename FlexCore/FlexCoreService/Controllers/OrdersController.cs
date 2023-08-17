@@ -148,6 +148,33 @@ namespace FlexCoreService.Controllers
 
 			}
 		}
+		[HttpPut("cancelcourse")]
+		public async Task<string> Cancelcourse(int id)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(id);
+
+
+			if (emp.order_status_Id == 1 || emp.order_status_Id == 2)
+			{
+				emp.order_status_Id = 7;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				emp.close = true;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已取消預約";
+			}
+			else
+			{
+				return "無法取消";
+
+			}
+		}
 		[HttpPut("cancelProduct")]
 		public async Task<string> CancellProductOrders(int id)
 		{

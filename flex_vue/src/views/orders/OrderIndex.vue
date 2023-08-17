@@ -333,7 +333,7 @@
                           <div>訂單編號:{{ item.id }}</div>
                           <button v-if="item.order_status_Id !== 7 &&
                             item.order_status_Id !== 6
-                            " @click="setcancelIdValue(item.id)" class="btn btn-success">
+                            " @click="setcancelcourseIdValue(item.id)" class="btn btn-success">
                             申請取消
                           </button>
                         </td>
@@ -463,6 +463,18 @@ const CancelOrders = async () => {
       alert(error);
     });
 };
+const Cancelcourse = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/cancelcourse?id=${cancelId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
 const CancelProductOrders = async () => {
   await axios
     .put(`https://localhost:7183/api/Orders/cancelProduct?id=${cancelId.value}`)
@@ -478,6 +490,10 @@ const CancelProductOrders = async () => {
 const setcancelIdValue = (paramValue) => {
   cancelId.value = paramValue;
   CancelOrders();
+};
+const setcancelcourseIdValue = (paramValue) => {
+  cancelId.value = paramValue;
+  Cancelcourse();
 };
 const setcancelProductIdValue = (paramValue) => {
   cancelId.value = paramValue;
