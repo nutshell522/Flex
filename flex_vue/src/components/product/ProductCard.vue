@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="card.path + '/detail/' + card.productId">
+  <router-link :to="path + '/detail/' + card.productId">
     <div class="productCardImg">
       <img
         :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath"
@@ -28,8 +28,8 @@ const props = defineProps(["card"]);
 const card = computed(() => props.card);
 const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
 const route = useRoute();
-// const path = ref("");
-// path.value = localStorage.getItem("originalPath");
+const path = ref("");
+path.value = localStorage.getItem("originalPath");
 //console.log(path.value);
 </script>
 

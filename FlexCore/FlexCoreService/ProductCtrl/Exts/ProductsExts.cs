@@ -54,8 +54,10 @@ namespace FlexCoreService.ProductCtrl.Exts
                 ProductOrigin = dto.FirstOrDefault().ProductOrigin,
                 UnitPrice = dto.FirstOrDefault()?.UnitPrice,
                 SalesPrice = dto.FirstOrDefault().SalesPrice,
-                //DefaultColorImg = new Dictionary<string, string>(),
-                ProductGroup=group
+                SalesCategoryName = dto.FirstOrDefault()?.SalesCategoryName,
+                ProductCategoryName= dto.FirstOrDefault()?.ProductCategoryName,
+                ProductSubCategoryName = dto.FirstOrDefault()?.ProductSubCategoryName,
+                ProductGroup =group
             };
             return vm;
         }

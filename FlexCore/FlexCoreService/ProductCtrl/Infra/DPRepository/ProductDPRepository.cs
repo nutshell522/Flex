@@ -42,14 +42,14 @@ join SalesCategories as sc on sc.SalesCategoryId=pc.fk_SalesCategoryId
 join ProductImgs as pi on pi.fk_ProductId=p.ProductId
 group by p.ProductId, p.ProductName, p.UnitPrice,p.SalesPrice,sc.SalesCategoryName,
 pc.ProductCategoryName,psc.ProductSubCategoryName,p.Status,p.LogOut,sc.SalesCategoryId  
-having p.ProductId <> '" + @productId+ "' and "+
-"sc.SalesCategoryName='"+ dto.SalesCategoryName+"' and "+
-"pc.ProductCategoryName='"+ dto.ProductCategoryName+ "' and "+
-"psc.ProductSubCategoryName ='"+ dto.ProductSubCategoryName+ "' and "+
-"p.Status=0 and p.LogOut=0 order by NEWID();";
+having p.ProductId <> @productId and 
+sc.SalesCategoryName=@SalesCategoryName and 
+pc.ProductCategoryName= @ProductCategoryName and 
+psc.ProductSubCategoryName =@ProductSubCategoryName and 
+p.Status=0 and p.LogOut=0 order by NEWID();";
 
             using IDbConnection dbConnection= new SqlConnection(_connStr);
-            var result = dbConnection.Query<ProductCardDto>(sql, new { productId });
+            var result = dbConnection.Query<ProductCardDto>(sql, new { productId=productId, SalesCategoryName =dto.SalesCategoryName, ProductCategoryName =dto.ProductCategoryName, ProductSubCategoryName =dto.ProductSubCategoryName});
             return result;
         }
 
@@ -76,19 +76,22 @@ where p.ProductId='"+@productId+
             string sql = @"select 
 p.ProductId,p.ProductName,p.ProductDescription,p.ProductMaterial,p.ProductOrigin, 
 p.UnitPrice,p.SalesPrice,pg.ProductGroupId,cc.ColorName,sc.SizeName, 
-pg.Qty,pi.ImgPath as DefaultColorImg 
+s.SalesCategoryName,pc.ProductCategoryName,psc.ProductSubCategoryName,pg.Qty,pi.ImgPath as DefaultColorImg 
 from Products as p 
 join ProductGroups as pg on pg.fk_ProductId=p.ProductId 
 join ColorCategories as cc on cc.ColorId=pg.fk_ColorId 
 join SizeCategories as sc on sc.SizeId=pg.fk_SizeId 
 join ProductImgs as pi on pi.fk_ProductId =p.ProductId 
+join ProductSubCategories as psc on psc.ProductSubCategoryId=p.fk_ProductSubCategoryId
+join ProductCategories as pc on pc.ProductCategoryId=psc.fk_ProductCategoryId
+join SalesCategories as s on s.SalesCategoryId=pc.fk_SalesCategoryId 
 where p.Status=0 and 
 p.LogOut=0 and 
 pi.fk_ColorId=cc.ColorId and 
-p.ProductId='" + @productId+"'";
+p.ProductId=@productId";
 
             using IDbConnection dbConnection = new SqlConnection(_connStr);
-            var result = dbConnection.Query<ProductDetailDto>(sql, new { productId });
+            var result = dbConnection.Query<ProductDetailDto>(sql, new { productId=productId });
             return result;
         }
 
