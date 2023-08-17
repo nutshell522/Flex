@@ -14,5 +14,8 @@
         public string SizeName { get; set; }
         public int Qty { get; set; }
         public string DefaultColorImg { get; set; }
+        public string? SalesCategoryName { get; set; }
+        public string? ProductCategoryName { get; set; }
+        public string? ProductSubCategoryName { get; set; }
     }
 }

@@ -2,21 +2,34 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
     public partial class orderItem
     {
+        [Key]
         public int Id { get; set; }
         public int order_Id { get; set; }
+        [StringLength(50)]
         public string product_name { get; set; }
         public int? per_price { get; set; }
         public int? quantity { get; set; }
+        [StringLength(50)]
         public string discount_name { get; set; }
         public int? subtotal { get; set; }
         public int? discount_subtotal { get; set; }
+        [StringLength(50)]
         public string Items_description { get; set; }
+        public int? fk_typeId { get; set; }
 
+        [ForeignKey("fk_typeId")]
+        [InverseProperty("orderItems")]
+        public virtual Type fk_type { get; set; }
+        [ForeignKey("order_Id")]
+        [InverseProperty("orderItems")]
         public virtual order order { get; set; }
     }
 }

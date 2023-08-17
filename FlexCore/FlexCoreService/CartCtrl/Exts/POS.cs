@@ -1,6 +1,8 @@
-﻿namespace FlexCoreService.CartCtrl.Exts
+﻿using FlexCoreService.CartCtrl.Exts.Discount_dll;
+
+namespace FlexCoreService.CartCtrl.Exts
 {
-	public class POS
+    public class POS
 	{
 		public readonly List<BaseDiscountStrategy> ActivedRules = new List<BaseDiscountStrategy>();
 

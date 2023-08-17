@@ -1,6 +1,7 @@
 ﻿using EFModels.Models;
 using FlexCoreService.CartCtrl.Exts;
 using FlexCoreService.CartCtrl.Exts.Coupon_dll;
+using FlexCoreService.CartCtrl.Exts.Discount_dll;
 using FlexCoreService.CartCtrl.Interface;
 using FlexCoreService.CartCtrl.Models.vm;
 using FlexCoreService.CartCtrl.Service;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FlexCoreService.Controllers
 {
-	[EnableCors("AllowAny")]
+    [EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class CartController : ControllerBase
@@ -43,24 +44,40 @@ namespace FlexCoreService.Controllers
 			return Ok(result);
 		}
 
-		// POST: api/Cart/Checkout
-		[HttpPost("Checkout")]
-		public async Task<ActionResult<CartContext>> Checkout()
+        // POST: api/Cart/Checkout
+        [HttpPost("Checkout")]
+        public async Task<ActionResult<CartContext>> Checkout()
+        {
+            try
+            {
+                var result = await Task.Run(() => _service.GetCartItems(memberId).Select(x => x.ToViewModel()));
+                CartContext checkOutResult = CheckoutProcess(result);
+                return Ok(checkOutResult);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "An error occurred.");
+            }
+        }
+
+        // POST: api/Cart/Checkout
+        [HttpPost("TestCoupons")]
+		public async Task<ActionResult<CouponVM>> TestCoupons()
 		{
-			try
-			{
-				var result = await Task.Run(() => _service.GetCartItems(memberId).Select(x => x.ToViewModel()));
-				CartContext checkOutResult = CheckoutProcess(result);
-				return Ok(checkOutResult);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-				return StatusCode(500, "An error occurred.");
-			}
+            var result = await Task.Run(() => _service.GetMemberCoupons(memberId).Select(x=>x.ToViewModel()));
+			return Ok(result);
 		}
 
-		private CartContext CheckoutProcess(IEnumerable<CartItemVM> cartItems)
+        // POST: api/Cart/Checkout
+        [HttpPost("TestCoupon")]
+        public async Task<ActionResult<CouponVM>> TestCoupon()
+        {
+            var result = await Task.Run(() => _service.GetCouponById(1).ToViewModel());
+            return Ok(result);
+        }
+
+        private CartContext CheckoutProcess(IEnumerable<CartItemVM> cartItems)
 		{
 			CartContext cart = new CartContext(cartItems);
 			POS pos = new POS();

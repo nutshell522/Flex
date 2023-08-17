@@ -8,5 +8,9 @@
         public DateTime ActivityDate { get; set; }
 
         public string ImgPath { get; set; }
+
+        public string ActivityCategoryName { get; set; }
+
+        public string ActivityPlace { get; set; }
     }
 }

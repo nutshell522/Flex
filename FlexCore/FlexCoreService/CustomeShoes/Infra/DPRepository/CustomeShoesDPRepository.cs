@@ -32,6 +32,16 @@ c.ShoesProductId=" + @shoesproductId;
             return result;
         }
 
+        public IEnumerable<ShoesImgsDto> GetShoesImgs(int shoesproductId)
+        {
+            string sql = @"select ShoesPicture_Id,ShoesPictureUrl from ShoesPictures
+where fk_ShoesPictureProduct_Id='" + @shoesproductId + "'";
+
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.Query<ShoesImgsDto>(sql, new { shoesproductId });
+            return result;
+        }
+
         public IEnumerable<CustomeShoesDto> SearchCustomeShoes()
 		{
 			string sql = @"select c.ShoesProductId, c.ShoesName, c.ShoesUnitPrice, sc.ShoesCategoryName, MIN(sp.ShoesPictureUrl) AS FirstImgPath 

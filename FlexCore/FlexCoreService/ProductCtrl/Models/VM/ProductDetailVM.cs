@@ -9,6 +9,9 @@ namespace FlexCoreService.ProductCtrl.Models.VM
         public string ProductDescription { get; set; }
         public string? ProductMaterial { get; set; }
         public string ProductOrigin { get; set; }
+        public string? SalesCategoryName { get; set; }
+        public string? ProductCategoryName { get; set; }
+        public string? ProductSubCategoryName { get; set; }
         public int? UnitPrice { get; set; }
         public int SalesPrice { get; set; }
         public Dictionary<string,List<ColorGroupDto>> ProductGroup { get; set; }

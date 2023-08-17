@@ -5,60 +5,67 @@
                 <div class="buy-info col-12 col-lg-7">
                     <form action="" method="post">
                         <!-- 寄送資訊 -->
-                        <div id="step-1-area">
+                        <div id="step-1-area" class="step-area">
                             <h2>輸入你的聯絡資訊:</h2>
                             <div class="input-wrapper">
-                                <input type="text" name="contact-name" id="contact-name" placeholder="姓名">
-                                <span>姓名</span>
+                                <input type="text" name="ContactInfo.ContactName" id="contact-name" placeholder="姓名"
+                                    v-if="member" v-model="member.name">
+                                <span></span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="text" class="readonly" name="postal-code" id="postal-code" placeholder="郵遞區號" readonly>
-                                <span>郵遞區號</span>
+                                <input type="text" name="ContactInfo.PostalCode" id="postal-code" placeholder="郵遞區號">
+                                <span></span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="text" class="readonly" name="address" id="address" placeholder="地址" readonly>
-                                <span>地址</span>
+                                <input type="text" name="ContactInfo.Address" id="address" placeholder="地址" v-if="member"
+                                    v-model="member.commonAddress">
+                                <span></span>
                                 <button type="button">變更地址</button>
                             </div>
                             <div class="input-wrapper">
-                                <input type="email" name="email" id="email" placeholder="電子郵件">
-                                <span>電子郵件</span>
+                                <input type="email" name="ContactInfo.Email" id="email" placeholder="電子郵件" v-if="member"
+                                    v-model="member.email">
+                                <span></span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="tel" name="phone" id="phone" placeholder="電話號碼">
-                                <span>電話號碼</span>
+                                <input type="tel" name="ContactInfo.Phone" id="phone" placeholder="電話號碼" v-if="member"
+                                    v-model="member.mobile">
+                                <span></span>
                             </div>
-                            <button type="button" class="next-step-btn">繼續</button>
+                            <button type="button" id='next-step-btn-1' class="change-step-btn next-step-btn"
+                                target-step="1">繼續</button>
                         </div>
                         <!-- 帳單 -->
-                        <div id="step-2-area">
+                        <div id="step-2-area" class="step-area">
                             <h2>輸入你的帳單地址:</h2>
                             <label class="same-address-label buy-label">
-                                <input type="checkbox" id="bill-same-address" class="buy-checkbox">
+                                <input type="checkbox" id="bill-same-address" class="buy-checkbox" checked>
                                 帳單地址同送貨地址
                             </label>
-                            <div class="different-address-area">
+                            <div id="different-address-area">
                                 <div class="input-wrapper">
-                                    <input type="text" name="bill-name" id="bill-name" placeholder="姓名">
-                                    <span>姓名</span>
+                                    <input type="text" name="BillingAddress.Name" id="bill-name" placeholder="姓名">
+                                    <span></span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="text" name="bill-postal-code" id="bill-postal-code" placeholder="郵遞區號">
-                                    <span>郵遞區號</span>
+                                    <input type="text" name="BillingAddress.PostalCode" id="bill-postal-code"
+                                        placeholder="郵遞區號">
+                                    <span></span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="text" name="bill-address" id="bill-address" placeholder="地址">
-                                    <span>地址</span>
+                                    <input type="text" name="BillingAddress.Address" id="bill-address" placeholder="地址">
+                                    <span></span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="tel" name="bill-phone" id="bill-phone" placeholder="電話號碼">
-                                    <span>電話號碼</span>
+                                    <input type="tel" name="BillingAddress.Phone" id="bill-phone" placeholder="電話號碼">
+                                    <span></span>
                                 </div>
                             </div>
-                            <button type="button" class="next-step-btn">繼續</button>
+                            <button type="button" id='next-step-btn-2' class="change-step-btn next-step-btn"
+                                target-step="2">繼續</button>
                         </div>
                         <!-- 付款 -->
-                        <div id="step-3-area">
+                        <div id="step-3-area" class="step-area">
                             <h2>使用優惠券?</h2>
                             <a href="javascript:;" class="choose-coupon">選擇優惠券</a>
                             <p class="show-coupon-info"></p>
@@ -71,29 +78,34 @@
                                 </div>
                             </div>
                             <h2>詳細付款資訊:</h2>
-                            <div class="input-wrapper">
-                                <input type="text" name="card-name" id="card-name" placeholder="Name on card">
-                                <span>Name on card</span>
-                            </div>
-                            <div class="input-wrapper">
-                                <input type="tel" name="card-number" id="card-number" placeholder="Card Number">
-                                <span>Card Number</span>
-                            </div>
-                            <div class="row row-cols-2">
+                            <div class="pay-info-area">
                                 <div class="input-wrapper">
-                                    <input type="text" name="expiration" id="expiration" placeholder="MM/YY">
-                                    <span>MM/YY</span>
+                                    <input type="text" name="PaymentInfo.CardName" id="card-name"
+                                        placeholder="Name on card">
+                                    <span></span>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="tel" name="cvv" id="cvv" placeholder="CVV">
-                                    <span>CVV</span>
+                                    <input type="tel" name="PaymentInfo.CardNumber" id="card-number"
+                                        placeholder="Card Number">
+                                    <span></span>
                                 </div>
+                                <div class="row row-cols-2">
+                                    <div class="input-wrapper">
+                                        <input type="text" name="PaymentInfo.Expiration" id="expiration"
+                                            placeholder="MM/YY">
+                                        <span></span>
+                                    </div>
+                                    <div class="input-wrapper">
+                                        <input type="tel" name="PaymentInfo.CVV" id="cvv" placeholder="CVV">
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <label class="confirm-terms-label buy-label">
+                                    <input type="checkbox" id="confirm-terms" class="buy-checkbox">
+                                    確認你同意 Flex 付款的 <a href="javascript:;">條款與條件</a>
+                                </label>
+                                <button type="submit" id="send-order" class="next-step-btn">下訂單</button>
                             </div>
-                            <label class="confirm-terms-label buy-label">
-                                <input type="checkbox" id="confirm-terms" class="buy-checkbox">
-                                確認你同意 Flex 付款的 <a href="javascript:;">條款與條件</a>
-                            </label>
-                            <button type="submit" class="next-step-btn">下訂單</button>
                         </div>
                     </form>
                     <div class="sent-info-area">
@@ -101,14 +113,14 @@
                             <h2>寄送資訊</h2>
                             <div class="show-info">
                                 <!-- 姓名 -->
-                                <p>殷易暄</p>
+                                <p>{{ member?.name }}</p>
                                 <!-- 地址 -->
-                                <p>新生路421號</p>
+                                <p>{{ member?.commonAddress }}</p>
                                 <!-- Email -->
-                                <p>jjboy830227@gmail.com</p>
+                                <p>{{ member?.email }}</p>
                                 <!-- 電話 -->
-                                <p>0987-654-321</p>
-                                <button class="info-edit-btn">編輯</button>
+                                <p>{{ member?.mobile }}</p>
+                                <button class="change-step-btn info-edit-btn" target-step="0">編輯</button>
                             </div>
                         </div>
                         <div class="step-block">
@@ -120,7 +132,7 @@
                                 <p></p>
                                 <!-- 電話 -->
                                 <p></p>
-                                <button class="info-edit-btn">編輯</button>
+                                <button class="change-step-btn info-edit-btn" target-step="1">編輯</button>
                             </div>
                         </div>
                         <div class="step-block">
@@ -158,7 +170,213 @@
 </template>
     
 <script setup lang='ts'>
-    
+import axios from "axios";
+import { Input } from "postcss";
+import { ref, onMounted, onUpdated, computed } from "vue";
+import { ShoppingCart, Member } from "@/types/type";
+import { storeToRefs } from 'pinia';
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+// 用vite獲得環境變數
+const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
+const cart = ref<ShoppingCart[]>([]);
+const member = ref<Member>();
+const getApiStore = useGetApiDataStore();
+const { memberInfo } = storeToRefs(getApiStore);
+const memberId = getApiStore.getMemberId;
+
+// 
+const loadCart = async (): Promise<void> => {
+    let url: string = `${baseAddress}api/Cart/Checkout`;
+    await axios
+        .post<ShoppingCart[]>(url)
+        .then((response) => {
+            cart.value = response.data;
+        })
+        .catch((error) => {
+            alert(error);
+        });
+}
+
+const loadMember = async (): Promise<void> => {
+    let url: string = `${baseAddress}api/Users/1`;
+    await axios
+        .get<Member>(url)
+        .then((response) => {
+            member.value = response.data;
+        })
+        .catch((error) => {
+            alert(error);
+        });
+}
+
+// 判斷input的title是否秀出來
+function updateTitleVisibility(input: HTMLInputElement, title: HTMLElement, originalPlaceholder: string): void {
+    title.innerHTML = originalPlaceholder;
+
+    if (input.value !== '') {
+        title.classList.add('d-block');
+        title.classList.remove('d-none');
+    } else {
+        title.classList.remove('d-block');
+        title.classList.add('d-none');
+    }
+}
+
+// 處理input的聚焦及失焦事件
+function attachInputEventHandlers(input: HTMLInputElement, title: HTMLElement, originalPlaceholder: string): void {
+    input.addEventListener('focus', function () {
+        input.removeAttribute('placeholder');
+        title.classList.add('d-block');
+        title.classList.remove('d-none');
+    });
+
+    input.addEventListener('blur', function () {
+        input.setAttribute('placeholder', originalPlaceholder);
+        updateTitleVisibility(input, title, originalPlaceholder);
+    });
+}
+
+class FlexCheckoutProcess {
+    private _step = 0;
+    private _stepAreas = document.querySelectorAll('.step-area');
+    private _showInfos = document.querySelectorAll('.show-info');
+    private _stepBlock = document.querySelectorAll('.step-block');
+
+    constructor() {
+        // 初始化
+        this.setupStep1();
+        this.setupStep2();
+        this.setupStep3();
+        this.initBtnClickHandler();
+    }
+
+    get step(): number {
+        return this._step;
+    }
+    set step(nextStep: number) {
+        if (nextStep < 0) {
+            this._step = 0;
+        }
+        else if (nextStep > 2) {
+            this._step = 2;
+        }
+        else {
+            this._step = nextStep;
+        }
+    }
+    process(): void {
+        for (let i = 0; i < this._stepAreas.length; i++) {
+            const isStep = i === this.step;
+            this._stepAreas[i].classList.toggle('d-block', isStep);
+            this._stepAreas[i].classList.toggle('d-none', !isStep);
+            this._stepBlock[i].classList.toggle('active', isStep);
+
+            if (i < this._stepAreas.length - 1) {
+                const shouldShowInfo = i < this.step;
+                this._showInfos[i].classList.toggle('d-block', shouldShowInfo);
+                this._showInfos[i].classList.toggle('d-none', !shouldShowInfo);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+    private initBtnClickHandler(): void {
+        const changeStepBtns = document.querySelectorAll('.change-step-btn') as NodeListOf<HTMLElement>;
+        changeStepBtns.forEach(btn => {
+            btn.addEventListener('click', () => { this.setStep(btn); });
+        });
+    }
+    private setStep(btn: HTMLElement): void {
+        let stepNum = parseInt(btn.getAttribute('target-step')!);
+        this.step = stepNum;
+        this.process();
+    }
+    private setupStep1(): void {
+        const nextStepBtn1 = document.querySelector('#next-step-btn-1') as HTMLButtonElement;
+        const step1Inputs = document.querySelectorAll('#step-1-area .input-wrapper input') as NodeListOf<HTMLInputElement>;
+        this.checkInputsAndToggle(step1Inputs, nextStepBtn1, true);
+        this.setupInputListeners(step1Inputs, nextStepBtn1, true);
+    }
+
+    private setupStep2(): void {
+        const nextStepBtn2 = document.querySelector('#next-step-btn-2') as HTMLButtonElement;
+        const billSameAddress = document.querySelector('#bill-same-address') as HTMLInputElement;
+        const differentAddressArea = document.querySelector('#different-address-area') as HTMLElement;
+        const step2Inputs = document.querySelectorAll('#step-2-area .input-wrapper input') as NodeListOf<HTMLInputElement>;
+
+        const updateStep2Elements = (): void => {
+            this.checkInputsAndToggle(step2Inputs, nextStepBtn2, !billSameAddress.checked);
+            differentAddressArea.classList.toggle('d-block', !billSameAddress.checked);
+            differentAddressArea.classList.toggle('d-none', billSameAddress.checked);
+        };
+
+        updateStep2Elements();
+        billSameAddress.addEventListener('change', updateStep2Elements);
+        this.setupInputListeners(step2Inputs, nextStepBtn2, billSameAddress.checked);
+    }
+
+    setupStep3(): void {
+        const sendOrderBtn = document.querySelector('#send-order') as HTMLButtonElement;
+        const confirmTerms = document.querySelector('#confirm-terms') as HTMLInputElement;
+        const step3Inputs = document.querySelectorAll('#step-3-area .pay-info-area .input-wrapper input') as NodeListOf<HTMLInputElement>;
+
+        const updateStep3Elements = (): void => {
+            // 檢查是否所有 input 都有值
+            const allInputsFilled = Array.from(step3Inputs).every(input => input.value.trim() !== '');
+
+            // 根據 confirmTerms 的狀態和 input 是否都有值，決定是否啟用按鈕
+            sendOrderBtn.disabled = !(confirmTerms.checked && allInputsFilled);
+        };
+
+        confirmTerms.addEventListener('change', updateStep3Elements);
+        updateStep3Elements(); // 初始化時執行一次
+        step3Inputs.forEach(input => {
+            input.addEventListener('keyup', updateStep3Elements)
+            input.addEventListener('change', updateStep3Elements)
+        });
+    }
+
+
+    private checkInputsAndToggle(inputs: NodeListOf<HTMLInputElement>, btn: HTMLButtonElement, condition: boolean, defaultBtnDisabled: boolean = false): void {
+        const anyInputEmpty = Array.from(inputs).some(input => input.value.trim() === '');
+        btn.disabled = condition ? anyInputEmpty : defaultBtnDisabled;
+    }
+
+    private setupInputListeners(inputs: NodeListOf<HTMLInputElement>, btn: HTMLButtonElement, condition: boolean, defaultBtnDisabled: boolean = false): void {
+        inputs.forEach(input => {
+            input.addEventListener('keyup', () => {
+                this.checkInputsAndToggle(inputs, btn, condition, defaultBtnDisabled);
+            });
+            input.addEventListener('change', () => {
+                this.checkInputsAndToggle(inputs, btn, condition, defaultBtnDisabled);
+            });
+        });
+    }
+}
+
+onMounted(() => {
+
+    loadCart();
+    loadMember();
+
+    let flexCheckout = new FlexCheckoutProcess();
+    flexCheckout.process();
+
+});
+
+onUpdated(() => {
+    const textInputs = document.querySelectorAll('.input-wrapper > input') as NodeListOf<HTMLInputElement>;
+    const textTitles = document.querySelectorAll('.input-wrapper > span');
+    textInputs.forEach((input, index) => {
+        const originalPlaceholder = input.getAttribute('placeholder')!;
+        const title = textTitles[index] as HTMLElement;
+
+        updateTitleVisibility(input, title, originalPlaceholder);
+        attachInputEventHandlers(input, title, originalPlaceholder);
+    });
+});
+
+
+
 </script>
     
 <style scoped lang="scss">

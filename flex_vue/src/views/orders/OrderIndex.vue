@@ -3,27 +3,46 @@
   <div id="searchorderout" class="container">
     <div id="srarchdate" class="col-3">
       <input type="text" v-model="begintime" @searchInputbegintime="inputbegintime" class="form-control datePicker"
-        placeholder="輸入開始日期">
+        placeholder="輸入開始日期" />
       ~
       <input type="text" v-model="endtime" @searchInputendtime="inputendtime" class="form-control datePicker"
-        placeholder="輸入結束日期">
+        placeholder="輸入結束日期" />
     </div>
     <div id="searchorder" class="col-3">
-      <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control" placeholder="輸入名稱">
+      <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control" placeholder="輸入名稱" />
       <button class="button" @click="keywordSearch">搜尋</button>
     </div>
   </div>
   <div id="cate" class="container">
-    <button @click="setTypeValue('1'); setostatusValue('')">商品</button>
+    <button @click="
+      setTypeValue('1');
+    setostatusValue('');">
+      商品
+    </button>
 
-    <button @click="setTypeValue('4'); setostatusValue('')">客製化</button>
+    <button @click="
+      setTypeValue('4');
+    setostatusValue('');
+    ">
+      客製化
+    </button>
 
-    <button @click="setTypeValue('2'); setostatusValue('1')">活動</button>
+    <button @click="
+      setTypeValue('2');
+    setostatusValue('1');
+    ">
+      活動
+    </button>
 
-    <button @click="setTypeValue('3'); setostatusValue('1')">課程</button>
+    <button @click="
+      setTypeValue('3');
+    setostatusValue('1');
+    ">
+      課程
+    </button>
   </div>
   <div class="container" v-if="Type == 1">
-    <table class="table" style="width: 100%;">
+    <table class="table" style="width: 100%">
       <thead>
         <tr>
           <th></th>
@@ -50,20 +69,27 @@
           </tr>
           <tr>
             <td colspan="8">
-              <table class="table " style="text-align: left;border:2px solid black;"
+              <table class="table" style="text-align: left; border: 2px solid black"
                 v-show="expandedItems.includes(item.id)">
                 <tr>
-                  <td colspan="4" style="text-align: right;">
-                    <div style="text-align: right;">
-                      <button
-                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8 && item.close !== true"
-                        @click="setcancelIdValue(item.id)" class="btn btn-primary"
-                        style="margin-right: 30px;">申請取消</button>
-                      <button
-                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8 && item.close !== true"
-                        @click="setreturnIdValue(item.id)" class="btn btn-primary"
-                        :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
-                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">申請退貨</button>
+                  <td colspan="4" style="text-align: right">
+                    <div style="text-align: right">
+                      <button v-if="item.order_status_Id !== 7 &&
+                        item.order_status_Id !== 9 &&
+                        item.order_status_Id !== 8 &&
+                        item.close !== true
+                        " @click="setcancelProductIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px">
+                        申請取消
+                      </button>
+                      <button v-if="item.order_status_Id !== 7 &&
+                        item.order_status_Id !== 9 &&
+                        item.order_status_Id !== 8 &&
+                        item.close !== true
+                        " @click="setreturnIdValue(item.id)" class="btn btn-primary" :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null
+    " :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null
+    ">
+                        申請退貨
+                      </button>
                       <button v-if="item.order_status_Id == 9" type="button" class="btn btn-secondary"
                         @click="setcancelreturnIdValue2(item.id)">
                         取消退貨
@@ -77,21 +103,25 @@
                   <td>價格：{{ orderItem.per_price }}</td>
                   <td>規格：{{ orderItem.items_description }}</td>
                 </tr>
-                <hr>
-                <tr style="justify-content: center;">
+                <hr />
+                <tr style="justify-content: center">
                   <td colspan="8">
-                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
+                    <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
                       <tr>
-                        <td style="padding:0 200px 80px 20px;border-right:2px solid black;width: 500px;">
+                        <td style="
+                            padding: 0 200px 80px 20px;
+                            border-right: 2px solid black;
+                            width: 500px;
+                          ">
                           <h3>收件資訊</h3>
-                          <br>
+                          <br />
                           <div>地址：{{ item.recipient_address }}</div>
-                          <br>
+                          <br />
                           <div>姓名:{{ item.receiver }}</div>
-                          <br>
+                          <br />
                           <div>電話:{{ item.cellphone }}</div>
                         </td>
-                        <td id="orderItemDetail" style="padding-left: 30px;width: 800px;">
+                        <td id="orderItemDetail" style="padding-left: 30px; width: 800px">
                           <h6>運費</h6>
                           <div>{{ item.freight }}</div>
                           <h6>運費折扣</h6>
@@ -114,7 +144,7 @@
     </table>
   </div>
   <div class="container" v-if="Type == 4">
-    <table class="table" style="width: 100%;">
+    <table class="table" style="width: 100%">
       <thead>
         <tr>
           <th></th>
@@ -129,7 +159,6 @@
       </thead>
       <tbody>
         <template v-for="item in GetOrders" :key="item.id">
-
           <tr>
             <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
             <td>{{ formatOrderTime(item.ordertime) }}</td>
@@ -142,20 +171,31 @@
           </tr>
           <tr>
             <td colspan="8">
-              <table class="table " style=" text-align: left;border:2px solid black;"
+              <table class="table" style="text-align: left; border: 2px solid black"
                 v-show="expandedItems.includes(item.id)">
                 <tr>
-                  <td colspan="4" style="text-align: right;">
-                    <div style="text-align: right;">
-                      <button
-                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setcancelIdValue(item.id)" class="btn btn-primary"
-                        style="margin-right: 30px;">申請取消</button>
-                      <button
-                        v-if="item.order_status_Id !== 7 && item.order_status_Id !== 9 && item.order_status_Id !== 8"
-                        @click="setreturnIdValue(item.id)" class="btn btn-primary"
-                        :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null"
-                        :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null">申請退貨</button>
+                  <td colspan="4" style="text-align: right">
+                    <div style="text-align: right">
+                      <button v-if="item.order_status_Id !== 7 &&
+                        item.order_status_Id !== 9 &&
+                        item.order_status_Id !== 8 &&
+                        item.order_status_Id !== 10 &&
+                        item.close !== true
+                        " @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px">
+                        申請取消
+                      </button>
+                      <button v-if="item.order_status_Id !== 7 &&
+                        item.order_status_Id !== 9 &&
+                        item.order_status_Id !== 8 &&
+                        item.order_status_Id !== 10 &&
+                        item.close !== true
+                        " @click="setchangeIdValue(item.id)" class="btn btn-primary">
+                        申請換貨
+                      </button>
+                      <button v-if="item.order_status_Id == 10" type="button" class="btn btn-secondary"
+                        @click="setcancelreturnIdValue3(item.id)">
+                        取消換貨
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -165,20 +205,24 @@
                   <td>價格：{{ orderItem.per_price }}</td>
                   <td>規格：{{ orderItem.items_description }}</td>
                 </tr>
-                <hr>
-                <tr style="justify-content: center;">
+                <hr />
+                <tr style="justify-content: center">
                   <td colspan="8">
-                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
+                    <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
                       <tr>
-                        <td style="padding:0 200px 80px 20px;border-right:2px solid black;width: 500px;">
+                        <td style="
+                            padding: 0 200px 80px 20px;
+                            border-right: 2px solid black;
+                            width: 500px;
+                          ">
                           <h3>收件資訊</h3>
                           <div>地址：{{ item.recipient_address }}</div>
-                          <br>
+                          <br />
                           <div>姓名:{{ item.receiver }}</div>
-                          <br>
+                          <br />
                           <div>電話{{ item.cellphone }}</div>
                         </td>
-                        <td id="orderItemDetail" style="padding-left: 30px;width: 800px;">
+                        <td id="orderItemDetail" style="padding-left: 30px; width: 800px">
                           <h6>運費</h6>
                           <div>{{ item.freight }}</div>
                           <h6>運費折扣</h6>
@@ -201,7 +245,7 @@
     </table>
   </div>
   <div class="container" v-if="Type == 2">
-    <table class="table" style="width: 100%;">
+    <table class="table" style="width: 100%">
       <div id="cateorder" class="container">
         <button @click="setostatusValue('1')">即將開始</button>
 
@@ -215,9 +259,9 @@
       <tbody>
         <template v-for="item in GetOrders" :key="item.id">
           <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-            <td style=" text-align: left;">
+            <td style="text-align: left">
               <div>活動名稱：{{ orderItem.product_name }}</div>
-              <div>活動時間:{{ item.order_description }}</div>
+              <div>活動時間:{{ formatOrderTime(item.close_time) }}</div>
               <div>活動地點：{{ item.recipient_address }}</div>
               <div>活動講師:{{ item.receiver }}</div>
               <div>費用：{{ orderItem.per_price }}</div>
@@ -226,19 +270,24 @@
           </tr>
           <tr>
             <td colspan="8">
-              <table class="table " style=" text-align: left;border:2px solid black;"
+              <table class="table" style="text-align: left; border: 2px solid black"
                 v-show="expandedItems.includes(item.id)">
-                <tr style="justify-content: center;">
+                <tr style="justify-content: center">
                   <td colspan="8">
-                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
+                    <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
                       <tr>
-                        <td style="padding:10px 200px 20px 20px;width: 500px;">
+                        <td style="padding: 10px 200px 20px 20px; width: 500px">
                           <h3>訂單詳請</h3>
-                          <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
+                          <div>
+                            購買時間：{{ formatOrderTime(item.ordertime) }}
+                          </div>
                           <div>訂單編號:{{ item.id }}</div>
                           <div>發票編號{{ item.receipt }}</div>
-                          <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
-                            @click="setcancelIdValue(item.id)" class="btn btn-success">申請取消</button>
+                          <button v-if="item.order_status_Id !== 7 &&
+                            item.order_status_Id !== 6
+                            " @click="setcancelIdValue(item.id)" class="btn btn-success">
+                            申請取消
+                          </button>
                         </td>
                       </tr>
                     </table>
@@ -252,7 +301,7 @@
     </table>
   </div>
   <div class="container" v-if="Type == 3">
-    <table class="table" style="width: 100%;">
+    <table class="table" style="width: 100%">
       <div id="cateorder" class="container">
         <button @click="setostatusValue('1')">即將開始</button>
 
@@ -266,9 +315,9 @@
       <tbody>
         <template v-for="item in GetOrders" :key="item.id">
           <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-            <td style=" text-align: left;">
+            <td style="text-align: left">
               <div>課程名稱：{{ orderItem.product_name }}</div>
-              <div>課程時間:{{ item.order_description }}</div>
+              <div>課程時間:{{ formatOrderTime(item.close_time) }}</div>
               <div>課程地點：{{ item.recipient_address }}</div>
               <div>課程講師:{{ item.receiver }}</div>
             </td>
@@ -276,18 +325,23 @@
           </tr>
           <tr>
             <td colspan="8">
-              <table class="table " style=" text-align: left;border:2px solid black;"
+              <table class="table" style="text-align: left; border: 2px solid black"
                 v-show="expandedItems.includes(item.id)">
-                <tr style="justify-content: center;">
+                <tr style="justify-content: center">
                   <td colspan="8">
-                    <table class="" style="text-align: left;" v-show="expandedItems.includes(item.id)">
+                    <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
                       <tr>
-                        <td style="padding:10px 200px 20px 20px;width: 500px;">
+                        <td style="padding: 10px 200px 20px 20px; width: 500px">
                           <h3>訂單詳請</h3>
-                          <div>購買時間：{{ formatOrderTime(item.ordertime) }}</div>
+                          <div>
+                            購買時間：{{ formatOrderTime(item.ordertime) }}
+                          </div>
                           <div>訂單編號:{{ item.id }}</div>
-                          <button v-if="item.order_status_Id !== 7 && item.order_status_Id !== 6"
-                            @click="setcancelIdValue(item.id)" class="btn btn-success">申請取消</button>
+                          <button v-if="item.order_status_Id !== 7 &&
+                            item.order_status_Id !== 6
+                            " @click="setcancelcourseIdValue(item.id)" class="btn btn-success">
+                            申請取消
+                          </button>
                         </td>
                       </tr>
                     </table>
@@ -312,12 +366,14 @@
           <div class="modal-body">
             <div class="form-group">
               <label class="form-label">退款帳號:</label>
-              <input type="text" class="form-control" v-model="returnaccount" />
+              <input type="text" class="form-control" v-model="returnaccount" maxlength="16" />
             </div>
             <div class="form-group">
               <label class="form-label">退貨原因:</label>
               <select class="form-control" v-model="returnreason">
-                <option v-for="reason in reReason" :key="reason.id" :value="reason.id">{{ reason.退貨理由 }}</option>
+                <option v-for="reason in reReason" :key="reason.id" :value="reason.id">
+                  {{ reason.退貨理由 }}
+                </option>
               </select>
             </div>
           </div>
@@ -325,8 +381,9 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
               關閉
             </button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-              @click="setreturndetalValue()">確定</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
+              確定
+            </button>
           </div>
         </div>
       </div>
@@ -365,6 +422,7 @@ import axios from "axios";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const GetOrders = ref([]);
 const Type = ref("");
 const keyword = ref("");
@@ -380,7 +438,6 @@ const returnOrderId = ref("");
 const request = ref([]);
 const reReason = ref([]);
 
-
 const loadGetOrders = async () => {
   const begintimeValue = begintime.value;
   const endtimeValue = endtime.value;
@@ -389,9 +446,11 @@ const loadGetOrders = async () => {
     return;
   }
   await axios
-    .get(`https://localhost:7183/api/Orders/GetOrders?begintime=${begintime.value}&endtime=${endtime.value}&keyword=${keyword.value}&typeId=${Type.value}&ostatusId=${ostatus.value}`)
+    .get(
+      `${baseAddress}api/Orders/GetOrders?begintime=${begintime.value}&endtime=${endtime.value}&keyword=${keyword.value}&typeId=${Type.value}&ostatusId=${ostatus.value}`
+    )
     .then((response) => {
-      //console.log(response.data);
+      console.log(response.data);
       GetOrders.value = response.data;
     })
     .catch((error) => {
@@ -410,9 +469,41 @@ const CancelOrders = async () => {
       alert(error);
     });
 };
+const Cancelcourse = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/cancelcourse?id=${cancelId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const CancelProductOrders = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/cancelProduct?id=${cancelId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
 const setcancelIdValue = (paramValue) => {
   cancelId.value = paramValue;
   CancelOrders();
+};
+const setcancelcourseIdValue = (paramValue) => {
+  cancelId.value = paramValue;
+  Cancelcourse();
+};
+const setcancelProductIdValue = (paramValue) => {
+  cancelId.value = paramValue;
+  CancelProductOrders();
 };
 const ReturnOrders = async () => {
   await axios
@@ -432,7 +523,9 @@ const setreturnIdValue = (paramValue) => {
 };
 const CancelReturnOrders = async () => {
   await axios
-    .put(`https://localhost:7183/api/Orders/cancelreturn?orderid=${retrunId.value}`)
+    .put(
+      `https://localhost:7183/api/Orders/cancelreturn?orderid=${retrunId.value}`
+    )
     .then((response) => {
       //console.log(response.data);
       alert(response.data);
@@ -442,22 +535,60 @@ const CancelReturnOrders = async () => {
       alert(error);
     });
 };
-const setcancelreturnIdValue = (paramValue) => {
-  returnOrderId.value = paramValue;
-  CancelReturnOrders();
+const CancelChangeOrders = async () => {
+  await axios
+    .put(
+      `https://localhost:7183/api/Orders/cancelChange?orderid=${retrunId.value}`
+    )
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
 };
-const setcancelreturnIdValue2 = (paramValue) => {
+const SetOrdersclose = async () => {
+  await axios
+    .put(
+      `https://localhost:7183/api/Orders/setclose?orderid=${retrunId.value}`
+    )
+    .then((response) => {
+      //console.log(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const setcancelreturnIdValue = async (paramValue) => {
+  returnOrderId.value = paramValue;
+  await CancelReturnAndCloseOrders();
+};
+const setcancelreturnIdValue2 = async (paramValue) => {
   retrunId.value = paramValue;
-  CancelReturnOrders();
+  await CancelReturnAndCloseOrders();
+};
+const setcancelreturnIdValue3 = async (paramValue) => {
+  retrunId.value = paramValue;
+  await CancelChangeOrders();
+  await SetOrdersclose();
+};
+const CancelReturnAndCloseOrders = async () => {
+  await CancelReturnOrders();
+  await SetOrdersclose();
 };
 const Returndetail = async () => {
-  alert(returnreason.value);
   const requestData = {
     退貨轉帳帳號: returnaccount.value,
     退貨理由: returnreason.value,
   };
   await axios
-    .post(`https://localhost:7183/api/Orders/NewReturn?orderid=${retrunId.value}`, requestData)
+    .post(
+      `https://localhost:7183/api/Orders/NewReturn?orderid=${retrunId.value}`,
+      requestData
+    )
     .then((response) => {
       alert("退款資訊已提交");
       loadGetOrders();
@@ -473,14 +604,43 @@ const setreturndetalValue = (paramValue) => {
   Returndetail();
 };
 const fetchReturnReasons = async () => {
-  await axios.get('https://localhost:7183/api/Orders/ReturnReasons')
+  await axios
+    .get("https://localhost:7183/api/Orders/ReturnReasons")
     .then((response) => {
       reReason.value = response.data;
       console.log(reReason.value);
-    }).catch((error) => {
-      alert(error);
     })
-}
+    .catch((error) => {
+      alert(error);
+    });
+};
+const activityclose = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/activitycolse`)
+    .then((response) => {
+      //console.log(response.data);
+      //loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const ChangeOrders = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/Change?orderid=${retrunId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const setchangeIdValue = (paramValue) => {
+  retrunId.value = paramValue;
+  ChangeOrders();
+};
 // const ReturnReason = async () => {
 //   if (this.selectedReason === null) {
 //     alert('请选择退货原因');
@@ -505,16 +665,16 @@ const formatOrderTime = (ordertime) => {
   const minutes = dateTimeObject.getMinutes().toString().padStart(2, "0");
   return year + "-" + month + "-" + dates + " " + hours + ":" + minutes + "";
 };
-const setTypeValue = (paramValue) => {
+const setTypeValue = async (paramValue) => {
   Type.value = paramValue;
-  loadGetOrders();
+  //loadGetOrders();
 };
-const setostatusValue = (paramValue) => {
+const setostatusValue = async (paramValue) => {
   ostatus.value = paramValue;
   loadGetOrders();
 };
 
-const emit = defineEmits(["searchInput"])
+const emit = defineEmits(["searchInput"]);
 const inputhandler = () => {
   emit1("searchInput", keyword.value);
   loadGetOrders();
@@ -541,7 +701,7 @@ const toggleDetails = (itemId) => {
   } else {
     expandedItems.value.push(itemId);
   }
-}
+};
 
 onMounted(() => {
   Type.value = 1;
@@ -550,6 +710,7 @@ onMounted(() => {
     maxDate: "today",
     dateFormat: "Y-m-d",
   });
+  activityclose();
   loadGetOrders();
   fetchReturnReasons();
 });

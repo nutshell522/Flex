@@ -10,6 +10,8 @@ namespace FlexCoreService.ActivityCtrl.Interface
         Task<MemberDTO> GetMembreInfoAsync(int id);
 
         Task<IEnumerable<ActivityIndexDTO>> GetAllAsync();
+
+        //Task<IEnumerable<ActivityIndexDTO>> SearchByPlaceAndCategoryAsync(ActivitySearchDTO dto);
     }
 
 }

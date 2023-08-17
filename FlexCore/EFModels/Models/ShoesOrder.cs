@@ -2,6 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -12,12 +15,17 @@ namespace EFModels.Models
             ShoesGroups = new HashSet<ShoesGroup>();
         }
 
+        [Key]
         public int ShoesOrderId { get; set; }
         public int Qty { get; set; }
         public int fk_ShoesSizeId { get; set; }
+        [StringLength(300)]
         public string Remark { get; set; }
 
+        [ForeignKey("fk_ShoesSizeId")]
+        [InverseProperty("ShoesOrders")]
         public virtual ShoesSize fk_ShoesSize { get; set; }
+        [InverseProperty("fk_CustomerOrder")]
         public virtual ICollection<ShoesGroup> ShoesGroups { get; set; }
     }
 }

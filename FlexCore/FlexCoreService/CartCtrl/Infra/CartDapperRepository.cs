@@ -236,6 +236,7 @@ c.DiscountType, c.DiscountValue, cs.StartDate, cs.EndDate
 from CouponSendings as cs
 inner join Coupons as c on c.CouponId = cs.fk_CouponId
 where cs.fk_MemberId = @MemberId and RedemptionStatus = 0
+and cs.StartDate <= CURRENT_TIMESTAMP and cs.EndDate > CURRENT_TIMESTAMP;
 ";
 				var parameters = new { MemberId = memberId };
 

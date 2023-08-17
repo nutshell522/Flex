@@ -2,6 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -12,9 +15,13 @@ namespace EFModels.Models
             Coupons = new HashSet<Coupon>();
         }
 
+        [Key]
         public int CouponCategoryId { get; set; }
+        [Required]
+        [StringLength(20)]
         public string CouponCategoryName { get; set; }
 
+        [InverseProperty("fk_CouponCategory")]
         public virtual ICollection<Coupon> Coupons { get; set; }
     }
 }

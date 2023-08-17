@@ -14,6 +14,10 @@ namespace FlexCoreService.ProductCtrl.Exts
                 ProductName = dto.ProductName,
                 UnitPrice = dto.UnitPrice,
                 SalesPrice = dto.SalesPrice,
+                SalesCategoryId = dto.SalesCategoryId,
+                SalesCategoryName = dto.SalesCategoryName,
+                ProductCategoryName=dto.ProductCategoryName,
+                ProductSubCategoryName = dto.ProductSubCategoryName,
                 FirstImgPath = dto.FirstImgPath,
             };
         }
@@ -50,8 +54,10 @@ namespace FlexCoreService.ProductCtrl.Exts
                 ProductOrigin = dto.FirstOrDefault().ProductOrigin,
                 UnitPrice = dto.FirstOrDefault()?.UnitPrice,
                 SalesPrice = dto.FirstOrDefault().SalesPrice,
-                //DefaultColorImg = new Dictionary<string, string>(),
-                ProductGroup=group
+                SalesCategoryName = dto.FirstOrDefault()?.SalesCategoryName,
+                ProductCategoryName= dto.FirstOrDefault()?.ProductCategoryName,
+                ProductSubCategoryName = dto.FirstOrDefault()?.ProductSubCategoryName,
+                ProductGroup =group
             };
             return vm;
         }

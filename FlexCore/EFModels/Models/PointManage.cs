@@ -2,18 +2,26 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
+    [Table("PointManage")]
     public partial class PointManage
     {
+        [Key]
         public int PointManageId { get; set; }
         public bool GetOrDeduct { get; set; }
         public int Amount { get; set; }
         public int fk_TypeId { get; set; }
         public int? TypeProductId { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime? PointExpirationDate { get; set; }
 
+        [ForeignKey("fk_TypeId")]
+        [InverseProperty("PointManages")]
         public virtual Type fk_Type { get; set; }
     }
 }

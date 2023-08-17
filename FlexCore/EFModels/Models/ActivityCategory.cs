@@ -2,6 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -12,9 +15,13 @@ namespace EFModels.Models
             Activities = new HashSet<Activity>();
         }
 
+        [Key]
         public int ActivityCategoryId { get; set; }
+        [Required]
+        [StringLength(50)]
         public string ActivityCategoryName { get; set; }
 
+        [InverseProperty("fk_ActivityCategory")]
         public virtual ICollection<Activity> Activities { get; set; }
     }
 }

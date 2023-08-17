@@ -1,73 +1,92 @@
 <template>
   <navBar></navBar>
-  <div class="container loginBox">
+  <div class="container loginBox" v-if="loginBox">
     <div class="loginText">
       <h4>Flex Your Journey. Join us!</h4>
     </div>
     <div class="from-group" v-if="errors.length">
-      <ul class="mb-3 errsText">
+      <ul class="mb-3 errorsText">
         <span v-for="error in errors" class="text-danger">{{ error }}</span>
       </ul>
     </div>
+    <!-- 欄位 -->
     <div class="from-group mb-3">
+      <label for="account" class="mb-1" v-if="accInput">帳號</label>
       <input
         type="text"
         name="account"
         v-if="accInput"
+        id="account"
         v-model="account"
         class="form-control"
         placeholder="手機號碼/帳號/Email"
       />
     </div>
     <div class="from-group mb-3" v-if="validated">
-      <label class="mb-1">密碼</label>
+      <label for="password" class="mb-1">密碼</label>
       <input
         type="password"
         name="password"
+        id="password"
         v-model="password"
         class="form-control"
         placeholder="輸入6-20碼英數字"
       />
     </div>
-
+    <!-- 00再次輸入確認密碼 -->
+    <div class="from-group mb-3" v-if="nameInput">
+      <label for="name">姓名</label>
+      <input
+        type="text"
+        id="name"
+        v-model="name"
+        class="form-control"
+        placeholder="ex.吳哈哈"
+      />
+    </div>
     <div class="from-group mb-3" v-if="unValidated">
-      <label>信箱</label>
+      <label for="email">信箱</label>
       <input
         type="email"
         name="email"
+        id="email"
         v-model="email"
         class="form-control"
-        placeholder="信箱"
+        placeholder="ex.fuen28flex@gmail.com"
       />
     </div>
     <div class="from-group mb-3" v-if="birInput">
-      <label>生日</label>
+      <label for="birthday">生日</label>
       <input
         type="text"
         name="birthday"
+        id="birthday"
         v-model="birthday"
         class="form-control"
-        placeholder="生日"
+        placeholder="生日套用日期插件阿"
       />
     </div>
     <div class="from-group mb-3" v-if="mobInput">
-      <label>手機</label>
+      <label for="mobile">手機</label>
       <input
         type="text"
+        id="mobile"
         v-model="mobile"
         class="form-control"
-        placeholder="手機"
+        placeholder="ex.0912345678"
       />
     </div>
-    <div class="from-group mb-3" v-if="nameInput">
-      <label>姓名</label>
+    <div class="from-group mb-3" v-if="addressInput">
+      <label for="address">收件地址</label>
       <input
         type="text"
-        v-model="name"
+        id="address"
+        v-model="address"
         class="form-control"
-        placeholder="姓名"
+        placeholder="收件地址套用選項按鈕阿"
       />
     </div>
+    <!-- 按鈕 -->
     <div class="from-group mb-3">
       <button
         type="submit"
@@ -111,23 +130,27 @@
       </button>
     </div>
     <div class="secret">
-      <div>
-        <span>擁有帳號即表示你同意</span>
-      </div>
-      <a href="javascript:;">會員權益聲明</a>
-      <a href="javascript:;">隱私權 與 網站使用條款</a>
+      <div>擁有帳號即表示你同意</div>
+      <a href="#" class="underline">會員權益聲明</a>
+      <a href="#">與</a>
+      <a href="#" class="underline">隱私權及網站使用條款</a>
     </div>
   </div>
-
-  <forgetPwdAndSetPwd v-if="forgetPwdSetPwd"></forgetPwdAndSetPwd>
+  <!-- 忘記密碼請收驗證信 -->
+  <forgetPwdAndSetPwd
+    v-if="forgetPwdSetPwd"
+    :email="email"
+  ></forgetPwdAndSetPwd>
+  <!-- 收完驗證信重新設定密碼 -->
+  <!-- <resetPwd></resetPwd> -->
 </template>
 
 <script setup>
 import axios from 'axios';
 import navBar from '@/components/home/navBar.vue';
-import { ref } from 'vue';
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
+// import resetPwd from '@/components/user/resetPwd.vue';
 
 //pinia
 import { useRouter } from 'vue-router';
@@ -141,12 +164,13 @@ const { setMemberUsername } = getApiStore;
 const { setLoginSuccess } = getApiStore;
 const router = useRouter();
 
+const userAcc = ref(null);
 const loggedInUser = ref(null);
 
 onMounted(() => {
   //檢查本地儲存是否有登錄信息
   const storedUser = localStorage.getItem('loggedInUser');
-  //console.log(storedUser);
+  //console.log('storedUser', storedUser);
 
   if (storedUser) {
     loggedInUser.value = JSON.parse(storedUser);
@@ -165,9 +189,10 @@ const accInput = ref(true);
 const validated = ref(false); //初始化狀態為不顯示
 const unValidated = ref(false);
 
+const nameInput = ref(false);
 const birInput = ref(false);
 const mobInput = ref(false);
-const nameInput = ref(false);
+const addressInput = ref(false);
 const logAndRegBtn = ref(true);
 const registered = ref(true);
 const forgetPwd = ref(false);
@@ -178,22 +203,26 @@ const account = ref('');
 const password = ref('');
 
 //註冊表單
+const name = ref('');
 const email = ref('');
 const birthday = ref('');
 const mobile = ref('');
-const name = ref('');
-//--一般會員
+const address = ref('');
 
-const baseAddress = 'https://localhost:7183';
-const uri = `${baseAddress}/api/Users/Login`;
+const baseAddress = 'https://localhost:7183/api';
+const uri = `${baseAddress}/Users/Login`;
 var loginData = {}; //儲存傳給後端的登入資料
 
 function ValidatedIdentity() {
+  //存入帳號
+  localStorage.setItem('userAcc', account.value);
+
+  //載入開始
   //alert('loginAndRegister');
   //未填寫
   if (account.value === '') {
     errors.value = [];
-    errors.value.push('沒有填誰知道你是誰');
+    errors.value.push('沒有填誰知道你是誰'); //結束載入
   } else {
     //已填寫
     errors.value = [];
@@ -203,6 +232,7 @@ function ValidatedIdentity() {
     axios
       .post(uri, loginData)
       .then((res) => {
+        //結束載入
         userData.value = res.data;
         //console.log('帳號' + userData.value); //後端return的訊息
 
@@ -225,9 +255,10 @@ function ValidatedIdentity() {
           errors.value.push('484沒有註冊');
           validated.value = true;
           unValidated.value = true; //信箱
+          nameInput.value = true;
           birInput.value = true;
           mobInput.value = true;
-          nameInput.value = true;
+          addressInput.value = true;
           unRegistered.value = true;
 
           //todo驗證帳號是否唯一
@@ -235,6 +266,7 @@ function ValidatedIdentity() {
         }
       })
       .catch((err) => {
+        //結束載入
         alert('API請求失敗：' + err.message);
       });
   }
@@ -303,7 +335,7 @@ function handleSuccessfulLogin(memberInfo) {
   //console.log(loggedInUser.value);
 }
 
-const regUri = `${baseAddress}/api/Users/Register`;
+const regUri = `${baseAddress}/Users/Register`;
 var registerData = {};
 
 function register() {
@@ -317,11 +349,12 @@ function register() {
     errors.value = [];
     registerData.Account = account.value;
     registerData.EncryptedPassword = password.value;
+    registerData.Name = name.value;
     registerData.Email = email.value;
     registerData.Birthday = birthday.value;
     registerData.Mobile = mobile.value;
-    registerData.Name = name.value;
-    //console.log(registerData);
+    registerData.CommonAddress = address.value;
+    console.log(registerData);
     axios
       .post(regUri, registerData)
       .then((res) => {
@@ -333,9 +366,29 @@ function register() {
       .catch((err) => {});
   }
 }
+const loginBox = ref(true);
+const forgetPwdSetPwd = ref(false);
+userAcc.value = localStorage.getItem('userAcc');
+//console.log('userAcc', userAcc.value);
 
 function forgetPwdClick() {
+  loginBox.value = false;
   forgetPwdSetPwd.value = true;
+  //呼叫api取得信箱
+  if (userAcc.value) {
+    const forgetUri = `${baseAddress}/Users/account/` + userAcc.value;
+    //console.log(forgetUri);
+    // 呼叫 API 取得信箱
+    axios
+      .get(forgetUri)
+      .then((res) => {
+        email.value = res.data; // 回傳信箱
+        //console.log('Email:', email.value);
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
+  }
 }
 </script>
 <style scoped>
@@ -345,7 +398,8 @@ function forgetPwdClick() {
   justify-content: center;
   align-items: center;
   padding: 45px;
-  margin-top: 80px;
+  margin-top: 150px;
+  border: solid 1px;
 }
 .loginText {
   display: flex;
@@ -356,7 +410,7 @@ function forgetPwdClick() {
   font-weight: bold;
   font-size: 40px;
 }
-.errsText {
+.errorsText {
   display: flex;
   justify-content: center;
   padding: 0px;
@@ -412,9 +466,18 @@ p::after {
 .underline {
   text-decoration-line: underline;
   color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+  display: flex;
+  justify-content: center;
 }
-/* .forgetPwd a {
-  cursor: pointer;
-  text-decoration: underline;
-} */
+.secret {
+  margin: auto;
+}
+.secret div {
+  display: flex;
+  justify-content: center;
+}
+.secret a {
+  display: flex;
+  justify-content: center;
+}
 </style>

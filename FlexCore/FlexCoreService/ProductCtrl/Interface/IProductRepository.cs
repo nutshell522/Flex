@@ -6,7 +6,7 @@ namespace FlexCoreService.ProductCtrl.Interface
     {
         //IEnumerable<ProductCardDto> SearchProducts();
 
-        IEnumerable<ProductCardDto> SearchProducts(int salesId, string? categoryName, string? subCategoryName);
+        IEnumerable<ProductCardDto> SearchProducts(int? salesId, string? categoryName, string? subCategoryName);
 
         IEnumerable<ProductDetailDto> GetProductDetail(string productId);
         IEnumerable<ProductImgsDto> GetProductImgs(string productId);
@@ -15,6 +15,6 @@ namespace FlexCoreService.ProductCtrl.Interface
 
         IEnumerable<ProductCardDto> GetSimilarProducts(string productId,CategoryDto dto);
 
-        CategoryDto GetProdductCategories(string productId);
+        CategoryDto GetProductCategories(string productId);
     }
 }

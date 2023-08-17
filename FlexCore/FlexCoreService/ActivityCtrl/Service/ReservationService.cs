@@ -38,6 +38,7 @@ namespace FlexCoreService.ActivityCtrl.Service
 
         public async Task AddReservationAsync (AddReservationDTO dto)
         {
+            await _repo.AddReservationAsync(dto);
             
         }
     }

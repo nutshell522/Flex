@@ -12,5 +12,7 @@
 
 		public string? FirstImgPath { get; set; }
 
+		public string Remark { get; set; }
+
 	}
 }

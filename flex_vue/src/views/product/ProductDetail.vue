@@ -53,26 +53,75 @@
               :class="{
                 sizeboxsetting: true,
                 sizeActive: sizeActiveIndex === index,
+                zeroInventory: size.qty === 0,
               }"
               :key="size.productGroupId"
               :title="size.sizeName"
               :data-productGroupId="size.productGroupId"
-              @click="changeSize(index)"
+              @click="handleSizeClick(index, size.qty)"
             >
               {{ size.sizeName }}
             </div>
           </div>
           <div class="mt-3 d-flex mb-3">
             <div class="text-center">
-              <button class="form-control" style="font-size: 20px">
+              <button
+                type="button"
+                class="form-control btn btn-secondary"
+                style="font-size: 20px"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                v-if="productDetail.salesCategoryName !== '配件'"
+              >
                 尺寸表
               </button>
             </div>
+            <div
+              class="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      尺寸表
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body modal-dialog modal-dialog-scrollable">
+                    <img :src="baseAddress + 'Public/Img/' + sizeTable" />
+                    <p>※ 本尺寸表會因商品素材不同，可能與實際尺寸略有誤差。</p>
+                    <p>※ 尺寸表為商品平放測量，以公分(cm)為單位。</p>
+                    <img :src="baseAddress + 'Public/Img/' + sizeImg" />
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      關閉
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="ms-3 text-center">
-              <button class="form-control" style="font-size: 20px">
-                收藏在這，用v-if切換
-                <i class="bi bi-heart" style="color: red"></i
-                ><i class="bi bi-heart-fill" style="color: red"></i>
+              <button
+                class="form-control"
+                style="font-size: 20px"
+                @click="collect"
+              >
+                <i class="bi bi-heart" style="color: red" v-if="!like"></i
+                ><i class="bi bi-heart-fill" style="color: red" v-if="like"></i>
               </button>
             </div>
           </div>
@@ -231,6 +280,50 @@
                   <div>{{ comment.description }}</div>
                   <hr />
                 </div>
+                <nav
+                  aria-label="Page navigation example"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <ul class="pagination">
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        aria-label="Previous"
+                        @click="decrementPage"
+                      >
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                    <li
+                      v-for="(value, index) in totalPages"
+                      class="page-item"
+                      :key="index"
+                      @click="clickHandler(value)"
+                    >
+                      <a
+                        :class="{
+                          pageHandle: thePage === value,
+                          'page-link': true,
+                        }"
+                        >{{ value }}</a
+                      >
+                    </li>
+
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        aria-label="Next"
+                        @click="incrementPage"
+                      >
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
             </div>
           </div>
@@ -239,10 +332,19 @@
     </div>
     <div class="row mt-3">
       <div class="col-12">
-        <div class="container-body d-flex">
-          <ul class="d-flex flex-wrap">
+        <div class="container-body">
+          <div class="d-flex">
+            <h1 class="me-auto">你可能會喜歡</h1>
+            <button class="me-3 similarBtn" @click="prevCard">
+              <i class="bi bi-chevron-left similarIcon"></i>
+            </button>
+            <button class="me-5 similarBtn" @click="nextCard">
+              <i class="bi bi-chevron-right similarIcon"></i>
+            </button>
+          </div>
+          <ul class="d-flex flex-wrap mt-3">
             <li
-              v-for="card in cards"
+              v-for="card in similarProducts"
               :key="card.productId"
               class="card text-center"
             >
@@ -269,9 +371,10 @@
 
 <script setup>
 import axios from "axios";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import ProductCard from "@/components/product/ProductCard.vue";
+import { useProductRoute } from "@/stores/useProductRoute.js";
 
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
@@ -286,13 +389,25 @@ const productComment = ref([]);
 const showCommentDiv = ref(true);
 const showDetailDiv = ref(true);
 const cards = ref([]);
+const productStore = useProductRoute();
+const productName = ref("");
+const similarProducts = ref([]);
+const totalPages = ref(1);
+const thePage = ref(1);
+const currentIndex = ref(0);
+const visibleCards = ref([]);
+const sizeImg = ref("");
+const sizeTable = ref("");
+const like = ref(false);
 
+//基本資料
 let getData = async () => {
   await axios
     .get(`${baseAddress}api/Products/Detail/${route.params.productId}`)
     .then((response) => {
-      //console.log(response.data.productGroup);
+      //console.log(response.data.productName);
       productDetail.value = response.data;
+      productName.value = response.data.productName;
       const firstColor = Object.keys(productDetail.value.productGroup)[0];
       //console.log(firstColor);
       if (firstColor) {
@@ -300,12 +415,92 @@ let getData = async () => {
         detailImg.value = selectSizes.value[0].defaultColorImg;
         //console.log(selectSizes.value[0].defaultColorImg);
       }
+      productStore.setProductName(productName.value);
+
+      if (
+        response.data.productCategoryName == "上衣" &&
+        response.data.salesCategoryName == "男裝"
+      ) {
+        sizeTable.value = "男裝上衣尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "上衣" &&
+        response.data.salesCategoryName == "女裝"
+      ) {
+        sizeTable.value = "女裝上衣尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "上衣" &&
+        response.data.salesCategoryName == "童裝"
+      ) {
+        sizeTable.value = "童裝上衣尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "男裝" &&
+        response.data.productSubCategoryName == "短褲"
+      ) {
+        sizeTable.value = "男裝褲子短褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "男裝" &&
+        response.data.productSubCategoryName == "長褲"
+      ) {
+        sizeTable.value = "男裝褲子長褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "女裝" &&
+        response.data.productSubCategoryName == "短褲"
+      ) {
+        sizeTable.value = "女裝褲子短褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "女裝" &&
+        response.data.productSubCategoryName == "長褲"
+      ) {
+        sizeTable.value = "女裝褲子長褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "童裝" &&
+        response.data.productSubCategoryName == "短褲"
+      ) {
+        sizeTable.value = "童裝褲子短褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "童裝" &&
+        response.data.productSubCategoryName == "長褲"
+      ) {
+        sizeTable.value = "童裝褲子長褲尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "鞋子" &&
+        response.data.salesCategoryName == "男裝"
+      ) {
+        sizeTable.value = "成人鞋子尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "鞋子" &&
+        response.data.salesCategoryName == "女裝"
+      ) {
+        sizeTable.value = "成人鞋子尺寸表.jpg";
+      } else if (
+        response.data.productCategoryName == "鞋子" &&
+        response.data.salesCategoryName == "童裝"
+      ) {
+        sizeTable.value = "童裝鞋子尺寸表.jpg";
+      }
+
+      // console.log(sizeTable.value);
+
+      if (response.data.productCategoryName == "上衣") {
+        sizeImg.value = "上衣說明表.jpg";
+      } else if (response.data.productCategoryName == "褲子") {
+        sizeImg.value = "下身說明表.jpg";
+      } else if (response.data.productCategoryName == "鞋子") {
+        sizeImg.value = "鞋子說明表.jpg";
+      }
     })
     .catch((error) => {
       alert(error);
     });
 };
 
+//抓照片
 let getImgs = async () => {
   await axios
     .get(`${baseAddress}api/Products/Imgs/${route.params.productId}`)
@@ -318,28 +513,104 @@ let getImgs = async () => {
     });
 };
 
+//分頁
+let clickHandler = (page) => {
+  //console.log(page);
+  thePage.value = page;
+  getComment();
+};
+//上一頁
+let decrementPage = () => {
+  if (thePage.value > 1) {
+    thePage.value--;
+    getComment();
+  }
+};
+//下一頁
+let incrementPage = () => {
+  if (thePage.value < totalPages.value) {
+    thePage.value++;
+    getComment();
+  }
+};
+
+let prevCard = () => {
+  currentIndex.value =
+    (currentIndex.value - 1 + similarProducts.value.length) %
+    similarProducts.value.length;
+  console.log(currentIndex.value);
+  updateVisibleCards();
+};
+
+let nextCard = () => {
+  currentIndex.value =
+    (currentIndex.value + 1 + similarProducts.value.length) %
+    similarProducts.value.length;
+  console.log(currentIndex.value);
+  updateVisibleCards();
+};
+
+let updateVisibleCards = () => {
+  const cardCount = 4; // 一次顯示的卡片數量
+  const totalCards = similarProducts.value.length;
+
+  for (let i = 0; i < cardCount; i++) {
+    const cardIndex = (currentIndex.value + i) % totalCards; // 循環索引
+    visibleCards.value.push(similarProducts.value[cardIndex]);
+  }
+  //console.log(visibleCards.value);
+};
+
+//留言
 let getComment = async () => {
   await axios
-    .get(`${baseAddress}api/Products/Comment/${route.params.productId}`)
+    .get(
+      `${baseAddress}api/Products/Comment/${route.params.productId}?page=${thePage.value}&pageSize=3`
+    )
     .then((response) => {
-      console.log(response.data);
+      //console.log(response.data);
       productComment.value = response.data;
+      totalPages.value = response.data[0].totalPage;
+      //console.log(totalPages);
     })
     .catch((error) => {
       alert(error);
     });
 };
 
+//相似商品
+let getSimilarProducts = async () => {
+  await axios
+    .get(`${baseAddress}api/Products/Similar/${route.params.productId}`)
+    .then((response) => {
+      //console.log(response.data);
+      similarProducts.value = response.data;
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
+//更新size+照片
 let updateSizeList = (sizesDto, index) => {
   colorActiveindex.value = index;
   selectSizes.value = sizesDto;
   detailImg.value = sizesDto[0].defaultColorImg;
 };
 
+//被選重要加入樣式
 let changeSize = (index) => {
   sizeActiveIndex.value = index;
 };
 
+//被選重要加入樣式
+let handleSizeClick = (index, qty) => {
+  if (qty > 0) {
+    changeSize(index);
+  }
+};
+
+//購買數量(手輸)
 let handleQyt = (event) => {
   buyQty.value = event.target.value.replace(/\D/g, "");
   if (buyQty.value <= 1) {
@@ -350,6 +621,7 @@ let handleQyt = (event) => {
   }
 };
 
+//購買數量(--)
 let decrementProductQty = () => {
   if (buyQty.value <= 1) {
     buyQty.value = 1;
@@ -358,6 +630,7 @@ let decrementProductQty = () => {
   }
 };
 
+//購買數量(++)
 let incrementProductQty = () => {
   if (buyQty.value >= 99) {
     buyQty.value = 99;
@@ -366,11 +639,32 @@ let incrementProductQty = () => {
   }
 };
 
+watch(
+  () => route.params.productId,
+  (newProductId) => {
+    if (newProductId != undefined) {
+      getData();
+      getImgs();
+      getComment();
+      getSimilarProducts();
+    }
+  }
+);
+
 onMounted(() => {
   getData();
   getImgs();
   getComment();
+  getSimilarProducts();
+  //updateVisibleCards();
 });
+
+function collect() {
+  //alert('天阿!好喜翻呀~~~');
+  like.value = !like.value;
+  //喜歡的狀態要一直存在
+  //並加入收藏清單
+}
 </script>
 
 <style>
@@ -509,5 +803,31 @@ onMounted(() => {
   justify-content: center;
   border: 1px solid rgb(185, 184, 184);
   border-radius: 10px;
+}
+
+.similarBtn {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  border-radius: 50%;
+  background-color: #dbdbdb;
+}
+.similarBtn:hover {
+  background-color: #ababab;
+}
+
+.similarBtn:hover .similarIcon {
+  color: white;
+}
+
+.pageHandle {
+  background-color: #706e6c;
+  color: white;
+}
+
+.zeroInventory {
+  background-color: white;
+  color: #acaba9;
+  border: 1px dotted #acaba9;
 }
 </style>
