@@ -96,19 +96,29 @@
 
 <script setup>
 import axios from "axios";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import AOS from "aos";
 import { useRoute } from "vue-router";
 import FlipDown from 'vue-flip-down';
 
 const bookingTime = ref([]);
-const endDate = new Date("2023/8/18 10:50:35");
+
 const route = useRoute();
-const activityId = route.params.id;
+// const activityId = route.params.id;
 const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
 //從F12的Vue去看的
-console.log(activityId);
+// console.log(activityId);
 AOS.init();
+
+
+
+onMounted(async () => {
+  const activityId = route.params.id;
+  await loadActivities(activityId);
+  await getActivityBookingTime(activityId);
+  await loadActivities(activityId);
+});
+
 
 const activities = reactive({
   activityName: "",
@@ -123,7 +133,7 @@ const activities = reactive({
   activityOriginalPrice: 0,
 });
 
-
+//格式化日期的方法
 const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     
@@ -140,12 +150,17 @@ const formatDateTime = (dateString) => {
     return formattedDateTime;
 }
 
-console.log(formatCustomDateTime("2023-08-18T10:50:35")); // 示例日期时间
+// console.log(formatDateTime("2023-08-18T10:50:35")); // 測試日期格式
+// const testDate = formatDateTime("2023-08-18T10:50:35");
+// console.log(testDate); //2023/8/18 10:50:35
+// let testEndDate ;
+// testEndDate = new Date(testDate);
+let showDate;
+let endDate = ref(null); 
 
 
-console.log( formatDate("2023-03-25T05:25:00"));
 
-
+//從後端抓活動資料
 const loadActivities = async (id) => {
   axios
     .get(`https://localhost:7183/api/Activity/${id}`)
@@ -169,20 +184,29 @@ const loadActivities = async (id) => {
       console.log(err);
     });
 };
-loadActivities(activityId);
-
+// loadActivities(activityId);
+let startTime;
 //從後端獲得報名起訖時間
 const getActivityBookingTime = async(id)=>{
   axios.get(`https://localhost:7183/api/Activity/GetActivityBookingTime?id=${id}`)
       .then(res=>{
         console.log(res.data);
-        bookingTime.value = res.data;    
+        startTime= res.data;     
+        showDate = formatDateTime(startTime.activityBookStartTime);   
+        console.log(showDate); //2023/5/7 0:0:0
+        endDate.value = new Date(showDate);
       })
       .catch(err=>{
         console.log(err);
       })
 }
-getActivityBookingTime(activityId);
+// console.log(endDate);
+//  getActivityBookingTime(activityId)
+// console.log(startTime);
+
+
+
+
 </script>
 
 <style>
