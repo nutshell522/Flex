@@ -1,80 +1,130 @@
 import axios from "axios";
-//商品符合折扣
-export interface MatchDiscount {
-    discountId: number;
-    discountName: string;
-    discountDescription: string;
-    discountType: number;
-    discountValue: number;
-    conditionType: number;
-    conditionValue: number;
-    discountOrder: number;
-}
-
-// 購物車項目內商品資訊
-export interface CartItemProduct {
-    productSaleId: string;
-    productName: string;
-    unitPrice: number;
-    salesPrice: number;
-    size: string;
-    color: string;
-    matchDiscounts: MatchDiscount[];
-    imgPath: string;
-    salesCategoryName: string;
-    salesCategoryNameStr: string;
-    tagsValue: string;
-}
-
-export interface AppliedDiscount {
-    id: number;
-    rule: any; // 需要確定 rule 的型別
-    products: CartItemProduct[];
-    amount: number;
-}
-
-export interface Coupon {
-    id: number;
-    name: string;
-    sendingId: number;
-}
-
-// 購物車項目
-export interface CartItem {
-    cartItemId: number;
-    cartId: number;
-    productId: number;
-    qty: number;
-    product: CartItemProduct;
-    subTotal: number;
-    unitSubTotal: number;
-}
-
-// 購物車
-export interface ShoppingCart {
-    cartItems: CartItem[];
-    appliedDiscounts: AppliedDiscount[];
-    coupon: Coupon;
-    originalTotalAmount: number;
-    deliveryFee: number;
-    couponValue: number;
-    totalPrice: number;
-}
-// 會員資料
-export interface Member {
-    memberId: number;
-    fk_Level: number;
-    levelName: string;
-    name: string;
-    email: string;
-    mobile: string;
-    gender: boolean;
-    birthday: string;
-    commonAddress: string;
-    alternateAddress1: string;
-    alternateAddress2: string;
-    isSubscribeNews: boolean;
-}
+export class MatchDiscount {
+    constructor(
+      public discountId: number,
+      public discountName: string,
+      public discountDescription: string,
+      public discountType: number,
+      public discountValue: number,
+      public conditionType: number,
+      public conditionValue: number,
+      public discountOrder: number
+    ) {}
+  }
+  
+  export class CartItemProduct {
+    constructor(
+      public productSaleId: string,
+      public productName: string,
+      public unitPrice: number,
+      public salesPrice: number,
+      public size: string,
+      public color: string,
+      public matchDiscounts: MatchDiscount[],
+      public imgPath: string,
+      public salesCategoryName: string,
+      public salesCategoryNameStr: string,
+      public tagsValue: string
+    ) {}
+  }
+  
+  export class AppliedDiscount {
+    constructor(
+      public id: number,
+      public rule: any, // 需要確定 rule 的型別
+      public products: CartItemProduct[],
+      public amount: number
+    ) {}
+  }
+  
+  class Coupon {
+    constructor(
+      public id: number,
+      public name: string,
+      public sendingId: number
+    ) {}
+  }
+  
+  export class CartItem {
+    constructor(
+      public cartItemId: number,
+      public cartId: number,
+      public productId: number,
+      public qty: number,
+      public product: CartItemProduct,
+      public subTotal: number,
+      public unitSubTotal: number
+    ) {}
+  }
+  
+  export class ShoppingCart {
+    constructor(
+      public cartItems: CartItem[],
+      public appliedDiscounts: AppliedDiscount[],
+      public coupon: Coupon,
+      public originalTotalAmount: number,
+      public deliveryFee: number,
+      public couponValue: number,
+      public totalPrice: number,
+      public checkoutData: CheckoutData
+    ) {}
+  }
+  
+ export class Member {
+    constructor(
+      public memberId: number,
+      public fk_Level: number,
+      public levelName: string,
+      public name: string,
+      public email: string,
+      public mobile: string,
+      public gender: boolean,
+      public birthday: string,
+      public commonAddress: string,
+      public alternateAddress1: string,
+      public alternateAddress2: string,
+      public isSubscribeNews: boolean
+    ) {}
+  }
+  
+  export class CheckoutData {
+    constructor(
+      public contactInfo: ContactInfo,
+      public billingAddress: BillingAddress,
+      public paymentInfo: PaymentInfo
+    ) {}
+  }
+  
+  export class ContactInfo {
+    constructor(
+      public contactName: string,
+      public postalCode: string,
+      public address: string,
+      public email: string,
+      public phone: string
+    ) {}
+  }
+  
+  export class BillingAddress {
+    constructor(
+      public name: string,
+      public postalCode: string,
+      public address: string,
+      public phone: string
+    ) {}
+  }
+  
+  export class PaymentInfo {
+    constructor(
+        public paymentMethod: string,
+        public cardName: string,
+        public cardNumber: string,
+        public expiration: string,
+        public cvv: string,
+        public confirmTerms: boolean,
+        public couponId?: number,
+    ) {}
+  }
 
 
 // 購物車物件
