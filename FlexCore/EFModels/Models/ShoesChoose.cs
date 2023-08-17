@@ -2,9 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -15,13 +12,9 @@ namespace EFModels.Models
             ShoesGroups = new HashSet<ShoesGroup>();
         }
 
-        [Key]
         public int OptionId { get; set; }
-        [Required]
-        [StringLength(50)]
         public string OptinName { get; set; }
 
-        [InverseProperty("fk_Option")]
         public virtual ICollection<ShoesGroup> ShoesGroups { get; set; }
     }
 }

@@ -332,51 +332,62 @@ namespace FlexCoreService.Controllers
         /// </summary>
         /// <param name="favoritesdto"></param>
         /// <returns></returns>
-        //public async Task<ActionResult<string>> SaveFavorites(FavoritesDto favoritesdto)
-        //{
-        //    Member member = await _db.Members.FirstOrDefaultAsync(x => x.MemberId == favoritesdto.MemberId);
-        //    Product product = await _db.Products.FirstOrDefaultAsync(p=>p.ProductId== favoritesdto.ProductId);
+        [HttpPost("Favorites")]
 
-        //    Favorites favorites = new Favorites
-        //    {
-        //        member.MemberId = favoritesdto.MemberId,
-        //        product.ProductId = favorites.ProductId;
-        //    }
-        //    return Ok("喜愛商品收藏成功");
-        //}
+        public async Task<ActionResult<string>> SaveFavorites(FavoritesDto favoritesdto)
+        {
+            Member member = await _db.Members.FirstOrDefaultAsync(x => x.MemberId == favoritesdto.MemberId);
+            Product product = await _db.Products.FirstOrDefaultAsync(p => p.ProductId == favoritesdto.ProductId);
+
+            //Favorite favorites = new Favorite
+            //{
+            //    fk_memberId = favoritesdto.MemberId,
+            //    fk_productId = favoritesdto.ProductId
+            //};
+
+            Favorite favorites = new Favorite
+            {
+                fk_memberId= favoritesdto.MemberId,
+                fk_productId= favoritesdto.ProductId
+            };
+
+            _db.Favorites.Add(favorites);
+            await _db.SaveChangesAsync();
+            return Ok("喜愛商品收藏成功");
+        }
 
         /// <summary>
         /// 註冊驗證信(改成忘記密碼驗證信?)
         /// </summary>
         /// <param name="email"></param>
         //[HttpGet]
-        //public void SendEmail(string email)
+        //public void sendemail(string email)
         //{
-        //    var senderEmail = "";
+        //    var senderemail = "";
         //    var password = "";
-        //    //var senderEmail = _congig["Gmail:fuen28flex@gmail.com"];
-        //    //var password = _congig["Gmail:flexfuen28"];
+        //    //var senderemail = _congig["gmail:fuen28flex@gmail.com"];
+        //    //var password = _congig["gmail:flexfuen28"];
 
-        //    MailMessage mms = new MailMessage();
-        //    mms.From = new MailAddress(senderEmail);
-        //    mms.To.Add(email);
-        //    mms.Subject = "Flex 註冊驗證信";
-        //    mms.Body = "感謝您註冊成為 Flex 的會員!請點擊連結...來啟用您的帳戶";
+        //    mailmessage mms = new mailmessage();
+        //    mms.from = new mailaddress(senderemail);
+        //    mms.to.add(email);
+        //    mms.subject = "flex 註冊驗證信";
+        //    mms.body = "感謝您註冊成為 flex 的會員!請點擊連結...來啟用您的帳戶";
 
         //    //設定郵件主機
-        //    SmtpClient client = new SmtpClient("flex.gmail.com");
-        //    client.Port = 587;
-        //    client.Credentials = new NetworkCredential(senderEmail, password);
-        //    client.EnableSsl = true;
+        //    smtpclient client = new smtpclient("flex.gmail.com");
+        //    client.port = 587;
+        //    client.credentials = new networkcredential(senderemail, password);
+        //    client.enablessl = true;
 
         //    //寄出郵件
         //    try
         //    {
-        //        client.Send(mms);
+        //        client.send(mms);
         //    }
-        //    catch(Exception ex)
+        //    catch(exception ex)
         //    {
-        //        Console.WriteLine(ex.ToString());
+        //        console.writeline(ex.tostring());
         //    }
 
         //}

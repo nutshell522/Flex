@@ -2,9 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -15,15 +12,10 @@ namespace EFModels.Models
             Members = new HashSet<Member>();
         }
 
-        [Key]
         public int BlackListId { get; set; }
-        [Required]
-        [StringLength(30)]
         public string Behavior { get; set; }
-        [Column(TypeName = "datetime")]
         public DateTime? CreatedAt { get; set; }
 
-        [InverseProperty("fk_BlackList")]
         public virtual ICollection<Member> Members { get; set; }
     }
 }

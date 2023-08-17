@@ -399,7 +399,7 @@ const visibleCards = ref([]);
 const sizeImg = ref('');
 const sizeTable = ref('');
 const like = ref(false);
-let likeProductName = '';
+//let likeProductName = '';
 
 //基本資料
 let getData = async () => {
@@ -416,8 +416,8 @@ let getData = async () => {
         detailImg.value = selectSizes.value[0].defaultColorImg;
         //console.log(selectSizes.value[0].defaultColorImg);
       }
-      likeProductName = productName.value; //ying加的
-      productStore.setProductName(productName.value);
+      // likeProductName = productName.value; //ying加的
+      // productStore.setProductName(productName.value);
 
       if (
         response.data.productCategoryName == '上衣' &&
@@ -661,26 +661,51 @@ onMounted(() => {
   //updateVisibleCards();
 });
 
+//const likeProduct = ref(null);
 function collect() {
-  //alert('天阿!好喜翻呀~~~');
-  like.value = !like.value;
-  if (like.value) {
-    //alert('我喜翻');
-    //點選喜歡，把喜歡存到localstorge
+  //檢查本地儲存是否有登錄信息
+  const storedUser = localStorage.getItem('loggedInUser');
+  if (storedUser) {
+    //alert('天阿!好喜翻呀~~~');
+    const userObject = JSON.parse(storedUser);
+    like.value = !like.value;
+    if (like.value) {
+      alert('我喜翻');
+      //點選喜歡，把喜歡存到localstorge
+      // const likeProduct = JSON.parse(localStorage.getItem('likeProduct')) || [];
+      // likeProduct.push(likeProductName);
+      // localStorage.setItem('likeProduct', JSON.stringify(likeProduct));
 
-    //const likeProduct = localStorage.setItem('likeProduct', likeProductname);
-    const likeProduct = JSON.parse(localStorage.getItem('likeProduct')) || [];
-    likeProduct.push(likeProductName);
-    localStorage.setItem('likeProduct', JSON.stringify(likeProduct));
+      //呼叫api(memberId、productId)存進去
+      const baseAddress = 'https://localhost:7183/api';
+      const uri = `${baseAddress}/Users/Favorites`;
+
+      const data = {
+        MemberId: userObject.memberId,
+        ProductId: `${route.params.productId}`,
+      };
+
+      axios
+        .post(uri, data)
+        .then((res) => {
+          alert(res.data);
+        })
+        .catch((err) => {
+          err;
+        });
+      //console.log(likeProduct.value);
+    } else {
+      //alert('我不喜翻');
+      //點選不喜歡，把它從localstorege移除
+      //localStorage.removeItem('likeProduct');
+      // const likeProduct = JSON.parse(localStorage.getItem('likeProduct')) || [];
+      // const updatedLikeProduct = likeProduct.filter(
+      //   (product) => product !== likeProductName
+      // );
+      // localStorage.setItem('likeProduct', JSON.stringify(updatedLikeProduct));
+    }
   } else {
-    //alert('我不喜翻');
-    //點選不喜歡，把它從localstorege移除
-    //localStorage.removeItem('likeProduct');
-    const likeProduct = JSON.parse(localStorage.getItem('likeProduct')) || [];
-    const updatedLikeProduct = likeProduct.filter(
-      (product) => product !== likeProductName
-    );
-    localStorage.setItem('likeProduct', JSON.stringify(updatedLikeProduct));
+    alert('請先登入囉!');
   }
 }
 </script>

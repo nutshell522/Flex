@@ -2,19 +2,12 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
-    [Table("ReservationImg")]
     public partial class ReservationImg
     {
-        [Key]
         public int Id { get; set; }
-        [Required]
-        [StringLength(300)]
         public string ImgPath { get; set; }
     }
 }

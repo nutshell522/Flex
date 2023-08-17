@@ -19,12 +19,12 @@ import { ref, onMounted } from 'vue';
 
 const likeProductNames = ref([]);
 
-// 判斷使用者id從 localstorage 撈出來
 onMounted(() => {
-  const savedLikeProduct = localStorage.getItem('likeProduct');
-  if (savedLikeProduct) {
-    likeProductNames.value = JSON.parse(savedLikeProduct);
-  }
+  // 判斷使用者id從 localstorage 撈出來
+  // const savedLikeProduct = localStorage.getItem('likeProduct');
+  // if (savedLikeProduct) {
+  //   likeProductNames.value = JSON.parse(savedLikeProduct);
+  // }
 });
 </script>
 

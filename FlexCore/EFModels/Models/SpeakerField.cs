@@ -2,9 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -15,13 +12,9 @@ namespace EFModels.Models
             Speakers = new HashSet<Speaker>();
         }
 
-        [Key]
         public int FieldId { get; set; }
-        [Required]
-        [StringLength(50)]
         public string FieldName { get; set; }
 
-        [InverseProperty("fk_SpeakerField")]
         public virtual ICollection<Speaker> Speakers { get; set; }
     }
 }

@@ -2,9 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -15,24 +12,17 @@ namespace EFModels.Models
             CouponSendings = new HashSet<CouponSending>();
         }
 
-        [Key]
         public int CouponId { get; set; }
         public int fk_CouponCategoryId { get; set; }
-        [Required]
-        [StringLength(50)]
         public string CouponName { get; set; }
-        [StringLength(100)]
         public string CouponDescription { get; set; }
-        [StringLength(50)]
         public string CouponCode { get; set; }
         public int MinimumPurchaseAmount { get; set; }
         public int DiscountType { get; set; }
         public int DiscountValue { get; set; }
-        [Column(TypeName = "datetime")]
         public DateTime StartDate { get; set; }
         public bool? EndType { get; set; }
         public int? EndDays { get; set; }
-        [Column(TypeName = "datetime")]
         public DateTime? EndDate { get; set; }
         public int? PersonMaxUsage { get; set; }
         public int? RequirementType { get; set; }
@@ -40,13 +30,8 @@ namespace EFModels.Models
         public int? fk_RequiredProjectTagID { get; set; }
         public bool? Status { get; set; }
 
-        [ForeignKey("fk_CouponCategoryId")]
-        [InverseProperty("Coupons")]
         public virtual CouponCategory fk_CouponCategory { get; set; }
-        [ForeignKey("fk_RequiredProjectTagID")]
-        [InverseProperty("Coupons")]
         public virtual ProjectTag fk_RequiredProjectTag { get; set; }
-        [InverseProperty("fk_Coupon")]
         public virtual ICollection<CouponSending> CouponSendings { get; set; }
     }
 }
