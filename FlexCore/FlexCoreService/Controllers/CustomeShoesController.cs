@@ -54,12 +54,12 @@ namespace FlexCoreService.Controllers
 		}
 
         // GET: api/CustomizedShoesPo/5
-        [HttpGet("shoes")]
-        public async Task<ActionResult<CustomeShoesVM>> GetShoes(int id)
+        [HttpGet("shoes/Customization/{shoesProductId}")]
+        public async Task<ActionResult<CustomeShoesVM>> GetShoes(int shoesProductId)
         {
             var server = new CustomeShoesService(_repo);
 
-            var shoes = server.SearchOneCustomeShoes(id);
+            var shoes = server.SearchOneCustomeShoes(shoesProductId);
 
             var chooseserver = new ShoesChoosesService(_chooserepo);
 
