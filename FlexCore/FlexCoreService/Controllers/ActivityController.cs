@@ -91,8 +91,17 @@ namespace FlexCoreService.Controllers
                 {
                     if (string.IsNullOrEmpty(dto.Option2))
                     {
-                        var result = all.Where(a => a.ActivityCategoryName.Contains(dto.Option1) && a.ActivityPlace.Contains(dto.SearchArea));
-                        return result;
+                        if (string.IsNullOrEmpty(dto.Option1))
+                        {
+                            var result = all.Where(a=>a.ActivityPlace.Contains(dto.SearchArea));
+                            return result;
+                        }
+                        else
+                        {
+                            var result = all.Where(a => a.ActivityCategoryName.Contains(dto.Option1) && a.ActivityPlace.Contains(dto.SearchArea));
+                            return result;
+                        }
+                       
                     }
                     else
                     {
@@ -129,16 +138,19 @@ namespace FlexCoreService.Controllers
             return memberInfoDto;
         }
 
-        //[HttpPost("Search")]
-        //public async Task<IEnumerable<ActivityIndexDTO>> Search([FromBody] ActivitySearchDTO dto)
-        //{
-        //    dto.Option1 = "自行車";
-        //    dto.Option2 = "路跑";
-        //    dto.SearchArea = "聖德";
-        //   var result = await _repo.SearchByPlaceAndCategoryAsync(dto);
-        //    result.Where(p=>p.ActivityName== dto.Option1)
-        //    return result;
+        [HttpGet("GetActivityBookingTime")]
+        public async Task<ActionResult<ActivityBookingTimeDTO>> GetActivityBookingTime(int id)
+        {
+            var timeDTO = await _repo.GetActivityBookingTimeAsync(id);
+            if (timeDTO == null)
+            {
+                return NotFound () ;
+            }
+            return timeDTO;
+            
+        }
 
-        //}
+
+
     }
 }

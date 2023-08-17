@@ -52,29 +52,31 @@
 
     import VueMultiselect from 'vue-multiselect'
     const selected = ref(null);
-    const options = ['跑步', '跳舞', '溜冰', '滑水', '湯圓'];  
+    const options = ['路跑', '鐵人三項', '自行車', '健行', '登山', '瑜珈'];  
     const searchArea = ref("");
+    let requestData=ref({});
    
- 
-
+    //icon
     library.add(fas)
+    //得到照片路徑
     const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
     const info = ref([]);
 
 
-    // 獲得最終篩選條件
+    // 按下搜尋鈕獲得最終篩選條件
     const sendSelectedValues = () => {
         const selectedVaules = getSelectedValues();
-        const requestData = {
+        requestData = {
             searchArea: searchArea.value || null,
             option1:selectedVaules.option1,
             option2:selectedVaules.option2 
         };
         console.log(requestData);
+        //呼叫後端
         sendSearchRequest(requestData);
     };
 
-
+    //把篩選條件變成物件
     function getSelectedValues() {
         const selectedOptions = selected.value || [];
         const option1 = selectedOptions[0] || null;
@@ -89,27 +91,29 @@
     // 發送篩選條件到後端
     const sendSearchRequest = (data)=>{
         console.log(data);
-        // axios.post("", data)
-        //     .then(res=>{
-        //         console.log(res.data);
-        //     })
-        //     .catch(err=>{
-        //         console.log(err);
-        //     })
-    }
-    
-    onMounted(()=>{
         var uri = "https://localhost:7183/api/Activity/index";
-        axios.get(uri)
+        axios.post(uri, data)
              .then(res => {
                     console.log(res.data);
                     info.value = res.data;
                 })
              .catch(err => {
                     console.log(err)
-                })
-
-                
+                })         
+    }
+    
+    onMounted(()=>{
+        var uri = "https://localhost:7183/api/Activity/index";
+        // axios.post(uri, data)
+        //      .then(res => {
+        //             console.log(res.data);
+        //             info.value = res.data;
+        //         })
+        //      .catch(err => {
+        //             console.log(err)
+        //         })     
+        
+        sendSearchRequest(requestData);
                 
     });
 
