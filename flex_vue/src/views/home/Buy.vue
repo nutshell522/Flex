@@ -300,6 +300,17 @@
       </div>
     </div>
   </main>
+  <div id="coupon-area-bg">
+    <div id="coupon-area">
+      <div class="d-flex p-5">
+        <h2 class="me-auto">優惠券</h2>
+        <p>可選擇一張</p>
+      </div>
+      <ul class="coupon-list">
+        <li class="coupon-item"></li>
+      </ul>
+    </div>
+  </div>
 </template>
     
 <script setup lang='ts'>
@@ -613,6 +624,11 @@ onMounted(() => {
 
   let flexCheckout = new FlexCheckoutProcess();
   flexCheckout.process();
+  const addressBtn = document.querySelector("#address-btn");
+  addressBtn?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleAddressBoxEventHandler();
+  });
 });
 
 onUpdated(() => {
@@ -626,16 +642,14 @@ onUpdated(() => {
     updateTitleVisibility(input, title, originalPlaceholder);
     attachInputEventHandlers(input, title, originalPlaceholder);
   });
-  const addressBtn = document.querySelector("#address-btn");
-  addressBtn?.addEventListener("click", (event) => {
-    event.stopPropagation();
-    toggleAddressBoxEventHandler();
-  });
+
   const addressOption = document.querySelectorAll(".address-option");
   const addressInput = document.querySelector("#address") as HTMLInputElement;
   addressOption.forEach((option) => {
     option.addEventListener("click", () => {
-      addressInput.value = option.innerHTML;
+      if (cart.value?.checkoutData?.contactInfo) {
+        cart.value.checkoutData.contactInfo.address = option.innerHTML;
+      }
       hideAddressBoxEventHandler();
     });
   });
@@ -719,7 +733,14 @@ main {
                 width: 100%;
                 max-height: 0;
                 font-size: 18px;
+                padding: 0;
                 transition: max-height 0.6s;
+                & > li:first-child {
+                  margin-top: 15px;
+                }
+                & > li:last-child {
+                  margin-bottom: 30px;
+                }
                 &.active {
                   border: 2px solid #999;
                   max-height: 500px;
@@ -857,6 +878,24 @@ main {
         }
       }
     }
+  }
+}
+#coupon-area-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background-color: rgba($color: #000, $alpha: 0.5);
+  #coupon-area {
+    position: absolute;
+    background-color: rgba($color: #fff, $alpha: 1);
+    width: 700px;
+    left: calc((100% - 700px) / 2);
+    top: 100px;
+    height: 700px;
+    overflow-y: scroll;
   }
 }
 </style>
