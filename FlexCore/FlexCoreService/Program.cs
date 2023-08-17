@@ -7,6 +7,8 @@ using FlexCoreService.CustomeShoes.Infra.DPRepository;
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.ProductCtrl.Infra.DPRepository;
 using FlexCoreService.ProductCtrl.Interface;
+using FlexCoreService.UserCtrl.Infa.DPRepository;
+using FlexCoreService.UserCtrl.Interface;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +49,7 @@ namespace FlexCoreService
             builder.Services.AddScoped<IShoesCategoryRepository, ShoesCategoryDPRepository>();
             builder.Services.AddScoped<ICustomerChooseRepository, ShoesChooseDPRepository>();
             builder.Services.AddScoped<IReservationDPRepository, ReservationDPRepositorycs>();
+            builder.Services.AddScoped<IFavoriteDPRepository, FavoriteDPRepository>();
 
 
             builder.Services.AddHttpContextAccessor();

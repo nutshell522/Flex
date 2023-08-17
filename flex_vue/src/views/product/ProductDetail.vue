@@ -670,7 +670,7 @@ function collect() {
     const userObject = JSON.parse(storedUser);
     like.value = !like.value;
     if (like.value) {
-      alert('我喜翻');
+      //alert('我喜翻');
       //點選喜歡，把喜歡存到localstorge
       // const likeProduct = JSON.parse(localStorage.getItem('likeProduct')) || [];
       // likeProduct.push(likeProductName);
@@ -688,7 +688,7 @@ function collect() {
       axios
         .post(uri, data)
         .then((res) => {
-          alert(res.data);
+          //alert(res.data);
         })
         .catch((err) => {
           err;

@@ -15,6 +15,10 @@ using System.Net.Mail;
 using System.Net;
 using System.Security.Principal;
 using Newtonsoft.Json.Linq;
+using FlexCoreService.ProductCtrl.Models.Dtos;
+using FlexCoreService.UserCtrl.Interface;
+using FlexCoreService.UserCtrl.Service;
+using FlexCoreService.UserCtrl.Infa;
 
 namespace FlexCoreService.Controllers
 {
@@ -25,9 +29,11 @@ namespace FlexCoreService.Controllers
     {
         private readonly AppDbContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor)
+        private  IFavoriteDPRepository _repo;
+        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor , IFavoriteDPRepository repo)
         {
             _db = db;
+            _repo = repo;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -129,6 +135,7 @@ namespace FlexCoreService.Controllers
                         IsPersistent = true,
                         ExpiresUtc = DateTime.UtcNow.AddDays(7),
                     };
+                    //todo 帳號沒有被驗證就要擋下來
 
                     //控制登入狀態
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
@@ -189,9 +196,9 @@ namespace FlexCoreService.Controllers
                 fk_LevelId = 1//一般會員
             };
 
-
-
-            //todo發送驗證信
+            //發送驗證信
+            SendEmail sendEmail = new SendEmail();
+            sendEmail.Sendemail(regdto.Email);
 
             _db.Members.Add(member);
             await _db.SaveChangesAsync();
@@ -339,12 +346,6 @@ namespace FlexCoreService.Controllers
             Member member = await _db.Members.FirstOrDefaultAsync(x => x.MemberId == favoritesdto.MemberId);
             Product product = await _db.Products.FirstOrDefaultAsync(p => p.ProductId == favoritesdto.ProductId);
 
-            //Favorite favorites = new Favorite
-            //{
-            //    fk_memberId = favoritesdto.MemberId,
-            //    fk_productId = favoritesdto.ProductId
-            //};
-
             Favorite favorites = new Favorite
             {
                 fk_memberId= favoritesdto.MemberId,
@@ -357,41 +358,29 @@ namespace FlexCoreService.Controllers
         }
 
         /// <summary>
-        /// 註冊驗證信(改成忘記密碼驗證信?)
+        /// 取得喜愛商品
         /// </summary>
-        /// <param name="email"></param>
-        //[HttpGet]
-        //public void sendemail(string email)
-        //{
-        //    var senderemail = "";
-        //    var password = "";
-        //    //var senderemail = _congig["gmail:fuen28flex@gmail.com"];
-        //    //var password = _congig["gmail:flexfuen28"];
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        [HttpGet("Favorites")]
+        public async Task<ActionResult<IEnumerable<ProductCardDto>>> GetFavorites(int memberId)
+        {
+            //List<string> favoriteProductIds = await _db.Favorites.Where(f=>f.fk_memberId == memberId).Select(f=>f.fk_productId).ToListAsync();
 
-        //    mailmessage mms = new mailmessage();
-        //    mms.from = new mailaddress(senderemail);
-        //    mms.to.add(email);
-        //    mms.subject = "flex 註冊驗證信";
-        //    mms.body = "感謝您註冊成為 flex 的會員!請點擊連結...來啟用您的帳戶";
+            //if (favoriteProductIds.Count == 0)
+            //{
+            //    return Ok("尚未收藏商品喔!");
+            //}
+            //else
+            //{
+            //    return Ok(favoriteProductIds);
+            //}
+            var service = new FavoriteService(_repo);
+            var pro = service.GetFavorites(memberId);
 
-        //    //設定郵件主機
-        //    smtpclient client = new smtpclient("flex.gmail.com");
-        //    client.port = 587;
-        //    client.credentials = new networkcredential(senderemail, password);
-        //    client.enablessl = true;
-
-        //    //寄出郵件
-        //    try
-        //    {
-        //        client.send(mms);
-        //    }
-        //    catch(exception ex)
-        //    {
-        //        console.writeline(ex.tostring());
-        //    }
-
-        //}
-
+            var result=new List<ProductCardDto>();
+            return Ok(pro);
+        }
         private bool MemberExists(int id)
         {
             return (_db.Members?.Any(e => e.MemberId == id)).GetValueOrDefault();
