@@ -84,6 +84,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Favorites]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[JobTitles]",
          "ObjectType": 0
       },
@@ -260,7 +264,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "lun.Flex.dbo",
+   "UiHint": "desktop-iq9m2qc.Flex.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,

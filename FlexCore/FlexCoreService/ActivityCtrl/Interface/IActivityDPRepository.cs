@@ -11,6 +11,8 @@ namespace FlexCoreService.ActivityCtrl.Interface
 
         Task<IEnumerable<ActivityIndexDTO>> GetAllAsync();
 
+        Task<ActivityBookingTimeDTO> GetActivityBookingTimeAsync(int id);
+
         //Task<IEnumerable<ActivityIndexDTO>> SearchByPlaceAndCategoryAsync(ActivitySearchDTO dto);
     }
 

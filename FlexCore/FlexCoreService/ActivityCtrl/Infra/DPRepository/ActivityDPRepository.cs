@@ -76,6 +76,20 @@ GROUP BY
             }
         }
 
+        public async Task<ActivityBookingTimeDTO> GetActivityBookingTimeAsync(int id)
+        {
+            string sql = @"
+select ActivityBookStartTime, ActivityBookEndTime
+from 
+Activities
+where ActivityId =@id
+";
+
+            using(var conn = new SqlConnection(_connStr))
+            {
+                return await conn.QueryFirstOrDefaultAsync<ActivityBookingTimeDTO>(sql, new { id});
+            }
+        }
 
 
         //public async Task<IEnumerable<ActivityIndexDTO>> SearchByPlaceAndCategoryAsync(ActivitySearchDTO dto)
@@ -113,6 +127,7 @@ GROUP BY
         //        return result;
         //    }
         //}
+
 
     }
 }

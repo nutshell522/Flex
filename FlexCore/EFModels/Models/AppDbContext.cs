@@ -35,6 +35,7 @@ namespace EFModels.Models
         public virtual DbSet<Customized_material> Customized_materials { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Discount> Discounts { get; set; }
+        public virtual DbSet<Favorite> Favorites { get; set; }
         public virtual DbSet<JobTitle> JobTitles { get; set; }
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<MemberPoint> MemberPoints { get; set; }
@@ -423,6 +424,26 @@ namespace EFModels.Models
                     .HasForeignKey(d => d.fk_ProjectTagId)
                     .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_Discount_DiscountGroup");
+            });
+
+            modelBuilder.Entity<Favorite>(entity =>
+            {
+                entity.Property(e => e.fk_productId)
+                    .IsRequired()
+                    .HasMaxLength(254)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.fk_member)
+                    .WithMany(p => p.Favorites)
+                    .HasForeignKey(d => d.fk_memberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Favorites_Members");
+
+                entity.HasOne(d => d.fk_product)
+                    .WithMany(p => p.Favorites)
+                    .HasForeignKey(d => d.fk_productId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Favorites_Favorites");
             });
 
             modelBuilder.Entity<JobTitle>(entity =>
@@ -872,6 +893,8 @@ namespace EFModels.Models
 
             modelBuilder.Entity<Return>(entity =>
             {
+                entity.Property(e => e.退貨日期).HasColumnType("datetime");
+
                 entity.Property(e => e.退貨日期).HasColumnType("datetime");
 
                 entity.HasOne(d => d.fk訂單Navigation)

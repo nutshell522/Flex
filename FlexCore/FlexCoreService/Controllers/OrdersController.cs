@@ -14,7 +14,6 @@ namespace FlexCoreService.Controllers
 	public class OrdersController : ControllerBase
 	{
 		private readonly AppDbContext _context;
-
 		public OrdersController(AppDbContext context)
 		{
 			_context = context;
@@ -148,6 +147,60 @@ namespace FlexCoreService.Controllers
 
 			}
 		}
+		[HttpPut("cancelcourse")]
+		public async Task<string> Cancelcourse(int id)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(id);
+
+
+			if (emp.order_status_Id == 1 || emp.order_status_Id == 2)
+			{
+				emp.order_status_Id = 7;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				emp.close = true;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已取消預約";
+			}
+			else
+			{
+				return "無法取消";
+
+			}
+		}
+		[HttpPut("cancelProduct")]
+		public async Task<string> CancellProductOrders(int id)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(id);
+
+
+			if (emp.order_status_Id == 1 || emp.order_status_Id == 2)
+			{
+				emp.order_status_Id = 7;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				emp.close = true;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已取消訂單";
+			}
+			else
+			{
+				return "訂單已寄出，無法取消";
+
+			}
+		}
 
 		[HttpPut("return")]
 		public async Task<string> ReturnOrders(int orderid)
@@ -165,6 +218,28 @@ namespace FlexCoreService.Controllers
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
 				return "已申請退貨";
+			}
+			else
+			{
+				return "訂單尚未領取";
+			}
+		}
+		[HttpPut("Change")]
+		public async Task<string> ChangeOrders(int orderid)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			order emp = await _context.orders.FindAsync(orderid);
+
+			if (emp.order_status_Id == 6)
+			{
+				emp.order_status_Id = 10;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已申請換貨";
 			}
 			else
 			{
@@ -194,8 +269,8 @@ namespace FlexCoreService.Controllers
 			}
 			
 		}
-		[HttpPut("setclose")]
-		public async Task<string> Setclose(int orderid)
+		[HttpPut("cancelChange")]
+		public async Task<string> CancelChange(int orderid)
 		{
 			var db = _context;
 			if (_context.orders == null)
@@ -204,9 +279,33 @@ namespace FlexCoreService.Controllers
 			}
 			order emp = await _context.orders.FindAsync(orderid);
 
-				await Task.Delay(TimeSpan.FromSeconds(10));
-				emp.close = true;
+			if (emp.order_status_Id == 10)
+			{
+				emp.order_status_Id = 6;
 				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "已取消換貨";
+			}
+			else
+			{
+				return "訂單尚未領取";
+			}
+
+		}
+		[HttpPut("setclose")]
+		public async Task<string> Setclose(int orderid)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			//order emp = await _context.orders.FindAsync(orderid);
+
+			await Task.Delay(TimeSpan.FromSeconds(10));
+			order emp = await _context.orders.FindAsync(orderid);
+			emp.close = true;
+			_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
 				return "已過鑑賞期";
 			
@@ -254,7 +353,27 @@ namespace FlexCoreService.Controllers
 				});
 			return Reasons;
 		}
+	[HttpPut("activitycolse")]
+	public async Task<string> Activitycolse()
+	{
+		var allOrders = await _context.orders.ToListAsync();
+
+		// 獲取目前時間
+		DateTime currentTime = DateTime.Now;
+
+		foreach (var order in allOrders)
+		{
+			// 判斷是否有 close_time 值且該值小於目前時間
+			if (order.close_time.HasValue && order.close_time.Value < currentTime)
+			{
+				// 將 order_status_Id 改成 6
+				order.order_status_Id = 6;
+			}
+		}
+		// 儲存變更回資料庫
+		await _context.SaveChangesAsync();
+		return "活動已結束";
+		}
 	}
-	
 
 }

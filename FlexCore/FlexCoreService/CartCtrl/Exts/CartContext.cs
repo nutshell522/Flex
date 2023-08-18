@@ -14,7 +14,8 @@ namespace FlexCoreService.CartCtrl.Exts
         public decimal DeliveryFee { get; set; }
 		public decimal CouponValue { get; set; }
 		public decimal TotalPrice { get; set; }
-		public CartContext(IEnumerable<CartItemVM> vms, BaseCouponStrategy? coupon = null)
+		public CheckoutDataVM checkoutData { get; set; }
+        public CartContext(IEnumerable<CartItemVM> vms, BaseCouponStrategy? coupon = null)
 		{
 			CartItems = vms;
 			AppliedDiscounts = new List<ItemDiscount>();
@@ -22,6 +23,8 @@ namespace FlexCoreService.CartCtrl.Exts
 			CouponValue = 0m;
 			DeliveryFee = 500;
 			Coupon = coupon;
-		}
+            checkoutData = new CheckoutDataVM();
+
+        }
 	}
 }

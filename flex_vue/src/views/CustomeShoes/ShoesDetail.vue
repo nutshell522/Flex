@@ -42,9 +42,6 @@
               </select>
             </div>
           </div>
-          <div class="mt-3 d-flex mb-3">
-            <div></div>
-          </div>
           <hr />
           <div class="mt-3 mb-3 col-12">
             <div class="d-flex row">
