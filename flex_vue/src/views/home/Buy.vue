@@ -205,20 +205,32 @@
         <span>可選擇一張</span>
       </div>
       <ul class="coupon-list">
-        <li class="coupon-item selected" data-id="sendingId">
+        <li v-if="coupons.length != 0" v-for="coupon in coupons" :key="coupon.sendingId"
+          :class="['coupon-item', { 'disabled': cart && coupon.discountType == 2 && cart.deliveryFee == 0 && (!cart.coupon?.discountType || cart.coupon.discountType != 2) }]"
+          :data-id="coupon.sendingId">
           <div class="coupon-body">
             <div class="coupon-discount-box">
-              <div class="coupon-discount">95折</div>
+              <div v-if="coupon.discountType == 2" class="coupon-discount"> 免運費 </div>
+              <div v-else-if="coupon.discountType == 1" class="coupon-discount"> {{ 100 - coupon.discountValue }}折 </div>
+              <div v-else-if="coupon.discountType == 0" class="coupon-discount"> {{ coupon.discountValue }}元 </div>
             </div>
             <div class="coupon-info">
-              <h3>註冊禮券</h3>
               <div class="d-flex">
-                <div class="description me-4">滿XX元可用</div>
-                <div class="danger-info text-danger"></div>
+                <h3 class="me-auto">{{ coupon.couponName }}</h3>
+                <div
+                  v-if="cart && coupon.discountType == 2 && cart.deliveryFee == 0 && (!cart.coupon?.discountType || cart.coupon.discountType != 2)"
+                  class="danger-info text-danger">無法使用 已達免運標準</div>
               </div>
-              <div class="coupon-date-limit">使用期限</div>
+              <div class="d-flex">
+                <div class="description">滿 {{ coupon.minimumPurchaseAmount }} 元可用</div>
+              </div>
+
+              <div class="coupon-date-limit">使用期間 {{ coupon.startDateStr }} ~ {{ coupon.endDateStr }}</div>
             </div>
           </div>
+        </li>
+        <li v-else class="w-100 h-100 d-flex justify-content-center align-items-center fs-4 text-gray">
+          無可使用的優惠券
         </li>
       </ul>
     </div>
@@ -229,7 +241,7 @@
 import axios from "axios";
 import { Input } from "postcss";
 import { ref, onMounted, onUpdated, computed } from "vue";
-import { ShoppingCart, Member } from "@/types/type";
+import { ShoppingCart, Member, Coupon } from "@/types/type";
 import { storeToRefs } from "pinia";
 import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
 // 用vite獲得環境變數
@@ -239,6 +251,7 @@ const { memberInfo } = storeToRefs(getApiStore);
 const memberId = getApiStore.getMemberId;
 const cart = ref<ShoppingCart>();
 const member = ref<Member>();
+const coupons = ref<Coupon[]>([]);
 const addresses = ref({
   commonAddress: "",
   alternateAddress1: "",
@@ -252,7 +265,6 @@ const loadCart = async (callback?: () => Promise<void>): Promise<void> => {
     .post<ShoppingCart>(url)
     .then((response) => {
       cart.value = response.data;
-      console.log(response.data);
       callback?.();
     })
     .catch((error) => {
@@ -278,15 +290,32 @@ const loadMember = async (): Promise<void> => {
       addresses.value.commonAddress = response.data.commonAddress;
       addresses.value.alternateAddress1 = response.data.alternateAddress1;
       addresses.value.alternateAddress2 = response.data.alternateAddress2;
-      console.log(cart.value);
-      console.log(addresses.value);
-
-      console.log(response.data);
     })
     .catch((error) => {
       alert(error);
     });
 };
+
+const loadCoupons = async (): Promise<void> => {
+  let requestData = {
+    memberId: 1,
+  };
+  let url: string = `${baseAddress}api/Cart/GetMemberAllCoupons`;
+  await axios
+    .post<Coupon[]>(url, 1, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => {
+      coupons.value = response.data;
+      console.log(coupons.value);
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
 
 // 判斷input的title是否秀出來
 function updateTitleVisibility(
@@ -541,6 +570,9 @@ onMounted(() => {
     event.stopPropagation();
     toggleAddressBoxEventHandler();
   });
+  loadCoupons();
+  console.log(coupons.value.length);
+
 });
 
 onUpdated(() => {
@@ -863,6 +895,8 @@ main {
       overflow-y: scroll;
       padding: 0;
     }
+
+    .text-gray {}
 
     .coupon-item {
       border: 3px rgba($color: #000000, $alpha: 0) dashed;

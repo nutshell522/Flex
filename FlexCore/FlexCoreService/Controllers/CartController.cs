@@ -56,21 +56,20 @@ namespace FlexCoreService.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "An error occurred.");
+                return StatusCode(500, ex.Message);
             }
         }
 
-        // POST: api/Cart/Checkout
-        [HttpPost("TestCoupons")]
-		public async Task<ActionResult<CouponVM>> TestCoupons()
+		// POST: api/Cart/GetMemberAllCoupons
+		[HttpPost("GetMemberAllCoupons")]
+		public async Task<ActionResult<CouponVM>> TestCoupons([FromBody] int memberId)
 		{
             var result = await Task.Run(() => _service.GetMemberCoupons(memberId).Select(x=>x.ToViewModel()));
 			return Ok(result);
 		}
 
-        // POST: api/Cart/Checkout
-        [HttpPost("TestCoupon")]
+		// POST: api/Cart/TestCoupon
+		[HttpPost("TestCoupon")]
         public async Task<ActionResult<CouponVM>> TestCoupon()
         {
             var result = await Task.Run(() => _service.GetCouponById(1).ToViewModel());
