@@ -20,11 +20,11 @@ export default {
       user: null,
 
       callback: (response) => {
-        console.log('login');
+        console.log('googleLoginSuccess');
         this.loggedIn = true;
-        console.log(response);
+        //console.log(response);
         this.user = decodeCredential(response.credential);
-        console.log(user);
+        //console.log(this.user);
       },
     };
   },
