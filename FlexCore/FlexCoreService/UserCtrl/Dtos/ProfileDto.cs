@@ -13,6 +13,8 @@
         public string? CommonAddress { get; set; }
         public string? AlternateAddress1 { get; set; }
         public string? AlternateAddress2 { get; set; }
+        public string? EncryptedPassword { get; set; }
+
         public bool? IsSubscribeNews { get; set; }  
     }
 }

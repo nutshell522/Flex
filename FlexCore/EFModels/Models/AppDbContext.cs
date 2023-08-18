@@ -35,6 +35,7 @@ namespace EFModels.Models
         public virtual DbSet<Customized_material> Customized_materials { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Discount> Discounts { get; set; }
+        public virtual DbSet<Favorite> Favorites { get; set; }
         public virtual DbSet<JobTitle> JobTitles { get; set; }
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<MemberPoint> MemberPoints { get; set; }
@@ -84,7 +85,7 @@ namespace EFModels.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Flex;Persist Security Info=True;User ID=sa5;Password=sa5");
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Flex;User ID=sa5;Password=sa5");
             }
         }
 
@@ -423,6 +424,26 @@ namespace EFModels.Models
                     .HasForeignKey(d => d.fk_ProjectTagId)
                     .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_Discount_DiscountGroup");
+            });
+
+            modelBuilder.Entity<Favorite>(entity =>
+            {
+                entity.Property(e => e.fk_productId)
+                    .IsRequired()
+                    .HasMaxLength(254)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.fk_member)
+                    .WithMany(p => p.Favorites)
+                    .HasForeignKey(d => d.fk_memberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Favorites_Members");
+
+                entity.HasOne(d => d.fk_product)
+                    .WithMany(p => p.Favorites)
+                    .HasForeignKey(d => d.fk_productId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Favorites_Favorites");
             });
 
             modelBuilder.Entity<JobTitle>(entity =>

@@ -120,24 +120,24 @@ const routes = [
         component: () => import("../views/product/ProductList.vue"),
         meta: { title: `${webTitle}男裝` },
       },
-      // {
-      //   path: ":categoryName",
-      //   component: () => import("../views/product/ProductList.vue"),
-      //   meta: {},
-      //   beforeEnter(to, from, next) {
-      //     document.title = `${webTitle}男裝/${to.params.categoryName}`;
-      //     next();
-      //   },
-      // },
-      // {
-      //   path: ":categoryName/:subCategoryName",
-      //   component: () => import("../views/product/ProductList.vue"),
-      //   meta: {},
-      //   beforeEnter(to, from, next) {
-      //     document.title = `${webTitle}男裝/${to.params.categoryName}/${to.params.subCategoryName}`;
-      //     next();
-      //   },
-      // },
+      {
+        path: ":categoryName",
+        component: () => import("../views/product/ProductList.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}男裝/${to.params.categoryName}`;
+          next();
+        },
+      },
+      {
+        path: ":categoryName/:subCategoryName",
+        component: () => import("../views/product/ProductList.vue"),
+        meta: {},
+        beforeEnter(to, from, next) {
+          document.title = `${webTitle}男裝/${to.params.categoryName}/${to.params.subCategoryName}`;
+          next();
+        },
+      },
       {
         // 當 /ProductMenLayout/:id/posts 匹配成功
         // Detial.vue 將被渲染到 ProductMenLayout 的 <router-view> 内部，替換card.vue
@@ -266,6 +266,17 @@ const routes = [
       next();
     },
   },
+  {
+    //http://loaclhost/CustomeShoes/detail/shoesProductId
+    path: "/CustomeShoes/detail/Customization/:shoesProductId",
+    component: () => import("../views/CustomeShoes/CustomerPage.vue"),
+    meta: {},
+    beforeEnter(to, from, next) {
+      document.title = `${webTitle}商品客製化頁面${to.params.shoesProductId}`;
+      next();
+    },
+  },
+
   {
     //http://loaclhost/CustomeShoes/Contact
     path: "/CustomeShoes/Contact",

@@ -15,6 +15,10 @@ using System.Net.Mail;
 using System.Net;
 using System.Security.Principal;
 using Newtonsoft.Json.Linq;
+using FlexCoreService.ProductCtrl.Models.Dtos;
+using FlexCoreService.UserCtrl.Interface;
+using FlexCoreService.UserCtrl.Service;
+using FlexCoreService.UserCtrl.Infa;
 
 namespace FlexCoreService.Controllers
 {
@@ -25,9 +29,11 @@ namespace FlexCoreService.Controllers
     {
         private readonly AppDbContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor)
+        private  IFavoriteDPRepository _repo;
+        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor , IFavoriteDPRepository repo)
         {
             _db = db;
+            _repo = repo;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -129,6 +135,7 @@ namespace FlexCoreService.Controllers
                         IsPersistent = true,
                         ExpiresUtc = DateTime.UtcNow.AddDays(7),
                     };
+                    //todo 帳號沒有被驗證就要擋下來
 
                     //控制登入狀態
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
@@ -189,9 +196,9 @@ namespace FlexCoreService.Controllers
                 fk_LevelId = 1//一般會員
             };
 
-
-
-            //todo發送驗證信
+            //發送驗證信
+            SendEmail sendEmail = new SendEmail();
+            sendEmail.Sendemail(regdto.Email);
 
             _db.Members.Add(member);
             await _db.SaveChangesAsync();
@@ -220,6 +227,7 @@ namespace FlexCoreService.Controllers
             member.Gender = prodto.Gender;
             member.Birthday = prodto.Birthday;
             member.CommonAddress = prodto.CommonAddress;
+            member.EncryptedPassword= prodto.EncryptedPassword;
             member.IsSubscribeNews = prodto.IsSubscribeNews;
 
             //AlternateAddress 
@@ -328,41 +336,52 @@ namespace FlexCoreService.Controllers
         }
 
         /// <summary>
-        /// 註冊驗證信(改成忘記密碼驗證信?)
+        /// 收藏喜愛商品
         /// </summary>
-        /// <param name="email"></param>
-        //[HttpGet]
-        //public void SendEmail(string email)
-        //{
-        //    var senderEmail = "";
-        //    var password = "";
-        //    //var senderEmail = _congig["Gmail:fuen28flex@gmail.com"];
-        //    //var password = _congig["Gmail:flexfuen28"];
+        /// <param name="favoritesdto"></param>
+        /// <returns></returns>
+        [HttpPost("SaveFavorites")]
 
-        //    MailMessage mms = new MailMessage();
-        //    mms.From = new MailAddress(senderEmail);
-        //    mms.To.Add(email);
-        //    mms.Subject = "Flex 註冊驗證信";
-        //    mms.Body = "感謝您註冊成為 Flex 的會員!請點擊連結...來啟用您的帳戶";
+        public async Task<ActionResult<string>> SaveFavorites(FavoritesDto favoritesdto)
+        {
+            Member member = await _db.Members.FirstOrDefaultAsync(x => x.MemberId == favoritesdto.MemberId);
+            Product product = await _db.Products.FirstOrDefaultAsync(p => p.ProductId == favoritesdto.ProductId);
 
-        //    //設定郵件主機
-        //    SmtpClient client = new SmtpClient("flex.gmail.com");
-        //    client.Port = 587;
-        //    client.Credentials = new NetworkCredential(senderEmail, password);
-        //    client.EnableSsl = true;
+            Favorite favorites = new Favorite
+            {
+                fk_memberId= favoritesdto.MemberId,
+                fk_productId= favoritesdto.ProductId
+            };
 
-        //    //寄出郵件
-        //    try
-        //    {
-        //        client.Send(mms);
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        Console.WriteLine(ex.ToString());
-        //    }
+            _db.Favorites.Add(favorites);
+            await _db.SaveChangesAsync();
+            return Ok("喜愛商品收藏成功");
+        }
 
-        //}
+        /// <summary>
+        /// 取得喜愛商品
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        [HttpGet("GetFavorites")]
+        public async Task<ActionResult<IEnumerable<ProductCardDto>>> GetFavorites(int memberId)
+        {
+            //List<string> favoriteProductIds = await _db.Favorites.Where(f=>f.fk_memberId == memberId).Select(f=>f.fk_productId).ToListAsync();
 
+            //if (favoriteProductIds.Count == 0)
+            //{
+            //    return Ok("尚未收藏商品喔!");
+            //}
+            //else
+            //{
+            //    return Ok(favoriteProductIds);
+            //}
+            var service = new FavoriteService(_repo);
+            var pro = service.GetFavorites(memberId);
+
+            var result=new List<ProductCardDto>();
+            return Ok(pro);
+        }
         private bool MemberExists(int id)
         {
             return (_db.Members?.Any(e => e.MemberId == id)).GetValueOrDefault();
