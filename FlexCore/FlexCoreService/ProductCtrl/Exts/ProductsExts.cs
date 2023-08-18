@@ -55,9 +55,9 @@ namespace FlexCoreService.ProductCtrl.Exts
                 UnitPrice = dto.FirstOrDefault()?.UnitPrice,
                 SalesPrice = dto.FirstOrDefault().SalesPrice,
                 SalesCategoryName = dto.FirstOrDefault()?.SalesCategoryName,
-                ProductCategoryName= dto.FirstOrDefault()?.ProductCategoryName,
+                ProductCategoryName = dto.FirstOrDefault()?.ProductCategoryName,
                 ProductSubCategoryName = dto.FirstOrDefault()?.ProductSubCategoryName,
-                ProductGroup =group
+                ProductGroup = group
             };
             return vm;
         }
