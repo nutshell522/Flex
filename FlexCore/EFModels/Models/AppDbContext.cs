@@ -863,9 +863,11 @@ namespace EFModels.Models
 
             modelBuilder.Entity<Return>(entity =>
             {
-                entity.Property(e => e.ID).ValueGeneratedNever();
-
                 entity.Property(e => e.退貨日期).HasColumnType("datetime");
+
+                entity.Property(e => e.退貨轉帳帳號)
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.fk訂單Navigation)
                     .WithMany(p => p.Returns)

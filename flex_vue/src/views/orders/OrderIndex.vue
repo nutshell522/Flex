@@ -617,6 +617,22 @@ const CancelReturnAndCloseOrders = async () => {
   await SetOrdersclose();
 };
 const Returndetail = async () => {
+  let showError = false;
+
+  if (!returnaccount.value || isNaN(returnaccount.value)) {
+    alert("請輸入有效的退款帳號（數字）");
+    showError = true;
+  }
+
+  if (!returnreason.value) {
+    alert("請選擇退貨原因");
+    showError = true;
+  }
+
+  if (showError) {
+    await CancelReturnAndCloseOrders();
+    return;
+  }
   const requestData = {
     退貨轉帳帳號: returnaccount.value,
     退貨理由: returnreason.value,
