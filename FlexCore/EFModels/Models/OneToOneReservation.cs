@@ -2,38 +2,23 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
     public partial class OneToOneReservation
     {
-        [Key]
         public int ReservationId { get; set; }
         public int fk_BookerId { get; set; }
-        [Column(TypeName = "datetime")]
         public DateTime ReservationStartTime { get; set; }
-        [Column(TypeName = "datetime")]
         public DateTime ReservationEndTime { get; set; }
         public int fk_BranchId { get; set; }
         public int fk_ReservationSpeakerId { get; set; }
         public int fk_ReservationStatusId { get; set; }
-        [Column(TypeName = "datetime")]
         public DateTime ReservationCreatedDate { get; set; }
 
-        [ForeignKey("fk_BookerId")]
-        [InverseProperty("OneToOneReservations")]
         public virtual Member fk_Booker { get; set; }
-        [ForeignKey("fk_BranchId")]
-        [InverseProperty("OneToOneReservations")]
         public virtual Branch fk_Branch { get; set; }
-        [ForeignKey("fk_ReservationSpeakerId")]
-        [InverseProperty("OneToOneReservations")]
         public virtual Speaker fk_ReservationSpeaker { get; set; }
-        [ForeignKey("fk_ReservationStatusId")]
-        [InverseProperty("OneToOneReservations")]
         public virtual ReservationStatus fk_ReservationStatus { get; set; }
     }
 }
