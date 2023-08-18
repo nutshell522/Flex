@@ -48,7 +48,8 @@
             </a>
           </div>
           <div class="size-height">
-            <div
+            <a
+              href="#"
               v-for="(size, index) in selectSizes"
               :class="{
                 sizeboxsetting: true,
@@ -61,7 +62,7 @@
               @click="handleSizeClick(index, size.qty)"
             >
               {{ size.sizeName }}
-            </div>
+            </a>
           </div>
           <div class="mt-3 d-flex mb-3">
             <div class="text-center">
