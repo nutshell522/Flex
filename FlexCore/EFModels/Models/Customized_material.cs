@@ -2,9 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
@@ -20,23 +17,14 @@ namespace EFModels.Models
             ShoesGroups = new HashSet<ShoesGroup>();
         }
 
-        [Key]
         public int Shoesmaterial_Id { get; set; }
-        [Required]
-        [StringLength(50)]
         public string material_Name { get; set; }
 
-        [InverseProperty("Customized_EdgeProtectionNavigation")]
         public virtual ICollection<CustomizedOrder> CustomizedOrderCustomized_EdgeProtectionNavigations { get; set; }
-        [InverseProperty("Customized_EyeletNavigation")]
         public virtual ICollection<CustomizedOrder> CustomizedOrderCustomized_EyeletNavigations { get; set; }
-        [InverseProperty("Customized_RearNavigation")]
         public virtual ICollection<CustomizedOrder> CustomizedOrderCustomized_RearNavigations { get; set; }
-        [InverseProperty("Customized_ToeNavigation")]
         public virtual ICollection<CustomizedOrder> CustomizedOrderCustomized_ToeNavigations { get; set; }
-        [InverseProperty("Customized_TongueNavigation")]
         public virtual ICollection<CustomizedOrder> CustomizedOrderCustomized_TongueNavigations { get; set; }
-        [InverseProperty("fk_Material")]
         public virtual ICollection<ShoesGroup> ShoesGroups { get; set; }
     }
 }

@@ -266,7 +266,7 @@
    "UseDatabaseNames": true,
    "UseDateOnlyTimeOnly": false,
    "UseDbContextSplitting": false,
-   "UseFluentApiOnly": false,
+   "UseFluentApiOnly": true,
    "UseHandleBars": false,
    "UseHierarchyId": false,
    "UseInflector": true,

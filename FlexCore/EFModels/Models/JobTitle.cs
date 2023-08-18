@@ -2,13 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
-    [Index("TitleName", Name = "UQ__JobTitle__252BE89C516695E0", IsUnique = true)]
     public partial class JobTitle
     {
         public JobTitle()
@@ -16,13 +12,10 @@ namespace EFModels.Models
             Staff = new HashSet<Staff>();
         }
 
-        [Key]
         public int TitleId { get; set; }
-        [StringLength(50)]
         public string TitleName { get; set; }
         public int? fk_StaffPermissions { get; set; }
 
-        [InverseProperty("fk_Title")]
         public virtual ICollection<Staff> Staff { get; set; }
     }
 }
