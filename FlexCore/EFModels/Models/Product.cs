@@ -9,7 +9,6 @@ namespace EFModels.Models
     {
         public Product()
         {
-            Favorites = new HashSet<Favorite>();
             ProductGroups = new HashSet<ProductGroup>();
             ProductImgs = new HashSet<ProductImg>();
             ProjectTagItems = new HashSet<ProjectTagItem>();
@@ -32,7 +31,6 @@ namespace EFModels.Models
         public DateTime EditTime { get; set; }
 
         public virtual ProductSubCategory fk_ProductSubCategory { get; set; }
-        public virtual ICollection<Favorite> Favorites { get; set; }
         public virtual ICollection<ProductGroup> ProductGroups { get; set; }
         public virtual ICollection<ProductImg> ProductImgs { get; set; }
         public virtual ICollection<ProjectTagItem> ProjectTagItems { get; set; }

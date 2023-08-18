@@ -117,15 +117,15 @@ namespace FlexCoreService.Controllers
 		[HttpPost("EnterCustomerChoose")]
 		public async Task<ShoesOrderDto> Register([FromBody] ShoesOrderDto dto)
 		{
-			ShoesOrder order = new ShoesOrder
-			{
-				ShoesOrderId = dto.ShoesOrderId,
-				Qty = dto.Qty,
-				fk_ShoesSizeId = dto.fk_ShoesSizeId,
-				Remark = dto.Remark,
-			};
+			//ShoesOrder order = new ShoesOrder
+			//{
+			//	ShoesOrderId = dto.ShoesOrderId,
+			//	Qty = dto.Qty,
+			//	fk_ShoesSizeId = dto.fk_ShoesSizeId,
+			//	Remark = dto.Remark,
+			//};
 
-			_db.ShoesOrders.Add(order);
+			//_db.ShoesOrders.Add(order);
 			await _db.SaveChangesAsync();
 			return dto;
 		}
