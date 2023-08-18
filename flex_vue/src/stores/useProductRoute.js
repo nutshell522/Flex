@@ -5,6 +5,8 @@ export const useProductRoute = defineStore("productRoute", {
   state: () => ({
     originalPath: "",
     productName: "",
+    minPrice: "",
+    maxPrice: "",
     productInfo: {
       salesCategoryName: "",
       categoryName: "",
@@ -20,6 +22,10 @@ export const useProductRoute = defineStore("productRoute", {
     },
     setProductInfo(newInfo) {
       this.productInfo = newInfo;
+    },
+    setPriceInfo(newMinPrice, newMaxPrice) {
+      this.minPrice = newMinPrice;
+      this.maxPrice = newMaxPrice;
     },
   },
 });

@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
-    [Index("BranchName", Name = "UQ__Branches__3903DB0396AE7A84", IsUnique = true)]
-    [Index("BranchAddress", Name = "UQ__Branches__F50DE17ADEB4A600", IsUnique = true)]
+    [Index("BranchName", Name = "UQ__Branches__3903DB0316C85B7E", IsUnique = true)]
+    [Index("BranchAddress", Name = "UQ__Branches__F50DE17A8FE66F2C", IsUnique = true)]
     public partial class Branch
     {
         public Branch()

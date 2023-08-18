@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
-    [Index("ReservationStatusDescription", Name = "UQ__Reservat__ADF40EA6CB35C142", IsUnique = true)]
+    [Index("ReservationStatusDescription", Name = "UQ__Reservat__ADF40EA691E7C780", IsUnique = true)]
     public partial class ReservationStatus
     {
         public ReservationStatus()

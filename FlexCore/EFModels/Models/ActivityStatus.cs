@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
-    [Index("ActivityStatusDescription", Name = "UQ__Activity__732635EC26E85008", IsUnique = true)]
+    [Index("ActivityStatusDescription", Name = "UQ__Activity__732635EC59C97514", IsUnique = true)]
     public partial class ActivityStatus
     {
         public ActivityStatus()

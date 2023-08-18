@@ -199,7 +199,7 @@ namespace EFModels.Models
             modelBuilder.Entity<CustomizedOrder>(entity =>
             {
                 entity.HasKey(e => e.Customized_Id)
-                    .HasName("PK__Customiz__AFADABDDC2C98250");
+                    .HasName("PK__Customiz__AFADABDDD46DF52E");
 
                 entity.HasOne(d => d.Customized_EdgeProtectionNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_EdgeProtectionNavigations)
@@ -262,7 +262,7 @@ namespace EFModels.Models
             modelBuilder.Entity<Customized_material>(entity =>
             {
                 entity.HasKey(e => e.Shoesmaterial_Id)
-                    .HasName("PK__Customiz__06EFE12D27ABA59E");
+                    .HasName("PK__Customiz__06EFE12D08FD4BDD");
             });
 
             modelBuilder.Entity<Discount>(entity =>
@@ -323,7 +323,7 @@ namespace EFModels.Models
                         r => r.HasOne<MembershipLevel>().WithMany().HasForeignKey("fk_LevelId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Membershi__fk_Le__01D345B0"),
                         j =>
                         {
-                            j.HasKey("fk_LevelId", "fk_PrivilegeId").HasName("PK__Membersh__580C8EAA6AE32338");
+                            j.HasKey("fk_LevelId", "fk_PrivilegeId").HasName("PK__Membersh__580C8EAA7D40AD22");
 
                             j.ToTable("MembershipLevelPrivileges");
                         });
@@ -332,7 +332,7 @@ namespace EFModels.Models
             modelBuilder.Entity<OneToOneReservation>(entity =>
             {
                 entity.HasKey(e => e.ReservationId)
-                    .HasName("PK__OneToOne__B7EE5F24C5E3DB1B");
+                    .HasName("PK__OneToOne__B7EE5F2435594BE1");
 
                 entity.Property(e => e.ReservationCreatedDate).HasDefaultValueSql("(getdate())");
 
@@ -519,15 +519,13 @@ namespace EFModels.Models
             modelBuilder.Entity<ReservationStatus>(entity =>
             {
                 entity.HasKey(e => e.ReservationId)
-                    .HasName("PK__Reservat__B7EE5F24D6F7E297");
+                    .HasName("PK__Reservat__B7EE5F24CB6ABED3");
 
                 entity.Property(e => e.ReservationId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Return>(entity =>
             {
-               entity.Property(e => e.ID).ValueGeneratedNever();
-
                 entity.HasOne(d => d.fk訂單Navigation)
                     .WithMany(p => p.Returns)
                     .HasForeignKey(d => d.fk訂單)
@@ -541,15 +539,13 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ReturnReson>(entity =>
             {
-                entity.Property(e => e.ID).ValueGeneratedNever();
-
                 entity.Property(e => e.退貨理由).IsFixedLength();
             });
 
             modelBuilder.Entity<ShoesColorCategory>(entity =>
             {
                 entity.HasKey(e => e.ShoesColorId)
-                    .HasName("PK__ShoesCol__BB1469D4F8D858C7");
+                    .HasName("PK__ShoesCol__BB1469D459E0152F");
             });
 
             modelBuilder.Entity<ShoesGroup>(entity =>
@@ -597,7 +593,7 @@ namespace EFModels.Models
             modelBuilder.Entity<ShoesPicture>(entity =>
             {
                 entity.HasKey(e => e.ShoesPicture_Id)
-                    .HasName("PK__ShoesPic__DF35EBA49163BC9B");
+                    .HasName("PK__ShoesPic__DF35EBA4A34BE74D");
 
                 entity.HasOne(d => d.fk_ShoesPictureProduct)
                     .WithMany(p => p.ShoesPictures)
@@ -608,7 +604,7 @@ namespace EFModels.Models
             modelBuilder.Entity<ShoesSize>(entity =>
             {
                 entity.HasKey(e => e.SizeId)
-                    .HasName("PK__ShoesSiz__83BD097A090A5366");
+                    .HasName("PK__ShoesSiz__83BD097A657225D0");
             });
 
             modelBuilder.Entity<ShoppingCart>(entity =>
@@ -639,7 +635,7 @@ namespace EFModels.Models
             modelBuilder.Entity<SpeakerField>(entity =>
             {
                 entity.HasKey(e => e.FieldId)
-                    .HasName("PK__SpeakerF__C8B6FF0718A27852");
+                    .HasName("PK__SpeakerF__C8B6FF0730B2B9D7");
             });
 
             modelBuilder.Entity<Staff>(entity =>

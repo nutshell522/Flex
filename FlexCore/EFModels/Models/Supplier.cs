@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFModels.Models
 {
-    [Index("SupplierCompanyNumber", Name = "UQ__Supplier__AE8E9B416D44610C", IsUnique = true)]
+    [Index("SupplierCompanyNumber", Name = "UQ__Supplier__AE8E9B41A015B0CA", IsUnique = true)]
     public partial class Supplier
     {
         [Key]
