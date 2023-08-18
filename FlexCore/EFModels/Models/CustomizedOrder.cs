@@ -22,7 +22,6 @@ namespace EFModels.Models
 
         public virtual Customized_material Customized_EdgeProtectionNavigation { get; set; }
         public virtual Customized_material Customized_EyeletNavigation { get; set; }
-        public virtual Customized_material Customized_RearNavigation { get; set; }
         public virtual CustomizedShoesPo Customized_Shoes { get; set; }
         public virtual Customized_material Customized_ToeNavigation { get; set; }
         public virtual Customized_material Customized_TongueNavigation { get; set; }

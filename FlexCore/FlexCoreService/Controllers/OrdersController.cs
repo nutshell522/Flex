@@ -3,6 +3,7 @@ using FlexCoreService.Orders;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
@@ -107,7 +108,8 @@ namespace FlexCoreService.Controllers
 					discount_name = o.discount_name,
 					subtotal = o.subtotal,
 					discount_subtotal = o.discount_subtotal,
-					Items_description = o.Items_description
+					Items_description = o.Items_description,
+					productcommit = o.productcommit,
 				})
 				.ToList();
 
@@ -353,8 +355,8 @@ namespace FlexCoreService.Controllers
 				});
 			return Reasons;
 		}
-	[HttpPut("activitycolse")]
-	public async Task<string> Activitycolse()
+	    [HttpPut("activitycolse")]
+	     public async Task<string> Activitycolse()
 	{
 		var allOrders = await _context.orders.ToListAsync();
 
@@ -374,6 +376,24 @@ namespace FlexCoreService.Controllers
 		await _context.SaveChangesAsync();
 		return "活動已結束";
 		}
-	}
 
+		[HttpPost("Newcommit")]
+		public async Task<string> Newcommit(commitVM reDTO)
+		{
+			var re = new ProductComment
+			{
+				CreateTime = DateTime.Now,
+				fk_MemberId = reDTO.MemberID,
+				fk_ProductGroupId = reDTO.ProductId,
+				Description = reDTO.Description,
+				Status = false,
+				Score = reDTO.Score,
+			};
+			_context.ProductComments.Add(re);
+			await _context.SaveChangesAsync();
+
+			return "評論成功";
+		}
+	}
+	
 }

@@ -57,22 +57,22 @@
       </thead>
       <tbody>
         <template v-for="item in GetOrders" :key="item.id">
-          <tr>
-            <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
-            <td>{{ formatOrderTime(item.ordertime) }}</td>
-            <td>{{ item.id }}</td>
-            <td>{{ item.total_quantity }}</td>
-            <td>{{ item.total_price }}</td>
-            <td>{{ item.pay_method }}</td>
-            <td>{{ item.receipt }}</td>
-            <td>{{ item.order_status }}</td>
+          <tr class="firstTr" @click="toggleDetails(item.id)">
+            <td class="firstTr"><button>收合/展開</button></td>
+            <td class="firstTr">{{ formatOrderTime(item.ordertime) }}</td>
+            <td class="firstTr">{{ item.id }}</td>
+            <td class="firstTr">{{ item.total_quantity }}</td>
+            <td class="firstTr">{{ item.total_price }}</td>
+            <td class="firstTr">{{ item.pay_method }}</td>
+            <td class="firstTr">{{ item.receipt }}</td>
+            <td class="firstTr">{{ item.order_status }}</td>
           </tr>
           <tr>
             <td colspan="8">
               <table class="table" style="text-align: left; border: 2px solid black"
                 v-show="expandedItems.includes(item.id)">
                 <tr>
-                  <td colspan="4" style="text-align: right">
+                  <td colspan="8" style="text-align: right">
                     <div style="text-align: right">
                       <button v-if="item.order_status_Id !== 7 &&
                         item.order_status_Id !== 9 &&
@@ -98,10 +98,13 @@
                   </td>
                 </tr>
                 <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-                  <td>商品名稱：{{ orderItem.product_name }}</td>
-                  <td>數量：{{ orderItem.quantity }}</td>
-                  <td>價格：{{ orderItem.per_price }}</td>
-                  <td>規格：{{ orderItem.items_description }}</td>
+                  <td class="sceTr">商品名稱：{{ orderItem.product_name }}</td>
+                  <td class="sceTr">數量：{{ orderItem.quantity }}</td>
+                  <td class="sceTr">價格：{{ orderItem.per_price }}</td>
+                  <td class="sceTr">規格：{{ orderItem.items_description }}</td>
+                  <td><button class="btn btn-primary" :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null
+                    " :data-bs-target="item.order_status_Id === 6 ? '#exampleModal2' : null
+    " @click="prepareCommentData(item.fk_member_Id, orderItem.productcommit)">留下評論</button></td>
                 </tr>
                 <hr />
                 <tr style="justify-content: center">
@@ -389,6 +392,36 @@
       </div>
     </div>
   </template>
+
+  <template v-for="item in GetOrders" :key="item.id">
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">評分</h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">分數:</label>
+              <input type="text" class="form-control" v-model="commentstar" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">評論:</label>
+              <textarea class="form-control" v-model="commentdescription"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
+              關閉
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="comment()">
+              確定
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
   <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
@@ -437,6 +470,10 @@ const returnreason = ref("");
 const returnOrderId = ref("");
 const request = ref([]);
 const reReason = ref([]);
+const commentMemberid = ref("");
+const commentProductid = ref("");
+const commentstar = ref("");
+const commentdescription = ref("");
 
 const loadGetOrders = async () => {
   const begintimeValue = begintime.value;
@@ -580,6 +617,22 @@ const CancelReturnAndCloseOrders = async () => {
   await SetOrdersclose();
 };
 const Returndetail = async () => {
+  let showError = false;
+
+  if (!returnaccount.value || isNaN(returnaccount.value)) {
+    alert("請輸入有效的退款帳號（數字）");
+    showError = true;
+  }
+
+  if (!returnreason.value) {
+    alert("請選擇退貨原因");
+    showError = true;
+  }
+
+  if (showError) {
+    await CancelReturnAndCloseOrders();
+    return;
+  }
   const requestData = {
     退貨轉帳帳號: returnaccount.value,
     退貨理由: returnreason.value,
@@ -640,6 +693,29 @@ const ChangeOrders = async () => {
 const setchangeIdValue = (paramValue) => {
   retrunId.value = paramValue;
   ChangeOrders();
+};
+const prepareCommentData = async (item, orderItem) => {
+  commentMemberid.value = item;
+  commentProductid.value = orderItem;
+};
+const comment = async () => {
+  const commentData = {
+    memberID: commentMemberid.value,
+    productId: commentProductid.value,
+    score: commentstar.value,
+    description: commentdescription.value
+  };
+  await axios
+    .post(
+      `https://localhost:7183/api/Orders/Newcommit`,
+      commentData
+    )
+    .then((response) => {
+      loadGetOrders();
+    })
+    .catch((error) => {
+      alert(error);
+    });
 };
 // const ReturnReason = async () => {
 //   if (this.selectedReason === null) {
@@ -730,6 +806,18 @@ onMounted(() => {
   text-align: center;
 }
 
+.tables>thead>tr>th {
+  background-color: maroon;
+  color: white;
+  text-align: center;
+}
+
+.tables {
+  text-align: center;
+  padding-top: 20px;
+  border-bottom: solid gray 2px;
+}
+
 #cate>button {
   text-align: center;
   padding-right: 20px;
@@ -789,5 +877,13 @@ onMounted(() => {
   margin: 20px;
   padding: 10px;
   width: 300px;
+}
+
+.firstTr {
+  padding: 30px 0 30px 0;
+}
+
+.sceTr {
+  padding: 10px;
 }
 </style>
