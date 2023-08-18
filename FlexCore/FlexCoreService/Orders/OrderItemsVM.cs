@@ -30,6 +30,7 @@ namespace FlexCoreService.Orders
 			[Display(Name = "描述")]
 			[StringLength(50)]
 			public string? Items_description { get; set; }
+		    public int? productcommit { get; set; }
 
 			//[Display(Name = "收件人電話")]
 			//public string? cellphone { get; set; }
