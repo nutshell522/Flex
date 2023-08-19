@@ -61,12 +61,7 @@ const routes = [
     component: ActivityInfo,
     meta: { title: `${webTitle}活動` },
   },
-  {
-    //http://loaclhost/activitySignUp
-    path: "/activitySignUp",
-    component: ActivitySignUp,
-    meta: { title: `${webTitle}活動報名` },
-  },
+
   {
     path: "/activityIndex",
     component: ActivityIndex,
@@ -100,10 +95,9 @@ const routes = [
     meta: { title: `${webTitle}活動` },
   },
   {
-    //http://loaclhost/activitySignUp
     path: "/activitySignUp",
     component: ActivitySignUp,
-    meta: { title: `${webTitle}活動報名` },
+    meta: { title: `${webTitle}活動報名`, require: true },
   },
   {
     //http://loaclhost/Login
