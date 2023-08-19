@@ -38,17 +38,15 @@
         <div class="media-element d-flex justify-content-between"></div>
         <div class="countdown">
           <!-- 倒數計時器 -->
-          <h5>距離報名結束還有
+          <h5>
+            距離報名結束還有
             <FlipDown
-              :endDate=endDate
+              :endDate="endDate"
               :theme="2"
               :type="4"
-              :timeUnit="['天','時','分','秒']"
-              
-              @timeUp="func"            
+              :timeUnit="['天', '時', '分', '秒']"
+              @timeUp="func"
             />
-
-            
           </h5>
         </div>
         <!-- 手刀報名按鈕 -->
@@ -99,7 +97,7 @@ import axios from "axios";
 import { ref, reactive, onMounted } from "vue";
 import AOS from "aos";
 import { useRoute } from "vue-router";
-import FlipDown from 'vue-flip-down';
+import FlipDown from "vue-flip-down";
 
 const bookingTime = ref([]);
 
@@ -135,20 +133,20 @@ const activities = reactive({
 
 //格式化日期的方法
 const formatDateTime = (dateString) => {
-    const date = new Date(dateString);
-    
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
+  const date = new Date(dateString);
 
-    // 組裝成我要的格式
-    const formattedDateTime = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
-    return formattedDateTime;
-}
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+
+  // 組裝成我要的格式
+  const formattedDateTime = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+  return formattedDateTime;
+};
 
 // console.log(formatDateTime("2023-08-18T10:50:35")); // 測試日期格式
 // const testDate = formatDateTime("2023-08-18T10:50:35");
