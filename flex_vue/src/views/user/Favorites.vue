@@ -6,7 +6,7 @@
     v-for="(product, index) in likeProducts"
     :key="index"
   >
-    <div class="card mb-3" style="max-width: 540px">
+    <div class="card mb-3 likeCard">
       <div class="row g-0">
         <div class="col-md-4">
           <!-- <img
@@ -46,8 +46,9 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 //const likeProductNames = ref([]);
-const likeProducts = ref([]);
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const likeProducts = ref([]);
+const like = ref(true);
 
 onMounted(() => {
   // 判斷使用者id從 localstorage 撈出來
@@ -84,11 +85,37 @@ onMounted(() => {
       });
   }
 });
+// 77如果不要綁在一起
+function collect() {
+  like.value = !like.value;
+  if (like.value) {
+    //呼叫api(memberId、productId)移除
+    // const baseAddress = 'https://localhost:7183/api';
+    // const uri = `${baseAddress}/Users/SaveFavorites`;
+    // const data = {
+    //   MemberId: userObject.memberId,
+    //   ProductId: `${route.params.productId}`,
+    // };
+    // axios
+    //   .post(uri, data)
+    //   .then((res) => {
+    //     //alert(res.data);
+    //     console.log(res.data);
+    //   })
+    //   .catch((err) => {
+    //     err;
+    //   });
+  } else {
+  }
+}
 </script>
 
 <style scoped>
 .likeProductCard {
   display: flex;
+}
+.likeCard {
+  max-width: 540px;
 }
 .likeProduct {
   border: 1px solid;
