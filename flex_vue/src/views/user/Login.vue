@@ -1,6 +1,11 @@
 <template>
   <navBar></navBar>
   <div class="container loginBox" v-if="loginBox">
+    <div class="arrow" :class="{ show: arrow }" @click="prePage">
+      <button>
+        <i class="bi bi-arrow-left"></i>
+      </button>
+    </div>
     <div class="loginText">
       <h4>Flex Your Journey. Join us!</h4>
     </div>
@@ -33,6 +38,7 @@
         placeholder="輸入6-20碼英數字"
       />
     </div>
+
     <!-- 00再次輸入確認密碼 -->
     <div class="from-group mb-3" v-if="nameInput">
       <label for="name">姓名</label>
@@ -194,6 +200,7 @@ const unRegistered = ref(false);
 //登入表單
 const account = ref('');
 const password = ref('');
+const arrow = ref(false);
 
 //註冊表單
 const name = ref('');
@@ -238,6 +245,7 @@ function ValidatedIdentity() {
           registered.value = false;
           //忘記密碼
           forgetPwd.value = true;
+          arrow.value = true;
         } else {
           //未註冊
           validated.value = false;
@@ -264,7 +272,11 @@ function ValidatedIdentity() {
       });
   }
 }
-uri;
+
+function prePage() {
+  window.location.reload();
+}
+
 function Login() {
   //alert('Login');
   //todo是否與資料庫的密碼相符
@@ -392,7 +404,7 @@ function forgetPwdClick() {
   width: 23%;
   justify-content: center;
   align-items: center;
-  padding: 45px;
+  padding: 20px 45px 45px 45px;
   margin-top: 150px;
   border: solid 1px;
 }
@@ -476,5 +488,18 @@ p::after {
 .secret a {
   display: flex;
   justify-content: center;
+}
+.arrow {
+  font-size: 28px;
+  padding-bottom: 10px;
+  visibility: hidden; /* 初始隱藏，但保留位置 */
+}
+
+.arrow.show {
+  visibility: visible; /* 當有 show 類名時顯示 */
+}
+
+.arrow:hover {
+  color: #bb3e20;
 }
 </style>
