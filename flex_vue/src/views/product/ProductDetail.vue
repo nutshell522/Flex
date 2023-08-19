@@ -336,22 +336,29 @@
         <div class="container-body">
           <div class="d-flex">
             <h1 class="me-auto">你可能會喜歡</h1>
-            <button class="me-3 similarBtn" @click="prevCard">
+            <button class="me-3 similarBtn" @click="showPrev">
               <i class="bi bi-chevron-left similarIcon"></i>
             </button>
-            <button class="me-5 similarBtn" @click="nextCard">
+            <button class="me-5 similarBtn" @click="showNext">
               <i class="bi bi-chevron-right similarIcon"></i>
             </button>
           </div>
-          <ul class="d-flex flex-wrap mt-3">
-            <li
+          <Carousel
+            :items-to-show="3"
+            :wrap-around="true"
+            ref="similarCarousel"
+          >
+            <Slide
               v-for="card in similarProducts"
               :key="card.productId"
               class="card text-center"
             >
               <ProductCard :card="card"></ProductCard>
-            </li>
-          </ul>
+            </Slide>
+            <!-- <template #addons>
+              <Navigation />
+            </template> -->
+          </Carousel>
         </div>
       </div>
     </div>
@@ -371,17 +378,18 @@
 </template>
 
 <script setup>
-import axios from 'axios';
-import { computed, onMounted, ref, watch } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import ProductCard from '@/components/product/ProductCard.vue';
-import { useProductRoute } from '@/stores/useProductRoute.js';
+import axios from "axios";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import ProductCard from "@/components/product/ProductCard.vue";
+import { useProductRoute } from "@/stores/useProductRoute.js";
+import { Carousel, Slide } from "vue3-carousel";
 
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
 const productDetail = ref({});
 const selectSizes = ref({});
-const detailImg = ref('');
+const detailImg = ref("");
 const colorActiveindex = ref(0);
 const sizeActiveIndex = ref(0);
 const buyQty = ref(1);
@@ -391,16 +399,28 @@ const showCommentDiv = ref(true);
 const showDetailDiv = ref(true);
 const cards = ref([]);
 const productStore = useProductRoute();
-const productName = ref('');
+const productName = ref("");
 const similarProducts = ref([]);
 const totalPages = ref(1);
 const thePage = ref(1);
 const currentIndex = ref(0);
 const visibleCards = ref([]);
-const sizeImg = ref('');
-const sizeTable = ref('');
+const sizeImg = ref("");
+const sizeTable = ref("");
 const like = ref(false);
 //let likeProductName = '';
+const similarCarousel = ref(null);
+
+//輪播自訂切換
+const showPrev = () => {
+  similarCarousel.value.prev();
+  similarCarousel.value.updateSlideWidth();
+};
+//輪播自訂切換
+const showNext = () => {
+  similarCarousel.value.next();
+  similarCarousel.value.updateSlideWidth();
+};
 
 //基本資料
 let getData = async () => {
@@ -421,81 +441,81 @@ let getData = async () => {
       // productStore.setProductName(productName.value);
 
       if (
-        response.data.productCategoryName == '上衣' &&
-        response.data.salesCategoryName == '男裝'
+        response.data.productCategoryName == "上衣" &&
+        response.data.salesCategoryName == "男裝"
       ) {
-        sizeTable.value = '男裝上衣尺寸表.jpg';
+        sizeTable.value = "男裝上衣尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '上衣' &&
-        response.data.salesCategoryName == '女裝'
+        response.data.productCategoryName == "上衣" &&
+        response.data.salesCategoryName == "女裝"
       ) {
-        sizeTable.value = '女裝上衣尺寸表.jpg';
+        sizeTable.value = "女裝上衣尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '上衣' &&
-        response.data.salesCategoryName == '童裝'
+        response.data.productCategoryName == "上衣" &&
+        response.data.salesCategoryName == "童裝"
       ) {
-        sizeTable.value = '童裝上衣尺寸表.jpg';
+        sizeTable.value = "童裝上衣尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '褲子' &&
-        response.data.salesCategoryName == '男裝' &&
-        response.data.productSubCategoryName == '短褲'
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "男裝" &&
+        response.data.productSubCategoryName == "短褲"
       ) {
-        sizeTable.value = '男裝褲子短褲尺寸表.jpg';
+        sizeTable.value = "男裝褲子短褲尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '褲子' &&
-        response.data.salesCategoryName == '男裝' &&
-        response.data.productSubCategoryName == '長褲'
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "男裝" &&
+        response.data.productSubCategoryName == "長褲"
       ) {
-        sizeTable.value = '男裝褲子長褲尺寸表.jpg';
+        sizeTable.value = "男裝褲子長褲尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '褲子' &&
-        response.data.salesCategoryName == '女裝' &&
-        response.data.productSubCategoryName == '短褲'
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "女裝" &&
+        response.data.productSubCategoryName == "短褲"
       ) {
-        sizeTable.value = '女裝褲子短褲尺寸表.jpg';
+        sizeTable.value = "女裝褲子短褲尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '褲子' &&
-        response.data.salesCategoryName == '女裝' &&
-        response.data.productSubCategoryName == '長褲'
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "女裝" &&
+        response.data.productSubCategoryName == "長褲"
       ) {
-        sizeTable.value = '女裝褲子長褲尺寸表.jpg';
+        sizeTable.value = "女裝褲子長褲尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '褲子' &&
-        response.data.salesCategoryName == '童裝' &&
-        response.data.productSubCategoryName == '短褲'
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "童裝" &&
+        response.data.productSubCategoryName == "短褲"
       ) {
-        sizeTable.value = '童裝褲子短褲尺寸表.jpg';
+        sizeTable.value = "童裝褲子短褲尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '褲子' &&
-        response.data.salesCategoryName == '童裝' &&
-        response.data.productSubCategoryName == '長褲'
+        response.data.productCategoryName == "褲子" &&
+        response.data.salesCategoryName == "童裝" &&
+        response.data.productSubCategoryName == "長褲"
       ) {
-        sizeTable.value = '童裝褲子長褲尺寸表.jpg';
+        sizeTable.value = "童裝褲子長褲尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '鞋子' &&
-        response.data.salesCategoryName == '男裝'
+        response.data.productCategoryName == "鞋子" &&
+        response.data.salesCategoryName == "男裝"
       ) {
-        sizeTable.value = '成人鞋子尺寸表.jpg';
+        sizeTable.value = "成人鞋子尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '鞋子' &&
-        response.data.salesCategoryName == '女裝'
+        response.data.productCategoryName == "鞋子" &&
+        response.data.salesCategoryName == "女裝"
       ) {
-        sizeTable.value = '成人鞋子尺寸表.jpg';
+        sizeTable.value = "成人鞋子尺寸表.jpg";
       } else if (
-        response.data.productCategoryName == '鞋子' &&
-        response.data.salesCategoryName == '童裝'
+        response.data.productCategoryName == "鞋子" &&
+        response.data.salesCategoryName == "童裝"
       ) {
-        sizeTable.value = '童裝鞋子尺寸表.jpg';
+        sizeTable.value = "童裝鞋子尺寸表.jpg";
       }
 
       // console.log(sizeTable.value);
 
-      if (response.data.productCategoryName == '上衣') {
-        sizeImg.value = '上衣說明表.jpg';
-      } else if (response.data.productCategoryName == '褲子') {
-        sizeImg.value = '下身說明表.jpg';
-      } else if (response.data.productCategoryName == '鞋子') {
-        sizeImg.value = '鞋子說明表.jpg';
+      if (response.data.productCategoryName == "上衣") {
+        sizeImg.value = "上衣說明表.jpg";
+      } else if (response.data.productCategoryName == "褲子") {
+        sizeImg.value = "下身說明表.jpg";
+      } else if (response.data.productCategoryName == "鞋子") {
+        sizeImg.value = "鞋子說明表.jpg";
       }
     })
     .catch((error) => {
@@ -535,33 +555,6 @@ let incrementPage = () => {
     thePage.value++;
     getComment();
   }
-};
-
-let prevCard = () => {
-  currentIndex.value =
-    (currentIndex.value - 1 + similarProducts.value.length) %
-    similarProducts.value.length;
-  console.log(currentIndex.value);
-  updateVisibleCards();
-};
-
-let nextCard = () => {
-  currentIndex.value =
-    (currentIndex.value + 1 + similarProducts.value.length) %
-    similarProducts.value.length;
-  console.log(currentIndex.value);
-  updateVisibleCards();
-};
-
-let updateVisibleCards = () => {
-  const cardCount = 4; // 一次顯示的卡片數量
-  const totalCards = similarProducts.value.length;
-
-  for (let i = 0; i < cardCount; i++) {
-    const cardIndex = (currentIndex.value + i) % totalCards; // 循環索引
-    visibleCards.value.push(similarProducts.value[cardIndex]);
-  }
-  //console.log(visibleCards.value);
 };
 
 //留言
@@ -615,7 +608,7 @@ let handleSizeClick = (index, qty) => {
 
 //購買數量(手輸)
 let handleQyt = (event) => {
-  buyQty.value = event.target.value.replace(/\D/g, '');
+  buyQty.value = event.target.value.replace(/\D/g, "");
   if (buyQty.value <= 1) {
     buyQty.value = 1;
   }
@@ -665,7 +658,7 @@ onMounted(() => {
 //const likeProduct = ref(null);
 function collect() {
   //檢查本地儲存是否有登錄信息
-  const storedUser = localStorage.getItem('loggedInUser');
+  const storedUser = localStorage.getItem("loggedInUser");
   if (storedUser) {
     //alert('天阿!好喜翻呀~~~');
     const userObject = JSON.parse(storedUser);
@@ -678,7 +671,7 @@ function collect() {
       // localStorage.setItem('likeProduct', JSON.stringify(likeProduct));
 
       //呼叫api(memberId、productId)存進去
-      const baseAddress = 'https://localhost:7183/api';
+      const baseAddress = "https://localhost:7183/api";
       const uri = `${baseAddress}/Users/SaveFavorites`;
 
       const data = {
@@ -706,7 +699,7 @@ function collect() {
       // localStorage.setItem('likeProduct', JSON.stringify(updatedLikeProduct));
     }
   } else {
-    alert('請先登入囉!');
+    alert("請先登入囉!");
   }
 }
 </script>

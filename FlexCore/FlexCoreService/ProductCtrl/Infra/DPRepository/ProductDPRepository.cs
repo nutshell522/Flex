@@ -32,7 +32,7 @@ where p.ProductId='"+ @productId + "'";
 
         public IEnumerable<ProductCardDto> GetSimilarProducts(string productId, CategoryDto dto)
         {
-            string sql = @"select top 5
+            string sql = @"select top 10
 p.ProductId, p.ProductName, p.UnitPrice,p.SalesPrice,sc.SalesCategoryName,
 pc.ProductCategoryName,psc.ProductSubCategoryName,sc.SalesCategoryId,MIN(pi.ImgPath) AS FirstImgPath 
 from Products as p
