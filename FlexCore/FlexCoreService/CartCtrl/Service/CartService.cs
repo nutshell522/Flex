@@ -15,6 +15,18 @@ namespace FlexCoreService.CartCtrl.Service
 
 		public IEnumerable<CartItemDto> GetCartItems(int memberId)
 			=> _repo.GetCartItems(memberId);
+
+		public IEnumerable<CartItemDto> GetCartItemsByIds(int[] cartItemIds,int memberId)
+		{
+			var items = new List<CartItemDto>();
+			foreach (var cartItemId in cartItemIds)
+			{
+				// TODO 驗證cartItemId是否為member的
+				items.Add(_repo.GetCartItemById(cartItemId));
+			}
+
+			return items;
+		}
 		
 		public Result UpdateCartItemQty(CartItemDto dto, int memberId)
 		{

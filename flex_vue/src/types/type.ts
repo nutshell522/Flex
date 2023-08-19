@@ -1,47 +1,9 @@
 import axios from "axios";
-export class MatchDiscount {
-  constructor(
-    public discountId: number,
-    public discountName: string,
-    public discountDescription: string,
-    public discountType: number,
-    public discountValue: number,
-    public conditionType: number,
-    public conditionValue: number,
-    public discountOrder: number
-  ) { }
-}
-
-export class CartItemProduct {
-  constructor(
-    public productSaleId: string,
-    public productName: string,
-    public unitPrice: number,
-    public salesPrice: number,
-    public size: string,
-    public color: string,
-    public matchDiscounts: MatchDiscount[],
-    public imgPath: string,
-    public salesCategoryName: string,
-    public salesCategoryNameStr: string,
-    public tagsValue: string
-  ) { }
-}
-
-export class AppliedDiscount {
-  constructor(
-    public id: number,
-    public rule: any, // 需要確定 rule 的型別
-    public products: CartItemProduct[],
-    public amount: number
-  ) { }
-}
-
 export class Coupon {
   id: number = 0;
   couponCategoryId: number = 0;
   sendingId: number = 0;
-  couponName: string = "";
+  name: string = "";
   minimumPurchaseAmount: number = 0;
   discountType: number = 0;
   discountValue: number = 0;
@@ -51,85 +13,123 @@ export class Coupon {
   endDateStr: string = "";
 
 }
+export class MatchDiscount {
+  constructor(
+    public discountId: number = 0,
+    public discountName: string = "",
+    public discountDescription: string = "",
+    public discountType: number = 0,
+    public discountValue: number = 0,
+    public conditionType: number = 0,
+    public conditionValue: number = 0,
+    public discountOrder: number = 0
+  ) { }
+}
+
+export class CartItemProduct {
+  constructor(
+    public productSaleId: string = "",
+    public productName: string = "",
+    public unitPrice: number = 0,
+    public salesPrice: number = 0,
+    public size: string = "",
+    public color: string = "",
+    public matchDiscounts: MatchDiscount[] = [],
+    public imgPath: string = "",
+    public salesCategoryName: string = "",
+    public salesCategoryNameStr: string = "",
+    public tagsValue: string = ""
+  ) { }
+}
+
+export class AppliedDiscount {
+  constructor(
+    public id: number = 0,
+    public rule: any = null,
+    public products: CartItemProduct[] = [],
+    public amount: number = 0
+  ) { }
+}
 
 export class CartItem {
   constructor(
-    public cartItemId: number,
-    public cartId: number,
-    public productId: number,
-    public qty: number,
-    public product: CartItemProduct,
-    public subTotal: number,
-    public unitSubTotal: number
+    public cartItemId: number = 0,
+    public cartId: number = 0,
+    public productId: number = 0,
+    public qty: number = 0,
+    public product: CartItemProduct = new CartItemProduct(),
+    public subTotal: number = 0,
+    public unitSubTotal: number = 0
   ) { }
 }
 
 export class ShoppingCart {
   constructor(
-    public cartItems: CartItem[],
-    public appliedDiscounts: AppliedDiscount[],
-    public coupon: Coupon,
-    public originalTotalAmount: number,
-    public deliveryFee: number,
-    public couponValue: number,
-    public totalPrice: number,
-    public checkoutData: CheckoutData
+    public memberId: number = 0,
+    public cartItems: CartItem[] = [],
+    public appliedDiscounts: AppliedDiscount[] = [],
+    public coupon: Coupon = new Coupon(),
+    public originalTotalAmount: number = 0,
+    public deliveryFee: number = 0,
+    public couponValue: number = 0,
+    public totalPrice: number = 0,
+    public checkoutData: CheckoutData = new CheckoutData()
   ) { }
 }
 
 export class Member {
   constructor(
-    public memberId: number,
-    public fk_Level: number,
-    public levelName: string,
-    public name: string,
-    public email: string,
-    public mobile: string,
-    public gender: boolean,
-    public birthday: string,
-    public commonAddress: string,
-    public alternateAddress1: string,
-    public alternateAddress2: string,
-    public isSubscribeNews: boolean
+    public memberId: number = 0,
+    public fk_Level: number = 0,
+    public levelName: string = "",
+    public name: string = "",
+    public email: string = "",
+    public mobile: string = "",
+    public gender: boolean = false,
+    public birthday: string = "",
+    public commonAddress: string = "",
+    public alternateAddress1: string = "",
+    public alternateAddress2: string = "",
+    public isSubscribeNews: boolean = false
   ) { }
 }
 
 export class CheckoutData {
   constructor(
-    public contactInfo: ContactInfo,
-    public billingAddress: BillingAddress,
-    public paymentInfo: PaymentInfo
+    public contactInfo: ContactInfo = new ContactInfo(),
+    public billingAddress: BillingAddress = new BillingAddress(),
+    public paymentInfo: PaymentInfo = new PaymentInfo()
   ) { }
 }
 
 export class ContactInfo {
   constructor(
-    public contactName: string,
-    public postalCode: string,
-    public address: string,
-    public email: string,
-    public phone: string
+    public contactName: string = "",
+    public postalCode: string = "",
+    public address: string = "",
+    public email: string = "",
+    public phone: string = ""
   ) { }
 }
 
 export class BillingAddress {
   constructor(
-    public name: string,
-    public postalCode: string,
-    public address: string,
-    public phone: string
+    public name: string = "",
+    public postalCode: string = "",
+    public address: string = "",
+    public phone: string = ""
   ) { }
 }
 
 export class PaymentInfo {
   constructor(
-    public paymentMethod: string,
-    public cardName: string,
-    public cardNumber: string,
-    public expiration: string,
-    public cvv: string,
-    public confirmTerms: boolean,
-    public couponId?: number,
+    public paymentMethod: string = "",
+    public cardName: string = "",
+    public cardNumber: string = "",
+    public expiration: string = "",
+    public cvv: string = "",
+    public confirmTerms: boolean = false,
+    public couponId?: number
   ) { }
 }
 

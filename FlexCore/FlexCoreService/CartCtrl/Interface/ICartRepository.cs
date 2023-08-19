@@ -7,6 +7,7 @@ namespace FlexCoreService.CartCtrl.Interface
 	public interface ICartRepository
 	{
 		IEnumerable<CartItemDto> GetCartItems(int memberId);
+		CartItemDto GetCartItemById(int cartItemId);
 		int GetCartId(int memberId);
 		int CreateCart(int memberId);
 		bool ExistsCart(int memberId);
