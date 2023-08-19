@@ -1,25 +1,39 @@
 <template>
   <navBar></navBar>
   <userBar></userBar>
-  <div class="container likeProductCard">
-    <div
-      class="likeProduct"
-      v-for="(product, index) in likeProducts"
-      :key="index"
-    >
-      <div>
-        <label>{{ product.productName }}</label>
-      </div>
-      <div>
-        <label>價格: {{ product.unitPrice }}</label>
-      </div>
-      <div>
-        <label>Sales Price: {{ product.salesPrice }}</label>
-      </div>
-      <div class="detailImgList">
-        <img
-          src="https://localhost:7183/Public/Img/550af4ee0a2047d69bf578c0bbe63fa7.jpg"
-        />
+  <div
+    class="container likeProductCard"
+    v-for="(product, index) in likeProducts"
+    :key="index"
+  >
+    <div class="card mb-3" style="max-width: 540px">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <!-- <img
+            src="https://localhost:7183/Public/Img/550af4ee0a2047d69bf578c0bbe63fa7.jpg"
+          /> -->
+          <img :src="baseAddress + 'Public/Img/' + product.firstImgPath" />
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.productName }}</h5>
+            <p class="card-text">{{ product.unitPrice }}</p>
+            <p class="card-text">{{ product.salesPrice }}</p>
+            <div class="allBtn">
+              <div class="likeBtn">
+                <button class="" style="font-size: 20px" @click="collect">
+                  <i class="bi bi-heart" style="color: red" v-if="!like"></i
+                  ><i class="bi bi-heart-fill" style="color: red" v-else></i>
+                </button>
+              </div>
+              <div>
+                <button style="font-size: 20px">
+                  <i class="bi bi-cart4"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -33,6 +47,8 @@ import axios from 'axios';
 
 //const likeProductNames = ref([]);
 const likeProducts = ref([]);
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+
 onMounted(() => {
   // 判斷使用者id從 localstorage 撈出來
   // const savedLikeProduct = localStorage.getItem('likeProduct');
@@ -61,7 +77,7 @@ onMounted(() => {
       .get(getLikeProductUri)
       .then((res) => {
         likeProducts.value = res.data;
-        //console.log('商品湯圓', likeProducts);
+        console.log('商品湯圓', likeProducts);
       })
       .catch((err) => {
         err;
@@ -83,5 +99,11 @@ onMounted(() => {
   width: 100%;
   height: auto;
   display: block;
+}
+.allBtn {
+  display: flex;
+}
+.likeBtn {
+  margin-right: 15px;
 }
 </style>

@@ -14,6 +14,12 @@
         <span v-for="error in errors" class="text-danger">{{ error }}</span>
       </ul>
     </div>
+    <!-- Loading -->
+    <div class="text-center" v-if="loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <!-- 欄位 -->
     <div class="from-group mb-3">
       <label for="account" class="mb-1" v-if="accInput">帳號</label>
@@ -193,6 +199,7 @@ const errors = ref([]);
 const userData = ref([]);
 const accInput = ref(true);
 const validated = ref(false); //初始化狀態為不顯示
+const loading = ref(false);
 const unValidated = ref(false);
 
 const nameInput = ref(false);
@@ -247,10 +254,12 @@ function ValidatedIdentity() {
         //已註冊
         if (userData.value == account.value) {
           //console.log('帳號驗證成功囉!');
+          loading.value = true;
           validated.value = true;
           accInput.value = false;
           registered.value = false;
           //忘記密碼
+          loading.value = false;
           forgetPwd.value = true;
           arrow.value = true;
         } else {
