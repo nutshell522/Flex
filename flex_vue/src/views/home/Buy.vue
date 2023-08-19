@@ -8,99 +8,54 @@
             <div id="step-1-area" class="step-area">
               <h2>輸入你的聯絡資訊:</h2>
               <div class="input-wrapper">
-                <input
-                  type="text"
-                  name="ContactInfo.ContactName"
-                  id="contact-name"
-                  placeholder="姓名"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.contactName"
-                />
+                <input type="text" name="ContactInfo.ContactName" id="contact-name" placeholder="姓名" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.contactName" />
                 <span></span>
               </div>
               <div class="input-wrapper">
-                <input
-                  type="text"
-                  name="ContactInfo.PostalCode"
-                  id="postal-code"
-                  placeholder="郵遞區號"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.postalCode"
-                />
+                <input type="text" name="ContactInfo.PostalCode" id="postal-code" placeholder="郵遞區號" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.postalCode" />
                 <span></span>
               </div>
               <div class="input-wrapper">
-                <input
-                  type="text"
-                  name="ContactInfo.Address"
-                  id="address"
-                  placeholder="地址"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.address"
-                />
+                <input type="text" name="ContactInfo.Address" id="address" placeholder="地址" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.address" />
                 <span></span>
                 <div class="address-area">
                   <button id="address-btn" type="button">變更地址</button>
                   <ul id="address-box">
-                    <li><h2>已儲存地址</h2></li>
-                    <li
-                      class="address-option"
-                      v-if="
-                        addresses.commonAddress != '' &&
-                        addresses.commonAddress != null
-                      "
-                    >
+                    <li>
+                      <h2>已儲存地址</h2>
+                    </li>
+                    <li class="address-option" v-if="addresses.commonAddress != '' &&
+                      addresses.commonAddress != null
+                      ">
                       {{ addresses.commonAddress }}
                     </li>
-                    <li
-                      class="address-option"
-                      v-if="
-                        addresses.alternateAddress1 != '' &&
-                        addresses.alternateAddress1 != null
-                      "
-                    >
+                    <li class="address-option" v-if="addresses.alternateAddress1 != '' &&
+                      addresses.alternateAddress1 != null
+                      ">
                       {{ addresses.alternateAddress1 }}
                     </li>
-                    <li
-                      class="address-option"
-                      v-if="
-                        addresses.alternateAddress2 != '' &&
-                        addresses.alternateAddress2 != null
-                      "
-                    >
+                    <li class="address-option" v-if="addresses.alternateAddress2 != '' &&
+                      addresses.alternateAddress2 != null
+                      ">
                       {{ addresses.alternateAddress2 }}
                     </li>
                   </ul>
                 </div>
               </div>
               <div class="input-wrapper">
-                <input
-                  type="email"
-                  name="ContactInfo.Email"
-                  id="email"
-                  placeholder="電子郵件"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.email"
-                />
+                <input type="email" name="ContactInfo.Email" id="email" placeholder="電子郵件" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.email" />
                 <span></span>
               </div>
               <div class="input-wrapper">
-                <input
-                  type="tel"
-                  name="ContactInfo.Phone"
-                  id="phone"
-                  placeholder="電話號碼"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.phone"
-                />
+                <input type="tel" name="ContactInfo.Phone" id="phone" placeholder="電話號碼" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.phone" />
                 <span></span>
               </div>
-              <button
-                type="button"
-                id="next-step-btn-1"
-                class="change-step-btn next-step-btn"
-                target-step="1"
-              >
+              <button type="button" id="next-step-btn-1" class="change-step-btn next-step-btn" target-step="1">
                 繼續
               </button>
             </div>
@@ -108,58 +63,28 @@
             <div id="step-2-area" class="step-area">
               <h2>輸入你的帳單地址:</h2>
               <label class="same-address-label buy-label">
-                <input
-                  type="checkbox"
-                  id="bill-same-address"
-                  class="buy-checkbox"
-                  checked
-                />
+                <input type="checkbox" id="bill-same-address" class="buy-checkbox" checked />
                 帳單地址同送貨地址
               </label>
               <div id="different-address-area">
                 <div class="input-wrapper">
-                  <input
-                    type="text"
-                    name="BillingAddress.Name"
-                    id="bill-name"
-                    placeholder="姓名"
-                  />
+                  <input type="text" name="BillingAddress.Name" id="bill-name" placeholder="姓名" />
                   <span></span>
                 </div>
                 <div class="input-wrapper">
-                  <input
-                    type="text"
-                    name="BillingAddress.PostalCode"
-                    id="bill-postal-code"
-                    placeholder="郵遞區號"
-                  />
+                  <input type="text" name="BillingAddress.PostalCode" id="bill-postal-code" placeholder="郵遞區號" />
                   <span></span>
                 </div>
                 <div class="input-wrapper">
-                  <input
-                    type="text"
-                    name="BillingAddress.Address"
-                    id="bill-address"
-                    placeholder="地址"
-                  />
+                  <input type="text" name="BillingAddress.Address" id="bill-address" placeholder="地址" />
                   <span></span>
                 </div>
                 <div class="input-wrapper">
-                  <input
-                    type="tel"
-                    name="BillingAddress.Phone"
-                    id="bill-phone"
-                    placeholder="電話號碼"
-                  />
+                  <input type="tel" name="BillingAddress.Phone" id="bill-phone" placeholder="電話號碼" />
                   <span></span>
                 </div>
               </div>
-              <button
-                type="button"
-                id="next-step-btn-2"
-                class="change-step-btn next-step-btn"
-                target-step="2"
-              >
+              <button type="button" id="next-step-btn-2" class="change-step-btn next-step-btn" target-step="2">
                 繼續
               </button>
             </div>
@@ -180,57 +105,29 @@
               <h2>詳細付款資訊:</h2>
               <div class="pay-info-area">
                 <div class="input-wrapper">
-                  <input
-                    type="text"
-                    name="PaymentInfo.CardName"
-                    id="card-name"
-                    placeholder="Name on card"
-                    v-if="cart"
-                    v-model="cart.checkoutData.paymentInfo.cardName"
-                  />
+                  <input type="text" name="PaymentInfo.CardName" id="card-name" placeholder="Name on card" v-if="cart"
+                    v-model="cart.checkoutData.paymentInfo.cardName" />
                   <span></span>
                 </div>
                 <div class="input-wrapper">
-                  <input
-                    type="tel"
-                    name="PaymentInfo.CardNumber"
-                    id="card-number"
-                    placeholder="Card Number"
-                    v-if="cart"
-                    v-model="cart.checkoutData.paymentInfo.cardNumber"
-                  />
+                  <input type="tel" name="PaymentInfo.CardNumber" id="card-number" placeholder="Card Number" v-if="cart"
+                    v-model="cart.checkoutData.paymentInfo.cardNumber" />
                   <span></span>
                 </div>
                 <div class="row row-cols-2">
                   <div class="input-wrapper">
-                    <input
-                      type="text"
-                      name="PaymentInfo.Expiration"
-                      id="expiration"
-                      placeholder="MM/YY"
-                      v-if="cart"
-                      v-model="cart.checkoutData.paymentInfo.expiration"
-                    />
+                    <input type="text" name="PaymentInfo.Expiration" id="expiration" placeholder="MM/YY" v-if="cart"
+                      v-model="cart.checkoutData.paymentInfo.expiration" />
                     <span></span>
                   </div>
                   <div class="input-wrapper">
-                    <input
-                      type="tel"
-                      name="PaymentInfo.CVV"
-                      id="cvv"
-                      placeholder="CVV"
-                      v-if="cart"
-                      v-model="cart.checkoutData.paymentInfo.cvv"
-                    />
+                    <input type="tel" name="PaymentInfo.CVV" id="cvv" placeholder="CVV" v-if="cart"
+                      v-model="cart.checkoutData.paymentInfo.cvv" />
                     <span></span>
                   </div>
                 </div>
                 <label class="confirm-terms-label buy-label">
-                  <input
-                    type="checkbox"
-                    id="confirm-terms"
-                    class="buy-checkbox"
-                  />
+                  <input type="checkbox" id="confirm-terms" class="buy-checkbox" />
                   確認你同意 Flex 付款的 <a href="javascript:;">條款與條件</a>
                 </label>
                 <button type="submit" id="send-order" class="next-step-btn">
@@ -302,12 +199,39 @@
   </main>
   <div id="coupon-area-bg">
     <div id="coupon-area">
-      <div class="d-flex p-5">
-        <h2 class="me-auto">優惠券</h2>
-        <p>可選擇一張</p>
+      <i class="bi bi-x"></i>
+      <div id="coupon-header">
+        <h2 class="me-auto">使用優惠券</h2>
+        <span>可選擇一張</span>
       </div>
       <ul class="coupon-list">
-        <li class="coupon-item"></li>
+        <li v-if="coupons.length != 0" v-for="coupon in coupons" :key="coupon.sendingId"
+          :class="['coupon-item', { 'disabled': cart && coupon.discountType == 2 && cart.deliveryFee == 0 && (!cart.coupon?.discountType || cart.coupon.discountType != 2) }]"
+          :data-id="coupon.sendingId">
+          <div class="coupon-body">
+            <div class="coupon-discount-box">
+              <div v-if="coupon.discountType == 2" class="coupon-discount"> 免運費 </div>
+              <div v-else-if="coupon.discountType == 1" class="coupon-discount"> {{ 100 - coupon.discountValue }}折 </div>
+              <div v-else-if="coupon.discountType == 0" class="coupon-discount"> {{ coupon.discountValue }}元 </div>
+            </div>
+            <div class="coupon-info">
+              <div class="d-flex">
+                <h3 class="me-auto">{{ coupon.couponName }}</h3>
+                <div
+                  v-if="cart && coupon.discountType == 2 && cart.deliveryFee == 0 && (!cart.coupon?.discountType || cart.coupon.discountType != 2)"
+                  class="danger-info text-danger">無法使用 已達免運標準</div>
+              </div>
+              <div class="d-flex">
+                <div class="description">滿 {{ coupon.minimumPurchaseAmount }} 元可用</div>
+              </div>
+
+              <div class="coupon-date-limit">使用期間 {{ coupon.startDateStr }} ~ {{ coupon.endDateStr }}</div>
+            </div>
+          </div>
+        </li>
+        <li v-else class="w-100 h-100 d-flex justify-content-center align-items-center fs-4 text-gray">
+          無可使用的優惠券
+        </li>
       </ul>
     </div>
   </div>
@@ -317,7 +241,7 @@
 import axios from "axios";
 import { Input } from "postcss";
 import { ref, onMounted, onUpdated, computed } from "vue";
-import { ShoppingCart, Member } from "@/types/type";
+import { ShoppingCart, Member, Coupon } from "@/types/type";
 import { storeToRefs } from "pinia";
 import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
 // 用vite獲得環境變數
@@ -327,6 +251,7 @@ const { memberInfo } = storeToRefs(getApiStore);
 const memberId = getApiStore.getMemberId;
 const cart = ref<ShoppingCart>();
 const member = ref<Member>();
+const coupons = ref<Coupon[]>([]);
 const addresses = ref({
   commonAddress: "",
   alternateAddress1: "",
@@ -340,7 +265,6 @@ const loadCart = async (callback?: () => Promise<void>): Promise<void> => {
     .post<ShoppingCart>(url)
     .then((response) => {
       cart.value = response.data;
-      console.log(response.data);
       callback?.();
     })
     .catch((error) => {
@@ -366,15 +290,32 @@ const loadMember = async (): Promise<void> => {
       addresses.value.commonAddress = response.data.commonAddress;
       addresses.value.alternateAddress1 = response.data.alternateAddress1;
       addresses.value.alternateAddress2 = response.data.alternateAddress2;
-      console.log(cart.value);
-      console.log(addresses.value);
-
-      console.log(response.data);
     })
     .catch((error) => {
       alert(error);
     });
 };
+
+const loadCoupons = async (): Promise<void> => {
+  let requestData = {
+    memberId: 1,
+  };
+  let url: string = `${baseAddress}api/Cart/GetMemberAllCoupons`;
+  await axios
+    .post<Coupon[]>(url, 1, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => {
+      coupons.value = response.data;
+      console.log(coupons.value);
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
 
 // 判斷input的title是否秀出來
 function updateTitleVisibility(
@@ -629,6 +570,9 @@ onMounted(() => {
     event.stopPropagation();
     toggleAddressBoxEventHandler();
   });
+  loadCoupons();
+  console.log(coupons.value.length);
+
 });
 
 onUpdated(() => {
@@ -675,7 +619,7 @@ main {
             position: relative;
             margin-bottom: 30px;
 
-            & > span {
+            &>span {
               background-color: #fff;
               position: absolute;
               left: 20px;
@@ -685,7 +629,7 @@ main {
               color: #999;
             }
 
-            & > input {
+            &>input {
               padding: 20px;
               width: 100%;
               height: 100%;
@@ -699,7 +643,7 @@ main {
               &:hover {
                 border-color: #333;
 
-                + span {
+                +span {
                   color: #333;
                 }
               }
@@ -707,7 +651,7 @@ main {
               &:focus {
                 border-color: #333;
 
-                + span {
+                +span {
                   color: #333;
                 }
               }
@@ -725,6 +669,7 @@ main {
                   background-color: #eee;
                 }
               }
+
               ul {
                 background: #fff;
                 border: 2px solid rgba($color: #000000, $alpha: 0);
@@ -735,15 +680,19 @@ main {
                 font-size: 18px;
                 padding: 0;
                 transition: max-height 0.6s;
-                & > li:first-child {
+
+                &>li:first-child {
                   margin-top: 15px;
                 }
-                & > li:last-child {
+
+                &>li:last-child {
                   margin-bottom: 30px;
                 }
+
                 &.active {
                   border: 2px solid #999;
                   max-height: 500px;
+
                   &:hover {
                     border: 2px solid #000;
                   }
@@ -752,14 +701,17 @@ main {
                 li {
                   padding: 20px 15px;
                   width: 100%;
+
                   h2 {
                     padding: 0;
                     margin: 0;
                   }
+
                   &.address-option {
                     cursor: pointer;
                     padding: 20px 45px;
                     border-radius: 10px;
+
                     &:hover {
                       background: #ccc;
                     }
@@ -784,7 +736,7 @@ main {
             font-size: 20px;
             margin-bottom: 50px;
 
-            & > a {
+            &>a {
               text-decoration: underline;
 
               &:hover {
@@ -842,7 +794,7 @@ main {
             padding: 30px 0;
             border-top: 1px solid #ccc;
 
-            &.active > h2 {
+            &.active>h2 {
               color: #333;
             }
 
@@ -855,7 +807,7 @@ main {
             .show-info {
               position: relative;
 
-              & > p {
+              &>p {
                 margin: 0;
                 color: #999;
               }
@@ -880,6 +832,7 @@ main {
     }
   }
 }
+
 #coupon-area-bg {
   position: fixed;
   top: 0;
@@ -888,14 +841,154 @@ main {
   height: 100vh;
   z-index: 9999;
   background-color: rgba($color: #000, $alpha: 0.5);
+
   #coupon-area {
-    position: absolute;
+    position: relative;
     background-color: rgba($color: #fff, $alpha: 1);
     width: 700px;
     left: calc((100% - 700px) / 2);
-    top: 100px;
-    height: 700px;
-    overflow-y: scroll;
+    top: 10%;
+    height: 80vh;
+    min-height: 400px;
+    max-height: 700px;
+    overflow: hidden;
+
+    .bi-x {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 40px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+
+      &:hover {
+        background-color: #ccc;
+        cursor: pointer;
+      }
+    }
+
+    #coupon-header {
+      display: flex;
+      justify-content: center;
+      align-items: end;
+      padding: 50px;
+      padding-bottom: 20px;
+
+      h2 {
+        padding: 0;
+        margin: 0;
+      }
+
+      span {
+        color: #999;
+      }
+    }
+
+    .coupon-list {
+      width: 85%;
+      height: 70%;
+      margin: auto;
+      border: 2px solid #ccc;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      padding: 0;
+    }
+
+    .text-gray {}
+
+    .coupon-item {
+      border: 3px rgba($color: #000000, $alpha: 0) dashed;
+      margin: 3px 0 0 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 130px;
+
+      &:not(.disabled) {
+        cursor: pointer;
+
+        &.selected {
+          border-color: #9bf;
+        }
+      }
+
+      .coupon-body {
+        display: flex;
+        width: 98%;
+        height: 90%;
+        border: 2px solid blue;
+
+        .coupon-discount-box {
+          border-right: 1px dashed blue;
+          width: 110px;
+          height: 100%;
+          padding: 8px;
+
+          .coupon-discount {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid blue;
+          }
+        }
+
+        .coupon-info {
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          padding-left: 20px;
+
+          h3 {
+            font-size: 20px;
+          }
+
+          .description {
+            color: #eee;
+            background-color: #333;
+            padding: 0 20px;
+            border-radius: 50px;
+          }
+
+          .coupon-date-limit {
+            color: red;
+            margin-top: 3px;
+            font-size: 15px;
+          }
+        }
+      }
+    }
+
+    /* Webkit (Chrome, Safari) */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #555;
+    }
+
+    /* Firefox */
+    ::-moz-scrollbar {
+      width: 8px;
+    }
+
+    ::-moz-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 4px;
+    }
+
+    ::-moz-scrollbar-thumb:hover {
+      background-color: #555;
+    }
   }
 }
 </style>

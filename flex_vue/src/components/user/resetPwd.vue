@@ -55,12 +55,11 @@ function finish() {
       .put(uri, resetUserData)
       .then((res) => {
         console.log(res.data);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
       });
-    //新密碼設定密碼完成，導入登入畫面
-    router.push({ path: '/login' });
   }
 }
 </script>

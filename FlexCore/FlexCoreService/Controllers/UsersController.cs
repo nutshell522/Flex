@@ -227,7 +227,7 @@ namespace FlexCoreService.Controllers
             member.Gender = prodto.Gender;
             member.Birthday = prodto.Birthday;
             member.CommonAddress = prodto.CommonAddress;
-           // member.EncryptedPassword= prodto.EncryptedPassword;
+            member.EncryptedPassword= prodto.EncryptedPassword;
             member.IsSubscribeNews = prodto.IsSubscribeNews;
 
             //AlternateAddress 

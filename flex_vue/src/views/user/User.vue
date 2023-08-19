@@ -175,6 +175,8 @@
 
   <!-- 驗證畫面 -->
   <verify class="verify" v-if="verifyArea"></verify>
+  <!-- 地址測試 -->
+  <!-- <iframe :srcdoc="iframeContent" width="100%" height="300"></iframe> -->
 </template>
 
 <script setup>
@@ -185,6 +187,17 @@ import { ref, watch, provide } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 import axios from 'axios';
+
+//77真的可以這樣子??????
+// axios
+//   .get('@/components/user/twAddress.html')
+//   .then((response) => {
+//     this.iframeContent = response.data;
+//   })
+//   .catch((error) => {
+//     console.error('Error loading HTML content:', error);
+//   });
+//
 
 const getApiStore = useGetApiDataStore();
 const { memberInfo } = storeToRefs(getApiStore);
@@ -395,12 +408,14 @@ if (isSubscribeNews.value == true) {
 }
 // 77按鈕的儲存字歪歪的
 .save {
-  width: 8%;
   height: 12%;
-  margin: 20px 0px;
+  margin: 0px;
   position: absolute;
-  top: 350px;
-  left: 550px;
+  top: 500px;
+  left: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
 }
 .changePhoto {
   position: absolute;

@@ -20,20 +20,15 @@
 <script setup>
 import ProductCard from "@/components/product/ProductCard.vue";
 import axios from "axios";
-import {
-  onMounted,
-  ref,
-  computed,
-  watchEffect,
-  watch,
-  onBeforeUnmount,
-} from "vue";
+import { onMounted, ref, computed, watchEffect, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useProductRoute } from "@/stores/useProductRoute.js";
 
 const route = useRoute();
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const cards = ref([]);
 const page = ref(1);
+const productStore = useProductRoute();
 
 //創建本機共用屬性
 const localStorageKey = "";
@@ -55,7 +50,11 @@ const originalPath = localStorage.getItem(localStorageKey);
 //監聽選擇的分類資料，一旦資料變動，重新加載 cards
 //根據選擇的分類資料重新叫用API
 watch(
-  () => route.query, //route.params,
+  [
+    () => route.query, //route.params,
+    () => productStore.minPrice,
+    () => productStore.maxPrice,
+  ],
   () => {
     loadProducts();
   }
@@ -71,12 +70,13 @@ const loadProducts = async () => {
   //   url = `${baseAddress}api/Products/Men`;
   // }
   if (route.query.categoryName && !route.query.subCategoryName) {
-    url = `${baseAddress}api/Products?categoryPath=${originalPath}&categoryName=${route.query.categoryName}&page=${page.value}`;
+    url = `${baseAddress}api/Products?categoryPath=${originalPath}&categoryName=${route.query.categoryName}&page=${page.value}&minPrice=${productStore.minPrice}&maxPrice=${productStore.maxPrice}`;
   } else if (route.query.categoryName && route.query.subCategoryName) {
-    url = `${baseAddress}api/Products?categoryPath=${originalPath}?categoryName=${route.query.categoryName}&subCategoryName=${route.query.subCategoryName}&page=${page.value}`;
+    url = `${baseAddress}api/Products?categoryPath=${originalPath}?categoryName=${route.query.categoryName}&subCategoryName=${route.query.subCategoryName}&page=${page.value}&minPrice=${productStore.minPrice}&maxPrice=${productStore.maxPrice}`;
   } else {
-    url = `${baseAddress}api/Products?categoryPath=${originalPath}&page=${page.value}`;
+    url = `${baseAddress}api/Products?categoryPath=${originalPath}&page=${page.value}&minPrice=${productStore.minPrice}&maxPrice=${productStore.maxPrice}`;
   }
+
   //console.log(url);
   await axios
     .get(url)

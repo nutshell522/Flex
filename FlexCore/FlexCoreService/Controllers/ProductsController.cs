@@ -34,6 +34,7 @@ namespace FlexCoreService.Controllers
         {
             int pageSize = 16;
             int? salesId=null;
+
             if (categoryPath != null)
             {
                 if (categoryPath.Contains("women"))
@@ -49,11 +50,23 @@ namespace FlexCoreService.Controllers
                     salesId = 3;
                 }
             }
+
             var server = new ProductService(_repo);
             var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
             if (products.Count == 0)
             {
                 return BadRequest();
+            }
+
+            if (minPrice > 0 && maxPrice > 0 && minPrice < maxPrice)
+            {
+                products = products.Where(p => p.SalesPrice >= minPrice && p.SalesPrice <= maxPrice).ToList();
+            }else if (minPrice > 0 && (maxPrice==null || minPrice> maxPrice))
+            {
+                products=products.Where(p => p.SalesPrice >= minPrice).ToList();
+            }else if (maxPrice > 0 && (minPrice==null || maxPrice > minPrice))
+            {
+                products=products.Where(p => p.SalesPrice <= maxPrice).ToList();
             }
 
             products= products.Take(pageSize*page).ToList();
