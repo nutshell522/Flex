@@ -394,6 +394,22 @@ namespace FlexCoreService.Controllers
 
 			return "評論成功";
 		}
+		[HttpPut("fincomment")]
+		public async Task<string> Closecomment(int orderid)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
+			orderItem emp = await _context.orderItems.FindAsync(orderid);
+
+				emp.comment = true;
+				_context.Entry(emp).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return "感謝您的評論";
+
+		}
 	}
 	
 }

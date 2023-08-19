@@ -32,16 +32,17 @@ namespace FlexCoreService.Orders
 			public string? Items_description { get; set; }
 		    public int? productcommit { get; set; }
 
-			//[Display(Name = "收件人電話")]
-			//public string? cellphone { get; set; }
-			//[Display(Name = "收據號碼")]
-			//public string? receipt { get; set; }
-			//[Display(Name = "收件人名稱")]
-			//public string? receiver { get; set; }
-			//[Display(Name = "收件人地址")]
-			//public string? recipient_address { get; set; }
-			//[Display(Name = "結單")]
-			//public bool close { get; set; }
-		}
+		public bool? comment { get; set; }
+		//[Display(Name = "收件人電話")]
+		//public string? cellphone { get; set; }
+		//[Display(Name = "收據號碼")]
+		//public string? receipt { get; set; }
+		//[Display(Name = "收件人名稱")]
+		//public string? receiver { get; set; }
+		//[Display(Name = "收件人地址")]
+		//public string? recipient_address { get; set; }
+		//[Display(Name = "結單")]
+		//public bool close { get; set; }
+	}
 	
 }
