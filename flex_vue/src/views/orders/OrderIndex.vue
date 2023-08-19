@@ -102,9 +102,10 @@
                   <td class="sceTr">數量：{{ orderItem.quantity }}</td>
                   <td class="sceTr">價格：{{ orderItem.per_price }}</td>
                   <td class="sceTr">規格：{{ orderItem.items_description }}</td>
-                  <td><button class="btn btn-primary" :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null
-                    " :data-bs-target="item.order_status_Id === 6 ? '#exampleModal2' : null
-    " @click="prepareCommentData(item.fk_member_Id, orderItem.productcommit)">留下評論</button></td>
+                  <td><button v-if="item.order_status_Id == 6 && orderItem.comment !== true &&
+                    item.close == true" class="btn btn-primary" :data-bs-toggle="'modal'
+    " :data-bs-target="'#exampleModal2'
+    " @click="prepareCommentData(item.fk_member_Id, orderItem.productcommit, orderItem.id)">留下評論</button></td>
                 </tr>
                 <hr />
                 <tr style="justify-content: center">
@@ -403,7 +404,9 @@
           <div class="modal-body">
             <div class="form-group">
               <label class="form-label">分數:</label>
-              <input type="text" class="form-control" v-model="commentstar" />
+              <!-- <input type="text" class="form-control" v-model="commentstar" /> -->
+              <input class="form-range" type="range" min="0" max="5" step="1" v-model="commentstar"
+                @input="handleInput()" />
             </div>
             <div class="form-group">
               <label class="form-label">評論:</label>
@@ -411,7 +414,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="returncomment()">
               關閉
             </button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="comment()">
@@ -474,6 +477,7 @@ const commentMemberid = ref("");
 const commentProductid = ref("");
 const commentstar = ref("");
 const commentdescription = ref("");
+const commentId = ref("");
 
 const loadGetOrders = async () => {
   const begintimeValue = begintime.value;
@@ -694,11 +698,15 @@ const setchangeIdValue = (paramValue) => {
   retrunId.value = paramValue;
   ChangeOrders();
 };
-const prepareCommentData = async (item, orderItem) => {
+const prepareCommentData = async (item, orderItem, orderitemId) => {
   commentMemberid.value = item;
   commentProductid.value = orderItem;
+  commentId.value = orderitemId;
 };
 const comment = async () => {
+  if (commentstar.value == 0) {
+    commentstar.value = 1;
+  }
   const commentData = {
     memberID: commentMemberid.value,
     productId: commentProductid.value,
@@ -711,6 +719,26 @@ const comment = async () => {
       commentData
     )
     .then((response) => {
+      closecomment();
+      loadGetOrders();
+      commentstar.value = "1";
+      commentdescription.value = "";
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+const handleInput = () => {
+  if (commentstar.value == 0) {
+    commentstar.value = 1;
+  }
+};
+const closecomment = async () => {
+  await axios
+    .put(`https://localhost:7183/api/Orders/fincomment?orderid=${commentId.value}`)
+    .then((response) => {
+      //console.log(response.data);
+      alert(response.data);
       loadGetOrders();
     })
     .catch((error) => {
@@ -778,9 +806,12 @@ const toggleDetails = (itemId) => {
     expandedItems.value.push(itemId);
   }
 };
-
+const returncomment = () => {
+  return;
+}
 onMounted(() => {
   Type.value = 1;
+  commentstar.value = 1;
   flatpickr(".datePicker", {
     enableTime: false,
     maxDate: "today",
@@ -885,5 +916,69 @@ onMounted(() => {
 
 .sceTr {
   padding: 10px;
+}
+
+[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  outline: 0;
+  cursor: pointer;
+  width: calc(var(--number, 5) * 2em);
+  --mask-url: url("data:image/svg+xml,%3Csvg width='12' height='11' viewBox='0 0 12 11' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0l1.693 3.67 4.013.476L8.74 6.89l.788 3.964L6 8.88l-3.527 1.974.788-3.964L.294 4.146l4.013-.476L6 0z'/%3E%3C/svg%3E");
+  --mask: var(--mask-url) repeat-x left / 2em 100%;
+}
+
+[type="range"]::-webkit-slider-runnable-track {
+  background: #f59b00;
+  height: 2em;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+}
+
+[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 0;
+  height: 100%;
+  box-shadow: 999em 0 0 999em #ededef;
+}
+
+[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 999em 0 0 999em #ededef;
+  background: #f59b00;
+}
+
+/* 只展示 */
+[type="range"][readonly] {
+  pointer-events: none;
+}
+
+/* 兼容火狐浏览器 */
+[type=range],
+_::-moz-range-track {
+  appearance: auto;
+}
+
+[type=range],
+_::-moz-range-track {
+  appearance: none;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+  height: 2em;
+}
+
+[type="range"]::-moz-range-track {
+  background: #ededef;
+  height: inherit;
+}
+
+[type="range"]::-moz-range-progress {
+  background: #f59b00;
+  height: inherit;
+}
+
+[type="range"]::-moz-range-thumb {
+  width: 0;
+  opacity: 0;
 }
 </style>
