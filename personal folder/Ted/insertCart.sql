@@ -150,3 +150,11 @@ select CartId
 from ShoppingCarts as sc
 where sc.fk_MemberID = 1
 
+select 
+c.CouponId as Id, c.fk_CouponCategoryId as CouponCategoryId, cs.SendingId, c.CouponName, c.MinimumPurchaseAmount,
+c.DiscountType, c.DiscountValue, cs.StartDate, cs.EndDate 
+from CouponSendings as cs
+inner join Coupons as c on c.CouponId = cs.fk_CouponId
+where cs.fk_MemberId = 1 and RedemptionStatus = 0
+and cs.StartDate <= CURRENT_TIMESTAMP and (cs.EndDate > CURRENT_TIMESTAMP or cs.EndDate is null);
+
