@@ -111,6 +111,11 @@
       >
         登入
       </button>
+      <!-- 我不是機器人 -->
+      <GoogleReCaptchaV2
+        class="from-group mb-3 reCaptchaV2"
+        v-if="unRegistered"
+      ></GoogleReCaptchaV2>
       <div class="forgetPwd" v-if="forgetPwd" @click="forgetPwdClick">
         <a href="#" class="underline">忘記密碼 ?</a>
       </div>
@@ -151,6 +156,8 @@ import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
 
 //google
 import googleLogin from '@/components/user/googleLogin.vue';
+import GoogleReCaptchaV2 from '@/components/user/GoogleReCaptchaV2.vue';
+
 //pinia
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
@@ -501,5 +508,9 @@ p::after {
 
 .arrow:hover {
   color: #bb3e20;
+}
+.reCaptchaV2 {
+  display: flex;
+  justify-content: center;
 }
 </style>
