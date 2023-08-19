@@ -1,7 +1,7 @@
 <template>
-  <div class="returnTop" v-show="goToTop">
-    <a href="#"><i class="bi bi-chevron-up"></i></a>
-  </div>
+  <a class="returnTop" v-show="goToTop" href="#">
+    <i class="bi bi-chevron-up"></i>
+  </a>
 </template>
 
 <script setup>

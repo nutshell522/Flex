@@ -347,13 +347,13 @@ namespace FlexCoreService.Controllers
             Member member = await _db.Members.FirstOrDefaultAsync(x => x.MemberId == favoritesdto.MemberId);
             Product product = await _db.Products.FirstOrDefaultAsync(p => p.ProductId == favoritesdto.ProductId);
 
-            Favorite favorites = new Favorite
-            {
-                fk_memberId= favoritesdto.MemberId,
-                fk_productId= favoritesdto.ProductId
-            };
+            //Favorite favorites = new Favorite
+            //{
+            //    fk_memberId= favoritesdto.MemberId,
+            //    fk_productId= favoritesdto.ProductId
+            //};
 
-            _db.Favorites.Add(favorites);
+            //_db.Favorites.Add(favorites);
             await _db.SaveChangesAsync();
             return Ok("喜愛商品收藏成功");
         }

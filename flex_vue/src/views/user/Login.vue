@@ -120,14 +120,8 @@
     <div>
       <p>或</p>
     </div>
-    <div class="from-group mb-3">
-      <button
-        type="submit"
-        class="btn btn-info googleBtn"
-        @click="ValidatedIdentity"
-      >
-        我是假的google登入
-      </button>
+    <div class="from-group mb-3 registerBtn">
+      <googleLogin></googleLogin>
     </div>
     <div class="secret">
       <div>擁有帳號即表示你同意</div>
@@ -141,8 +135,6 @@
     v-if="forgetPwdSetPwd"
     :email="email"
   ></forgetPwdAndSetPwd>
-  <!-- 收完驗證信重新設定密碼 -->
-  <!-- <resetPwd></resetPwd> -->
 </template>
 
 <script setup>
@@ -150,8 +142,9 @@ import axios from 'axios';
 import navBar from '@/components/home/navBar.vue';
 import { ref, onMounted } from 'vue';
 import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
-// import resetPwd from '@/components/user/resetPwd.vue';
 
+//google
+import googleLogin from '@/components/user/googleLogin.vue';
 //pinia
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
@@ -436,6 +429,8 @@ function forgetPwdClick() {
 
 .registerBtn {
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 p {

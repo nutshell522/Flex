@@ -11,7 +11,6 @@ namespace EFModels.Models
         {
             CustomizedOrderCustomized_EdgeProtectionNavigations = new HashSet<CustomizedOrder>();
             CustomizedOrderCustomized_EyeletNavigations = new HashSet<CustomizedOrder>();
-            CustomizedOrderCustomized_RearNavigations = new HashSet<CustomizedOrder>();
             CustomizedOrderCustomized_ToeNavigations = new HashSet<CustomizedOrder>();
             CustomizedOrderCustomized_TongueNavigations = new HashSet<CustomizedOrder>();
             ShoesGroups = new HashSet<ShoesGroup>();
@@ -22,7 +21,6 @@ namespace EFModels.Models
 
         public virtual ICollection<CustomizedOrder> CustomizedOrderCustomized_EdgeProtectionNavigations { get; set; }
         public virtual ICollection<CustomizedOrder> CustomizedOrderCustomized_EyeletNavigations { get; set; }
-        public virtual ICollection<CustomizedOrder> CustomizedOrderCustomized_RearNavigations { get; set; }
         public virtual ICollection<CustomizedOrder> CustomizedOrderCustomized_ToeNavigations { get; set; }
         public virtual ICollection<CustomizedOrder> CustomizedOrderCustomized_TongueNavigations { get; set; }
         public virtual ICollection<ShoesGroup> ShoesGroups { get; set; }

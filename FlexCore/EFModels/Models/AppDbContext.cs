@@ -35,7 +35,6 @@ namespace EFModels.Models
         public virtual DbSet<Customized_material> Customized_materials { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Discount> Discounts { get; set; }
-        public virtual DbSet<Favorite> Favorites { get; set; }
         public virtual DbSet<JobTitle> JobTitles { get; set; }
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<MemberPoint> MemberPoints { get; set; }
@@ -149,7 +148,7 @@ namespace EFModels.Models
                     .WithMany(p => p.ActivityImgs)
                     .HasForeignKey(d => d.fk_ActivityId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ActivityI__fk_Ac__4F47C5E3");
+                    .HasConstraintName("FK__ActivityI__fk_Ac__3C34F16F");
             });
 
             modelBuilder.Entity<ActivityStatus>(entity =>
@@ -315,17 +314,12 @@ namespace EFModels.Models
                 entity.HasOne(d => d.Customized_EdgeProtectionNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_EdgeProtectionNavigations)
                     .HasForeignKey(d => d.Customized_EdgeProtection)
-                    .HasConstraintName("FK__Customize__Custo__58D1301D");
+                    .HasConstraintName("FK__Customize__Custo__45BE5BA9");
 
                 entity.HasOne(d => d.Customized_EyeletNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_EyeletNavigations)
                     .HasForeignKey(d => d.Customized_Eyelet)
-                    .HasConstraintName("FK__Customize__Custo__57DD0BE4");
-
-                entity.HasOne(d => d.Customized_RearNavigation)
-                    .WithMany(p => p.CustomizedOrderCustomized_RearNavigations)
-                    .HasForeignKey(d => d.Customized_Rear)
-                    .HasConstraintName("FK__Customize__Custo__59C55456");
+                    .HasConstraintName("FK__Customize__Custo__44CA3770");
 
                 entity.HasOne(d => d.Customized_Shoes)
                     .WithMany(p => p.CustomizedOrders)
@@ -335,12 +329,12 @@ namespace EFModels.Models
                 entity.HasOne(d => d.Customized_ToeNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_ToeNavigations)
                     .HasForeignKey(d => d.Customized_Toe)
-                    .HasConstraintName("FK__Customize__Custo__5BAD9CC8");
+                    .HasConstraintName("FK__Customize__Custo__489AC854");
 
                 entity.HasOne(d => d.Customized_TongueNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_TongueNavigations)
                     .HasForeignKey(d => d.Customized_Tongue)
-                    .HasConstraintName("FK__Customize__Custo__5AB9788F");
+                    .HasConstraintName("FK__Customize__Custo__47A6A41B");
 
                 entity.HasOne(d => d.Fk_ForMemberCustomized)
                     .WithMany(p => p.CustomizedOrders)
@@ -424,26 +418,6 @@ namespace EFModels.Models
                     .HasForeignKey(d => d.fk_ProjectTagId)
                     .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_Discount_DiscountGroup");
-            });
-
-            modelBuilder.Entity<Favorite>(entity =>
-            {
-                entity.Property(e => e.fk_productId)
-                    .IsRequired()
-                    .HasMaxLength(254)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.fk_member)
-                    .WithMany(p => p.Favorites)
-                    .HasForeignKey(d => d.fk_memberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Favorites_Members");
-
-                entity.HasOne(d => d.fk_product)
-                    .WithMany(p => p.Favorites)
-                    .HasForeignKey(d => d.fk_productId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Favorites_Favorites");
             });
 
             modelBuilder.Entity<JobTitle>(entity =>
@@ -583,19 +557,19 @@ namespace EFModels.Models
                     .WithMany(p => p.OneToOneReservations)
                     .HasForeignKey(d => d.fk_BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OneToOneR__fk_Br__65370702");
+                    .HasConstraintName("FK__OneToOneR__fk_Br__5224328E");
 
                 entity.HasOne(d => d.fk_ReservationSpeaker)
                     .WithMany(p => p.OneToOneReservations)
                     .HasForeignKey(d => d.fk_ReservationSpeakerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OneToOneR__fk_Re__662B2B3B");
+                    .HasConstraintName("FK__OneToOneR__fk_Re__531856C7");
 
                 entity.HasOne(d => d.fk_ReservationStatus)
                     .WithMany(p => p.OneToOneReservations)
                     .HasForeignKey(d => d.fk_ReservationStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OneToOneR__fk_Re__671F4F74");
+                    .HasConstraintName("FK__OneToOneR__fk_Re__540C7B00");
             });
 
             modelBuilder.Entity<PointHistory>(entity =>
@@ -744,8 +718,6 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ProductComment>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("ProductComment");
 
                 entity.Property(e => e.CreateTime)
@@ -756,16 +728,14 @@ namespace EFModels.Models
                     .IsRequired()
                     .HasMaxLength(1000);
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
                 entity.HasOne(d => d.fk_Member)
-                    .WithMany()
+                    .WithMany(p => p.ProductComments)
                     .HasForeignKey(d => d.fk_MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductComment_Members");
 
                 entity.HasOne(d => d.fk_ProductGroup)
-                    .WithMany()
+                    .WithMany(p => p.ProductComments)
                     .HasForeignKey(d => d.fk_ProductGroupId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductComment_ProductGroups");
@@ -895,6 +865,10 @@ namespace EFModels.Models
             {
                 entity.Property(e => e.退貨日期).HasColumnType("datetime");
 
+                entity.Property(e => e.退貨轉帳帳號)
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.fk訂單Navigation)
                     .WithMany(p => p.Returns)
                     .HasForeignKey(d => d.fk訂單)
@@ -989,7 +963,7 @@ namespace EFModels.Models
                     .WithMany(p => p.ShoesOrders)
                     .HasForeignKey(d => d.fk_ShoesSizeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ShoesOrde__fk_Sh__0C50D423");
+                    .HasConstraintName("FK__ShoesOrde__fk_Sh__793DFFAF");
             });
 
             modelBuilder.Entity<ShoesPicture>(entity =>
@@ -1054,13 +1028,13 @@ namespace EFModels.Models
                 entity.HasOne(d => d.fk_SpeakerBranch)
                     .WithMany(p => p.Speakers)
                     .HasForeignKey(d => d.fk_SpeakerBranchId)
-                    .HasConstraintName("FK__Speakers__fk_Spe__0F2D40CE");
+                    .HasConstraintName("FK__Speakers__fk_Spe__7C1A6C5A");
 
                 entity.HasOne(d => d.fk_SpeakerField)
                     .WithMany(p => p.Speakers)
                     .HasForeignKey(d => d.fk_SpeakerFieldId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Speakers__fk_Spe__10216507");
+                    .HasConstraintName("FK__Speakers__fk_Spe__7D0E9093");
             });
 
             modelBuilder.Entity<SpeakerField>(entity =>
