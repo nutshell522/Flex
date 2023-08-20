@@ -18,7 +18,7 @@ namespace FlexCoreService.CartCtrl.Exts.Coupon_dll
 		{
 			if (cart.TotalPrice > _itemsAmount)
 			{
-				cart.CouponValue = (decimal)cart.TotalPrice * _percentOff / 100;
+				cart.CouponValue = Math.Round((decimal)cart.TotalPrice * _percentOff / 100, MidpointRounding.AwayFromZero);
 				cart.TotalPrice -= cart.CouponValue;
 			}
 		}

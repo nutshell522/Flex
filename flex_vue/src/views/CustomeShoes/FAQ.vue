@@ -100,6 +100,7 @@
 
 <script setup>
 import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
+import homeFooter from "@/components/home/footer.vue";
 </script>
 
 <style>

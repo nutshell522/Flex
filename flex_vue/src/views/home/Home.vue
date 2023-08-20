@@ -71,7 +71,7 @@
         </div>
         <div class="home-product-list">
           <Carousel
-            :items-to-show="3"
+            :items-to-show="4"
             :wrap-around="true"
             ref="hotSalesCarousel"
           >
@@ -99,7 +99,7 @@
         </div>
         <div class="home-product-list">
           <Carousel
-            :items-to-show="3"
+            :items-to-show="4"
             :wrap-around="true"
             ref="newProductsCarousel"
           >
@@ -377,5 +377,20 @@ main {
       }
     }
   }
+}
+
+.vueCarouselBtn {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  border-radius: 50%;
+  background-color: #dbdbdb;
+}
+.vueCarouselBtn:hover {
+  background-color: #ababab;
+}
+
+.vueCarouselBtn:hover .vueCarouselIcon {
+  color: white;
 }
 </style>

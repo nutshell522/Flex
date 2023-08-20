@@ -43,7 +43,7 @@
                 <option
                   v-for="size in shoesDetail.shoesSize"
                   :key="size.sizeId"
-                  :value="size.sizeName"
+                  :value="size"
                 >
                   {{ size.sizeName }}
                 </option>
@@ -90,9 +90,33 @@
                   <span>總金額${{ totalPrice }}</span>
                 </div>
               </div>
-              <div class="col-6 mt-5 ms-6">
-                <button class="form-control">進入客製化頁面</button>
-              </div>
+              <router-link
+                :to="
+                  '/CustomeShoes' +
+                  '/detail/' +
+                  'Customization/' +
+                  shoesProductId
+                "
+                :disabled="isButtonDisabled"
+                @click="navigateToCustomization"
+              >
+                <div class="col-6 mt-5 ms-6">
+                  <button
+                    type="submit"
+                    class="btn btn-primary comenextBtn"
+                    @click="intoOrder"
+                  >
+                    進入客製化頁面
+                  </button>
+                </div>
+                <div class="from-group" v-if="errors.length">
+                  <ul class="mb-3 errorsText">
+                    <span v-for="error in errors" class="text-danger">{{
+                      error
+                    }}</span>
+                  </ul>
+                </div>
+              </router-link>
             </div>
           </div>
         </div>
@@ -187,11 +211,14 @@ const shoesImgs = ref([]);
 const totalPrice = computed(() => {
   return buyQty.value * shoesDetail.value.shoesUnitPrice;
 });
+const errors = ref([]);
+const shoesProductId = route.params.shoesProductId;
 
 const handleSizeChange = () => {
   console.log("Selected size changed:", selectedSize.value);
 };
 
+//抓api資料
 let getData = async () => {
   try {
     const response = await axios.get(
@@ -208,6 +235,7 @@ let getData = async () => {
   }
 };
 
+//抓api資料(圖片)
 let getImgs = async () => {
   await axios
     .get(`${baseAddress}api/CustomeShoes/Imgs/${route.params.shoesProductId}`)
@@ -220,6 +248,7 @@ let getImgs = async () => {
     });
 };
 
+//商品數量的增減事件
 let handleQyt = (event) => {
   buyQty.value = event.target.value.replace(/\D/g, "");
   if (buyQty.value <= 1) {
@@ -246,10 +275,52 @@ let incrementProductQty = () => {
   }
 };
 
+//啟用方法
 onMounted(() => {
   getData();
   getImgs();
 });
+//塞入數量及尺寸到資料庫
+const orderUri = `${baseAddress}api/CustomeShoes/EnterCustomerChoose`;
+var orderData = {};
+
+function intoOrder() {
+  if (selectedSize.value.sizeId === undefined) {
+    //todo檢查有沒有選擇size
+    errors.value = [];
+    errors.value.push("Size還未選擇，請先選擇");
+  } else {
+    errors.value = [];
+    orderData.fk_ShoesSizeId = selectedSize.value.sizeId;
+    orderData.qty = buyQty.value;
+    orderData.remark = "";
+    console.log(orderData);
+    axios
+      .post(orderUri, orderData)
+      .then((res) => {
+        orderData = res.data;
+      })
+      .catch((error) => {
+        console.error("POST request error:", error);
+      });
+  }
+}
+
+const isButtonDisabled = computed(() => {
+  return selectedSize.value.sizeId === undefined;
+});
+
+const navigateToCustomization = () => {
+  if (selectedSize.value.sizeId === undefined) {
+    // 如果尺寸沒選擇，就不跳下個頁面
+    errors.value = [];
+    errors.value.push("Size還未選擇，請先選擇");
+  } else {
+    errors.value = [];
+    const routePath = `/CustomeShoes/detail/Customization/${shoesProductId}`;
+    router.push(routePath);
+  }
+};
 </script>
 
 <style>

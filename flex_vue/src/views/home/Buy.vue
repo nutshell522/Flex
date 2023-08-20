@@ -91,11 +91,12 @@
             <!-- 付款 -->
             <div id="step-3-area" class="step-area">
               <h2>使用優惠券?</h2>
-              <a href="javascript:;" class="choose-coupon">選擇優惠券</a>
-              <p class="show-coupon-info"></p>
-              <input type="hidden" name="coupon-id" />
+              <a @click="showCouponAreaEventHandler" href="javascript:;" class="choose-coupon">選擇優惠券</a>
+              <div class="used-coupon">
+                <p v-if="cart?.coupon" class="show-coupon-info">{{ cart.coupon.name }}，折抵{{ cart?.couponValue }} 元</p>
+              </div>
               <h2>付款方式</h2>
-              <input type="hidden" name="payment-method" id="payment-method" />
+              <input type="hidden" name="payment-method" id="payment-method" value="credit-card" />
               <div class="pay-by-select">
                 <div class="pay-by-btn active" data-value="credit-card">
                   <i class="bi bi-credit-card"></i>
@@ -175,72 +176,91 @@
         <div class="buy-summary col-12 col-lg-5">
           <div>
             <h2>訂單摘要</h2>
-            <div>
-              <div>運費</div>
-              <div></div>
+            <div class="d-flex">
+              <div class="me-auto">運費</div>
+              <div>{{ cart?.deliveryFee }}</div>
             </div>
-            <div>
-              <div>總計</div>
-              <div></div>
+            <hr>
+            <div class="d-flex">
+              <div class="me-auto">總計</div>
+              <div>{{ cart?.totalPrice }}</div>
             </div>
           </div>
-          <div>
+          <div class="order-item-area">
             <h2>訂單詳情</h2>
             <ul>
-              <li>
-                <div class="item-img-wrapper"></div>
-                <div class="item-info"></div>
+              <li v-if="cart" v-for="item in cart.cartItems" :key="item.cartItemId" class="d-flex">
+                <div class="item-img-wrapper"><img :src="imgBaseUrl + 'Public/Img/' + item.product.imgPath" alt=""></div>
+                <div class="item-info">
+                  <div>{{ item.product.productName }}</div>
+                  <div>{{ item.product.salesCategoryNameStr }}</div>
+                  <div>{{ item.qty }}</div>
+                  <div>{{ item.product.size }}</div>
+                  <div>{{ item.product.color }}</div>
+                  <div>{{ item.subTotal }}</div>
+                  <ul class="d-flex">
+                    <li v-for="matchDiscount in item.product.matchDiscounts" :key="matchDiscount.discountId">{{
+                      matchDiscount.discountName }}</li>
+                  </ul>
+                </div>
               </li>
             </ul>
           </div>
         </div>
       </div>
     </div>
-  </main>
-  <div id="coupon-area-bg">
-    <div id="coupon-area">
-      <i class="bi bi-x"></i>
-      <div id="coupon-header">
-        <h2 class="me-auto">使用優惠券</h2>
-        <span>可選擇一張</span>
-      </div>
-      <ul class="coupon-list">
-        <li v-if="coupons.length != 0" v-for="coupon in coupons" :key="coupon.sendingId"
-          :class="['coupon-item', { 'disabled': cart && coupon.discountType == 2 && cart.deliveryFee == 0 && (!cart.coupon?.discountType || cart.coupon.discountType != 2) }]"
-          :data-id="coupon.sendingId">
-          <div class="coupon-body">
-            <div class="coupon-discount-box">
-              <div v-if="coupon.discountType == 2" class="coupon-discount"> 免運費 </div>
-              <div v-else-if="coupon.discountType == 1" class="coupon-discount"> {{ 100 - coupon.discountValue }}折 </div>
-              <div v-else-if="coupon.discountType == 0" class="coupon-discount"> {{ coupon.discountValue }}元 </div>
-            </div>
-            <div class="coupon-info">
-              <div class="d-flex">
-                <h3 class="me-auto">{{ coupon.couponName }}</h3>
-                <div
-                  v-if="cart && coupon.discountType == 2 && cart.deliveryFee == 0 && (!cart.coupon?.discountType || cart.coupon.discountType != 2)"
-                  class="danger-info text-danger">無法使用 已達免運標準</div>
+    <div @click.self="hideCouponAreaEventHandler" id="coupon-area-bg" :class="{ active: isActive }">
+      <div id="coupon-area">
+        <i @click="hideCouponAreaEventHandler" class="bi bi-x"></i>
+        <div id="coupon-header">
+          <h2 class="me-auto">使用優惠券</h2>
+          <span>可選擇一張</span>
+        </div>
+        <ul class="coupon-list">
+          <li v-if="coupons.length != 0" v-for="coupon in coupons" :key="coupon.sendingId"
+            :class="['coupon-item', { 'disabled': cart && coupon.discountType == 2 && cart.deliveryFee == 0 && (!cart.coupon?.discountType || cart.coupon.discountType != 2) }]"
+            :data-id="coupon.sendingId" @click="selectCouponEventHandler">
+            <div class="coupon-body">
+              <div class="coupon-discount-box">
+                <div v-if="coupon.discountType == 2" class="coupon-discount"> 免運費 </div>
+                <div v-else-if="coupon.discountType == 1" class="coupon-discount"> {{ coupon.discountValue
+                  % 10 == 0 ? 10 - coupon.discountValue / 10 : 100 - coupon.discountValue }}折 </div>
+                <div v-else-if="coupon.discountType == 0" class="coupon-discount"> {{ coupon.discountValue }}元 </div>
               </div>
-              <div class="d-flex">
-                <div class="description">滿 {{ coupon.minimumPurchaseAmount }} 元可用</div>
-              </div>
+              <div class="coupon-info">
+                <div class="d-flex">
+                  <h3 class="me-auto">{{ coupon.couponName }}</h3>
+                  <div
+                    v-if="cart && coupon.discountType == 2 && cart.deliveryFee == 0 && (!cart.coupon?.discountType || cart.coupon.discountType != 2)"
+                    class="danger-info text-danger">無法使用 已達免運標準</div>
+                </div>
+                <div class="d-flex">
+                  <div class="description">滿 {{ coupon.minimumPurchaseAmount }} 元可用</div>
+                </div>
 
-              <div class="coupon-date-limit">使用期間 {{ coupon.startDateStr }} ~ {{ coupon.endDateStr }}</div>
+                <div class="coupon-date-limit">使用期間 {{ coupon.startDateStr }} ~ {{ coupon.endDateStr }}</div>
+              </div>
             </div>
-          </div>
-        </li>
-        <li v-else class="w-100 h-100 d-flex justify-content-center align-items-center fs-4 text-gray">
-          無可使用的優惠券
-        </li>
-      </ul>
+          </li>
+          <li v-else class="w-100 h-100 d-flex justify-content-center align-items-center fs-4 text-gray">
+            無可使用的優惠券
+          </li>
+        </ul>
+        <div class="d-flex px-5">
+          <div class="me-auto"></div>
+          <button class="btn btn-secondary mt-4 me-3">不使用優惠券</button>
+          <button @click="couponComfirmEventHandler" id="coupon-comfirm-btn" class="btn btn-primary mt-4"
+            disabled>確定</button>
+        </div>
+      </div>
     </div>
-  </div>
+  </main>
 </template>
     
 <script setup lang='ts'>
 import axios from "axios";
 import { Input } from "postcss";
-import { ref, onMounted, onUpdated, computed } from "vue";
+import { ref, onMounted, onUpdated, onUnmounted, computed } from "vue";
 import { ShoppingCart, Member, Coupon } from "@/types/type";
 import { storeToRefs } from "pinia";
 import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
@@ -252,11 +272,13 @@ const memberId = getApiStore.getMemberId;
 const cart = ref<ShoppingCart>();
 const member = ref<Member>();
 const coupons = ref<Coupon[]>([]);
+const imgBaseUrl = ref(baseAddress);
 const addresses = ref({
   commonAddress: "",
   alternateAddress1: "",
   alternateAddress2: "",
 });
+const isActive = ref(false);
 
 //
 const loadCart = async (callback?: () => Promise<void>): Promise<void> => {
@@ -285,6 +307,7 @@ const loadMember = async (): Promise<void> => {
         cart.value.checkoutData.contactInfo.email = response.data.email;
         cart.value.checkoutData.contactInfo.phone = response.data.mobile;
         cart.value.checkoutData.contactInfo.postalCode = "";
+        cart.value.memberId = response.data.memberId;
       }
 
       addresses.value.commonAddress = response.data.commonAddress;
@@ -297,9 +320,6 @@ const loadMember = async (): Promise<void> => {
 };
 
 const loadCoupons = async (): Promise<void> => {
-  let requestData = {
-    memberId: 1,
-  };
   let url: string = `${baseAddress}api/Cart/GetMemberAllCoupons`;
   await axios
     .post<Coupon[]>(url, 1, {
@@ -393,10 +413,81 @@ function hideAddressBoxEventHandler() {
   const addressBox = document.querySelector("#address-box")!;
   addressBox.classList.remove("active");
 }
-function toggleAddressBoxEventHandler() {
+const toggleAddressBoxEventHandler = () => {
   const addressBox = document.querySelector("#address-box")!;
   addressBox.classList.toggle("active");
 }
+
+const showCouponAreaEventHandler = () => {
+  isActive.value = true;
+  toggleActive();
+}
+function hideCouponAreaEventHandler() {
+  isActive.value = false;
+  toggleActive();
+}
+
+const toggleActive = () => {
+  if (isActive.value) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+};
+
+const clearCouponSelected = (items: NodeListOf<Element>) => {
+  items.forEach(item => {
+    item.classList.remove('selected');
+  })
+}
+
+const selectCouponEventHandler = (event: MouseEvent) => {
+  const couponItems = document.querySelectorAll('.coupon-item');
+  const couponBtn = document.querySelector('#coupon-comfirm-btn') as HTMLButtonElement;
+  if ((event.currentTarget as HTMLElement).classList.contains('disabled')) {
+    return;
+  }
+  clearCouponSelected(couponItems);
+  (event.currentTarget as HTMLElement).classList.add('selected');
+  couponBtn.disabled = (document.querySelectorAll('.selected').length != 1);
+};
+
+const couponComfirmEventHandler = () => {
+  const dataId = document.querySelector('.selected')?.getAttribute('data-id') as string;
+  const couponId = parseInt(dataId);
+  let request: object = {};
+  const cartItemIds: number[] = [];
+  if (cart.value) {
+    cart.value.cartItems.forEach(item => {
+      cartItemIds.push(item.cartItemId);
+    });
+    request = {
+      MemberId: cart.value.memberId,
+      CartItemIds: cartItemIds,
+      CouponId: couponId,
+    };
+    cart.value.coupon = new Coupon();
+    cart.value.coupon.sendingId = couponId;
+    console.log(request);
+  }
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+  axios.post<ShoppingCart>(`${baseAddress}api/Cart/LoadCartAndCoupon`, request, { headers }).then(response => {
+    if (cart.value) {
+      cart.value.coupon = response.data.coupon;
+      cart.value.couponValue = response.data.couponValue;
+      cart.value.deliveryFee = response.data.deliveryFee;
+      cart.value.totalPrice = response.data.totalPrice;
+      console.log(cart.value.coupon);
+
+    }
+    hideCouponAreaEventHandler()
+  }).catch(error => {
+    console.error(error);
+  })
+}
+
 class FlexCheckoutProcess {
   private _step = 0;
   private _stepAreas = document.querySelectorAll(".step-area");
@@ -557,9 +648,11 @@ class FlexCheckoutProcess {
     });
   }
 }
+loadCart(loadMember);
+loadCoupons();
 
 onMounted(() => {
-  loadCart(loadMember);
+
   const nextStepBtn2 = document.querySelector("#next-step-btn-2");
   nextStepBtn2?.addEventListener("click", updateBillingAddressFromContactInfo);
 
@@ -570,8 +663,6 @@ onMounted(() => {
     event.stopPropagation();
     toggleAddressBoxEventHandler();
   });
-  loadCoupons();
-  console.log(coupons.value.length);
 
 });
 
@@ -597,6 +688,8 @@ onUpdated(() => {
       hideAddressBoxEventHandler();
     });
   });
+
+
 });
 </script>
     
@@ -764,6 +857,17 @@ main {
             font-size: 18px;
           }
 
+          .used-coupon {
+            height: 50px;
+            display: flex;
+            align-items: center;
+
+            .show-coupon-info {
+              padding: 0;
+
+            }
+          }
+
           .show-coupon-info {
             height: 18px;
             font-size: 18px;
@@ -840,7 +944,20 @@ main {
   width: 100vw;
   height: 100vh;
   z-index: 9999;
-  background-color: rgba($color: #000, $alpha: 0.5);
+  background: rgba($color: #000, $alpha: 0);
+  visibility: hidden;
+  transition: background .3s;
+
+  &.active {
+    visibility: visible;
+    background: rgba($color: #000, $alpha: 0.5);
+
+    &>#coupon-area {
+      height: 80vh;
+      min-height: 400px;
+      max-height: 700px;
+    }
+  }
 
   #coupon-area {
     position: relative;
@@ -848,10 +965,9 @@ main {
     width: 700px;
     left: calc((100% - 700px) / 2);
     top: 10%;
-    height: 80vh;
-    min-height: 400px;
-    max-height: 700px;
     overflow: hidden;
+    transition: .3s;
+    max-height: 0;
 
     .bi-x {
       position: absolute;
@@ -894,69 +1010,76 @@ main {
       overflow-x: hidden;
       overflow-y: scroll;
       padding: 0;
-    }
 
-    .text-gray {}
-
-    .coupon-item {
-      border: 3px rgba($color: #000000, $alpha: 0) dashed;
-      margin: 3px 0 0 8px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 130px;
-
-      &:not(.disabled) {
-        cursor: pointer;
-
-        &.selected {
-          border-color: #9bf;
-        }
+      .text-gray {
+        color: #999;
+        font-weight: 500;
       }
 
-      .coupon-body {
+      .coupon-item {
+        border: 3px rgba($color: #000000, $alpha: 0) dashed;
+        margin: 3px 0 0 8px;
         display: flex;
-        width: 98%;
-        height: 90%;
-        border: 2px solid blue;
+        justify-content: center;
+        align-items: center;
+        height: 130px;
 
-        .coupon-discount-box {
-          border-right: 1px dashed blue;
-          width: 110px;
-          height: 100%;
-          padding: 8px;
+        &:not(.disabled) {
+          cursor: pointer;
 
-          .coupon-discount {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid blue;
+          &.selected {
+            border-color: #9bf;
           }
         }
 
-        .coupon-info {
+        &.disabled {
+          opacity: 0.4;
+        }
+
+        .coupon-body {
           display: flex;
-          justify-content: center;
-          flex-direction: column;
-          padding-left: 20px;
+          width: 98%;
+          height: 90%;
+          border: 2px solid blue;
 
-          h3 {
-            font-size: 20px;
+          .coupon-discount-box {
+            border-right: 1px dashed blue;
+            width: 110px;
+            height: 100%;
+            padding: 8px;
+
+            .coupon-discount {
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border: 1px solid blue;
+            }
           }
 
-          .description {
-            color: #eee;
-            background-color: #333;
-            padding: 0 20px;
-            border-radius: 50px;
-          }
+          .coupon-info {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding-left: 20px;
 
-          .coupon-date-limit {
-            color: red;
-            margin-top: 3px;
-            font-size: 15px;
+            h3 {
+              font-size: 20px;
+            }
+
+            .description {
+              color: #eee;
+              background-color: #333;
+              padding: 0 20px;
+              border-radius: 50px;
+            }
+
+            .coupon-date-limit {
+              color: red;
+              margin-top: 3px;
+              font-size: 15px;
+            }
           }
         }
       }

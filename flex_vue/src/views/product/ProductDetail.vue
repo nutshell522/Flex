@@ -344,7 +344,7 @@
             </button>
           </div>
           <Carousel
-            :items-to-show="3"
+            :items-to-show="4"
             :wrap-around="true"
             ref="similarCarousel"
           >

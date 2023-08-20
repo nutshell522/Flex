@@ -3,7 +3,61 @@
     <ShoesnavBar></ShoesnavBar>
     <div class="container-body">
       <div class="row">
-        <div class="col-6 ps-5">
+        <div class="dscene col-6">
+          <div class="sketchfab-embed-wrapper">
+            <iframe
+              title="shoes FILA 1"
+              frameborder="0"
+              allowfullscreen
+              mozallowfullscreen="true"
+              webkitallowfullscreen="true"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              xr-spatial-tracking
+              execution-while-out-of-viewport
+              execution-while-not-rendered
+              web-share
+              width="800"
+              height="800"
+              src="https://sketchfab.com/models/b55a3d57f34847fc92f32d28d53684b4/embed"
+            >
+            </iframe>
+            <p
+              style="
+                font-size: 13px;
+                font-weight: normal;
+                margin: 5px;
+                color: #4a4a4a;
+              "
+            >
+              <a
+                href="https://sketchfab.com/3d-models/shoes-fila-1-b55a3d57f34847fc92f32d28d53684b4?utm_medium=embed&utm_campaign=share-popup&utm_content=b55a3d57f34847fc92f32d28d53684b4"
+                target="_blank"
+                rel="nofollow"
+                style="font-weight: bold; color: #1caad9"
+              >
+                shoes FILA 1
+              </a>
+              by
+              <a
+                href="https://sketchfab.com/thunk3d.scanner?utm_medium=embed&utm_campaign=share-popup&utm_content=b55a3d57f34847fc92f32d28d53684b4"
+                target="_blank"
+                rel="nofollow"
+                style="font-weight: bold; color: #1caad9"
+              >
+                thunk3d.scanner
+              </a>
+              on
+              <a
+                href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=b55a3d57f34847fc92f32d28d53684b4"
+                target="_blank"
+                rel="nofollow"
+                style="font-weight: bold; color: #1caad9"
+                >Sketchfab</a
+              >
+            </p>
+          </div>
+        </div>
+        <div class="part col-6 ps-5">
           <div class="row" style="min-height: 129px">
             <div class="col-7 detailTitle" :title="shoesChoose.shoesName">
               {{ shoesChoose.shoesName }}
@@ -101,6 +155,9 @@
         </div>
       </div>
     </div>
+    <div v-if="showToast" class="toast">
+      {{ toastMessage }}
+    </div>
   </div>
   <div class="row mt-5">
     <div class="col-12">
@@ -181,7 +238,10 @@ const totalPrice = computed(() => {
 });
 
 const newFields = ref([]);
+const showToast = ref(false);
+const toastMessage = ref("");
 
+//客製化選項的下拉清單
 const addNewFields = () => {
   if (newFields.value.length < 15) {
     const newOption = {
@@ -189,6 +249,14 @@ const addNewFields = () => {
       value: "",
       options: shoesChoose.value.shoesOptions,
     };
+
+    const existingNames = newFields.value.map((field) => field.value);
+    if (existingNames.includes(newOption.value)) {
+      showToastMessage(
+        "Duplicate value detected. Please choose a different value."
+      );
+      return;
+    }
 
     newFields.value.push(newOption);
     newFields.value.push({
@@ -210,12 +278,25 @@ const addNewFields = () => {
   }
 };
 
+//移除選項的按鈕
 const removeAllFields = () => {
   if (newFields.value.length >= 3) {
     newFields.value.splice(newFields.value.length - 3, 3);
   }
 };
 
+//錯誤訊息
+const showToastMessage = (message) => {
+  toastMessage.value = message;
+  showToast.value = true;
+  console.log("Show toast");
+  setTimeout(() => {
+    showToast.value = false;
+    console.log("Hide toast");
+  }, 3000);
+};
+
+//變更下拉清單的事件
 const onChange = (index) => {
   handleNewFieldChange(index);
 };
@@ -224,6 +305,7 @@ const handleNewFieldChange = (index) => {
   console.log(`New Field ${index} changed:`, newFields.value[index].value);
 };
 
+//抓api資料
 const getData = async () => {
   try {
     const response = await axios.get(
@@ -238,6 +320,7 @@ const getData = async () => {
   }
 };
 
+//啟用方法
 onMounted(() => {
   getData();
 });
@@ -257,5 +340,18 @@ textarea {
   max-height: 200px;
   color: #000;
   letter-spacing: 1px;
+}
+
+.dscene {
+  width: 800px;
+  height: 800px;
+  margin-left: auto;
+  margin-top: auto;
+}
+
+.part {
+  width: 800px;
+  height: 800px;
+  margin-right: auto;
 }
 </style>
