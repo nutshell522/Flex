@@ -2,6 +2,6 @@
 {
     public class OrderDetailDTO
     {
-        public string TradeDesc { get; set; }
+        public string ActivityName { get; set; }
     }
 }

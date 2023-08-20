@@ -40,7 +40,7 @@
             <br>
             <div class="mb-3">
                 
-                <p>本人 {{member.name}} 謹此聲明，自願參加貴單位舉辦的{{orderInfo.ItemName}}，並願意遵守以下所有條款與約定。在此，本人郑重承諾遵守本切結書所規定的所有規定與要求，並將全力配合活動主辦方的運作。
+                <p>本人 {{member.name}} 謹此聲明，自願參加貴單位舉辦的{{payInfo.ItemName}}，並願意遵守以下所有條款與約定。在此，本人郑重承諾遵守本切結書所規定的所有規定與要求，並將全力配合活動主辦方的運作。
                     <br>
 
     健康安全：本人保證自身身體狀況良好，並無任何潛在的傳染病或感染風險。若本人在活動期間出現任何症狀或發現任何健康風險，將立即通報活動主辦單位。
@@ -78,7 +78,7 @@
             <input type="text" name="PaymentType" :value="payInfo.PaymentType">
             <input type="text" name="TotalAmount" :value="payInfo.TotalAmount">
             <input type="text" name="TradeDesc" :value="payInfo.TradeDesc">
-            <input type="text" name="ItemName" :value="orderInfo.ItemName">
+            <input type="text" name="ItemName" :value="payInfo.ItemName">
             <input type="text" name="ReturnURL" :value="payInfo.ReturnURL">
             <input type="text" name="ChoosePayment" :value="payInfo.ChoosePayment">
             <input type="text" name="EncryptType" :value="payInfo.EncryptType">
@@ -115,7 +115,7 @@ const payInfo = reactive({
     PaymentType:"",
     TotalAmount:"",
     TradeDesc:"",
-    // ItemName:"",
+    ItemName:"",
     ReturnURL:"",
     ChoosePayment:"",
     EncryptType:"",
@@ -124,9 +124,9 @@ const payInfo = reactive({
     OrderResultURL:""
 })
 
-const orderInfo = reactive({
-    ItemName:""
-})
+// const orderInfo = reactive({
+//     ItemName:""
+// })
 
 
 const member = reactive({
@@ -175,7 +175,7 @@ onMounted(()=>{
 
 
 //從後端得到綠界需要的參數資訊
-axios.get(`https://localhost:7183/api/Payment`)
+axios.get(`https://localhost:7183/api/Payment/${activityId}`)
 
     .then(res=>{
 
@@ -189,7 +189,7 @@ axios.get(`https://localhost:7183/api/Payment`)
         payInfo.MerchantTradeDate = payresult.MerchantTradeDate;
         payInfo.PaymentType = payresult.PaymentType;
         payInfo.TradeDesc = payresult.TradeDesc;
-        // payInfo.ItemName = payresult.ItemName;
+        payInfo.ItemName = payresult.ItemName;
         payInfo.ReturnURL = payresult.ReturnURL;
         payInfo.ChoosePayment = payresult.ChoosePayment;
         payInfo.EncryptType = payresult.EncryptType;
@@ -203,16 +203,16 @@ axios.get(`https://localhost:7183/api/Payment`)
     })
 
    
-    axios.get(`https://localhost:7183/api/Activity/${activityId}`)
-    .then(res=>{
-        const activityInfo = res.data;
-        orderInfo.ItemName = activityInfo.activityName;
-        // console.log(activityInfo);
-        // payInfo.TotalAmount = activityInfo.activitySalePrice;
-    })
-    .catch(err=>{
-        console.log(err);
-    })
+    // axios.get(`https://localhost:7183/api/Activity/${activityId}`)
+    // .then(res=>{
+    //     const activityInfo = res.data;
+    //     orderInfo.ItemName = activityInfo.activityName;
+    //     // console.log(activityInfo);
+    //     // payInfo.TotalAmount = activityInfo.activitySalePrice;
+    // })
+    // .catch(err=>{
+    //     console.log(err);
+    // })
 
 
 
@@ -230,10 +230,9 @@ axios.get(`https://localhost:7183/api/Payment`)
             MerchantTradeDate:payInfo.MerchantTradeDate,
             PaymentType:payInfo.PaymentType,
             CheckMacValue:payInfo.CheckMacValue,
-            // ItemName:payInfo.ItemName,
-            ItemName:orderInfo.ItemName,
+            ItemName:payInfo.ItemName,
             TradeDesc:payInfo.TradeDesc,
-            ActivityId:activityId.value 
+            ActivityId:activityId 
         };
         console.log(formData);
         //把訂單資訊傳給後端進資料庫

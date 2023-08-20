@@ -16,21 +16,24 @@ namespace FlexCoreService.Controllers
     {
         private AppDbContext _db;
         private PaymentDPRepository _repo;
+        private ActivityDPRepository _actRepo;
         private IConfiguration _configuration;
-        public PaymentController(AppDbContext context, PaymentDPRepository repo, IConfiguration configuration)
+        public PaymentController(AppDbContext context, PaymentDPRepository repo, IConfiguration configuration, ActivityDPRepository actRepo)
         {
             _db = context;
             _repo = repo;
             _configuration = configuration;
+            _actRepo = actRepo;
         }
 
-        [HttpGet]
-        public Dictionary<string, string> MakePayment()
+        [HttpGet("{id}")]
+        public Dictionary<string, string> MakePayment(int id)
         {
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
             var website = $"https://localhost:7183";
 
-
+            var activityInfo = _actRepo.GetActivityInfo(id) ;
+            
 
             var order = new Dictionary<string, string>
             {
@@ -38,9 +41,9 @@ namespace FlexCoreService.Controllers
                 { "MerchantTradeNo", orderId }, //訂單編號
                 { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") }, //交易時間
                 { "PaymentType", "aio" }, //交易類型，固定填aio
-                { "TotalAmount", "52777" }, //金額
-                { "TradeDesc", "我大綠界終於串完啦" },//交易描述
-                { "ItemName", "綠界串完要環遊世界啦" },//品名
+                { "TotalAmount", activityInfo.ActivitySalePrice.ToString() }, //金額
+                { "TradeDesc", "Flex活動報名" },//交易描述
+                { "ItemName", activityInfo.ActivityName },//品名
                 { "ReturnURL",  $"https://localhost:7183/api/Payment/addPayInfo/{orderId}"}, //付款完成通知回傳網址
                 { "ChoosePayment", "ALL" }, //預設付款方式
                 { "EncryptType", "1" },//CheckMacValue加密類型，固定填1
@@ -121,7 +124,7 @@ namespace FlexCoreService.Controllers
             var tradeNo = info.TradeNo;
 
             OrderDetailDTO result = _repo.GetTradeDesc(tradeNo);
-            string tradeDesc = result.TradeDesc;
+            string tradeDesc = result.ActivityName;
             string encodedString = HttpUtility.UrlEncode(tradeDesc);
             //return Ok(tradeDesc);
 

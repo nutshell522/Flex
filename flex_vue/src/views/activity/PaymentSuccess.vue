@@ -26,7 +26,7 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const tradeAmt = ref(route.params.TradeAmt);
 const tradeNo = ref(route.params.TradeNo);
-const tradeDesc = ref(route.params.TradeDesc);
+const tradeDesc = ref(route.params.ActivityName);
 
 
 

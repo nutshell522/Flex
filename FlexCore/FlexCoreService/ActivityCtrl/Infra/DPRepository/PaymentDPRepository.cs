@@ -39,13 +39,16 @@ namespace FlexCoreService.ActivityCtrl.Infra.DPRepository
 
         public OrderDetailDTO GetTradeDesc (string tradeNo)
         {
-            string sql = @"select TradeDesc
+            string sql = @"select ActivityName
 from EcpayOrders
+Join Activities
+On EcpayOrders.ItemId = Activities.ActivityId
 WHERE TradeNo = @tradeNo";
 
             using (var conn = new SqlConnection(_connStr))
             {
-                return conn.QueryFirstOrDefault< OrderDetailDTO>(sql, new { tradeNo });
+                var result = conn.QueryFirstOrDefault< OrderDetailDTO>(sql, new { tradeNo });
+                return result;
             }
         }
     }
