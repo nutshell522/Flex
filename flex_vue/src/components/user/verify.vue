@@ -26,9 +26,6 @@
         <label for="">為了保障您的資料安全， 必須再次填入密碼驗證。</label>
       </div>
     </div>
-    <button type="button">
-      <i class="bi bi-plus-square-fill icon-size" @click="closeBtn"></i>
-    </button>
   </div>
 </template>
 

@@ -6,6 +6,7 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router/index';
 import vue3GoogleLogin from 'vue3-google-login';
+import coupon from 'v-coupon';
 
 const pinia = createPinia();
 const CLIENT_ID =
@@ -16,4 +17,5 @@ createApp(App)
   .use(router)
   .use(pinia) // 使用 Pinia
   .use(vue3GoogleLogin, { clientId: CLIENT_ID })
+  .use(coupon)
   .mount('#app');

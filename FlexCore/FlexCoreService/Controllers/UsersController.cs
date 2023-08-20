@@ -226,8 +226,7 @@ namespace FlexCoreService.Controllers
             member.Mobile = prodto.Mobile;
             member.Gender = prodto.Gender;
             member.Birthday = prodto.Birthday;
-            member.CommonAddress = prodto.CommonAddress;
-            member.EncryptedPassword= prodto.EncryptedPassword;
+            member.CommonAddress = prodto.CommonAddress;            
             member.IsSubscribeNews = prodto.IsSubscribeNews;
 
             //AlternateAddress 
@@ -270,6 +269,39 @@ namespace FlexCoreService.Controllers
 
             //跳更新成功回到本頁
             return Ok("編輯會員資料成功");
+        }
+
+        /// <summary>
+        /// 更新密碼
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        [HttpPut("UpdatePwd")]
+        public async Task<ActionResult<string>> UpdatePassword(int id, ProfileDto prodto)
+        {
+            Member member = await _db.Members.FindAsync(id); //FindAsync 根據主键查找對應的紀錄
+
+            if (member == null)
+            {
+                return NotFound("找不到對應的會員資料");
+            }
+            member.EncryptedPassword = prodto.EncryptedPassword;
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MemberExists(id))
+                {
+                    return "更新密碼失敗!";
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return Ok("更新密碼成功");
         }
 
         /// <summary>
