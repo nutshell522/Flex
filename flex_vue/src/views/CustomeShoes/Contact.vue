@@ -152,14 +152,14 @@
   <homeFooter></homeFooter>
 </template>
 <script setup>
-  import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
-  
-  document.addEventListener('DOMContentLoaded', function() {
-  const phoneNumberInput = document.getElementById('phonenumber');
+import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 
-  phoneNumberInput.addEventListener('input', function (event) {
+document.addEventListener("DOMContentLoaded", function () {
+  const phoneNumberInput = document.getElementById("phonenumber");
+
+  phoneNumberInput.addEventListener("input", function (event) {
     const input = event.target.value;
-    const numericInput = input.replace(/\D/g, ''); // Remove non-numeric characters
+    const numericInput = input.replace(/\D/g, ""); // Remove non-numeric characters
 
     if (numericInput.length > 10) {
       phoneNumberInput.value = numericInput.slice(0, 10); // Truncate to 10 digits
@@ -186,7 +186,7 @@ body {
   text-align: center;
   margin: 0 auto;
   padding-top: 40px;
-  font: 300 60px 'Oswald', sans-serif;
+  font: 300 60px "Oswald", sans-serif;
   color: black;
   text-transform: uppercase;
   letter-spacing: 6px;
@@ -194,7 +194,7 @@ body {
 
 .section-header2 {
   text-align: center;
-  font: 150 30px 'Oswald', sans-serif;
+  font: 150 30px "Oswald", sans-serif;
   color: black;
   text-transform: uppercase;
   letter-spacing: 6px;
@@ -214,7 +214,7 @@ body {
 .form-horizontal {
   /*float: left;*/
   max-width: 400px;
-  font-family: 'Lato';
+  font-family: "Lato";
   font-weight: 400;
 }
 
@@ -232,17 +232,17 @@ textarea::placeholder {
   opacity: 0.7;
 }
 
-input[type='text']::placeholder {
+input[type="text"]::placeholder {
   color: #bbb;
   opacity: 0.8;
 }
 
-input[type='tel']::placeholder {
+input[type="tel"]::placeholder {
   color: #bbb;
   opacity: 0.8;
 }
 
-input[type='email']::placeholder {
+input[type="email"]::placeholder {
   color: #bbb;
   opacity: 0.8;
 }
@@ -269,7 +269,7 @@ input[type='email']::placeholder {
 .send-text {
   display: block;
   margin-top: 10px;
-  font: 700 12px 'Lato', sans-serif;
+  font: 700 12px "Lato", sans-serif;
   letter-spacing: 2px;
   color: black;
 }
@@ -308,7 +308,7 @@ input[type='email']::placeholder {
 }
 
 .contact-text {
-  font: 300 18px 'Lato', sans-serif;
+  font: 300 18px "Lato", sans-serif;
   letter-spacing: 1.9px;
   color: #bbb;
 }
@@ -365,7 +365,7 @@ input[type='email']::placeholder {
 }
 
 .social-media-list li:after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -393,7 +393,7 @@ input[type='email']::placeholder {
 }
 
 .copyright {
-  font: 200 14px 'Oswald', sans-serif;
+  font: 200 14px "Oswald", sans-serif;
   color: #555;
   letter-spacing: 1px;
   text-align: center;

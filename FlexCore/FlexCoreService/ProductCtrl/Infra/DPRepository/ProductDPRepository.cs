@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EFModels.Models;
 using FlexCoreService.ProductCtrl.Interface;
 using FlexCoreService.ProductCtrl.Models.Dtos;
 using Microsoft.Data.SqlClient;
@@ -126,6 +127,34 @@ having p.Status=0 and p.LogOut=0 "+
 
             using IDbConnection dbConnection = new SqlConnection(_connStr);
             var result = dbConnection.Query<ProductCardDto>(sql, new { salesId , categoryName , subCategoryName });
+            return result;
+        }
+
+        public IEnumerable<ProductCardDto> GetHotSales(bool isNewProduct)
+        {
+            string sql = @"select top 10
+p.ProductId, p.ProductName, p.UnitPrice,p.SalesPrice,sc.SalesCategoryName,
+pc.ProductCategoryName,psc.ProductSubCategoryName,sc.SalesCategoryId,MIN(pi.ImgPath) AS FirstImgPath ,p.Tag
+from Products as p
+join ProductSubCategories as psc on psc.ProductSubCategoryId=p.fk_ProductSubCategoryId
+join ProductCategories as pc on pc.ProductCategoryId=psc.fk_ProductCategoryId
+join SalesCategories as sc on sc.SalesCategoryId=pc.fk_SalesCategoryId
+join ProductImgs as pi on pi.fk_ProductId=p.ProductId
+group by p.ProductId, p.ProductName, p.UnitPrice,p.SalesPrice,sc.SalesCategoryName,
+pc.ProductCategoryName,psc.ProductSubCategoryName,p.Status,p.LogOut,sc.SalesCategoryId,
+p.Tag 
+having p.Status=0 and p.LogOut=0 ";
+            if (isNewProduct)
+            {
+                sql += " and p.Tag = '新品' order by NEWID()";
+            }else
+            {
+                sql += " order by NEWID()";
+            }
+
+
+            using IDbConnection dbConnection=new SqlConnection( _connStr);
+            var result = dbConnection.Query<ProductCardDto>(sql);
             return result;
         }
 

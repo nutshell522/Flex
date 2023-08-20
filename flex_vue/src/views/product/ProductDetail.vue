@@ -652,7 +652,6 @@ onMounted(() => {
   getImgs();
   getComment();
   getSimilarProducts();
-  //updateVisibleCards();
 });
 
 //const likeProduct = ref(null);
@@ -704,7 +703,7 @@ function collect() {
 }
 </script>
 
-<style>
+<style scoped>
 .detailImgbox {
   display: flex;
   align-items: center;

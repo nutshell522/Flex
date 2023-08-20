@@ -182,8 +182,8 @@ namespace FlexCoreService.Controllers
         [HttpGet("Similar/{productId}")]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetSimilarProducts(string productId)
         {
-            var server = new ProductService(_repo);
-            var products = server.GetSimilarProducts(productId).Select(p=>p.ToCardVM());
+            var service = new ProductService(_repo);
+            var products = service.GetSimilarProducts(productId).Select(p=>p.ToCardVM());
             if (products == null)
             {
                 return BadRequest();
@@ -191,6 +191,13 @@ namespace FlexCoreService.Controllers
             return Ok(products);
         }
 
+        [HttpGet("GetHotSalesOrNewProduct")]
+        public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetHotSalesOrNewProduct(bool isNewProduct)
+        {
+            var service = new ProductService(_repo);
+            var product = service.GetHotSales(isNewProduct).Select(p=>p.ToCardVM());
+            return Ok(product);
+        }
 
         //// GET: api/Products
         //[HttpGet]
