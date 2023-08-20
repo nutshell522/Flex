@@ -30,6 +30,8 @@ namespace FlexCoreService.Controllers
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
             var website = $"https://localhost:7183";
 
+
+
             var order = new Dictionary<string, string>
             {
                 { "MerchantID", "3002607" }, //商店編號

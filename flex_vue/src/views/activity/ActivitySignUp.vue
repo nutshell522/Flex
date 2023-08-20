@@ -40,7 +40,7 @@
             <br>
             <div class="mb-3">
                 
-                <p>本人 {{member.name}} 謹此聲明，自願參加貴單位舉辦的（活動名稱），並願意遵守以下所有條款與約定。在此，本人郑重承諾遵守本切結書所規定的所有規定與要求，並將全力配合活動主辦方的運作。
+                <p>本人 {{member.name}} 謹此聲明，自願參加貴單位舉辦的{{orderInfo.ItemName}}，並願意遵守以下所有條款與約定。在此，本人郑重承諾遵守本切結書所規定的所有規定與要求，並將全力配合活動主辦方的運作。
                     <br>
 
     健康安全：本人保證自身身體狀況良好，並無任何潛在的傳染病或感染風險。若本人在活動期間出現任何症狀或發現任何健康風險，將立即通報活動主辦單位。
@@ -72,19 +72,19 @@
       </div>
       <div class="modal-body  n">
         <form id="payForm" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">
-            <input type="hidden" name="MerchantID" :value="payInfo.MerchantID ">
-            <input type="hidden" name="MerchantTradeNo" :value="payInfo.MerchantTradeNo">
-            <input type="hidden" name="MerchantTradeDate" :value="payInfo.MerchantTradeDate">
-            <input type="hidden" name="PaymentType" :value="payInfo.PaymentType">
-            <input type="hidden" name="TotalAmount" :value="payInfo.TotalAmount">
-            <input type="hidden" name="TradeDesc" :value="payInfo.TradeDesc">
-            <input type="hidden" name="ItemName" :value="payInfo.ItemName">
-            <input type="hidden" name="ReturnURL" :value="payInfo.ReturnURL">
-            <input type="hidden" name="ChoosePayment" :value="payInfo.ChoosePayment">
-            <input type="hidden" name="EncryptType" :value="payInfo.EncryptType">
-            <input type="hidden" name="ClientBackURL" :value="payInfo.ClientBackURL">
-            <input type="hidden" name="OrderResultURL" :value="payInfo.OrderResultURL">
-            <input type="hidden" name="CheckMacValue" :value="payInfo.CheckMacValue">
+            <input type="text" name="MerchantID" :value="payInfo.MerchantID ">
+            <input type="text" name="MerchantTradeNo" :value="payInfo.MerchantTradeNo">
+            <input type="text" name="MerchantTradeDate" :value="payInfo.MerchantTradeDate">
+            <input type="text" name="PaymentType" :value="payInfo.PaymentType">
+            <input type="text" name="TotalAmount" :value="payInfo.TotalAmount">
+            <input type="text" name="TradeDesc" :value="payInfo.TradeDesc">
+            <input type="text" name="ItemName" :value="orderInfo.ItemName">
+            <input type="text" name="ReturnURL" :value="payInfo.ReturnURL">
+            <input type="text" name="ChoosePayment" :value="payInfo.ChoosePayment">
+            <input type="text" name="EncryptType" :value="payInfo.EncryptType">
+            <input type="text" name="ClientBackURL" :value="payInfo.ClientBackURL">
+            <input type="text" name="OrderResultURL" :value="payInfo.OrderResultURL">
+            <input type="text" name="CheckMacValue" :value="payInfo.CheckMacValue">
 
             <div class="mb-3 d-flex gap-3">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
@@ -102,8 +102,31 @@
 <script setup>
 import axios from 'axios';
 import{ref, reactive, onMounted} from 'vue';
+import { useRoute } from "vue-router";
+const route = useRoute();
 const memberId = ref("23"); 
-const activityId = ref("3"); 
+const activityId = route.params.id;
+console.log(activityId);
+
+const payInfo = reactive({
+    MerchantID:"",
+    MerchantTradeNo:"",
+    MerchantTradeDate:"",
+    PaymentType:"",
+    TotalAmount:"",
+    TradeDesc:"",
+    // ItemName:"",
+    ReturnURL:"",
+    ChoosePayment:"",
+    EncryptType:"",
+    ClientBackURL:"",
+    CheckMacValue:"",
+    OrderResultURL:""
+})
+
+const orderInfo = reactive({
+    ItemName:""
+})
 
 
 const member = reactive({
@@ -135,6 +158,7 @@ const loadMember = async (id)=>{
 loadMember(memberId.value);
 //確保整個頁面的html都跑完，才開始執行onMounted裡面的js
 onMounted(()=>{
+    
     const agreeCheck = document.querySelector("#agreeCheck");
     const confirmBtn = document.querySelector("#confirmBtn");
     agreeCheck.addEventListener("change", function(){
@@ -148,21 +172,7 @@ onMounted(()=>{
 
 })
 
-const payInfo = reactive({
-    MerchantID:"",
-    MerchantTradeNo:"",
-    MerchantTradeDate:"",
-    PaymentType:"",
-    TotalAmount:"",
-    TradeDesc:"",
-    ItemName:"",
-    ReturnURL:"",
-    ChoosePayment:"",
-    EncryptType:"",
-    ClientBackURL:"",
-    CheckMacValue:"",
-    OrderResultURL:""
-})
+
 
 //從後端得到綠界需要的參數資訊
 axios.get(`https://localhost:7183/api/Payment`)
@@ -178,19 +188,35 @@ axios.get(`https://localhost:7183/api/Payment`)
         payInfo.MerchantTradeNo = payresult.MerchantTradeNo;
         payInfo.MerchantTradeDate = payresult.MerchantTradeDate;
         payInfo.PaymentType = payresult.PaymentType;
-        payInfo.TotalAmount = payresult.TotalAmount;
         payInfo.TradeDesc = payresult.TradeDesc;
-        payInfo.ItemName = payresult.ItemName;
+        // payInfo.ItemName = payresult.ItemName;
         payInfo.ReturnURL = payresult.ReturnURL;
         payInfo.ChoosePayment = payresult.ChoosePayment;
         payInfo.EncryptType = payresult.EncryptType;
         payInfo.ClientBackURL = payresult.ClientBackURL;
         payInfo.CheckMacValue = payresult.CheckMacValue;
         payInfo.OrderResultURL = payresult.OrderResultURL;
+        payInfo.TotalAmount = payresult.TotalAmount;
     })
     .catch(err=>{
         console.log(err);
     })
+
+   
+    axios.get(`https://localhost:7183/api/Activity/${activityId}`)
+    .then(res=>{
+        const activityInfo = res.data;
+        orderInfo.ItemName = activityInfo.activityName;
+        // console.log(activityInfo);
+        // payInfo.TotalAmount = activityInfo.activitySalePrice;
+    })
+    .catch(err=>{
+        console.log(err);
+    })
+
+
+
+
 
    
 
@@ -204,7 +230,8 @@ axios.get(`https://localhost:7183/api/Payment`)
             MerchantTradeDate:payInfo.MerchantTradeDate,
             PaymentType:payInfo.PaymentType,
             CheckMacValue:payInfo.CheckMacValue,
-            ItemName:payInfo.ItemName,
+            // ItemName:payInfo.ItemName,
+            ItemName:orderInfo.ItemName,
             TradeDesc:payInfo.TradeDesc,
             ActivityId:activityId.value 
         };
