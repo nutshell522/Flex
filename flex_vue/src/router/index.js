@@ -63,6 +63,11 @@ const routes = [
     meta: { title: `${webTitle}訂單` },
   },
   {
+    path: "/activityIndex",
+    component: ActivityIndex,
+    meta: { title: `${webTitle}活動首頁` },
+  },
+  {
     //http://loaclhost/activityInfo
     path: '/activityInfo/:id',
     component: ActivityInfo,
@@ -70,14 +75,15 @@ const routes = [
   },
   {
     //http://loaclhost/activitySignUp
-    path: '/activitySignUp',
+    path: "/activitySignUp/:id",
     component: ActivitySignUp,
     meta: { title: `${webTitle}活動報名` },
   },
   {
-    path: '/activityIndex',
-    component: ActivityIndex,
-    meta: { title: `${webTitle}活動首頁` },
+    //http://loaclhost/paymentSuccess
+    path: '/paymentSuccess/:TradeAmt/:TradeNo/:ActivityName',
+    component: PaymentSuccess,
+    meta: { title: `${webTitle}訂單資訊` },
   },
   {
     path: '/reservationIndex',
@@ -99,18 +105,6 @@ const routes = [
     path: '/orders',
     component: () => import('../views/orders/orderindex.vue'),
     meta: { title: `${webTitle}訂單` },
-  },
-  {
-    //http://loaclhost/activityInfo
-    path: '/activityInfo',
-    component: ActivityInfo,
-    meta: { title: `${webTitle}活動` },
-  },
-  {
-    //http://loaclhost/activitySignUp
-    path: '/activitySignUp',
-    component: ActivitySignUp,
-    meta: { title: `${webTitle}活動報名`, require: true },
   },
   {
     //http://loaclhost/Login

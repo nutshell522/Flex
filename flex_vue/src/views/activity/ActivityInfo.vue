@@ -51,7 +51,7 @@
         </div>
         <!-- 手刀報名按鈕 -->
         <div class="text-end">
-          <a href="https://localhost:8080/activitySignUp" class="btn button">
+          <a :href="'https://localhost:8080/activitySignUp/'+ route.params.id" class="btn button">
             <!-- icon -->
             <span class="icon">
               <img
