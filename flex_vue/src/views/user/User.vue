@@ -8,7 +8,7 @@
     <div class="col-md-6 editPwdIcon" @click="editPwdBtn">
       <button class="">變更密碼<i class="bi bi-pencil-square"></i></button>
     </div>
-    <div>
+    <div class="col-md-6 editPwdAll" v-if="editPwdShow">
       <div class="col-md-6">
         <div class="input-group" v-if="editPwdShow">
           <label for="editPwdInput" class="text">修改密碼</label>
@@ -147,41 +147,36 @@
           v-if="addAddressInput2"
         />
       </div>
-    </div>
 
-    <!-- 之後增加 -->
-    <!-- <div class="input-group mb-3">
+      <!-- 之後增加 -->
+      <!-- <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="載具先不寫" />
     </div>
 
     <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="取貨店鋪預約" />
     </div> -->
-    <div class="subscribe">
-      <label class="text">訂閱電子報</label>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="subscribeBtn"
-          v-model="isSubscribeNews"
-          v-if="isSubscribeNews"
-        />
+      <div class="subscribe">
+        <label class="text">訂閱電子報</label>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="subscribeBtn"
+            v-model="isSubscribeNews"
+            v-if="isSubscribeNews"
+          />
+        </div>
+        <div class="form-check-label" for="subscribeBtn">訂閱</div>
       </div>
-      <div class="form-check-label" for="subscribeBtn">訂閱</div>
+      <!-- 更新資料按鈕 -->
+      <div class="col-md-6 btn btn-outline-info save">
+        <button type="button" @click="save">更新資料</button>
+      </div>
     </div>
-    <!-- 按鈕 -->
-    <div class="btn btn-outline-info save">
-      <button type="button" @click="save">更新資料</button>
-    </div>
-    <!-- 77絕對定位的樣式 -->
-    <div class="col-md-6">
-      <div class="userImg">
-        <img src="" alt="" />
-      </div>
-      <div class="btn btn-info changePhoto">
-        <button type="button" @click="changePhoto">選擇圖片</button>
-      </div>
+    <!-- 上傳圖片 -->
+    <div class="col-md-6 userImg">
+      <updatePhoto></updatePhoto>
     </div>
   </div>
 
@@ -194,6 +189,7 @@
 import verify from '@/components/user/verify.vue';
 import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
+import updatePhoto from '@/components/user/updatePhoto.vue';
 import { ref, watch, provide } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
@@ -203,8 +199,16 @@ const getApiStore = useGetApiDataStore();
 const { memberInfo } = storeToRefs(getApiStore);
 
 const userProfile = ref([]);
+const photo = ref(null);
 const account = ref(''); // 初始化為空字符串
 const id = ref('');
+const fileChange = (e) => {
+  console.log(e.target.files);
+};
+const uploadImages = () => {
+  photo.value.click();
+};
+
 // let level = ref('');
 const levelName = ref('');
 const name = ref('');
@@ -323,32 +327,47 @@ function editPwdBtn() {
   editPwdShow.value = !editPwdShow.value;
   //editPwdShow.value = true;
 }
-function updatePwd() {
-  alert('updatePwd');
-}
 
 const userData = ref([]);
 
+//更新密碼
+function updatePwd() {
+  //alert('updatePwd');
+  var uri = `${baseAddress}/Users/UpdatePwd?id=${id.value}`;
+  var editUserProfile = {};
+  if (editPwd.value == checkPwd.value) {
+    editUserProfile.EncryptedPassword = checkPwd.value;
+  }
+  axios
+    .put(uri, editUserProfile)
+    .then((res) => {
+      userData.value = res.data;
+      console.log(userData.value);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  window.location.reload();
+}
+//更新資料
 function save() {
   //alert('save');
   //todo檢查欄位有沒有確實填寫
-  if (editPwd.value == checkPwd.value) {
-    var uri = `${baseAddress}/Users/Id?id=${id.value}`;
-    var editUserProfile = {};
 
-    editUserProfile.gender = gender.value;
-    editUserProfile.email = userProfile.value.email;
-    editUserProfile.mobile = mobile.value;
-    editUserProfile.commonAddress = commonAddress.value;
-    editUserProfile.alternateAddress1 = alternateAddress1.value;
-    editUserProfile.alternateAddress2 = alternateAddress2.value;
-    editUserProfile.EncryptedPassword = checkPwd.value;
-    editUserProfile.isSubscribeNews = isSubscribeNews.value;
-    console.log(
-      'editUserProfile.alternateAddress2',
-      editUserProfile.alternateAddress2
-    );
-  }
+  var uri = `${baseAddress}/Users/Id?id=${id.value}`;
+  var editUserProfile = {};
+
+  editUserProfile.gender = gender.value;
+  editUserProfile.email = userProfile.value.email;
+  editUserProfile.mobile = mobile.value;
+  editUserProfile.commonAddress = commonAddress.value;
+  editUserProfile.alternateAddress1 = alternateAddress1.value;
+  editUserProfile.alternateAddress2 = alternateAddress2.value;
+  editUserProfile.isSubscribeNews = isSubscribeNews.value;
+  // console.log(
+  //   'editUserProfile.alternateAddress2',
+  //   editUserProfile.alternateAddress2
+  // );
 
   //todo檔案更新成功
 
@@ -368,7 +387,6 @@ function save() {
 if (isSubscribeNews.value == true) {
   isSubscribeNews.value = false;
 }
-// --
 </script>
 
 <style lang="scss" scoped>
@@ -419,27 +437,24 @@ if (isSubscribeNews.value == true) {
 }
 // 77按鈕的儲存字歪歪的
 .save {
-  height: 12%;
-  margin: 0px;
-  position: absolute;
-  top: 500px;
-  left: 700px;
-  display: flex;
-  align-items: center;
-  justify-content: start;
+  width: 100px;
+  margin-top: 20px;
 }
 .changePhoto {
   position: absolute;
   top: 300px;
   left: 950px;
 }
+.updatePhoto {
+  position: fixed;
+  top: -500px;
+  left: -500;
+}
 .userImg {
   position: absolute;
   top: 80px;
   left: 900px;
-  background-color: rebeccapurple;
-  width: 15%;
-  height: 50%;
+  width: 50%;
 }
 .radioBtn {
   margin-right: 10px;
@@ -457,5 +472,10 @@ if (isSubscribeNews.value == true) {
   justify-content: end;
   padding-right: 10px;
   margin: 10px;
+}
+.editPwdAll {
+  border: 1px solid;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 </style>

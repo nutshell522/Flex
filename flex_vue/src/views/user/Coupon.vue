@@ -1,4 +1,7 @@
 <template>
+  <navBar></navBar>
+  <userBar></userBar>
+
   <div class="container">
     <div
       :style="wrapStyle"
@@ -74,6 +77,10 @@
   </div>
 </template>
 <script>
+// 77 import無效
+import navBar from '@/components/home/navBar.vue';
+import userBar from '@/components/user/userBar.vue';
+
 export default {
   data() {
     return {
