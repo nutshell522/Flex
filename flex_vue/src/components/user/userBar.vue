@@ -17,14 +17,45 @@
 
         <li class="nav-item"><a name="rank" :href="page">積分中心</a></li>
 
-        <li class="nav-item"><a name="free" :href="page">優惠券</a></li>
-
+        <li class="nav-item" aria-disabled="true">
+          <router-link to="/coupon" name="coupon">優惠券</router-link>
+        </li>
         <li class="nav-item">
           <a name="history" :href="page">瀏覽紀錄</a>
         </li>
 
         <li class="nav-item"><a name="kart" :href="page">購物車</a></li>
       </ul>
+    </div>
+    <!-- -- -->
+    <div class="card text-center">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item">
+            <router-link to="/user" class="nav-link active"
+              >個人資料</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link disabled"
+              href="#"
+              tabindex="-1"
+              aria-disabled="true"
+              >Disabled</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Special title treatment</h5>
+        <p class="card-text">
+          With supporting text below as a natural lead-in to additional content.
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -35,11 +66,6 @@ const page = ref('favorites');
 </script>
 
 <style scoped>
-.nav {
-  background-color: #333;
-  /* 這裡使用你想要的顏色值 */
-}
-
 .nav-justified {
   margin-bottom: 50px;
   display: flex;
@@ -56,7 +82,6 @@ const page = ref('favorites');
 }
 
 .nav-tabs {
-  padding: 20px;
   justify-content: center;
 }
 

@@ -4,11 +4,46 @@
     <userBar></userBar>
   </div>
   <div class="container userDatas" v-if="showUserData">
+    <!-- 變更密碼 -->
+    <div class="col-md-6 editPwdIcon" @click="editPwdBtn">
+      <button class="">變更密碼<i class="bi bi-pencil-square"></i></button>
+    </div>
+    <div>
+      <div class="col-md-6">
+        <div class="input-group" v-if="editPwdShow">
+          <label for="editPwdInput" class="text">修改密碼</label>
+          <input
+            type="password"
+            class="form-control"
+            id="editPwdInput"
+            placeholder="editPwd"
+            v-model="editPwd"
+          />
+        </div>
+      </div>
+      <div class="col-md-6" v-if="editPwdShow">
+        <div class="input-group">
+          <label for="checkPwdInput" class="text">確認密碼</label>
+          <input
+            type="password"
+            class="form-control"
+            id="checkPwdInput"
+            placeholder="checkPwd"
+            v-model="checkPwd"
+          />
+        </div>
+      </div>
+      <div class="btn btn-info" v-if="editPwdShow" @click="updatePwd">
+        <button class="">更新密碼</button>
+      </div>
+    </div>
+
     <div class="col-md-6 d-flex">
       <div class="input-group mb-2">
         <label for="nameInput" class="text">姓名</label>
         <label for="">{{ userProfile.name }}</label>
       </div>
+
       <div class="level mb-3">
         <!-- <label for="">{{ level }}</label> -->
         <label for="">{{ userProfile.levelName }}</label>
@@ -113,30 +148,7 @@
         />
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="input-group">
-        <label for="editPwdInput" class="text">修改密碼</label>
-        <input
-          type="password"
-          class="form-control"
-          id="editPwdInput"
-          placeholder="editPwd"
-          v-model="editPwd"
-        />
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="input-group">
-        <label for="checkPwdInput" class="text">確認密碼</label>
-        <input
-          type="password"
-          class="form-control"
-          id="checkPwdInput"
-          placeholder="checkPwd"
-          v-model="checkPwd"
-        />
-      </div>
-    </div>
+
     <!-- 之後增加 -->
     <!-- <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="載具先不寫" />
@@ -160,7 +172,7 @@
     </div>
     <!-- 按鈕 -->
     <div class="btn btn-outline-info save">
-      <button type="button" @click="save">儲存</button>
+      <button type="button" @click="save">更新資料</button>
     </div>
     <!-- 77絕對定位的樣式 -->
     <div class="col-md-6">
@@ -175,11 +187,10 @@
 
   <!-- 驗證畫面 -->
   <verify class="verify" v-if="verifyArea"></verify>
-  <!-- 地址測試 -->
-  <!-- <iframe :srcdoc="iframeContent" width="100%" height="300"></iframe> -->
 </template>
 
 <script setup>
+// import './twzipcode.js';
 import verify from '@/components/user/verify.vue';
 import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
@@ -187,17 +198,6 @@ import { ref, watch, provide } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 import axios from 'axios';
-
-//77真的可以這樣子??????
-// axios
-//   .get('@/components/user/twAddress.html')
-//   .then((response) => {
-//     this.iframeContent = response.data;
-//   })
-//   .catch((error) => {
-//     console.error('Error loading HTML content:', error);
-//   });
-//
 
 const getApiStore = useGetApiDataStore();
 const { memberInfo } = storeToRefs(getApiStore);
@@ -219,6 +219,7 @@ const alternateAddress1 = ref(null);
 const alternateAddress2 = ref(null);
 const editPwd = ref('');
 const checkPwd = ref('');
+const editPwdShow = ref(false);
 const isSubscribeNews = ref(true);
 
 const memberId = getApiStore.getMemberId;
@@ -317,6 +318,15 @@ function changePhoto() {
   alert('changePhoto');
 }
 
+function editPwdBtn() {
+  //alert('editPwd');
+  editPwdShow.value = !editPwdShow.value;
+  //editPwdShow.value = true;
+}
+function updatePwd() {
+  alert('updatePwd');
+}
+
 const userData = ref([]);
 
 function save() {
@@ -358,6 +368,7 @@ function save() {
 if (isSubscribeNews.value == true) {
   isSubscribeNews.value = false;
 }
+// --
 </script>
 
 <style lang="scss" scoped>
@@ -440,5 +451,11 @@ if (isSubscribeNews.value == true) {
 }
 .verify {
   z-index: 1;
+}
+.editPwdIcon {
+  display: flex;
+  justify-content: end;
+  padding-right: 10px;
+  margin: 10px;
 }
 </style>
