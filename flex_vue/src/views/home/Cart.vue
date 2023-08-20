@@ -56,7 +56,7 @@
             <div>總計</div>
             <div>{{ subTotal }}</div>
           </div>
-          <button class="btn btn-dark w-100 my-3 py-3 rounded-5">結帳</button>
+          <button @click="goToCheckoutPageEventHandler" class="btn btn-dark w-100 my-3 py-3 rounded-5">結帳</button>
         </div>
       </div>
     </div>
@@ -70,7 +70,6 @@ import HomeFooter from '@/components/home/footer.vue';
 import axios from "axios";
 import { ref, onMounted, computed } from "vue";
 import { CartItem, ShoppingCartItem } from '@/types/type';
-
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
 const imgBaseUrl = ref(baseAddress);
@@ -78,17 +77,19 @@ const cartItems = ref<CartItem[]>([]);
 const originalTotalAmount = ref<number>();
 const subTotal = ref<number>();
 const deliveryFee = ref<number>();
+const loggedInUser = localStorage.getItem('loggedInUser')!;
+const memberInfo = JSON.parse(loggedInUser);
+const memberId: number = memberInfo.memberId;
 
 
 // 載入購物車
 const loadCartItems = async () => {
   let url: string = `${baseAddress}api/Cart`;
   await axios
-    .post<CartItem[]>(url)
+    .post<CartItem[]>(url, memberId)
     .then((response) => {
       cartItems.value = response.data;
       loadTotal();
-      // console.log(cartItems.value);
     })
     .catch((error) => {
       alert(error);
@@ -97,14 +98,17 @@ const loadCartItems = async () => {
 
 // 載入折扣後的結帳金額
 const loadTotal = async () => {
-  let url: string = `${baseAddress}api/Cart/Checkout`;
+  const request = {
+    CartItems: cartItems.value,
+    memberId: memberId,
+  }
+  let url: string = `${baseAddress}api/Cart/GetTotalAmount`;
   await axios
-    .post<number>(url)
+    .post<number>(url, request)
     .then((response) => {
       originalTotalAmount.value = response.data.originalTotalAmount;
       subTotal.value = response.data.totalPrice;
       deliveryFee.value = response.data.deliveryFee;
-      // console.log(subTotal.value);
     })
     .catch((error) => {
       alert(error);
@@ -127,23 +131,27 @@ function processCallbacks(...callbacks: Callback[]) {
 }
 
 const incrementCartItem = async (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem)
+  const shoppingCart = new ShoppingCartItem(cartItem, memberId)
   await shoppingCart.addOneItem(() => {
     processCallbacks(loadCartItems);
   });
 };
 
 const decrementCartItem = async (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem);
+  const shoppingCart = new ShoppingCartItem(cartItem, memberId);
   await shoppingCart.removeOneItem(() => {
     processCallbacks(loadCartItems);
   });
 };
 
 const getCartItemQty = (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem);
+  const shoppingCart = new ShoppingCartItem(cartItem, memberId);
   return shoppingCart.getCartItemQty();
 };
+
+const goToCheckoutPageEventHandler = () => {
+  window.location.href = "/buy";
+}
 
 </script>
     

@@ -10,4 +10,16 @@
 		public int? SubTotal => Product.SalesPrice * Qty;
 		public int? UnitSubTotal => Product.UnitPrice * Qty;
     }
+
+	public class CartItemUpdateVM
+	{
+		public int MemberId { get; set; }
+        public CartItemVM? CartItem{ get; set; }
+    }
+
+	public class CartItemsVM
+	{
+		public int MemberId { get; set; }
+		public CartItemVM[]? CartItems { get; set; }
+	}
 }

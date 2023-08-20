@@ -136,9 +136,11 @@ export class PaymentInfo {
 // 購物車物件
 export class ShoppingCartItem {
   private item: CartItem;
+  private memberId: number;
 
-  constructor(cartitem: CartItem) {
+  constructor(cartitem: CartItem, memberId: number) {
     this.item = cartitem;
+    this.memberId = memberId;
   }
   async addOneItem(callback?: () => void): Promise<void> {
     this.addItem(1, callback);
@@ -177,8 +179,12 @@ export class ShoppingCartItem {
 
   private updateItemQty = async (callback?: () => void) => {
     let url: string = `${import.meta.env.VITE_API_BASEADDRESS}api/Cart/UpdateItem`;
+    const request = {
+      MemberId: this.memberId,
+      CartItem: this.item
+    }
     await axios
-      .put(url, this.item)
+      .put(url, request)
       .then((response) => {
         if (callback) {
           callback();
