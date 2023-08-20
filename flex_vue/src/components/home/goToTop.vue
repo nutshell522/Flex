@@ -19,7 +19,7 @@ onUnmounted(() => {
 });
 </script>
 
-<style>
+<style scoped>
 .returnTop {
   width: 50px;
   height: 50px;

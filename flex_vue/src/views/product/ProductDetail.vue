@@ -203,8 +203,16 @@
               <i class="bi bi-chevron-right similarIcon"></i>
             </button>
           </div>
-          <Carousel :items-to-show="3" :wrap-around="true" ref="similarCarousel">
-            <Slide v-for="card in similarProducts" :key="card.productId" class="card text-center">
+          <Carousel
+            :items-to-show="4"
+            :wrap-around="true"
+            ref="similarCarousel"
+          >
+            <Slide
+              v-for="card in similarProducts"
+              :key="card.productId"
+              class="card text-center"
+            >
               <ProductCard :card="card"></ProductCard>
             </Slide>
             <!-- <template #addons>
@@ -501,7 +509,6 @@ onMounted(() => {
   getImgs();
   getComment();
   getSimilarProducts();
-  //updateVisibleCards();
 });
 
 //const likeProduct = ref(null);
@@ -586,7 +593,7 @@ const joinCartItemEventHandler = async () => {
 }
 </script>
 
-<style>
+<style scoped>
 .detailImgbox {
   display: flex;
   align-items: center;

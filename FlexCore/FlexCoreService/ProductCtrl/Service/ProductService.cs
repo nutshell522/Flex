@@ -46,8 +46,14 @@ namespace FlexCoreService.ProductCtrl.Service
 
         public IEnumerable<ProductCardDto> GetSimilarProducts(string productId)
         {
-            var categor = _repo.GetProductCategories(productId);
-            var result = _repo.GetSimilarProducts(productId, categor);
+            var category = _repo.GetProductCategories(productId);
+            var result = _repo.GetSimilarProducts(productId, category);
+            return result;
+        }
+
+        public IEnumerable<ProductCardDto> GetHotSales(bool isNewProduct)
+        {
+            var result = _repo.GetHotSales(isNewProduct);
             return result;
         }
     }

@@ -74,7 +74,7 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style scoped>
 .category a {
   color: #83521e;
   text-decoration: none;
