@@ -22,7 +22,7 @@
               <div class="detailSalesPrice" :title="shoesDetail.shoesUnitPrice">
                 {{ shoesDetail.shoesUnitPrice }}
               </div>
-            </div>  
+            </div>
           </div>
         </div>
         <hr />
@@ -35,8 +35,16 @@
           <div class="mt-3 d-flex">
             <div class="col-12">
               <label for="sizeSelect">Size:</label>
-              <select id="sizeSelect" v-model="selectedSize" @change="handleSizeChange">
-                <option v-for="size in shoesDetail.shoesSize" :key="size.sizeId" :value="size">
+              <select
+                id="sizeSelect"
+                v-model="selectedSize"
+                @change="handleSizeChange"
+              >
+                <option
+                  v-for="size in shoesDetail.shoesSize"
+                  :key="size.sizeId"
+                  :value="size"
+                >
                   {{ size.sizeName }}
                 </option>
               </select>
@@ -77,25 +85,38 @@
                   <i class="bi bi-plus-lg"></i>
                 </button>
               </div>
-                <div class="col-6">
-                  <div class="form-control">
-                    <span>總金額${{ totalPrice }}</span>
-                  </div>
+              <div class="col-6">
+                <div class="form-control">
+                  <span>總金額${{ totalPrice }}</span>
                 </div>
-                <router-link
-                  :to="'/CustomeShoes' + '/detail/'+ 'Customization/' + shoesProductId"
-                  :disabled="isButtonDisabled"
-                  @click="navigateToCustomization"             
-                >
-              <div class="col-6 mt-5 ms-6">
-                <button type="submit" class="btn btn-primary comenextBtn" @click="intoOrder">進入客製化頁面</button>
               </div>
-              <div class="from-group" v-if="errors.length">
-                <ul class="mb-3 errorsText">
-                  <span v-for="error in errors" class="text-danger">{{ error }}</span>            
-                </ul>
-              </div>
-            </router-link> 
+              <router-link
+                :to="
+                  '/CustomeShoes' +
+                  '/detail/' +
+                  'Customization/' +
+                  shoesProductId
+                "
+                :disabled="isButtonDisabled"
+                @click="navigateToCustomization"
+              >
+                <div class="col-6 mt-5 ms-6">
+                  <button
+                    type="submit"
+                    class="btn btn-primary comenextBtn"
+                    @click="intoOrder"
+                  >
+                    進入客製化頁面
+                  </button>
+                </div>
+                <div class="from-group" v-if="errors.length">
+                  <ul class="mb-3 errorsText">
+                    <span v-for="error in errors" class="text-danger">{{
+                      error
+                    }}</span>
+                  </ul>
+                </div>
+              </router-link>
             </div>
           </div>
         </div>
@@ -103,113 +124,115 @@
     </div>
   </div>
   <div class="row mt-5">
-      <div class="col-12">
-        <ul
-          class="nav nav-tabs d-flex"
-          style="align-items: center; justify-content: center"
-          id="myTab"
-          role="tablist"
-        >
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link active"
-              id="home-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#home-tab-pane"
-              type="button"
-              role="tab"
-              aria-controls="home-tab-pane"
-              aria-selected="true"
-            >
-              商品資訊
-            </button>
-          </li>
-        </ul>
-        <div class="tab-content mt-3" id="myTabContent">
-          <div
-            class="tab-pane fade show active commentDiv"
-            id="home-tab-pane"
-            role="tabpanel"
-            aria-labelledby="home-tab"
-            tabindex="0"
+    <div class="col-12">
+      <ul
+        class="nav nav-tabs d-flex"
+        style="align-items: center; justify-content: center"
+        id="myTab"
+        role="tablist"
+      >
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="home-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#home-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="home-tab-pane"
+            aria-selected="true"
           >
-            <div style="width: 95%; position: relative" class="p-3">
-              <h1 style="display: inline">商品資訊</h1>
-              <span style="right: 0%; position: absolute; font-size: 30px"
-                ><i
-                  class="bi bi-plus-lg"
-                  v-if="!showDetailDiv"
-                  @click="showDetailDiv = !showDetailDiv"
-                ></i
-                ><i
-                  class="bi bi-dash-lg"
-                  v-else
-                  @click="showDetailDiv = !showDetailDiv"
-                ></i
-              ></span>
-              <div class="mt-3 ms-3" v-if="showDetailDiv">
-                <div>產地:{{ shoesDetail.shoesOrigin }}</div>
-                <div>類別:{{ shoesDetail.shoesCategoryName }}</div>
-                <div>描述:{{ shoesDetail.shoesDescription }}</div>
-              </div>
+            商品資訊
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content mt-3" id="myTabContent">
+        <div
+          class="tab-pane fade show active commentDiv"
+          id="home-tab-pane"
+          role="tabpanel"
+          aria-labelledby="home-tab"
+          tabindex="0"
+        >
+          <div style="width: 95%; position: relative" class="p-3">
+            <h1 style="display: inline">商品資訊</h1>
+            <span style="right: 0%; position: absolute; font-size: 30px"
+              ><i
+                class="bi bi-plus-lg"
+                v-if="!showDetailDiv"
+                @click="showDetailDiv = !showDetailDiv"
+              ></i
+              ><i
+                class="bi bi-dash-lg"
+                v-else
+                @click="showDetailDiv = !showDetailDiv"
+              ></i
+            ></span>
+            <div class="mt-3 ms-3" v-if="showDetailDiv">
+              <div>產地:{{ shoesDetail.shoesOrigin }}</div>
+              <div>類別:{{ shoesDetail.shoesCategoryName }}</div>
+              <div>描述:{{ shoesDetail.shoesDescription }}</div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row mt-3">
-      <div class="col-12">
-        <div class="detailImgboxs">
-          <img
-            v-for="datas in shoesImgs"
-            :key="datas.shoesPicture_Id"
-            :src="baseAddress + 'Public/Img/' + datas.shoesPictureUrl"
-            class="detailImgList"
-          />
-        </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-12">
+      <div class="detailImgboxs">
+        <img
+          v-for="datas in shoesImgs"
+          :key="datas.shoesPicture_Id"
+          :src="baseAddress + 'Public/Img/' + datas.shoesPictureUrl"
+          class="detailImgList"
+        />
       </div>
     </div>
-    <homeFooter></homeFooter>
+  </div>
+  <homeFooter></homeFooter>
 </template>
 
 <script setup>
 import axios from "axios";
 import { onMounted, ref, computed } from "vue";
-import { useRoute} from "vue-router";
+import { useRoute } from "vue-router";
 import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
 //import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
-    const selectedSize = ref("");
-    const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
-    const route = useRoute();
-    const shoesDetail = ref({});
-    const detailImg = ref("");
-    const buyQty = ref(1);
-    const showDetailDiv = ref(true);
-    const shoesImgs = ref([]);
-    const totalPrice = computed(() => {
-        return buyQty.value * shoesDetail.value.shoesUnitPrice;
-      });
-    const errors = ref([]);
-    const shoesProductId = route.params.shoesProductId;
+const selectedSize = ref("");
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const route = useRoute();
+const shoesDetail = ref({});
+const detailImg = ref("");
+const buyQty = ref(1);
+const showDetailDiv = ref(true);
+const shoesImgs = ref([]);
+const totalPrice = computed(() => {
+  return buyQty.value * shoesDetail.value.shoesUnitPrice;
+});
+const errors = ref([]);
+const shoesProductId = route.params.shoesProductId;
 
 const handleSizeChange = () => {
-      console.log('Selected size changed:', selectedSize.value);
+  console.log("Selected size changed:", selectedSize.value);
 };
 
-//抓api資料 
+//抓api資料
 let getData = async () => {
-      try {
-        const response = await axios.get(`${baseAddress}api/CustomeShoes/shoes/Detail/${route.params.shoesProductId}`);
-        console.log(response.data);
-        shoesDetail.value = response.data;
-        if (shoesDetail.value.shoesSize && shoesDetail.value.shoesSize.length > 0) {
-          selectedSize.value = shoesDetail.value.shoesSize[0].sizeName;
-        }
-        detailImg.value = shoesDetail.value.shoesImgs;
-      } catch (error) {
-        alert(error);
-      }
+  try {
+    const response = await axios.get(
+      `${baseAddress}api/CustomeShoes/shoes/Detail/${route.params.shoesProductId}`
+    );
+    console.log(response.data);
+    shoesDetail.value = response.data;
+    if (shoesDetail.value.shoesSize && shoesDetail.value.shoesSize.length > 0) {
+      selectedSize.value = shoesDetail.value.shoesSize[0].sizeName;
+    }
+    detailImg.value = shoesDetail.value.shoesImgs;
+  } catch (error) {
+    alert(error);
+  }
 };
 
 //抓api資料(圖片)
@@ -236,7 +259,6 @@ let handleQyt = (event) => {
   }
 };
 
-
 let decrementProductQty = () => {
   if (buyQty.value <= 1) {
     buyQty.value = 1;
@@ -255,32 +277,31 @@ let incrementProductQty = () => {
 
 //啟用方法
 onMounted(() => {
-      getData();
-      getImgs();
+  getData();
+  getImgs();
 });
-
 //塞入數量及尺寸到資料庫
 const orderUri = `${baseAddress}api/CustomeShoes/EnterCustomerChoose`;
 var orderData = {};
 
-function intoOrder(){
-  if(selectedSize.value.sizeId === undefined){
+function intoOrder() {
+  if (selectedSize.value.sizeId === undefined) {
     //todo檢查有沒有選擇size
     errors.value = [];
-    errors.value.push('Size還未選擇，請先選擇');
-  }else{
+    errors.value.push("Size還未選擇，請先選擇");
+  } else {
     errors.value = [];
     orderData.fk_ShoesSizeId = selectedSize.value.sizeId;
     orderData.qty = buyQty.value;
-    orderData.remark = '';
+    orderData.remark = "";
     console.log(orderData);
     axios
-    .post(orderUri, orderData)
-    .then((res) => {
-      orderData = res.data;
-    })
-    .catch((error) => {
-        console.error('POST request error:', error);
+      .post(orderUri, orderData)
+      .then((res) => {
+        orderData = res.data;
+      })
+      .catch((error) => {
+        console.error("POST request error:", error);
       });
   }
 }
@@ -293,15 +314,13 @@ const navigateToCustomization = () => {
   if (selectedSize.value.sizeId === undefined) {
     // 如果尺寸沒選擇，就不跳下個頁面
     errors.value = [];
-    errors.value.push('Size還未選擇，請先選擇');
+    errors.value.push("Size還未選擇，請先選擇");
   } else {
     errors.value = [];
     const routePath = `/CustomeShoes/detail/Customization/${shoesProductId}`;
     router.push(routePath);
   }
 };
-
-
 </script>
 
 <style>

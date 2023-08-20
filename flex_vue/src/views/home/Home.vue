@@ -53,56 +53,64 @@
       </div>
       <div class="home-row">
         <div class="home-row-title">
-          <h3>必備經典</h3>
+          <h3>熱門推薦</h3>
           <div class="btn-wrapper">
-            <a href="javascript:;">選購</a>
-            <button disabled><i class="bi bi-chevron-left"></i></button>
-            <button><i class="bi bi-chevron-right"></i></button>
+            <button
+              class="me-3 vueCarouselBtn"
+              @click="showPrevHotSalesProduct"
+            >
+              <i class="bi bi-chevron-left vueCarouselIcon"></i>
+            </button>
+            <button
+              class="me-5 vueCarouselBtn"
+              @click="showNextHotSalesProduct"
+            >
+              <i class="bi bi-chevron-right vueCarouselIcon"></i>
+            </button>
           </div>
         </div>
         <div class="home-product-list">
-          <div class="home-product-list-items">
-            <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
-            </a>
-            <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
-            </a>
-            <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
-            </a>
-            <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
-            </a>
-            <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
-            </a>
-            <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
-            </a>
-            <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
-            </a>
-            <a href="javascript:;" class="img-wrapper">
-              <img
-                src="../../../public/imgs/LINE_ALBUM_2023.07.17 服飾的商品底圖_230731_1.jpg"
-              />
-            </a>
+          <Carousel
+            :items-to-show="4"
+            :wrap-around="true"
+            ref="hotSalesCarousel"
+          >
+            <Slide
+              v-for="card in hotSalesProduct"
+              :key="card.productId"
+              class="card text-center"
+            >
+              <ProductCard :card="card"></ProductCard>
+            </Slide>
+          </Carousel>
+        </div>
+      </div>
+      <div class="home-row">
+        <div class="home-row-title">
+          <h3>新品推薦</h3>
+          <div class="btn-wrapper">
+            <button class="me-3 vueCarouselBtn" @click="showPrevNewProduct">
+              <i class="bi bi-chevron-left vueCarouselIcon"></i>
+            </button>
+            <button class="me-5 vueCarouselBtn" @click="showNextNewProduct">
+              <i class="bi bi-chevron-right vueCarouselIcon"></i>
+            </button>
           </div>
+        </div>
+        <div class="home-product-list">
+          <Carousel
+            :items-to-show="4"
+            :wrap-around="true"
+            ref="newProductsCarousel"
+          >
+            <Slide
+              v-for="card in newProducts"
+              :key="card.productId"
+              class="card text-center"
+            >
+              <ProductCard :card="card"></ProductCard>
+            </Slide>
+          </Carousel>
         </div>
       </div>
     </div>
@@ -113,6 +121,63 @@
 <script setup>
 import navBar from "@/components/home/NavBar.vue";
 import homeFooter from "../../components/home/footer.vue";
+import ProductCard from "@/components/product/ProductCard.vue";
+import { Carousel, Slide } from "vue3-carousel";
+import axios from "axios";
+import { onMounted, ref } from "vue";
+
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const hotSalesProduct = ref([]);
+const hotSalesCarousel = ref(null);
+const newProducts = ref([]);
+const newProductsCarousel = ref(null);
+
+const getHotSalesProduct = async () => {
+  await axios
+    .get(
+      `${baseAddress}api/Products/GetHotSalesOrNewProduct?isNewProduct=false`
+    )
+    .then((resopnse) => {
+      hotSalesProduct.value = resopnse.data;
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
+const getNewProduct = async () => {
+  await axios
+    .get(`${baseAddress}api/Products/GetHotSalesOrNewProduct?isNewProduct=true`)
+    .then((resopnse) => {
+      newProducts.value = resopnse.data;
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
+const showPrevHotSalesProduct = () => {
+  hotSalesCarousel.value.prev();
+  hotSalesCarousel.value.updateSlideWidth();
+};
+const showNextHotSalesProduct = () => {
+  hotSalesCarousel.value.next();
+  hotSalesCarousel.value.updateSlideWidth();
+};
+
+const showPrevNewProduct = () => {
+  newProductsCarousel.value.prev();
+  newProductsCarousel.value.updateSlideWidth();
+};
+const showNextNewProduct = () => {
+  newProductsCarousel.value.next();
+  newProductsCarousel.value.updateSlideWidth();
+};
+
+onMounted(() => {
+  getHotSalesProduct();
+  getNewProduct();
+});
 
 //alert('Flex 優惠享不完 立即追蹤，優惠折扣從此不漏接(還沒做完喔!)');
 </script>
@@ -312,5 +377,20 @@ main {
       }
     }
   }
+}
+
+.vueCarouselBtn {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  border-radius: 50%;
+  background-color: #dbdbdb;
+}
+.vueCarouselBtn:hover {
+  background-color: #ababab;
+}
+
+.vueCarouselBtn:hover .vueCarouselIcon {
+  color: white;
 }
 </style>

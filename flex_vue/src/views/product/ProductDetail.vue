@@ -344,7 +344,7 @@
             </button>
           </div>
           <Carousel
-            :items-to-show="3"
+            :items-to-show="4"
             :wrap-around="true"
             ref="similarCarousel"
           >
@@ -652,7 +652,6 @@ onMounted(() => {
   getImgs();
   getComment();
   getSimilarProducts();
-  //updateVisibleCards();
 });
 
 //const likeProduct = ref(null);
@@ -704,7 +703,7 @@ function collect() {
 }
 </script>
 
-<style>
+<style scoped>
 .detailImgbox {
   display: flex;
   align-items: center;

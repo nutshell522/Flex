@@ -22,11 +22,23 @@ namespace FlexCoreService.Controllers
             _repo = repo;
         }
 
-        //Post: api/Category/Men
-        [HttpPost("men")]
-        public async Task<ActionResult<CategoryVM>> GetCategoryMen()
+
+        //Post: api/Category
+        [HttpPost("{categoryName}")]
+        public async Task<ActionResult<CategoryVM>> GetCategoryMen(string categoryName)
         {
             int categoryId = 1;
+            switch (categoryName)
+            {
+                case "/men":
+                    categoryId = 1; break;
+                case "/women":
+                    categoryId = 2; break;
+                case "/kid":
+                    categoryId = 3; break;
+            }
+
+
             var server = new CategoryService(_repo);
             var category = server.SearchCategory(categoryId).ToCategoryVM();
             if (category == null)
@@ -36,32 +48,46 @@ namespace FlexCoreService.Controllers
             return category;
         }
 
-        //Post: api/Category/Women
-        [HttpPost("women")]
-        public async Task<ActionResult<CategoryVM>> GetCategoryWomen()
-        {
-            int categoryId = 2;
-            var server = new CategoryService(_repo);
-            var category = server.SearchCategory(categoryId).ToCategoryVM();
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return category;
-        }
+        ////Post: api/Category/Men
+        //[HttpPost("men")]
+        //public async Task<ActionResult<CategoryVM>> GetCategoryMen()
+        //{
+        //    int categoryId = 1;
+        //    var server = new CategoryService(_repo);
+        //    var category = server.SearchCategory(categoryId).ToCategoryVM();
+        //    if (category == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return category;
+        //}
 
-        //Post: api/Category/Kid
-        [HttpPost("kid")]
-        public async Task<ActionResult<CategoryVM>> GetCategoryKid()
-        {
-            int categoryId = 3;
-            var server = new CategoryService(_repo);
-            var category = server.SearchCategory(categoryId).ToCategoryVM();
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return category;
-        }
+        ////Post: api/Category/Women
+        //[HttpPost("women")]
+        //public async Task<ActionResult<CategoryVM>> GetCategoryWomen()
+        //{
+        //    int categoryId = 2;
+        //    var server = new CategoryService(_repo);
+        //    var category = server.SearchCategory(categoryId).ToCategoryVM();
+        //    if (category == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return category;
+        //}
+
+        ////Post: api/Category/Kid
+        //[HttpPost("kid")]
+        //public async Task<ActionResult<CategoryVM>> GetCategoryKid()
+        //{
+        //    int categoryId = 3;
+        //    var server = new CategoryService(_repo);
+        //    var category = server.SearchCategory(categoryId).ToCategoryVM();
+        //    if (category == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return category;
+        //}
     }
 }
