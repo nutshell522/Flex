@@ -50,6 +50,7 @@ namespace FlexCoreService
             builder.Services.AddScoped<ICustomerChooseRepository, ShoesChooseDPRepository>();
             builder.Services.AddScoped<IReservationDPRepository, ReservationDPRepositorycs>();
             builder.Services.AddScoped<IFavoriteDPRepository, FavoriteDPRepository>();
+            builder.Services.AddScoped<PaymentDPRepository>();
 
 
             builder.Services.AddHttpContextAccessor();

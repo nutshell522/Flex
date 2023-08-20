@@ -10,6 +10,7 @@ import ActivitySignUp from "../views/activity/ActivitySignUp.vue";
 import ActivityIndex from "../views/activity/ActivityIndex.vue";
 import ReservationIndex from "../views/reservation/ReservationIndex.vue";
 import SpeakerInfo from "../views/reservation/SpeakerInfo.vue";
+import PaymentSuccess from '../views/activity/PaymentSuccess.vue';
 const webTitle = "FLEX - ";
 
 // 路由設定
@@ -66,6 +67,18 @@ const routes = [
     path: "/activityIndex",
     component: ActivityIndex,
     meta: { title: `${webTitle}活動首頁` },
+  },
+  {
+    //http://loaclhost/activitySignUp
+    path: '/activitySignUp',
+    component: ActivitySignUp,
+    meta: { title: `${webTitle}活動報名` },
+  },
+  {
+    //http://loaclhost/paymentSuccess
+    path: '/paymentSuccess/:TradeAmt/:TradeNo/:TradeDesc',
+    component: PaymentSuccess,
+    meta: { title: `${webTitle}訂單資訊` },
   },
   {
     path: "/reservationIndex",
