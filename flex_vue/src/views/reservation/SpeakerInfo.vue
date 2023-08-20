@@ -1,78 +1,49 @@
 <template>
     <div class="container">
-        <div class="row main">
-            <div class="col-md-8">左
-                <div class="featured-img">
-                    <img :src='imgBaseUrl + "/Public/Img/" + speaker.speakerImg' alt="Featured 1" class="featured-big">
-                </div>
-
-                <p>講師姓名：{{ speaker.speakerName }}</p>
-                <p>擅長領域：{{ speaker.fieldName }}</p>
-                <p>講師描述：{{ speaker.speakerDescription }}</p>
-                <p>駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})</p>
-
-
-
-
-
-                <!-- 預約系統 -->
-                <p>預約時間表</p>
-                <div id="datePicker">
-
-                    <button id="prevButton"><font-awesome-icon icon="fa-solid fa-angles-left" beat-fade /></button>
-                    <span id="currentDate"></span>
-                    <button id="nextButton"><font-awesome-icon icon="fa-solid fa-angles-right" beat-fade /></button>
-                </div>
-                <div id="schedule">
-
-                </div>
-
-                <!-- 評論 -->
-                <p>心得</p>
-
-
-            </div>
-
-
-            <div class="row main">
-                <div class="col-md-8">左
-                    <div class="featured-img">
-                        <img :src='imgBaseUrl + "/Public/Img/" + speaker.speakerImg' alt="Featured 1" class="featured-big">
-                    </div>
-
-                    <p>講師姓名：{{ speaker.speakerName }}</p>
-                    <p>擅長領域：{{ speaker.fieldName }}</p>
-                    <p>講師描述：{{ speaker.speakerDescription }}</p>
-                    <p>駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})</p>
-
-
-
-
-
-                    <!-- 預約系統 -->
-                    <p>預約時間表</p>
-                    <div id="datePicker">
-
-                        <button id="prevButton"><font-awesome-icon icon="fa-solid fa-angles-left" beat-fade /></button>
-                        <span id="currentDate"></span>
-                        <button id="nextButton"><font-awesome-icon icon="fa-solid fa-angles-right" beat-fade /></button>
-                    </div>
-                    <div id="schedule">
-
-                    </div>
-
-
-                </div>
-
-
-                <div class="col-md-4">
-                    右
-                </div>
-            </div>
-
+  
+    
+  <div class="row main">
+    <div class="col-md-8">左
+        <div class="featured-img">
+            <img :src='imgBaseUrl+"/Public/Img/"+speaker.speakerImg'
+                alt="Featured 1" class="featured-big">
         </div>
+        
+            <p>講師姓名：{{ speaker.speakerName }}</p>
+            <p>擅長領域：{{speaker.fieldName}}</p>
+            <p>講師描述：{{speaker.speakerDescription}}</p>
+            <p>駐點分店：{{speaker.branchName}} ({{speaker.branchAddress}})</p>
+            
+        
+       
+  
+        
+            <!-- 預約系統 -->
+            <p>預約時間表</p>
+            <div id="datePicker">
+           
+                <button id="prevButton"><font-awesome-icon icon="fa-solid fa-angles-left" beat-fade /></button>
+                <span id="currentDate"></span>
+                <button id="nextButton"><font-awesome-icon icon="fa-solid fa-angles-right" beat-fade /></button>
+            </div>
+            <div id="schedule">
+  
+            </div>
+  
+             <!-- 評論 -->
+             <p>心得</p>
+       
+  
     </div>
-</template>
+  
+  
+    <div class="col-md-4">
+  右
+    </div>
+  </div>
+  
+  </div>
+  </template>
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
