@@ -102,11 +102,21 @@
 <script setup>
 import axios from 'axios';
 import{ref, reactive, onMounted} from 'vue';
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { useActivityRoute} from "@/stores/useActivityRoute.js";
+const activityStore = useActivityRoute();
 const route = useRoute();
-const memberId = ref("23"); 
+
 const activityId = route.params.id;
 console.log(activityId);
+
+
+const IdInfo = localStorage.getItem('loggedInUser');
+console.log(IdInfo);
+const IdData = JSON.parse(IdInfo);
+const memberId = IdData.memberId;
+
+console.log(memberId);
 
 const payInfo = reactive({
     MerchantID:"",
@@ -155,7 +165,7 @@ const loadMember = async (id)=>{
             console.log(err);
         })
 }
-loadMember(memberId.value);
+loadMember(memberId);
 //確保整個頁面的html都跑完，才開始執行onMounted裡面的js
 onMounted(()=>{
     
@@ -223,7 +233,7 @@ axios.get(`https://localhost:7183/api/Payment/${activityId}`)
     const submitPayment = () => {
         document.querySelector("#payForm").submit();
         const formData = {
-            MemberID:memberId.value,
+            MemberID:memberId,
             MerchantTradeNo:payInfo.MerchantTradeNo,
             MerchantID:payInfo.MerchantID,
             TotalAmount:payInfo.TotalAmount,
