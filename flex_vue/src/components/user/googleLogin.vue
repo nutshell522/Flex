@@ -24,7 +24,7 @@ export default {
         this.loggedIn = true;
         //console.log(response);
         this.user = decodeCredential(response.credential);
-        //console.log(this.user);
+        console.log(this.user);
       },
     };
   },

@@ -63,16 +63,6 @@ onMounted(() => {
   if (storedUser) {
     //呼叫api把喜愛商品Id取出來
     const baseAddress = 'https://localhost:7183/api';
-    // const uri = `${baseAddress}/Users/SaveFavorites?memberId=${userObject.memberId}`;
-    // axios
-    //   .get(uri)
-    //   .then((res) => {
-    //     console.log('喜愛商品的id', res.data);
-    //   })
-    //   .catch((err) => {
-    //     err;
-    //   });
-    //呼叫api透過喜愛商品Id把商品湯圓取出來
     const getLikeProductUri = `${baseAddress}/Users/GetFavorites?memberId=${userObject.memberId}`;
     https: axios
       .get(getLikeProductUri)
@@ -89,23 +79,6 @@ onMounted(() => {
 function collect() {
   like.value = !like.value;
   if (like.value) {
-    //呼叫api(memberId、productId)移除
-    // const baseAddress = 'https://localhost:7183/api';
-    // const uri = `${baseAddress}/Users/SaveFavorites`;
-    // const data = {
-    //   MemberId: userObject.memberId,
-    //   ProductId: `${route.params.productId}`,
-    // };
-    // axios
-    //   .post(uri, data)
-    //   .then((res) => {
-    //     //alert(res.data);
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => {
-    //     err;
-    //   });
-  } else {
   }
 }
 </script>

@@ -187,15 +187,12 @@
         />
       </div>
       <div>
-        <label
-          for="photo-input"
-          @click="uploadImages"
-          class="btn btn-info changePhoto"
-        >
+        <label for="photo-input" class="btn btn-info changePhoto">
           選擇圖片
         </label>
       </div>
     </div>
+    <!-- <twzipcode></twzipcode> -->
   </div>
 
   <!-- 驗證畫面 -->
@@ -203,11 +200,10 @@
 </template>
 
 <script setup>
-// import './twzipcode.js';
 import verify from '@/components/user/verify.vue';
 import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
-
+// import twzipcode from './twzipcode.vue';
 import { ref, watch, provide } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
@@ -215,7 +211,6 @@ import axios from 'axios';
 
 let photo = ref(null); //保存 <input> 元素的參考
 let imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑
-//let img = ref('member.jpg');
 
 //使用 Vue Composition API 設定區塊
 function fileChange(event) {
@@ -225,6 +220,27 @@ function fileChange(event) {
     document.querySelector('#profileImage').src = e.target.result;
   };
   reader.readAsDataURL(selectedFile);
+
+  const response = axios
+    .post(
+      edituri,
+      { image: selectedFile },
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
+    .then((res) => {
+      console.log('hello', res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  console.log(response.data);
+  // 更新成功後，也可以更新本地的圖片路徑
+  imageSrc.value = URL.createObjectURL(photo.value.files[0]);
 }
 
 //檢查本地儲存是否有登錄信息
@@ -234,26 +250,10 @@ const userObject = JSON.parse(storedUser);
 const edituri = `${baseAddress}/Users/EditUserPhoto?id=${userObject.memberId}`;
 //選擇圖片時被觸發
 const uploadImages = async () => {
+  console.log('click搞事');
   //photo.value.click();
   const inputElement = photo.value;
-  inputElement.click(); // 直接觸發 input 元素的點擊事件
-
-  try {
-    const formData = new FormData();
-    formData.append('image', photo.value.files[0]);
-
-    const response = await axios.post(edituri, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    console.log(response.data);
-    // 更新成功後，也可以更新本地的圖片路徑
-    imageSrc.value = URL.createObjectURL(photo.value.files[0]);
-  } catch (error) {
-    console.error('Error uploading image:', error);
-  }
+  // inputElement.click(); // 直接觸發 input 元素的點擊事件
 };
 
 //--
@@ -513,7 +513,7 @@ if (isSubscribeNews.value == true) {
   left: 950px;
 }
 .updatePhoto {
-  position: fixed;
+  // position: fixed;
   top: -500px;
   left: -500;
 }

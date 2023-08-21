@@ -44,7 +44,6 @@
         placeholder="輸入6-20碼英數字"
       />
     </div>
-
     <!-- 00再次輸入確認密碼 -->
     <div class="from-group mb-3" v-if="nameInput">
       <label for="name">姓名</label>
@@ -95,7 +94,7 @@
         id="address"
         v-model="address"
         class="form-control"
-        placeholder="收件地址套用選項按鈕阿"
+        placeholder="ex.OO市OO區OO路O號O樓"
       />
     </div>
     <!-- 按鈕 -->
@@ -231,12 +230,13 @@ function ValidatedIdentity() {
   //存入帳號
   localStorage.setItem('userAcc', account.value);
 
-  //載入開始
+  //loading.value = true;
   //alert('loginAndRegister');
   //未填寫
   if (account.value === '') {
     errors.value = [];
-    errors.value.push('沒有填誰知道你是誰'); //結束載入
+    loading.value = false;
+    errors.value.push('請確實填寫');
   } else {
     //已填寫
     errors.value = [];
@@ -246,7 +246,6 @@ function ValidatedIdentity() {
     axios
       .post(uri, loginData)
       .then((res) => {
-        //結束載入
         userData.value = res.data;
         //console.log('帳號' + userData.value); //後端return的訊息
 
@@ -254,22 +253,23 @@ function ValidatedIdentity() {
         //已註冊
         if (userData.value == account.value) {
           //console.log('帳號驗證成功囉!');
-          loading.value = true;
+
           validated.value = true;
           accInput.value = false;
           registered.value = false;
           //忘記密碼
-          loading.value = false;
+
           forgetPwd.value = true;
           arrow.value = true;
+          //loading.value = false;
         } else {
           //未註冊
+          arrow.value = true;
           validated.value = false;
-          //console.log('帳號驗證失敗');
           logAndRegBtn.value = false;
 
           errors.value = [];
-          errors.value.push('484沒有註冊');
+          errors.value.push('此帳號尚未註冊');
           validated.value = true;
           unValidated.value = true; //信箱
           nameInput.value = true;
@@ -283,7 +283,7 @@ function ValidatedIdentity() {
         }
       })
       .catch((err) => {
-        //結束載入
+        loading.value = false;
         alert('API請求失敗：' + err.message);
       });
   }
@@ -302,7 +302,7 @@ function Login() {
   //未填寫密碼
   if (password.value === '') {
     errors.value = [];
-    errors.value.push('密碼沒有填想怎樣');
+    errors.value.push('請確實填寫');
     return;
   }
 
@@ -342,8 +342,6 @@ function Login() {
       errors.value = [];
       errors.value.push('密碼累計錯誤1次');
 
-      //errors.value.push('密碼錯誤');
-
       console.error(err);
       //todo錯誤累計三次
     });
@@ -366,7 +364,7 @@ function register() {
   //todo檢查信箱格式
   if (email.value === '') {
     errors.value = [];
-    errors.value.push('給我確實填寫喔');
+    errors.value.push('欄位尚未填寫完畢');
   } else {
     //格式驗證通過
     errors.value = [];
