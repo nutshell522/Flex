@@ -83,9 +83,9 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref } from "vue";
 
-const page = ref('favorites');
+const page = ref("favorites");
 </script>
 
 <style scoped>

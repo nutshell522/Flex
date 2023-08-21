@@ -19,7 +19,7 @@ namespace EFModels.Models
         public DateTime ordertime { get; set; }
         public int fk_member_Id { get; set; }
         public int total_quantity { get; set; }
-        public int logistics_company_Id { get; set; }
+        public int? logistics_company_Id { get; set; }
         public int order_status_Id { get; set; }
         public int pay_method_Id { get; set; }
         public int pay_status_Id { get; set; }
@@ -35,6 +35,11 @@ namespace EFModels.Models
         public bool? close { get; set; }
         public DateTime? close_time { get; set; }
         public int? fk_typeId { get; set; }
+        public string orderCode { get; set; }
+        public string biller { get; set; }
+        public string bill_address { get; set; }
+        public string bill_cellphone { get; set; }
+        public bool? agreement { get; set; }
 
         public virtual Member fk_member { get; set; }
         public virtual Type fk_type { get; set; }

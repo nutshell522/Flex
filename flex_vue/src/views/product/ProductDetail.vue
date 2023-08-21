@@ -3,7 +3,11 @@
     <div class="row">
       <div class="col-6 pe-3">
         <div class="detailImgbox">
-          <img class="detailImg" :src="baseAddress + 'Public/Img/' + detailImg" :title="productDetail.productName" />
+          <img
+            class="detailImg"
+            :src="baseAddress + 'Public/Img/' + detailImg"
+            :title="productDetail.productName"
+          />
         </div>
       </div>
       <div class="col-6 ps-5">
@@ -12,8 +16,11 @@
             {{ productDetail.productName }}
           </div>
           <div class="col-5">
-            <div v-if="productDetail.unitPrice !== null" :title="productDetail.unitPrice"
-              class="text-decoration-line-through detailUnitPrice text-right">
+            <div
+              v-if="productDetail.unitPrice !== null"
+              :title="productDetail.unitPrice"
+              class="text-decoration-line-through detailUnitPrice text-right"
+            >
               {{ productDetail.unitPrice }}
             </div>
             <div class="detailSalesPriceBox">
@@ -27,38 +34,68 @@
         <hr />
         <div class="row color-list">
           <div class="">
-            <a href="#" v-for="(groupDetail, color, index) in productDetail.productGroup" :class="{
-              colorBoxSetting: true,
-              colorActive: colorActiveindex === index,
-            }" :key="color" @click="updateSizeList(groupDetail, index)" :title="color">{{ color }}
+            <a
+              href="#"
+              v-for="(groupDetail, color, index) in productDetail.productGroup"
+              :class="{
+                colorBoxSetting: true,
+                colorActive: colorActiveindex === index,
+              }"
+              :key="color"
+              @click="updateSizeList(groupDetail, index)"
+              :title="color"
+              >{{ color }}
             </a>
           </div>
           <div class="size-height">
-            <a href="#" v-for="(size, index) in selectSizes" :class="{
-              sizeboxsetting: true,
-              sizeActive: sizeActiveIndex === index,
-              zeroInventory: size.qty === 0,
-            }" :key="size.productGroupId" :title="size.sizeName" :data-productGroupId="size.productGroupId"
-              @click="handleSizeClick(index, size.qty)">
+            <a
+              href="#"
+              v-for="(size, index) in selectSizes"
+              :class="{
+                sizeboxsetting: true,
+                sizeActive: sizeActiveIndex === index,
+                zeroInventory: size.qty === 0,
+              }"
+              :key="size.productGroupId"
+              :title="size.sizeName"
+              :data-productGroupId="size.productGroupId"
+              @click="handleSizeClick(index, size.qty)"
+            >
               {{ size.sizeName }}
             </a>
           </div>
           <div class="mt-3 d-flex mb-3">
             <div class="text-center">
-              <button type="button" class="form-control btn btn-secondary" style="font-size: 20px" data-bs-toggle="modal"
-                data-bs-target="#exampleModal" v-if="productDetail.salesCategoryName !== '配件'">
+              <button
+                type="button"
+                class="form-control btn btn-secondary"
+                style="font-size: 20px"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                v-if="productDetail.salesCategoryName !== '配件'"
+              >
                 尺寸表
               </button>
             </div>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-              aria-hidden="true">
+            <div
+              class="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">
                       尺寸表
                     </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
                   </div>
                   <div class="modal-body modal-dialog modal-dialog-scrollable">
                     <img :src="baseAddress + 'Public/Img/' + sizeTable" />
@@ -67,7 +104,11 @@
                     <img :src="baseAddress + 'Public/Img/' + sizeImg" />
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
                       關閉
                     </button>
                   </div>
@@ -75,9 +116,13 @@
               </div>
             </div>
             <div class="ms-3 text-center">
-              <button class="form-control" style="font-size: 20px" @click="collect">
-                <i class="bi bi-heart" style="color: red" v-if="!like"></i><i class="bi bi-heart-fill" style="color: red"
-                  v-else></i>
+              <button
+                class="form-control"
+                style="font-size: 20px"
+                @click="collect"
+              >
+                <i class="bi bi-heart" style="color: red" v-if="!like"></i
+                ><i class="bi bi-heart-fill" style="color: red" v-else></i>
               </button>
             </div>
           </div>
@@ -85,22 +130,41 @@
           <div class="mt-3 mb-3 col-12 buy-height">
             <div class="d-flex row">
               <div class="d-flex me-3 col-5">
-                <span class="col-3" style="
+                <span
+                  class="col-3"
+                  style="
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                  ">數量:</span>
-                <button @click="decrementProductQty()" class="increaseAndDecrease">
+                  "
+                  >數量:</span
+                >
+                <button
+                  @click="decrementProductQty()"
+                  class="increaseAndDecrease"
+                >
                   <i class="bi bi-dash-lg"></i>
                 </button>
-                <input type="text" name="productQty" id="productQty" class="form-control text-center"
-                  style="border-radius: 0" v-model="buyQty" @input="handleQyt" />
-                <button @click="incrementProductQty()" class="increaseAndDecrease">
+                <input
+                  type="text"
+                  name="productQty"
+                  id="productQty"
+                  class="form-control text-center"
+                  style="border-radius: 0"
+                  v-model="buyQty"
+                  @input="handleQyt"
+                />
+                <button
+                  @click="incrementProductQty()"
+                  class="increaseAndDecrease"
+                >
                   <i class="bi bi-plus-lg"></i>
                 </button>
               </div>
               <div class="col-6">
-                <button @click="joinCartItemEventHandler" class="form-control">加入購物車</button>
+                <button @click="joinCartItemEventHandler" class="form-control">
+                  加入購物車
+                </button>
               </div>
             </div>
           </div>
@@ -109,28 +173,63 @@
     </div>
     <div class="row mt-5">
       <div class="col-12">
-        <ul class="nav nav-tabs d-flex" style="align-items: center; justify-content: center" id="myTab" role="tablist">
+        <ul
+          class="nav nav-tabs d-flex"
+          style="align-items: center; justify-content: center"
+          id="myTab"
+          role="tablist"
+        >
           <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
-              type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+            <button
+              class="nav-link active"
+              id="home-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#home-tab-pane"
+              type="button"
+              role="tab"
+              aria-controls="home-tab-pane"
+              aria-selected="true"
+            >
               商品資訊
             </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
-              type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+            <button
+              class="nav-link"
+              id="profile-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#profile-tab-pane"
+              type="button"
+              role="tab"
+              aria-controls="profile-tab-pane"
+              aria-selected="false"
+            >
               商品評價
             </button>
           </li>
         </ul>
         <div class="tab-content mt-3" id="myTabContent">
-          <div class="tab-pane fade show active commentDiv" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
-            tabindex="0">
+          <div
+            class="tab-pane fade show active commentDiv"
+            id="home-tab-pane"
+            role="tabpanel"
+            aria-labelledby="home-tab"
+            tabindex="0"
+          >
             <div style="width: 95%; position: relative" class="p-3">
               <h1 style="display: inline">商品資訊</h1>
-              <span style="right: 0%; position: absolute; font-size: 30px"><i class="bi bi-plus-lg" v-if="!showDetailDiv"
-                  @click="showDetailDiv = !showDetailDiv"></i><i class="bi bi-dash-lg" v-else
-                  @click="showDetailDiv = !showDetailDiv"></i></span>
+              <span style="right: 0%; position: absolute; font-size: 30px"
+                ><i
+                  class="bi bi-plus-lg"
+                  v-if="!showDetailDiv"
+                  @click="showDetailDiv = !showDetailDiv"
+                ></i
+                ><i
+                  class="bi bi-dash-lg"
+                  v-else
+                  @click="showDetailDiv = !showDetailDiv"
+                ></i
+              ></span>
               <div class="mt-3 ms-3" v-if="showDetailDiv">
                 <div>產地:{{ productDetail.productOrigin }}</div>
                 <div>材質:{{ productDetail.productMaterial }}</div>
@@ -138,48 +237,91 @@
               </div>
             </div>
           </div>
-          <div class="tab-pane fade commentDiv" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
-            tabindex="0" v-if="productComment.length > 0">
+          <div
+            class="tab-pane fade commentDiv"
+            id="profile-tab-pane"
+            role="tabpanel"
+            aria-labelledby="profile-tab"
+            tabindex="0"
+            v-if="productComment.length > 0"
+          >
             <div style="width: 95%; position: relative" class="p-3">
               <h1 class="d-inline">
                 綜合評分 : <i class="bi bi-star-fill" style="color: gold"></i>
                 {{ productComment[0].averageScore }} / 5
               </h1>
-              <span style="right: 0%; position: absolute; font-size: 30px"><i class="bi bi-plus-lg" v-if="!showCommentDiv"
-                  @click="showCommentDiv = !showCommentDiv"></i><i class="bi bi-dash-lg" v-else
-                  @click="showCommentDiv = !showCommentDiv"></i></span>
+              <span style="right: 0%; position: absolute; font-size: 30px"
+                ><i
+                  class="bi bi-plus-lg"
+                  v-if="!showCommentDiv"
+                  @click="showCommentDiv = !showCommentDiv"
+                ></i
+                ><i
+                  class="bi bi-dash-lg"
+                  v-else
+                  @click="showCommentDiv = !showCommentDiv"
+                ></i
+              ></span>
               <div v-if="showCommentDiv">
-                <div v-for="comment in productComment" :key="comment.commentId" class="mb-3 ms-3">
+                <div
+                  v-for="comment in productComment"
+                  :key="comment.commentId"
+                  class="mb-3 ms-3"
+                >
                   <div class="d-flex">
                     <div>{{ comment.memberNameText }}</div>
                     <div class="ms-3">
-                      <i v-for="i in comment.score" :key="i" class="bi bi-star-fill" style="color: gold"></i>
+                      <i
+                        v-for="i in comment.score"
+                        :key="i"
+                        class="bi bi-star-fill"
+                        style="color: gold"
+                      ></i>
                     </div>
                     <div class="ms-3">{{ comment.createTimeText }}</div>
                   </div>
                   <div>{{ comment.description }}</div>
                   <hr />
                 </div>
-                <nav aria-label="Page navigation example" style="
+                <nav
+                  aria-label="Page navigation example"
+                  style="
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                  ">
+                  "
+                >
                   <ul class="pagination">
                     <li class="page-item">
-                      <a class="page-link" aria-label="Previous" @click="decrementPage">
+                      <a
+                        class="page-link"
+                        aria-label="Previous"
+                        @click="decrementPage"
+                      >
                         <span aria-hidden="true">&laquo;</span>
                       </a>
                     </li>
-                    <li v-for="(value, index) in totalPages" class="page-item" :key="index" @click="clickHandler(value)">
-                      <a :class="{
-                        pageHandle: thePage === value,
-                        'page-link': true,
-                      }">{{ value }}</a>
+                    <li
+                      v-for="(value, index) in totalPages"
+                      class="page-item"
+                      :key="index"
+                      @click="clickHandler(value)"
+                    >
+                      <a
+                        :class="{
+                          pageHandle: thePage === value,
+                          'page-link': true,
+                        }"
+                        >{{ value }}</a
+                      >
                     </li>
 
                     <li class="page-item">
-                      <a class="page-link" aria-label="Next" @click="incrementPage">
+                      <a
+                        class="page-link"
+                        aria-label="Next"
+                        @click="incrementPage"
+                      >
                         <span aria-hidden="true">&raquo;</span>
                       </a>
                     </li>
@@ -207,9 +349,6 @@
             <Slide v-for="card in similarProducts" :key="card.productId" class="card text-center">
               <ProductCard :card="card"></ProductCard>
             </Slide>
-            <!-- <template #addons>
-              <Navigation />
-            </template> -->
           </Carousel>
         </div>
       </div>
@@ -217,8 +356,12 @@
     <div class="row mt-3">
       <div class="col-12">
         <div class="detailImgboxs">
-          <img v-for="datas in productImgs" :key="datas.productImgId" :src="baseAddress + 'Public/Img/' + datas.imgPath"
-            class="detailImgList" />
+          <img
+            v-for="datas in productImgs"
+            :key="datas.productImgId"
+            :src="baseAddress + 'Public/Img/' + datas.imgPath"
+            class="detailImgList"
+          />
         </div>
       </div>
     </div>
@@ -232,7 +375,7 @@ import { useRouter, useRoute } from "vue-router";
 import ProductCard from "@/components/product/ProductCard.vue";
 import { useProductRoute } from "@/stores/useProductRoute.js";
 import { Carousel, Slide } from "vue3-carousel";
-import navBar from '@/components/home/navBar.vue';
+import navBar from "@/components/home/navBar.vue";
 
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
@@ -248,7 +391,7 @@ const showCommentDiv = ref(true);
 const showDetailDiv = ref(true);
 const cards = ref([]);
 const productStore = useProductRoute();
-const productName = ref("");
+//const productName = ref("");
 const similarProducts = ref([]);
 const totalPages = ref(1);
 const thePage = ref(1);
@@ -278,7 +421,7 @@ let getData = async () => {
     .then((response) => {
       //console.log(response.data.productName);
       productDetail.value = response.data;
-      productName.value = response.data.productName;
+      //productName.value = response.data.productName;
       const firstColor = Object.keys(productDetail.value.productGroup)[0];
       //console.log(firstColor);
       if (firstColor) {
@@ -557,10 +700,10 @@ const joinCartItemEventHandler = async () => {
   const storedUser = localStorage.getItem("loggedInUser");
   if (storedUser) {
     const userObject = JSON.parse(storedUser);
-    const product = document.querySelector('.sizeActive');
+    const product = document.querySelector(".sizeActive");
     if (product) {
-      const productId = product.getAttribute('data-productgroupid')
-      const Qty = document.querySelector('#productQty').value;
+      const productId = product.getAttribute("data-productgroupid");
+      const Qty = document.querySelector("#productQty").value;
       const requestData = {
         MemberId: parseInt(userObject.memberId),
         CartItem: {
@@ -586,7 +729,7 @@ const joinCartItemEventHandler = async () => {
   } else {
     alert("請先登入囉!");
   }
-}
+};
 </script>
 
 <style scoped>

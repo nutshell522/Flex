@@ -41,11 +41,11 @@
           <h3>引領潮流</h3>
         </div>
         <div class="row row-cols-2 gx-3">
-          <a href="javascript:;" class="img-wrapper col">
+          <a href="/men" class="img-wrapper col">
             <img src="../../../public/imgs/pexels-luis-zambrano-17570085.jpg" />
             <div class="img-text">男款</div>
           </a>
-          <a href="#" class="img-wrapper col">
+          <a href="/women" class="img-wrapper col">
             <img src="../../../public/imgs/pexels-daniel-duarte-17122658.jpg" />
             <div class="img-text">女款</div>
           </a>

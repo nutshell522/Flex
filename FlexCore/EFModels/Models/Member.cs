@@ -12,6 +12,7 @@ namespace EFModels.Models
             CouponSendings = new HashSet<CouponSending>();
             CustomizedOrders = new HashSet<CustomizedOrder>();
             Favorites = new HashSet<Favorite>();
+            MemberImgs = new HashSet<MemberImg>();
             OneToOneReservations = new HashSet<OneToOneReservation>();
             PointHistories = new HashSet<PointHistory>();
             PointTradeIns = new HashSet<PointTradeIn>();
@@ -44,6 +45,7 @@ namespace EFModels.Models
         public virtual ICollection<CouponSending> CouponSendings { get; set; }
         public virtual ICollection<CustomizedOrder> CustomizedOrders { get; set; }
         public virtual ICollection<Favorite> Favorites { get; set; }
+        public virtual ICollection<MemberImg> MemberImgs { get; set; }
         public virtual ICollection<OneToOneReservation> OneToOneReservations { get; set; }
         public virtual ICollection<PointHistory> PointHistories { get; set; }
         public virtual ICollection<PointTradeIn> PointTradeIns { get; set; }

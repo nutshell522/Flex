@@ -8,9 +8,9 @@ namespace EFModels.Models
     public partial class MemberImg
     {
         public int Id { get; set; }
-        public string ImgsPath { get; set; }
         public int fk_memberId { get; set; }
+        public string ImgPath { get; set; }
 
-        public virtual Member IdNavigation { get; set; }
+        public virtual Member fk_member { get; set; }
     }
 }
