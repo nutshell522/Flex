@@ -65,7 +65,7 @@ const routes = [
     meta: { title: `${webTitle}訂單` },
   },
   {
-    path: "/activityIndex",
+    path: '/activityIndex',
     component: ActivityIndex,
     meta: { title: `${webTitle}活動首頁` },
   },
@@ -77,7 +77,7 @@ const routes = [
   },
   {
     //http://loaclhost/activitySignUp
-    path: "/activitySignUp/:id",
+    path: '/activitySignUp/:id',
     component: ActivitySignUp,
     name: 'activitySignUp',
     meta: { title: `${webTitle}活動報名`, require: true },
@@ -97,11 +97,6 @@ const routes = [
     path: '/speakerInfo/:id',
     component: SpeakerInfo,
     meta: { title: `${webTitle}講師資訊` },
-  },
-  {
-    //http://loaclhost/Login
-    path: '/login',
-    component: Login,
   },
   {
     //http://loaclhost/orders
@@ -334,7 +329,12 @@ router.beforeEach((to, from, next) => {
   //檢查是否需要驗證，如果需要，則檢查是否已登入
   if (to.meta.require && !loginSuccess) {
     console.log('nologin');
+    console.log(44332211);
     next({ path: '/login' });
+  } else if (to.path == '/login' && loginSuccess) {
+    console.log('already logged in');
+    console.log(11223344);
+    next({ path: '/' }); // 或其他您希望導向的頁面
   } else {
     //console.log('login');
     next();
