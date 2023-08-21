@@ -29,8 +29,8 @@ namespace FlexCoreService.Controllers
     {
         private readonly AppDbContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private  IFavoriteDPRepository _repo;
-        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor , IFavoriteDPRepository repo)
+        private IFavoriteDPRepository _repo;
+        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor, IFavoriteDPRepository repo)
         {
             _db = db;
             _repo = repo;
@@ -85,7 +85,8 @@ namespace FlexCoreService.Controllers
                 CommonAddress = m.CommonAddress,
                 AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
                 AlternateAddress2 = m.AlternateAddress.AlternateAddress2,
-                IsSubscribeNews = m.IsSubscribeNews
+                IsSubscribeNews = m.IsSubscribeNews,
+                ImgsPath=m.MemberImg.ImgsPath
             }).First();
 
 
@@ -206,6 +207,74 @@ namespace FlexCoreService.Controllers
         }
 
         /// <summary>
+        /// 編輯會員照片
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        [HttpPost("EditUserPhoto")]
+        public async Task<ActionResult<string>> EditUserPhoto(int id, IFormFile image)
+        {
+            Member member = await _db.Members.FindAsync(id); //FindAsync 根據主键查找對應的紀錄
+
+            if (member == null)
+            {
+                return NotFound("找不到對應的會員資料");
+            }
+
+            try
+            {
+                if (image == null)
+                {
+                    return BadRequest("找不到圖片");
+                }
+
+                // 查詢是否已經有對應的照片記錄
+                MemberImg existingImg = await _db.MemberImgs.FirstOrDefaultAsync(img => img.fk_memberId == id);
+
+                if (existingImg != null)
+                {
+                    // 如果已經有照片記錄，更新它
+                    string targetDirectory = @"D:\FlexFrontend\FlexFrontendNew\flex_vue\public\imgs";
+                    string imagePath = Path.Combine(targetDirectory, image.FileName);
+
+                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+
+                    existingImg.ImgsPath = image.FileName;
+                }
+                else
+                {
+                    // 如果沒有照片記錄，新增一條照片記錄
+                    MemberImg img = new MemberImg();
+                    img.fk_memberId = id;
+
+                    string targetDirectory = @"D:\FlexFrontend\FlexFrontendNew\flex_vue\public\imgs";
+                    string imagePath = Path.Combine(targetDirectory, image.FileName);
+
+                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+
+                    img.ImgsPath = image.FileName;
+                    _db.MemberImgs.Add(img);
+                }
+
+                await _db.SaveChangesAsync();
+
+                return Ok("更新圖片成功");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"發生錯誤: {ex.Message}");
+            }
+        }
+
+
+        /// <summary>
         /// 編輯會員資料
         /// </summary>
         /// <param name="account"></param>
@@ -216,6 +285,8 @@ namespace FlexCoreService.Controllers
 
             //檢查id是否存在
             Member member = await _db.Members.FindAsync(id); //FindAsync 根據主键查找對應的紀錄
+                                                             // 查詢是否已經有對應的照片記錄
+            MemberImg existingImg = await _db.MemberImgs.FirstOrDefaultAsync(img => img.fk_memberId == id);
 
             if (member == null)
             {
@@ -226,7 +297,7 @@ namespace FlexCoreService.Controllers
             member.Mobile = prodto.Mobile;
             member.Gender = prodto.Gender;
             member.Birthday = prodto.Birthday;
-            member.CommonAddress = prodto.CommonAddress;            
+            member.CommonAddress = prodto.CommonAddress;
             member.IsSubscribeNews = prodto.IsSubscribeNews;
 
             //AlternateAddress 
@@ -267,7 +338,9 @@ namespace FlexCoreService.Controllers
             }
             //檢查資料都填寫
 
-            //跳更新成功回到本頁
+
+
+
             return Ok("編輯會員資料成功");
         }
 
@@ -379,13 +452,13 @@ namespace FlexCoreService.Controllers
             Member member = await _db.Members.FirstOrDefaultAsync(x => x.MemberId == favoritesdto.MemberId);
             Product product = await _db.Products.FirstOrDefaultAsync(p => p.ProductId == favoritesdto.ProductId);
 
-            //Favorite favorites = new Favorite
-            //{
-            //    fk_memberId= favoritesdto.MemberId,
-            //    fk_productId= favoritesdto.ProductId
-            //};
+            Favorite favorites = new Favorite
+            {
+                fk_memberId = favoritesdto.MemberId,
+                fk_productId = favoritesdto.ProductId
+            };
 
-            //_db.Favorites.Add(favorites);
+            _db.Favorites.Add(favorites);
             await _db.SaveChangesAsync();
             return Ok("喜愛商品收藏成功");
         }
@@ -411,7 +484,7 @@ namespace FlexCoreService.Controllers
             var service = new FavoriteService(_repo);
             var pro = service.GetFavorites(memberId);
 
-            var result=new List<ProductCardDto>();
+            var result = new List<ProductCardDto>();
             return Ok(pro);
         }
         private bool MemberExists(int id)

@@ -176,8 +176,23 @@
     </div>
     <!-- 上傳圖片 -->
     <div class="col-md-6 userImg">
-      <updatePhoto></updatePhoto>
+      <div>
+        <img :src="imageSrc + imgsPath" alt="" id="profileImage" />
+        <input
+          id="photo-input"
+          ref="photo"
+          type="file"
+          class="photo"
+          @change="fileChange($event)"
+        />
+      </div>
+      <div>
+        <label for="photo-input" class="btn btn-info changePhoto">
+          選擇圖片
+        </label>
+      </div>
     </div>
+    <!-- <twzipcode></twzipcode> -->
   </div>
 
   <!-- 驗證畫面 -->
@@ -185,29 +200,69 @@
 </template>
 
 <script setup>
-// import './twzipcode.js';
 import verify from '@/components/user/verify.vue';
 import navBar from '@/components/home/navBar.vue';
 import userBar from '@/components/user/userBar.vue';
-import updatePhoto from '@/components/user/updatePhoto.vue';
+// import twzipcode from './twzipcode.vue';
 import { ref, watch, provide } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 import axios from 'axios';
 
+let photo = ref(null); //保存 <input> 元素的參考
+let imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑
+
+//使用 Vue Composition API 設定區塊
+function fileChange(event) {
+  const selectedFile = event.target.files[0]; //獲取所選圖片
+  var reader = new FileReader();
+  reader.onload = (e) => {
+    document.querySelector('#profileImage').src = e.target.result;
+  };
+  reader.readAsDataURL(selectedFile);
+
+  const response = axios
+    .post(
+      edituri,
+      { image: selectedFile },
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
+    .then((res) => {
+      console.log('hello', res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  console.log(response.data);
+  // 更新成功後，也可以更新本地的圖片路徑
+  imageSrc.value = URL.createObjectURL(photo.value.files[0]);
+}
+
+//檢查本地儲存是否有登錄信息
+const storedUser = localStorage.getItem('loggedInUser');
+const userObject = JSON.parse(storedUser);
+
+const edituri = `${baseAddress}/Users/EditUserPhoto?id=${userObject.memberId}`;
+//選擇圖片時被觸發
+const uploadImages = async () => {
+  console.log('click搞事');
+  //photo.value.click();
+  const inputElement = photo.value;
+  // inputElement.click(); // 直接觸發 input 元素的點擊事件
+};
+
+//--
+
 const getApiStore = useGetApiDataStore();
 const { memberInfo } = storeToRefs(getApiStore);
 
 const userProfile = ref([]);
-const photo = ref(null);
-const account = ref(''); // 初始化為空字符串
 const id = ref('');
-const fileChange = (e) => {
-  console.log(e.target.files);
-};
-const uploadImages = () => {
-  photo.value.click();
-};
 
 // let level = ref('');
 const levelName = ref('');
@@ -225,6 +280,7 @@ const editPwd = ref('');
 const checkPwd = ref('');
 const editPwdShow = ref(false);
 const isSubscribeNews = ref(true);
+const imgsPath = ref('');
 
 const memberId = getApiStore.getMemberId;
 const verifyArea = ref(true);
@@ -234,6 +290,7 @@ const showUserData = ref(false);
 
 const baseAddress = 'https://localhost:7183/api';
 const uri = `${baseAddress}/Users/` + memberId;
+
 //console.log('uri', uri);
 
 axios
@@ -255,11 +312,13 @@ axios
     alternateAddress1.value = res.data.alternateAddress1;
     alternateAddress2.value = res.data.alternateAddress2;
     isSubscribeNews.value = res.data.isSubscribeNews;
-    //console.log(alternateAddress1.value);
+    //imgsPath.value = res.data.imgsPath;
+
+    console.log(alternateAddress1.value);
     //console.log(alternateAddress2.value);
     //console.log('gender', gender.value);
-    //console.log(isSubscribeNews.value);
-
+    console.log(isSubscribeNews.value);
+    console.log(imgsPath.value);
     //顯示控制項
     if (alternateAddress1.value) {
       addAddressInput1.value = true;
@@ -274,6 +333,14 @@ axios
     if (isSubscribeNews.value != true) {
       isSubscribeNews.value = true;
     }
+    console.log(res.data);
+    console.log(res.data.imgsPath);
+    if (res.data.imgsPath != null) {
+      imgsPath.value = res.data.imgsPath;
+    } else {
+      imgsPath.value = 'member.jpg';
+    }
+    //img.value = imgsPath.value;
   })
   .catch((err) => {
     err;
@@ -441,12 +508,12 @@ if (isSubscribeNews.value == true) {
   margin-top: 20px;
 }
 .changePhoto {
-  position: absolute;
+  // position: absolute;
   top: 300px;
   left: 950px;
 }
 .updatePhoto {
-  position: fixed;
+  // position: fixed;
   top: -500px;
   left: -500;
 }
@@ -469,7 +536,7 @@ if (isSubscribeNews.value == true) {
 }
 .editPwdIcon {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding-right: 10px;
   margin: 10px;
 }
@@ -477,5 +544,14 @@ if (isSubscribeNews.value == true) {
   border: 1px solid;
   padding: 20px;
   margin-bottom: 20px;
+}
+.photo {
+  position: fixed;
+  top: -500px;
+  left: -500;
+}
+.userImg {
+  display: flex;
+  width: 300px;
 }
 </style>

@@ -9,7 +9,6 @@ namespace EFModels.Models
     {
         public Type()
         {
-            EcpayOrders = new HashSet<EcpayOrder>();
             PointHistories = new HashSet<PointHistory>();
             PointManages = new HashSet<PointManage>();
             orderItems = new HashSet<orderItem>();
@@ -19,7 +18,6 @@ namespace EFModels.Models
         public int TypeId { get; set; }
         public string TypeName { get; set; }
 
-        public virtual ICollection<EcpayOrder> EcpayOrders { get; set; }
         public virtual ICollection<PointHistory> PointHistories { get; set; }
         public virtual ICollection<PointManage> PointManages { get; set; }
         public virtual ICollection<orderItem> orderItems { get; set; }

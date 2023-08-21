@@ -51,7 +51,7 @@
         </div>
         <!-- 手刀報名按鈕 -->
         <div class="text-end">
-          <a :href="'https://localhost:8080/activitySignUp/'+ route.params.id" class="btn button">
+          <a :href="'https://localhost:8080/activitySignUp/'+ route.params.id" class="btn button" @click="getActivityId">
             <!-- icon -->
             <span class="icon">
               <img
@@ -96,26 +96,46 @@
 import axios from "axios";
 import { ref, reactive, onMounted } from "vue";
 import AOS from "aos";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import FlipDown from "vue-flip-down";
+import { useActivityRoute} from "@/stores/useActivityRoute.js";
+let activityId;
+// let originalPath;
 
 const bookingTime = ref([]);
-
+const activityStore = useActivityRoute();
 const route = useRoute();
 // const activityId = route.params.id;
 const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
 //從F12的Vue去看的
 // console.log(activityId);
 AOS.init();
+console.log(activityStore);
 
 
+const originalPath = route.path;
+
+localStorage.setItem('originalRoute', route.path);
+localStorage.setItem('activityId', route.params.id);
 
 onMounted(async () => {
-  const activityId = route.params.id;
+  activityId = route.params.id;
+ 
   await loadActivities(activityId);
   await getActivityBookingTime(activityId);
   await loadActivities(activityId);
+  
+
 });
+
+
+const getActivityId = () =>{
+  activityStore.activityId=activityId;
+  activityStore.originalPath =originalPath;
+  
+  console.log(activityStore);
+}
+
 
 
 const activities = reactive({

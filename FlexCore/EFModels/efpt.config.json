@@ -84,7 +84,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[EcpayOrders]",
+         "Name": "[dbo].[Favorites]",
          "ObjectType": 0
       },
       {
@@ -93,6 +93,10 @@
       },
       {
          "Name": "[dbo].[logistics_companies]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MemberImg]",
          "ObjectType": 0
       },
       {
@@ -188,10 +192,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[ReservationReviews]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[ReservationStatuses]",
          "ObjectType": 0
       },
@@ -268,7 +268,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "desktop-3rgs82c.Flex.dbo",
+   "UiHint": "desktop-iq9m2qc.Flex.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
