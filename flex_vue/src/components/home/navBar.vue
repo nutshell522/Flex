@@ -8,7 +8,9 @@
           <a href="/login">登入</a>
         </li>
         <li class="p-relative userIcon" v-if="loginSuccess">
-          <a href="/orders" @mouseenter="showList"><i class="bi bi-person-circle"></i></a>
+          <a href="/orders" @mouseenter="showList"
+            ><i class="bi bi-person-circle"></i
+          ></a>
           <userList v-if="isListVisible" @mouseleave="hideList"></userList>
         </li>
       </ul>
@@ -18,7 +20,11 @@
     <div class="container">
       <div class="left">
         <router-link to="/" class="logo-wrapper">
-          <img src="../../../../public/LOGO/FlexLogoDark.png" alt="" class="logo" />
+          <img
+            src="../../../../public/LOGO/FlexLogoDark.png"
+            alt=""
+            class="logo"
+          />
           <h1>FLEX</h1>
         </router-link>
       </div>
@@ -67,30 +73,53 @@
         </div>
         <div class="icon">
           <a href="/cart"><i class="bi bi-bag"></i></a>
-          <div v-if="cartItemCount && cartItemCount.value != 0" class="count">{{ cartItemCount }}</div>
+          <div v-if="cartItemCount && cartItemCount.value != 0" class="count">
+            {{ cartItemCount }}
+          </div>
           <div class="drap">
-            <div v-if="memberId == 0" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+            <div
+              v-if="memberId == 0"
+              class="w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+            >
               <div class="w-100 text-center fs-4">您尚未登入</div>
               <a class="btn btn-dark rounded-5 px-4 mt-4" href="/login">登入</a>
             </div>
-            <div v-else-if="cartItemCount && cartItemCount != 0" class="w-100 h-100 d-flex flex-column p-2">
+            <div
+              v-else-if="cartItemCount && cartItemCount != 0"
+              class="w-100 h-100 d-flex flex-column p-2"
+            >
               <ul class="p-0">
-                <li v-for="cartItem in cartItems" :key="cartItem.cartItemId" class="w-100 d-flex border-bottom pb-2 mb-2">
+                <li
+                  v-for="cartItem in cartItems"
+                  :key="cartItem.cartItemId"
+                  class="w-100 d-flex border-bottom pb-2 mb-2"
+                >
                   <div class="cart-img-wrapper me-3">
-                    <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath">
+                    <img
+                      :src="
+                        imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath
+                      "
+                    />
                   </div>
                   <div class="w-75">
                     <div class="fs-6">{{ cartItem.product.productName }}</div>
                     <div class="d-flex">
-                      <div class="fs-6 me-3">顏色:{{ cartItem.product.color }}</div>
-                      <div class="fs-6 me-auto">尺寸:{{ cartItem.product.size }}</div>
+                      <div class="fs-6 me-3">
+                        顏色:{{ cartItem.product.color }}
+                      </div>
+                      <div class="fs-6 me-auto">
+                        尺寸:{{ cartItem.product.size }}
+                      </div>
                       <div class="fs-6">{{ cartItem.qty }} 件</div>
                     </div>
                   </div>
                 </li>
               </ul>
             </div>
-            <div v-else class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+            <div
+              v-else
+              class="w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+            >
               <div class="w-100 text-center fs-4">購物車還沒有東西喔</div>
             </div>
           </div>
@@ -104,7 +133,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, defineComponent } from "vue";
+import { ref, onMounted, watch, defineEmits } from "vue";
 import userList from "../home/userList.vue";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -117,14 +146,13 @@ const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs�
 const { memberInfo } = storeToRefs(getApiStore);
 const { setLoginSuccess } = getApiStore; //function透過store取資料
 const { getData } = getApiStore;
-const loggedInUser = localStorage.getItem('loggedInUser');
+const loggedInUser = localStorage.getItem("loggedInUser");
 const imgBaseUrl = ref(baseAddress);
 let memberId = 0;
 if (loggedInUser) {
   const memberInfo = JSON.parse(loggedInUser);
   memberId = memberInfo.memberId;
-}
-else {
+} else {
   memberId = 0;
 }
 const cartItemCount = ref(0);
@@ -132,15 +160,13 @@ const cartItems = ref([]);
 const loadCartAnditemCount = async () => {
   if (memberId == 0) {
     cartItemCount.value = 0;
-  }
-  else {
+  } else {
     let url = `${baseAddress}api/Cart`;
     await axios
       .post(url, memberId)
       .then((response) => {
         cartItemCount.value = response.data.length;
         cartItems.value = response.data;
-
       })
       .catch((error) => {
         alert(error);
@@ -148,6 +174,11 @@ const loadCartAnditemCount = async () => {
   }
 };
 loadCartAnditemCount();
+const emit = defineEmits("UpdateCart");
+const sendFunctionToParent = async () => {
+  // 定義父元件傳到子元件事件
+  emit("UpdateCart", loadCartAnditemCount);
+};
 
 const url = `${baseAddress}api/Users/Login`;
 function getApi() {
@@ -162,8 +193,8 @@ function hideList() {
   isListVisible.value = false;
 }
 onMounted(() => {
-
-})
+  sendFunctionToParent();
+});
 
 watch(memberInfo, (newValue) => {
   if (newValue) {
@@ -226,21 +257,21 @@ header {
   background-color: #f5f5f5;
   height: $header-height;
 
-  &>div {
+  & > div {
     display: flex;
     height: 100%;
 
-    &>ul {
+    & > ul {
       display: flex;
       align-items: center;
       height: 100%;
 
-      &>li {
+      & > li {
         list-style: none;
         font-size: 14px;
         height: 100%;
 
-        &>a {
+        & > a {
           @extend .text-link;
           display: inline-block;
           height: 100%;
@@ -269,21 +300,21 @@ nav {
   @extend .nav-height;
   background-color: #fff;
 
-  &>.container {
+  & > .container {
     position: relative;
 
-    &>.left,
-    &>.center,
-    &>.right {
+    & > .left,
+    & > .center,
+    & > .right {
       @extend .nav-height;
       position: absolute;
     }
 
-    &>.left {
+    & > .left {
       @extend .nav-height;
       position: absolute;
 
-      &>.logo-wrapper {
+      & > .logo-wrapper {
         @extend .nav-height;
         width: 100px;
         display: flex;
@@ -305,7 +336,7 @@ nav {
           object-fit: cover;
         }
 
-        &>h1 {
+        & > h1 {
           line-height: $nav-height;
           font-weight: bold;
           font-size: 40px;
@@ -314,16 +345,16 @@ nav {
       }
     }
 
-    &>.center {
+    & > .center {
       left: 50%;
       transform: translate(-50%);
 
-      &>ul {
+      & > ul {
         display: flex;
         height: 100%;
 
-        &>.transetion {
-          &>li {
+        & > .transetion {
+          & > li {
             height: 100%;
             cursor: pointer;
             overflow-y: hidden;
@@ -333,13 +364,13 @@ nav {
             display: flex;
             justify-content: center;
 
-            &>.nav-list-item {
+            & > .nav-list-item {
               height: 200%;
               position: absolute;
               top: 0;
               transition: 0.3s;
 
-              &>div {
+              & > div {
                 display: flex;
                 height: 50%;
                 align-items: center;
@@ -350,14 +381,14 @@ nav {
             &:hover {
               border-bottom: 3px solid black;
 
-              &>.nav-list-item {
+              & > .nav-list-item {
                 top: -100%;
               }
             }
           }
         }
 
-        &>li {
+        & > li {
           height: 100%;
           cursor: pointer;
           overflow-y: hidden;
@@ -367,13 +398,13 @@ nav {
           display: flex;
           justify-content: center;
 
-          &>.nav-list-item {
+          & > .nav-list-item {
             height: 200%;
             position: absolute;
             top: 0;
             transition: 0.3s;
 
-            &>div {
+            & > div {
               display: flex;
               height: 50%;
               align-items: center;
@@ -384,7 +415,7 @@ nav {
           &:hover {
             border-bottom: 3px solid black;
 
-            &>.nav-list-item {
+            & > .nav-list-item {
               top: -100%;
             }
           }
@@ -470,7 +501,7 @@ nav {
           width: 350px;
           z-index: 999;
           border: 1px solid rgba($color: #fff, $alpha: 0);
-          transition: max-height .3s;
+          transition: max-height 0.3s;
           overflow-y: scroll;
 
           .cart-img-wrapper {
