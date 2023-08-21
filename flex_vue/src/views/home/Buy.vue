@@ -292,7 +292,11 @@ const isActive = ref(false);
 const loadCartItems = async () => {
   let url: string = `${baseAddress}api/Cart`;
   await axios
-    .post<CartItem[]>(url, memberId)
+    .post<CartItem[]>(url, memberId, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
     .then((response) => {
       cartItems.value = response.data;
       loadCart(loadMember);
@@ -311,7 +315,11 @@ const loadCart = async (callback?: () => Promise<void>): Promise<void> => {
     memberId: memberId,
   }
   await axios
-    .post<ShoppingCart>(url, request)
+    .post<ShoppingCart>(url, request, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
     .then((response) => {
       cart.value = response.data;
       callback?.();
@@ -349,7 +357,7 @@ const loadMember = async (): Promise<void> => {
 const loadCoupons = async (): Promise<void> => {
   let url: string = `${baseAddress}api/Cart/GetMemberAllCoupons`;
   await axios
-    .post<Coupon[]>(url, 1, {
+    .post<Coupon[]>(url, memberId, {
       headers: {
         'Content-Type': 'application/json',
       },

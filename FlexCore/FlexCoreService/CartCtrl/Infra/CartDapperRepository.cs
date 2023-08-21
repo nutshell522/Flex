@@ -28,22 +28,31 @@ namespace FlexCoreService.CartCtrl.Infra
 			using (IDbConnection dbConnection = new SqlConnection(_connStr))
 			{
 				dbConnection.Open();
-				string sql = @"select 
-ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId, 
-p.ProductName, p.UnitPrice, p.SalesPrice, sc.SizeName as Size, cc.ColorName as Color, 
-pir.ImgPath, ssc.SalesCategoryName, d.DiscountId, d.DiscountName, d.DiscountDescription, 
-d.DiscountType, d.DiscountValue, d.ConditionType, d.ConditionValue, d.OrderBy as DiscountOrder
-from CartItems as ci
-inner join ShoppingCarts as C on c.CartId = ci.fk_CardId
-inner join ProductGroups as pg on pg.ProductGroupId = ci.fk_ProductId
-inner join Products as p on p.ProductId = pg.fk_ProductId
-inner join ColorCategories as cc on cc.ColorId = pg.fk_ColorId
-inner join SizeCategories as sc on sc.SizeId = pg.fk_SizeId
-inner join ProductSubCategories as psc on psc.ProductSubCategoryId = p.fk_ProductSubCategoryId
-inner join ProductCategories as pc on pc.ProductCategoryId = psc.fk_ProductCategoryId
-inner join SalesCategories as ssc on ssc.SalesCategoryId = pc.fk_SalesCategoryId
-left join ProjectTagItems as pti on pti.fk_ProductId = p.ProductId
-left join(
+				string sql = @"
+SELECT 
+    ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId, 
+    p.ProductName, p.UnitPrice, p.SalesPrice, sc.SizeName as Size, cc.ColorName as Color, 
+    pir.ImgPath, ssc.SalesCategoryName, 
+    CASE 
+        WHEN d.DiscountId IS NULL THEN NULL 
+        WHEN d.StartDate > GETDATE() OR (d.EndDate IS NOT NULL AND d.EndDate <= GETDATE()) THEN NULL 
+        ELSE d.DiscountId 
+    END AS DiscountId, 
+    MAX(d.DiscountName) as DiscountName, MAX(d.DiscountDescription) as DiscountDescription, 
+    MAX(d.DiscountType) as DiscountType, MAX(d.DiscountValue) as DiscountValue, 
+    MAX(d.ConditionType) as ConditionType, MAX(d.ConditionValue) as ConditionValue, 
+    MAX(d.OrderBy) as DiscountOrder
+FROM CartItems as ci
+INNER JOIN ShoppingCarts as C ON c.CartId = ci.fk_CardId
+INNER JOIN ProductGroups as pg ON pg.ProductGroupId = ci.fk_ProductId
+INNER JOIN Products as p ON p.ProductId = pg.fk_ProductId
+INNER JOIN ColorCategories as cc ON cc.ColorId = pg.fk_ColorId
+INNER JOIN SizeCategories as sc ON sc.SizeId = pg.fk_SizeId
+INNER JOIN ProductSubCategories as psc ON psc.ProductSubCategoryId = p.fk_ProductSubCategoryId
+INNER JOIN ProductCategories as pc ON pc.ProductCategoryId = psc.fk_ProductCategoryId
+INNER JOIN SalesCategories as ssc ON ssc.SalesCategoryId = pc.fk_SalesCategoryId
+LEFT JOIN ProjectTagItems as pti ON pti.fk_ProductId = p.ProductId
+LEFT JOIN(
     SELECT
         pi.fk_ProductId,
         pi.ProductImgId,
@@ -56,16 +65,19 @@ left join(
         ORDER BY pi2.ProductImgId
     )
 ) AS pir ON pir.fk_ProductId = p.ProductId
-left join Discounts as d on d.fk_ProjectTagId = pti.fk_ProjectTagId
-where p.Status=0 and p.LogOut=0 and c.fk_MemberID = 1 
-AND (d.StartDate <= GETDATE() AND (d.EndDate > GETDATE() OR d.EndDate IS NULL) AND d.status = 1
-OR d.DiscountId IS NULL)
+LEFT JOIN Discounts as d ON d.fk_ProjectTagId = pti.fk_ProjectTagId
+WHERE p.Status = 0 AND p.LogOut = 0 AND c.fk_MemberID = @MemberId
+AND (
+    (d.StartDate <= GETDATE() AND (d.EndDate > GETDATE() OR d.EndDate IS NULL) AND d.status = 1)
+    OR d.DiscountId IS NULL
+    OR (d.StartDate > GETDATE() OR (d.EndDate IS NOT NULL AND d.EndDate <= GETDATE()))
+)
 GROUP BY
-ci.CartItemId, c.CartId, pg.ProductGroupId, ci.Qty, p.ProductId,
-p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
-d.DiscountId, d.DiscountName, d.DiscountDescription, d.DiscountType, d.DiscountValue,
-d.ConditionType, d.ConditionValue, d.OrderBy, ssc.SalesCategoryName ,p.ProductName
-ORDER BY p.ProductId asc, d.OrderBy asc;
+    ci.CartItemId, c.CartId, pg.ProductGroupId, ci.Qty, p.ProductId,
+    p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
+    d.DiscountId, ssc.SalesCategoryName, p.ProductName,d.EndDate,d.StartDate
+HAVING COUNT(p.ProductId) >= 1
+ORDER BY p.ProductId asc, MAX(d.OrderBy) asc;
 ";
 
 				var cartItems = dbConnection.Query<CartItemDto, CartItemProductDto, ProductDiscountDto, CartItemDto>(
@@ -79,7 +91,7 @@ ORDER BY p.ProductId asc, d.OrderBy asc;
 						}
 						return cartItem;
 					},
-					new { memberId = memberId },
+					new { MemberId = memberId },
 					splitOn: "ProductId,ProductSaleId,DiscountId"
 				);
 
@@ -99,22 +111,30 @@ ORDER BY p.ProductId asc, d.OrderBy asc;
 			using (IDbConnection dbConnection = new SqlConnection(_connStr))
 			{
 				dbConnection.Open();
-				string sql = @"select 
-ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId, 
-p.ProductName, p.UnitPrice, p.SalesPrice, sc.SizeName as Size, cc.ColorName as Color, 
-pir.ImgPath, ssc.SalesCategoryName, d.DiscountId, d.DiscountName, d.DiscountDescription, 
-d.DiscountType, d.DiscountValue, d.ConditionType, d.ConditionValue, d.OrderBy as DiscountOrder
-from CartItems as ci
-inner join ShoppingCarts as C on c.CartId = ci.fk_CardId
-inner join ProductGroups as pg on pg.ProductGroupId = ci.fk_ProductId
-inner join Products as p on p.ProductId = pg.fk_ProductId
-inner join ColorCategories as cc on cc.ColorId = pg.fk_ColorId
-inner join SizeCategories as sc on sc.SizeId = pg.fk_SizeId
-inner join ProductSubCategories as psc on psc.ProductSubCategoryId = p.fk_ProductSubCategoryId
-inner join ProductCategories as pc on pc.ProductCategoryId = psc.fk_ProductCategoryId
-inner join SalesCategories as ssc on ssc.SalesCategoryId = pc.fk_SalesCategoryId
-left join ProjectTagItems as pti on pti.fk_ProductId = p.ProductId
-left join(
+				string sql = @"SELECT 
+    ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId, 
+    p.ProductName, p.UnitPrice, p.SalesPrice, sc.SizeName as Size, cc.ColorName as Color, 
+    pir.ImgPath, ssc.SalesCategoryName, 
+    CASE 
+        WHEN d.DiscountId IS NULL THEN NULL 
+        WHEN d.StartDate > GETDATE() OR (d.EndDate IS NOT NULL AND d.EndDate <= GETDATE()) THEN NULL 
+        ELSE d.DiscountId 
+    END AS DiscountId, 
+    MAX(d.DiscountName) as DiscountName, MAX(d.DiscountDescription) as DiscountDescription, 
+    MAX(d.DiscountType) as DiscountType, MAX(d.DiscountValue) as DiscountValue, 
+    MAX(d.ConditionType) as ConditionType, MAX(d.ConditionValue) as ConditionValue, 
+    MAX(d.OrderBy) as DiscountOrder
+FROM CartItems as ci
+INNER JOIN ShoppingCarts as C ON c.CartId = ci.fk_CardId
+INNER JOIN ProductGroups as pg ON pg.ProductGroupId = ci.fk_ProductId
+INNER JOIN Products as p ON p.ProductId = pg.fk_ProductId
+INNER JOIN ColorCategories as cc ON cc.ColorId = pg.fk_ColorId
+INNER JOIN SizeCategories as sc ON sc.SizeId = pg.fk_SizeId
+INNER JOIN ProductSubCategories as psc ON psc.ProductSubCategoryId = p.fk_ProductSubCategoryId
+INNER JOIN ProductCategories as pc ON pc.ProductCategoryId = psc.fk_ProductCategoryId
+INNER JOIN SalesCategories as ssc ON ssc.SalesCategoryId = pc.fk_SalesCategoryId
+LEFT JOIN ProjectTagItems as pti ON pti.fk_ProductId = p.ProductId
+LEFT JOIN(
     SELECT
         pi.fk_ProductId,
         pi.ProductImgId,
@@ -127,16 +147,19 @@ left join(
         ORDER BY pi2.ProductImgId
     )
 ) AS pir ON pir.fk_ProductId = p.ProductId
-left join Discounts as d on d.fk_ProjectTagId = pti.fk_ProjectTagId
-where CartItemId = @CartItemId
-AND (d.StartDate <= GETDATE() AND (d.EndDate > GETDATE() OR d.EndDate IS NULL) AND d.status = 1
-OR d.DiscountId IS NULL)
+LEFT JOIN Discounts as d ON d.fk_ProjectTagId = pti.fk_ProjectTagId
+WHERE ci.CartItemId = @CartItemId
+AND (
+    (d.StartDate <= GETDATE() AND (d.EndDate > GETDATE() OR d.EndDate IS NULL) AND d.status = 1)
+    OR d.DiscountId IS NULL
+    OR (d.StartDate > GETDATE() OR (d.EndDate IS NOT NULL AND d.EndDate <= GETDATE()))
+)
 GROUP BY
-ci.CartItemId, c.CartId, pg.ProductGroupId, ci.Qty, p.ProductId,
-p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
-d.DiscountId, d.DiscountName, d.DiscountDescription, d.DiscountType, d.DiscountValue,
-d.ConditionType, d.ConditionValue, d.OrderBy, ssc.SalesCategoryName ,p.ProductName
-ORDER BY p.ProductId asc, d.OrderBy asc;
+    ci.CartItemId, c.CartId, pg.ProductGroupId, ci.Qty, p.ProductId,
+    p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
+    d.DiscountId, ssc.SalesCategoryName, p.ProductName,d.EndDate,d.StartDate
+HAVING COUNT(p.ProductId) >= 1
+ORDER BY p.ProductId asc, MAX(d.OrderBy) asc;
 ";
 
 				var cartItems = dbConnection.Query<CartItemDto, CartItemProductDto, ProductDiscountDto, CartItemDto>(
@@ -194,21 +217,29 @@ WHERE CartItemId = @CartItemId
 			}
 		}
 
-		public (bool DoesExist, int CartItemId) ExistsCartItem(int memberId, int productId)
+		public (bool DoesExist, int CartItemId,int Qty) ExistsCartItem(int memberId, int productId)
 		{
 			using (var connection = new SqlConnection(_connStr))
 			{
 				connection.Open();
 				string sql = @"
-SELECT TOP 1 ci.cartitemId
+SELECT TOP 1 ci.cartitemId, ci.Qty
 FROM CartItems AS ci
 JOIN ShoppingCarts AS sc ON sc.CartId = ci.fk_CardId
 WHERE sc.fk_MemberID = @MemberID AND ci.fk_ProductId = @ProductId"
 ;
 				var parameters = new { MemberID = memberId, ProductId = productId };
-				int cartItemId = connection.QuerySingleOrDefault<int?>(sql, parameters) ?? 0;
-				bool doesExist = cartItemId > 0;
-				return (doesExist, cartItemId);
+
+				var cartItem = connection.QuerySingleOrDefault<(int CartItemId, int Qty)?>(sql, parameters);
+
+				if (cartItem != null)
+				{
+					return (true, cartItem.Value.CartItemId, cartItem.Value.Qty);
+				}
+				else
+				{
+					return (false, 0, 0);
+				}
 			}
 		}
 		public bool ExistsCart(int memberId)

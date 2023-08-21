@@ -203,16 +203,8 @@
               <i class="bi bi-chevron-right similarIcon"></i>
             </button>
           </div>
-          <Carousel
-            :items-to-show="4"
-            :wrap-around="true"
-            ref="similarCarousel"
-          >
-            <Slide
-              v-for="card in similarProducts"
-              :key="card.productId"
-              class="card text-center"
-            >
+          <Carousel :items-to-show="4" :wrap-around="true" ref="similarCarousel">
+            <Slide v-for="card in similarProducts" :key="card.productId" class="card text-center">
               <ProductCard :card="card"></ProductCard>
             </Slide>
             <!-- <template #addons>
@@ -235,7 +227,7 @@
 
 <script setup>
 import axios from "axios";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch, inject, toRef, defineProps } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import ProductCard from "@/components/product/ProductCard.vue";
 import { useProductRoute } from "@/stores/useProductRoute.js";
@@ -558,7 +550,9 @@ function collect() {
     alert("請先登入囉!");
   }
 }
-
+const props = defineProps({
+  updateCartFunction: Function
+});
 const joinCartItemEventHandler = async () => {
   const storedUser = localStorage.getItem("loggedInUser");
   if (storedUser) {
@@ -569,20 +563,22 @@ const joinCartItemEventHandler = async () => {
       const Qty = document.querySelector('#productQty').value;
       const requestData = {
         MemberId: parseInt(userObject.memberId),
-        ProductId: parseInt(productId),
-        Qty: parseInt(Qty)
+        CartItem: {
+          ProductId: parseInt(productId),
+          Qty: parseInt(Qty)
+        }
       };
-
       console.log(requestData);
-      // await axios
-      //   .post(`${baseAddress}/Users/SaveFavorites`, requestData)
-      //   .then((response) => {
-      //     console.log(response.data);
-      //   })
-      //   .catch((err) => {
-      //     alert('加入購物車錯誤', err);
-      //   });
-      // loadCartAnditemCount();
+      await axios
+        .put(`${baseAddress}api/Cart/UpdateItem`, requestData)
+        .then((response) => {
+          if (props.updateCartFunction) {
+            props.updateCartFunction();
+          }
+        })
+        .catch((err) => {
+          alert('加入購物車錯誤', err);
+        });
     }
     else {
       alert('請選擇尺寸');

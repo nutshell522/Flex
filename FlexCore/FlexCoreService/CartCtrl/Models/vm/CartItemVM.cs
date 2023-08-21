@@ -7,15 +7,15 @@
 		public int? ProductId { get; set; }
 		public int? Qty { get; set; }
 		public CartItemProductVM? Product { get; set; }
-		public int? SubTotal => Product.SalesPrice * Qty;
-		public int? UnitSubTotal => Product.UnitPrice * Qty;
-    }
+		public int? SubTotal => Product != null ? Product.SalesPrice * Qty : 0;
+		public int? UnitSubTotal => Product != null ? Product.UnitPrice * Qty : 0;
+	}
 
 	public class CartItemUpdateVM
 	{
 		public int MemberId { get; set; }
-        public CartItemVM? CartItem{ get; set; }
-    }
+		public CartItemVM? CartItem { get; set; }
+	}
 
 	public class CartItemsVM
 	{

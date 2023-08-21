@@ -8,9 +8,7 @@
           <a href="/login">登入</a>
         </li>
         <li class="p-relative userIcon" v-if="loginSuccess">
-          <a href="/orders" @mouseenter="showList"
-            ><i class="bi bi-person-circle"></i
-          ></a>
+          <a href="/orders" @mouseenter="showList"><i class="bi bi-person-circle"></i></a>
           <userList v-if="isListVisible" @mouseleave="hideList"></userList>
         </li>
       </ul>
@@ -20,11 +18,7 @@
     <div class="container">
       <div class="left">
         <router-link to="/" class="logo-wrapper">
-          <img
-            src="../../../../public/LOGO/FlexLogoDark.png"
-            alt=""
-            class="logo"
-          />
+          <img src="../../../../public/LOGO/FlexLogoDark.png" alt="" class="logo" />
           <h1>FLEX</h1>
         </router-link>
       </div>
@@ -54,12 +48,14 @@
               </div>
             </li>
           </router-link>
-          <li>
-            <div class="nav-list-item">
-              <div>Sale</div>
-              <div>特惠</div>
-            </div>
-          </li>
+          <router-link to="/onSale" class="transetion">
+            <li>
+              <div class="nav-list-item">
+                <div>Sale</div>
+                <div>特惠</div>
+              </div>
+            </li>
+          </router-link>
         </ul>
       </div>
       <div class="right">
@@ -77,49 +73,36 @@
             {{ cartItemCount }}
           </div>
           <div class="drap">
-            <div
-              v-if="memberId == 0"
-              class="w-100 h-100 d-flex flex-column justify-content-center align-items-center"
-            >
+            <div v-if="memberId == 0" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
               <div class="w-100 text-center fs-4">您尚未登入</div>
               <a class="btn btn-dark rounded-5 px-4 mt-4" href="/login">登入</a>
             </div>
-            <div
-              v-else-if="cartItemCount && cartItemCount != 0"
-              class="w-100 h-100 d-flex flex-column p-2"
-            >
+            <div v-else-if="cartItemCount && cartItemCount != 0" class="w-100 h-100 d-flex flex-column p-2">
               <ul class="p-0">
-                <li
-                  v-for="cartItem in cartItems"
-                  :key="cartItem.cartItemId"
-                  class="w-100 d-flex border-bottom pb-2 mb-2"
-                >
-                  <div class="cart-img-wrapper me-3">
-                    <img
-                      :src="
-                        imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath
-                      "
-                    />
-                  </div>
-                  <div class="w-75">
-                    <div class="fs-6">{{ cartItem.product.productName }}</div>
-                    <div class="d-flex">
-                      <div class="fs-6 me-3">
-                        顏色:{{ cartItem.product.color }}
-                      </div>
-                      <div class="fs-6 me-auto">
-                        尺寸:{{ cartItem.product.size }}
-                      </div>
-                      <div class="fs-6">{{ cartItem.qty }} 件</div>
+                <li v-for="cartItem in cartItems" :key="cartItem.cartItemId" class="w-100">
+                  <a :href="webBaseAddress + cartItem.product.categorySubStr + '/detail/' + cartItem.product.productSaleId"
+                    class="w-100 d-flex border-bottom pb-2 mb-2">
+                    <div class="cart-img-wrapper me-3">
+                      <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath
+                        " />
                     </div>
-                  </div>
+                    <div class="w-75">
+                      <div class="fs-6">{{ cartItem.product.productName }}</div>
+                      <div class="d-flex">
+                        <div class="fs-6 me-3">
+                          顏色:{{ cartItem.product.color }}
+                        </div>
+                        <div class="fs-6 me-auto">
+                          尺寸:{{ cartItem.product.size }}
+                        </div>
+                        <div class="fs-6">{{ cartItem.qty }} 件</div>
+                      </div>
+                    </div>
+                  </a>
                 </li>
               </ul>
             </div>
-            <div
-              v-else
-              class="w-100 h-100 d-flex flex-column justify-content-center align-items-center"
-            >
+            <div v-else class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
               <div class="w-100 text-center fs-4">購物車還沒有東西喔</div>
             </div>
           </div>
@@ -140,6 +123,7 @@ import axios from "axios";
 import { storeToRefs } from "pinia"; //把解構又同時具備響應式功能
 import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
 
+const webBaseAddress = 'https://localhost:8080/';
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const getApiStore = useGetApiDataStore();
 const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
@@ -163,10 +147,15 @@ const loadCartAnditemCount = async () => {
   } else {
     let url = `${baseAddress}api/Cart`;
     await axios
-      .post(url, memberId)
+      .post(url, memberId, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
       .then((response) => {
         cartItemCount.value = response.data.length;
         cartItems.value = response.data;
+        console.log(response.data);
       })
       .catch((error) => {
         alert(error);
@@ -242,10 +231,6 @@ $bg-gray: #f5f5f5;
 }
 
 body {
-  min-height: 100vh;
-  padding-bottom: 348px;
-  position: relative;
-  width: 100vw;
   overflow-x: hidden;
 }
 
@@ -257,21 +242,21 @@ header {
   background-color: #f5f5f5;
   height: $header-height;
 
-  & > div {
+  &>div {
     display: flex;
     height: 100%;
 
-    & > ul {
+    &>ul {
       display: flex;
       align-items: center;
       height: 100%;
 
-      & > li {
+      &>li {
         list-style: none;
         font-size: 14px;
         height: 100%;
 
-        & > a {
+        &>a {
           @extend .text-link;
           display: inline-block;
           height: 100%;
@@ -300,21 +285,21 @@ nav {
   @extend .nav-height;
   background-color: #fff;
 
-  & > .container {
+  &>.container {
     position: relative;
 
-    & > .left,
-    & > .center,
-    & > .right {
+    &>.left,
+    &>.center,
+    &>.right {
       @extend .nav-height;
       position: absolute;
     }
 
-    & > .left {
+    &>.left {
       @extend .nav-height;
       position: absolute;
 
-      & > .logo-wrapper {
+      &>.logo-wrapper {
         @extend .nav-height;
         width: 100px;
         display: flex;
@@ -336,7 +321,7 @@ nav {
           object-fit: cover;
         }
 
-        & > h1 {
+        &>h1 {
           line-height: $nav-height;
           font-weight: bold;
           font-size: 40px;
@@ -345,16 +330,16 @@ nav {
       }
     }
 
-    & > .center {
+    &>.center {
       left: 50%;
       transform: translate(-50%);
 
-      & > ul {
+      &>ul {
         display: flex;
         height: 100%;
 
-        & > .transetion {
-          & > li {
+        &>.transetion {
+          &>li {
             height: 100%;
             cursor: pointer;
             overflow-y: hidden;
@@ -364,13 +349,13 @@ nav {
             display: flex;
             justify-content: center;
 
-            & > .nav-list-item {
+            &>.nav-list-item {
               height: 200%;
               position: absolute;
               top: 0;
               transition: 0.3s;
 
-              & > div {
+              &>div {
                 display: flex;
                 height: 50%;
                 align-items: center;
@@ -381,14 +366,14 @@ nav {
             &:hover {
               border-bottom: 3px solid black;
 
-              & > .nav-list-item {
+              &>.nav-list-item {
                 top: -100%;
               }
             }
           }
         }
 
-        & > li {
+        &>li {
           height: 100%;
           cursor: pointer;
           overflow-y: hidden;
@@ -398,13 +383,13 @@ nav {
           display: flex;
           justify-content: center;
 
-          & > .nav-list-item {
+          &>.nav-list-item {
             height: 200%;
             position: absolute;
             top: 0;
             transition: 0.3s;
 
-            & > div {
+            &>div {
               display: flex;
               height: 50%;
               align-items: center;
@@ -415,7 +400,7 @@ nav {
           &:hover {
             border-bottom: 3px solid black;
 
-            & > .nav-list-item {
+            &>.nav-list-item {
               top: -100%;
             }
           }

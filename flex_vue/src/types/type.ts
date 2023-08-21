@@ -38,6 +38,7 @@ export class CartItemProduct {
     public imgPath: string = "",
     public salesCategoryName: string = "",
     public salesCategoryNameStr: string = "",
+    public categorySubStr: string = "",
     public tagsValue: string = ""
   ) { }
 }
@@ -137,9 +138,10 @@ export class PaymentInfo {
 export class ShoppingCartItem {
   private item: CartItem;
   private memberId: number;
+  private qty: number = 0;
 
   constructor(cartitem: CartItem, memberId: number) {
-    this.item = cartitem;
+    this.item = { ...cartitem };
     this.memberId = memberId;
   }
   async addOneItem(callback?: () => void): Promise<void> {
@@ -148,6 +150,7 @@ export class ShoppingCartItem {
 
   async addItem(qty: number, callback?: () => void): Promise<void> {
     this.item.qty += qty;
+    this.qty = qty;
     this.updateItemQty(callback);
   }
   async removeOneItem(callback?: () => void): Promise<void> {
@@ -155,21 +158,21 @@ export class ShoppingCartItem {
   }
 
   async removeItem(qty: number, callback?: () => void): Promise<void> {
-    if (this.item.qty >= qty) {
-      this.item.qty = Math.max(this.item.qty - qty, 0);
-      if (this.item.qty > 0) {
+    if (this.item.qty - qty <= 0) {
+      const result = confirm("是否刪除此商品？");
+      if (result) {
+        this.qty = qty * -1
         this.updateItemQty(callback);
       }
-      if (this.item.qty <= 0) {
-        const result = confirm("是否刪除此商品？");
-        if (result) {
-          this.updateItemQty(callback);
-        }
-        else {
-          this.item.qty = 1;
-          this.updateItemQty(callback);
+      else {
+        if (callback) {
+          callback();
         }
       }
+    }
+    else {
+      this.qty = qty * -1
+      this.updateItemQty(callback);
     }
   }
 
@@ -183,6 +186,7 @@ export class ShoppingCartItem {
       MemberId: this.memberId,
       CartItem: this.item
     }
+    request.CartItem.qty = this.qty;
     await axios
       .put(url, request)
       .then((response) => {

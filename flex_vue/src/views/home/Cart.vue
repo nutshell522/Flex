@@ -6,36 +6,22 @@
         <!-- 購物車左側 -->
         <div class="left col-12 col-lg-8">
           <ul class="cart">
-            <li
-              v-for="cartItem in cartItems"
-              :key="cartItem.cartItemId"
-              class="cart-item"
-            >
-              <a class="pd-img-wrapper" href="javascript:;">
-                <img
-                  :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath"
-                  :title="cartItem.product.productName"
-                />
+            <li v-for="cartItem in cartItems" :key="cartItem.cartItemId" class="cart-item">
+              <a class="pd-img-wrapper"
+                :href="webBaseAddress + cartItem.product.categorySubStr + '/detail/' + cartItem.product.productSaleId">
+                <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath" :title="cartItem.product.productName" />
               </a>
               <div class="item-info-wrapper me-auto">
-                <a href="javascript:;" class="fw-bold"
-                  >{{ cartItem.product.productName }}-{{
-                    cartItem.product.salesCategoryNameStr
-                  }}-{{ cartItem.product.color }}</a
-                >
+                <a href="javascript:;" class="fw-bold">{{ cartItem.product.productName }}-{{
+                  cartItem.product.salesCategoryNameStr
+                }}-{{ cartItem.product.color }}</a>
                 <div>
                   尺寸
-                  <a href="javascript:;"
-                    ><span>{{ cartItem.product.size }}</span
-                    ><i class="bi bi-chevron-down"></i
-                  ></a>
+                  <a href="javascript:;"><span>{{ cartItem.product.size }}</span><i class="bi bi-chevron-down"></i></a>
                 </div>
                 <ul class="d-flex px-0">
-                  <li
-                    class="me-2"
-                    v-for="matchDiscount in cartItem.product.matchDiscounts"
-                    :key="matchDiscount.discountId"
-                  >
+                  <li class="me-2" v-for="matchDiscount in cartItem.product.matchDiscounts"
+                    :key="matchDiscount.discountId">
                     <a href="javascript:;">{{ matchDiscount.discountName }}</a>
                   </li>
                 </ul>
@@ -76,16 +62,11 @@
             <div>運費</div>
             <div>{{ deliveryFee }}</div>
           </div>
-          <div
-            class="d-flex justify-content-between border border-start-0 border-end-0 py-2"
-          >
+          <div class="d-flex justify-content-between border border-start-0 border-end-0 py-2">
             <div>總計</div>
             <div>{{ subTotal }}</div>
           </div>
-          <button
-            @click="goToCheckoutPageEventHandler"
-            class="btn btn-dark w-100 my-3 py-3 rounded-5"
-          >
+          <button @click="goToCheckoutPageEventHandler" class="btn btn-dark w-100 my-3 py-3 rounded-5">
             結帳
           </button>
         </div>
@@ -103,6 +84,7 @@ import { ref, onMounted, computed } from "vue";
 import { CartItem, ShoppingCartItem } from "@/types/type";
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
+const webBaseAddress = 'https://localhost:8080/';
 const imgBaseUrl = ref(baseAddress);
 const cartItems = ref<CartItem[]>([]);
 const originalTotalAmount = ref<number>();
@@ -120,14 +102,17 @@ const getUpdateFunc = (func: (() => void) | null) => {
 const loadCartItems = async () => {
   let url: string = `${baseAddress}api/Cart`;
   await axios
-    .post<CartItem[]>(url, memberId)
+    .post<CartItem[]>(url, memberId, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
     .then((response) => {
       cartItems.value = response.data;
       loadTotal();
       if (UpdateCartHandler) {
         UpdateCartHandler();
       }
-      console.log(UpdateCartHandler);
     })
     .catch((error) => {
       alert(error);
@@ -198,9 +183,9 @@ main {
   padding-bottom: 120px;
 
   .row {
-    & > .left {
-      & > .cart {
-        & > .cart-item {
+    &>.left {
+      &>.cart {
+        &>.cart-item {
           display: flex;
 
           .pd-img-wrapper {
@@ -211,7 +196,7 @@ main {
             align-items: center;
             justify-content: center;
 
-            & > img {
+            &>img {
               width: 100%;
               height: auto;
               object-fit: cover;
@@ -221,9 +206,8 @@ main {
       }
     }
 
-    & > .right {
-      & > div {
-      }
+    &>.right {
+      &>div {}
     }
   }
 }

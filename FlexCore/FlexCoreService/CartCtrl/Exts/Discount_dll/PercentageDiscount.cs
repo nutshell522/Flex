@@ -1,10 +1,9 @@
-﻿using FlexCoreService.CartCtrl.Exts.Discount_dll;
-using FlexCoreService.CartCtrl.Models.vm;
+﻿using FlexCoreService.CartCtrl.Models.vm;
 using Newtonsoft.Json.Linq;
 
-namespace FlexCoreService.CartCtrl.Exts
+namespace FlexCoreService.CartCtrl.Exts.Discount_dll
 {
-    public class PercentageDiscount : BaseDiscountStrategy
+	public class PercentageDiscount : BaseDiscountStrategy
 	{
 		// 門檻金額
 		private readonly int _itemsAmount;
@@ -23,7 +22,7 @@ namespace FlexCoreService.CartCtrl.Exts
 
 			foreach (CartItemVM p in cart.CartItems)
 			{
-				if (p.Product.MatchDiscounts.Any(x => x.DiscountId == this.Id))
+				if (p.Product.MatchDiscounts.Any(x => x.DiscountId == Id))
 				{
 					matchedProducts.Add(p);
 				}
@@ -36,7 +35,7 @@ namespace FlexCoreService.CartCtrl.Exts
 				{
 					Rule = this,
 					Products = matchedProducts.Select(x => x.Product).ToArray(),
-					Amount = (decimal)matchedProducts.Sum(x => x.SubTotal) * _percentOff / 100
+					Amount = Math.Round((decimal)matchedProducts.Sum(x => x.SubTotal) * _percentOff / 100, MidpointRounding.AwayFromZero)
 				};
 			}
 			return null;

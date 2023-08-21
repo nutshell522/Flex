@@ -30,7 +30,7 @@ namespace FlexCoreService.Controllers
 
 		// POST: api/Cart/
 		[HttpPost]
-		public async Task<ActionResult<IEnumerable<CartItemVM>>> GetCartItems(int memberId)
+		public async Task<ActionResult<IEnumerable<CartItemVM>>> GetCartItems([FromBody]int memberId)
 		{
 			var cartItems = await Task.Run(() => _service.GetCartItems(memberId).Select(x => x.ToViewModel()));
 			return Ok(cartItems);

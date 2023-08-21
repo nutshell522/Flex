@@ -35,6 +35,12 @@ const routes = [
     meta: { title: `${webTitle}結帳` },
   },
   {
+    //http://loaclhost/onSale
+    path: '/onSale',
+    component: () => import('@/views/home/Sale.vue'),
+    meta: { title: `${webTitle}特惠專區` },
+  },
+  {
     //http://loaclhost/User
     path: '/user',
     component: User,

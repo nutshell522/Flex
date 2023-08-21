@@ -60,11 +60,9 @@
     
 <style lang="scss">
 footer {
-    margin-top: 80px;
     background-color: #111111;
-    padding: 40px 0;
-    position: absolute;
-    bottom: 0;
+    padding: 0;
+    padding-top: 40px;
     width: 100%;
 
     .container {
