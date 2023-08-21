@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useGetApiDataStore } from "../stores/useGetApiDataStore";
 import { useProductRoute } from "../stores/useProductRoute";
 import { storeToRefs } from "pinia";
+import { useActivityRoute } from "../stores/useActivityRoute";
 import User from "../views/user/User.vue";
 import Favorites from "../views/user/Favorites.vue";
 import Coupon from "../views/user/Coupon.vue";
@@ -78,13 +79,14 @@ const routes = [
     //http://loaclhost/activitySignUp
     path: "/activitySignUp/:id",
     component: ActivitySignUp,
-    meta: { title: `${webTitle}活動報名` },
+    name: "activitySignUp",
+    meta: { title: `${webTitle}活動報名`, require: true },
   },
   {
     //http://loaclhost/paymentSuccess
-    path: "/paymentSuccess/:TradeAmt/:TradeNo/:ActivityName",
-    component: PaymentSuccess,
-    meta: { title: `${webTitle}訂單資訊` },
+    // path: '/paymentSuccess/:TradeAmt/:TradeNo/:ActivityName',
+    // component: PaymentSuccess,
+    // meta: { title: `${webTitle}訂單資訊` },
   },
   {
     path: "/reservationIndex",

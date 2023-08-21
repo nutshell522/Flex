@@ -168,6 +168,7 @@ import GoogleReCaptchaV2 from "@/components/user/GoogleReCaptchaV2.vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
+import { useActivityRoute } from "@/stores/useActivityRoute.js";
 
 axios.defaults.withCredentials = true;
 
@@ -178,6 +179,10 @@ const router = useRouter();
 
 const userAcc = ref(null);
 const loggedInUser = ref(null);
+
+const getActivityStore = useActivityRoute();
+const originalRoute = ref(null);
+const activityId = localStorage.getItem("activityId");
 
 onMounted(() => {
   //檢查本地儲存是否有登錄信息
@@ -335,7 +340,19 @@ function Login() {
         }
         //alert('登入成功啦港動~~~');
         handleSuccessfulLogin(memberInfo);
-        router.replace({ path: "/" });
+
+        originalRoute.value = localStorage.getItem("originalRoute");
+        console.log(originalRoute.value);
+        if (originalRoute.value.includes("/activityInfo")) {
+          // const resolvedRoute = router.resolve({ path: '/activitySignUp/:activityId', params: { activityId: activityId } });
+          router.replace({
+            name: "activitySignUp",
+            params: { id: activityId },
+          });
+          // router.replace({path:resolvedRoute.href});
+        } else {
+          router.replace({ path: "/" });
+        }
       }
     })
     .catch((err) => {
