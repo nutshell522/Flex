@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useGetApiDataStore } from '../stores/useGetApiDataStore';
 import { useProductRoute } from '../stores/useProductRoute';
 import { storeToRefs } from 'pinia';
+import { useActivityRoute } from '../stores/useActivityRoute';
 import User from '../views/user/User.vue';
 import Favorites from '../views/user/Favorites.vue';
 import Coupon from '../views/user/Coupon.vue';
@@ -11,6 +12,7 @@ import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
 import ActivityIndex from '../views/activity/ActivityIndex.vue';
 import ReservationIndex from '../views/reservation/ReservationIndex.vue';
 import SpeakerInfo from '../views/reservation/SpeakerInfo.vue';
+import PaymentSuccess from '../views/activity/PaymentSuccess.vue';
 const webTitle = 'FLEX - ';
 
 // 路由設定
@@ -77,7 +79,8 @@ const routes = [
     //http://loaclhost/activitySignUp
     path: "/activitySignUp/:id",
     component: ActivitySignUp,
-    meta: { title: `${webTitle}活動報名` },
+    name: 'activitySignUp',
+    meta: { title: `${webTitle}活動報名`, require: true },
   },
   {
     //http://loaclhost/paymentSuccess
