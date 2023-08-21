@@ -82,9 +82,9 @@ const routes = [
   },
   {
     //http://loaclhost/paymentSuccess
-    path: '/paymentSuccess/:TradeAmt/:TradeNo/:ActivityName',
-    component: PaymentSuccess,
-    meta: { title: `${webTitle}訂單資訊` },
+    // path: '/paymentSuccess/:TradeAmt/:TradeNo/:ActivityName',
+    // component: PaymentSuccess,
+    // meta: { title: `${webTitle}訂單資訊` },
   },
   {
     path: '/reservationIndex',

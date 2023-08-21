@@ -1,6 +1,6 @@
 <template>
-  <OrdernavBar></OrdernavBar>
-  <div id="searchorderout" class="container">
+  <navBar></navBar>
+  <div id="searchorderout" class="container ">
     <div id="srarchdate" class="col-3">
       <input type="text" v-model="begintime" @searchInputbegintime="inputbegintime" class="form-control datePicker"
         placeholder="輸入開始日期" />
@@ -425,6 +425,12 @@
       </div>
     </div>
   </template>
+  <div class="chat" style="display: none;">
+    <div class="showcon" id="showcon"></div>
+    <input type="text" id="msg" />
+    <button @click="send()">發送</button>
+  </div>
+  <button class="chat2" @click="toggleContainer()">test</button>
   <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
@@ -452,7 +458,8 @@
   </div> -->
 </template>
 <script setup>
-import OrdernavBar from "@/components/Order/OrdernavBar.vue";
+//import OrdernavBar from "@/components/Order/OrdernavBar.vue";
+import navBar from '@/components/home/navBar.vue';
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import flatpickr from "flatpickr";
@@ -571,6 +578,8 @@ const CancelReturnOrders = async () => {
       //console.log(response.data);
       alert(response.data);
       loadGetOrders();
+      returnaccount.value = "";
+      returnreason.value = "";
     })
     .catch((error) => {
       alert(error);
@@ -635,7 +644,6 @@ const Returndetail = async () => {
 
   if (showError) {
     await CancelReturnAndCloseOrders();
-    return;
   }
   const requestData = {
     退貨轉帳帳號: returnaccount.value,
@@ -809,6 +817,14 @@ const toggleDetails = (itemId) => {
 const returncomment = () => {
   return;
 }
+const toggleContainer = () => {
+  var container = document.querySelector(".chat");
+  if (container.style.display === "none" || container.style.display === "") {
+    container.style.display = "block";
+  } else {
+    container.style.display = "none";
+  }
+}
 onMounted(() => {
   Type.value = 1;
   commentstar.value = 1;
@@ -873,6 +889,11 @@ onMounted(() => {
   padding-right: 20px;
   margin-right: 80px;
   font-size: 30px;
+}
+
+#searchorderout {
+  max-width: 800px;
+  margin: 0 700px;
 }
 
 #searchorder {
@@ -980,5 +1001,50 @@ _::-moz-range-track {
 [type="range"]::-moz-range-thumb {
   width: 0;
   opacity: 0;
+}
+
+.chat {
+  width: 350px;
+  text-align: center;
+  padding: 20px 0;
+  max-width: 0 auto;
+  overflow: auto;
+  background-color: rgb(149, 236, 149);
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+.chat2 {
+  width: 250px;
+  text-align: center;
+  padding: 20px 0;
+  max-width: 0 auto;
+  /* overflow: auto; */
+  background-color: rgb(185, 235, 236);
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+.chat .showcon {
+  width: 330px;
+  height: 300px;
+  padding: 10px;
+  overflow: auto;
+  background-color: #fff;
+  margin: 0 auto 10px;
+}
+
+#msg {
+  width: 230px;
+  height: 40px;
+  margin-bottom: 60px;
+}
+
+.chat button {
+  width: 50px;
+  height: 40px;
+  vertical-align: middle;
 }
 </style>
