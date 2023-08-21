@@ -11,6 +11,7 @@ import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
 import ActivityIndex from '../views/activity/ActivityIndex.vue';
 import ReservationIndex from '../views/reservation/ReservationIndex.vue';
 import SpeakerInfo from '../views/reservation/SpeakerInfo.vue';
+import PaymentSuccess from '../views/activity/PaymentSuccess.vue';
 const webTitle = 'FLEX - ';
 
 // 路由設定

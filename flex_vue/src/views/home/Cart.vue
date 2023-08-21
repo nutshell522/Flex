@@ -1,23 +1,41 @@
 <template>
-  <navBar></navBar>
+  <navBar @UpdateCart="getUpdateFunc"></navBar>
   <main>
     <div class="container">
       <div class="row gx-4">
         <!-- 購物車左側 -->
         <div class="left col-12 col-lg-8">
           <ul class="cart">
-            <li v-for="cartItem in cartItems" :key="cartItem.cartItemId" class="cart-item">
+            <li
+              v-for="cartItem in cartItems"
+              :key="cartItem.cartItemId"
+              class="cart-item"
+            >
               <a class="pd-img-wrapper" href="javascript:;">
-                <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath" :title="cartItem.product.productName" />
+                <img
+                  :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath"
+                  :title="cartItem.product.productName"
+                />
               </a>
               <div class="item-info-wrapper me-auto">
-                <a href="javascript:;" class="fw-bold">{{ cartItem.product.productName }}-{{
-                  cartItem.product.salesCategoryNameStr }}-{{ cartItem.product.color }}</a>
-                <div>尺寸 <a href="javascript:;"><span>{{ cartItem.product.size }}</span><i
-                      class="bi bi-chevron-down"></i></a></div>
+                <a href="javascript:;" class="fw-bold"
+                  >{{ cartItem.product.productName }}-{{
+                    cartItem.product.salesCategoryNameStr
+                  }}-{{ cartItem.product.color }}</a
+                >
+                <div>
+                  尺寸
+                  <a href="javascript:;"
+                    ><span>{{ cartItem.product.size }}</span
+                    ><i class="bi bi-chevron-down"></i
+                  ></a>
+                </div>
                 <ul class="d-flex px-0">
-                  <li class="me-2" v-for="matchDiscount in cartItem.product.matchDiscounts"
-                    :key="matchDiscount.discountId">
+                  <li
+                    class="me-2"
+                    v-for="matchDiscount in cartItem.product.matchDiscounts"
+                    :key="matchDiscount.discountId"
+                  >
                     <a href="javascript:;">{{ matchDiscount.discountName }}</a>
                   </li>
                 </ul>
@@ -25,13 +43,19 @@
               <i class="bi bi-trash3"></i>
               <div>
                 <div class="d-flex">
-                  <button @click="decrementCartItem(cartItem)"><i class="bi bi-dash-lg"></i></button>
+                  <button @click="decrementCartItem(cartItem)">
+                    <i class="bi bi-dash-lg"></i>
+                  </button>
                   <div>{{ cartItem.qty }}</div>
-                  <button @click="incrementCartItem(cartItem)"><i class="bi bi-plus-lg"></i></button>
+                  <button @click="incrementCartItem(cartItem)">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
                 </div>
               </div>
               <div class="px-4">
-                <div v-if="cartItem.unitSubTotal !== null">{{ cartItem.unitSubTotal }}</div>
+                <div v-if="cartItem.unitSubTotal !== null">
+                  {{ cartItem.unitSubTotal }}
+                </div>
                 <div>{{ cartItem.subTotal }}</div>
               </div>
             </li>
@@ -52,11 +76,18 @@
             <div>運費</div>
             <div>{{ deliveryFee }}</div>
           </div>
-          <div class="d-flex justify-content-between border border-start-0 border-end-0 py-2 ">
+          <div
+            class="d-flex justify-content-between border border-start-0 border-end-0 py-2"
+          >
             <div>總計</div>
             <div>{{ subTotal }}</div>
           </div>
-          <button @click="goToCheckoutPageEventHandler" class="btn btn-dark w-100 my-3 py-3 rounded-5">結帳</button>
+          <button
+            @click="goToCheckoutPageEventHandler"
+            class="btn btn-dark w-100 my-3 py-3 rounded-5"
+          >
+            結帳
+          </button>
         </div>
       </div>
     </div>
@@ -65,11 +96,11 @@
 </template>
     
 <script setup lang="ts">
-import NavBar from '@/components/home/navBar.vue';
-import HomeFooter from '@/components/home/footer.vue';
+import NavBar from "@/components/home/navBar.vue";
+import HomeFooter from "@/components/home/footer.vue";
 import axios from "axios";
 import { ref, onMounted, computed } from "vue";
-import { CartItem, ShoppingCartItem } from '@/types/type';
+import { CartItem, ShoppingCartItem } from "@/types/type";
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
 const imgBaseUrl = ref(baseAddress);
@@ -77,10 +108,13 @@ const cartItems = ref<CartItem[]>([]);
 const originalTotalAmount = ref<number>();
 const subTotal = ref<number>();
 const deliveryFee = ref<number>();
-const loggedInUser = localStorage.getItem('loggedInUser')!;
+const loggedInUser = localStorage.getItem("loggedInUser")!;
 const memberInfo = JSON.parse(loggedInUser);
 const memberId: number = memberInfo.memberId;
-
+let UpdateCartHandler: (() => void) | null = null;
+const getUpdateFunc = (func: (() => void) | null) => {
+  UpdateCartHandler = func;
+};
 
 // 載入購物車
 const loadCartItems = async () => {
@@ -90,6 +124,10 @@ const loadCartItems = async () => {
     .then((response) => {
       cartItems.value = response.data;
       loadTotal();
+      if (UpdateCartHandler) {
+        UpdateCartHandler();
+      }
+      console.log(UpdateCartHandler);
     })
     .catch((error) => {
       alert(error);
@@ -101,7 +139,7 @@ const loadTotal = async () => {
   const request = {
     CartItems: cartItems.value,
     memberId: memberId,
-  }
+  };
   let url: string = `${baseAddress}api/Cart/GetTotalAmount`;
   await axios
     .post<number>(url, request)
@@ -113,7 +151,7 @@ const loadTotal = async () => {
     .catch((error) => {
       alert(error);
     });
-}
+};
 
 const discountCount = computed(() => {
   return subTotal.value - deliveryFee.value - originalTotalAmount.value;
@@ -127,11 +165,11 @@ onMounted(() => {
 type Callback = () => void;
 
 function processCallbacks(...callbacks: Callback[]) {
-  callbacks.forEach(callback => callback());
+  callbacks.forEach((callback) => callback());
 }
 
 const incrementCartItem = async (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem, memberId)
+  const shoppingCart = new ShoppingCartItem(cartItem, memberId);
   await shoppingCart.addOneItem(() => {
     processCallbacks(loadCartItems);
   });
@@ -151,8 +189,7 @@ const getCartItemQty = (cartItem: CartItem) => {
 
 const goToCheckoutPageEventHandler = () => {
   window.location.href = "/buy";
-}
-
+};
 </script>
     
 <style scoped lang="scss">
@@ -161,9 +198,9 @@ main {
   padding-bottom: 120px;
 
   .row {
-    &>.left {
-      &>.cart {
-        &>.cart-item {
+    & > .left {
+      & > .cart {
+        & > .cart-item {
           display: flex;
 
           .pd-img-wrapper {
@@ -174,7 +211,7 @@ main {
             align-items: center;
             justify-content: center;
 
-            &>img {
+            & > img {
               width: 100%;
               height: auto;
               object-fit: cover;
@@ -184,8 +221,9 @@ main {
       }
     }
 
-    &>.right {
-      &>div {}
+    & > .right {
+      & > div {
+      }
     }
   }
 }
