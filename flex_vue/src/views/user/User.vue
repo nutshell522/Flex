@@ -186,22 +186,22 @@
 
 <script setup>
 // import './twzipcode.js';
-import verify from '@/components/user/verify.vue';
-import navBar from '@/components/home/navBar.vue';
-import userBar from '@/components/user/userBar.vue';
-import updatePhoto from '@/components/user/updatePhoto.vue';
-import { ref, watch, provide } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
-import axios from 'axios';
+import verify from "@/components/user/verify.vue";
+import navBar from "@/components/home/navBar.vue";
+import userBar from "@/components/user/userBar.vue";
+import updatePhoto from "@/components/user/updatePhoto.vue";
+import { ref, watch, provide } from "vue";
+import { storeToRefs } from "pinia";
+import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
+import axios from "axios";
 
 const getApiStore = useGetApiDataStore();
 const { memberInfo } = storeToRefs(getApiStore);
 
 const userProfile = ref([]);
 const photo = ref(null);
-const account = ref(''); // 初始化為空字符串
-const id = ref('');
+const account = ref(""); // 初始化為空字符串
+const id = ref("");
 const fileChange = (e) => {
   console.log(e.target.files);
 };
@@ -210,29 +210,29 @@ const uploadImages = () => {
 };
 
 // let level = ref('');
-const levelName = ref('');
-const name = ref('');
-const email = ref('');
-const mobile = ref('');
+const levelName = ref("");
+const name = ref("");
+const email = ref("");
+const mobile = ref("");
 const gender = ref(false);
-const commonAddress = ref('');
+const commonAddress = ref("");
 const addressBtn = ref(false);
 const addAddressInput1 = ref(false);
 const addAddressInput2 = ref(false);
 const alternateAddress1 = ref(null);
 const alternateAddress2 = ref(null);
-const editPwd = ref('');
-const checkPwd = ref('');
+const editPwd = ref("");
+const checkPwd = ref("");
 const editPwdShow = ref(false);
 const isSubscribeNews = ref(true);
 
 const memberId = getApiStore.getMemberId;
 const verifyArea = ref(true);
-provide('verifyArea', verifyArea);
+provide("verifyArea", verifyArea);
 
 const showUserData = ref(false);
 
-const baseAddress = 'https://localhost:7183/api';
+const baseAddress = "https://localhost:7183/api";
 const uri = `${baseAddress}/Users/` + memberId;
 //console.log('uri', uri);
 
@@ -290,11 +290,11 @@ watch(verifyArea, (newValue) => {
 function addBtn() {
   if (commonAddress.value && addAddressInput1.value == false) {
     addAddressInput1.value = true;
-    console.log('增加備用地址1');
+    console.log("增加備用地址1");
   }
   if (commonAddress.value && alternateAddress1.value) {
     addAddressInput2.value = true;
-    console.log('有三個地址，-按鈕');
+    console.log("有三個地址，-按鈕");
     addressBtn.value = true;
   }
   if (commonAddress.value && !alternateAddress1.value) {
@@ -304,22 +304,22 @@ function addBtn() {
 function minusBtn() {
   if (!alternateAddress2.value) {
     addAddressInput2.value = false;
-    console.log('常用跟備用1，+按鈕');
+    console.log("常用跟備用1，+按鈕");
     addressBtn.value = false;
   }
   if (!alternateAddress1.value) {
     addressBtn.value = false;
-    console.log('常用地址，-按鈕');
+    console.log("常用地址，-按鈕");
   }
   if (!alternateAddress1.value && !alternateAddress2.value) {
     addAddressInput1.value = false;
-    console.log('常用地址，+按鈕');
+    console.log("常用地址，+按鈕");
     addressBtn.value = false;
   }
 }
 
 function changePhoto() {
-  alert('changePhoto');
+  alert("changePhoto");
 }
 
 function editPwdBtn() {
@@ -469,7 +469,7 @@ if (isSubscribeNews.value == true) {
 }
 .editPwdIcon {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding-right: 10px;
   margin: 10px;
 }

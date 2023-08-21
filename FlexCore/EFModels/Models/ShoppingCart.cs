@@ -14,6 +14,8 @@ namespace EFModels.Models
 
         public int CartId { get; set; }
         public int fk_MemberID { get; set; }
+        public string CartItemsId { get; set; }
+        public bool? Status { get; set; }
 
         public virtual Member fk_Member { get; set; }
         public virtual ICollection<CartItem> CartItems { get; set; }
