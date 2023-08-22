@@ -54,5 +54,11 @@ namespace FlexCoreService.ActivityCtrl.Service
             var result = await _repo.GetAllCommentAsync(id);
             return result;
         }
+
+        public async Task<IEnumerable<TopThreeSpeakerDTO>> GetTopThreeSpeakersAsync()
+        {
+            var result = await _repo.GetTopThreeSpeakersAsync();
+            return result;
+        }
     }
 }
