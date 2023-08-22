@@ -10,7 +10,7 @@
         </ul>
       </div>
       <input
-        type="text"
+        type="password"
         class="form-control input"
         id="verify"
         placeholder="請輸入登入密碼"

@@ -189,7 +189,7 @@
     <!-- 上傳圖片 -->
     <div class="col-md-6 userImg">
       <div>
-        <img :src="imageSrc + imgsPath" alt="" id="profileImage" />
+        <img :src="imageSrc + imgPath" alt="" id="profileImage" />
         <input
           id="photo-input"
           ref="photo"
@@ -303,7 +303,7 @@ const editPwd = ref('');
 const checkPwd = ref('');
 const editPwdShow = ref(false);
 const isSubscribeNews = ref(true);
-const imgsPath = ref('');
+const imgPath = ref('');
 
 const memberId = getApiStore.getMemberId;
 const verifyArea = ref(true);
@@ -336,13 +336,12 @@ axios
     alternateAddress1.value = res.data.alternateAddress1;
     alternateAddress2.value = res.data.alternateAddress2;
     isSubscribeNews.value = res.data.isSubscribeNews;
-    //imgsPath.value = res.data.imgsPath;
 
     console.log(alternateAddress1.value);
     //console.log(alternateAddress2.value);
     //console.log('gender', gender.value);
     console.log(isSubscribeNews.value);
-    console.log(imgsPath.value);
+    console.log(imgPath.value);
     //顯示控制項
     if (alternateAddress1.value) {
       addAddressInput1.value = true;
@@ -358,12 +357,11 @@ axios
       isSubscribeNews.value = true;
     }
     //console.log(res.data);
-    if (res.data.imgsPath != null) {
-      imgsPath.value = res.data.imgsPath;
+    if (res.data.imgPath != null) {
+      imgPath.value = res.data.imgPath;
     } else {
-      imgsPath.value = 'member.jpg';
+      imgPath.value = 'member.jpg';
     }
-    //img.value = imgsPath.value;
   })
   .catch((err) => {
     err;
@@ -455,12 +453,8 @@ function save() {
   editUserProfile.alternateAddress1 = alternateAddress1.value;
   editUserProfile.alternateAddress2 = alternateAddress2.value;
   editUserProfile.isSubscribeNews = isSubscribeNews.value;
-  // console.log(
-  //   'editUserProfile.alternateAddress2',
-  //   editUserProfile.alternateAddress2
-  // );
 
-  //todo檔案更新成功
+  //todo檔案更新成功畫面
 
   axios
     .put(uri, editUserProfile)
