@@ -15,6 +15,22 @@ namespace FlexCoreService.CustomeShoes.Infra.DPRepository
             _configuration = configuration;
             _connStr = _configuration.GetConnectionString("AppDbContext");
         }
+
+        public IEnumerable<ShoesAllOptionsDto> GetAllOptions(string ShoesOrderId)
+        {
+            string sql = @"select ShoesOrders.ShoesOrderId,Customized_materials.Shoesmaterial_Id,Customized_materials.material_Name,ShoesColorCategories.ShoesColorId,ShoesColorCategories.ColorName,ShoesChooses.OptionId,ShoesChooses.OptinName
+from ShoesOrders
+join ShoesGroups on ShoesGroups.fk_CustomerOrderId = ShoesOrders.ShoesOrderId
+join ShoesChooses on ShoesGroups.fk_OptionId = ShoesChooses.OptionId
+join ShoesColorCategories on ShoesGroups.fk_ShoesColorId = ShoesColorCategories.ShoesColorId
+join Customized_materials on ShoesGroups.fk_MaterialId = Customized_materials.Shoesmaterial_Id
+where ShoesOrders.ShoesOrderId ='" + @ShoesOrderId + "'";
+
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.Query<ShoesAllOptionsDto>(sql, new { ShoesOrderId });
+            return result;
+        }
+
         public IEnumerable<ShoesColorCategoriesDto> GetColor()
         {
             string sql = @"select scc.ShoesColorId, scc.ColorName, scc.ColorCode from ShoesColorCategories as scc

@@ -58,44 +58,44 @@ namespace FlexCoreService.Controllers
 
         }
 
-        [HttpPost("addOrder")]
-        public string AddOrders([FromBody] MakeOrderDTO order)
-        {
-            string msg = "";
-            EcpayOrder entity = new EcpayOrder
-            {
-                MerchantTradeNo = order.MerchantTradeNo,
-                MemberID = order.MemberID,
-                RtnCode = 0, //未付款
-                RtnMsg = "訂單成功尚未付款",
-                TradeNo = order.MerchantID,
-                TradeAmt = order.TotalAmount,
-                PaymentDate = null, //付款時間
-                PaymentType = order.PaymentType,
-                PaymentTypeChargeFee = "0",
-                TradeDate = order.MerchantTradeDate,  //訂單成立時間          
-                SimulatePaid = 0,
-                TradeDesc = order.TradeDesc,
-                fk_typeId = 2,
-                ItemId = order.ActivityId,
+        //[HttpPost("addOrder")]
+        //public string AddOrders([FromBody] MakeOrderDTO order)
+        //{
+        //    string msg = "";
+        //    EcpayOrder entity = new EcpayOrder
+        //    {
+        //        MerchantTradeNo = order.MerchantTradeNo,
+        //        MemberID = order.MemberID,
+        //        RtnCode = 0, //未付款
+        //        RtnMsg = "訂單成功尚未付款",
+        //        TradeNo = order.MerchantID,
+        //        TradeAmt = order.TotalAmount,
+        //        PaymentDate = null, //付款時間
+        //        PaymentType = order.PaymentType,
+        //        PaymentTypeChargeFee = "0",
+        //        TradeDate = order.MerchantTradeDate,  //訂單成立時間          
+        //        SimulatePaid = 0,
+        //        TradeDesc = order.TradeDesc,
+        //        fk_typeId = 2,
+        //        ItemId = order.ActivityId,
 
-            };
+        //    };
 
-            try
-            {
-                _db.EcpayOrders.Add(entity);
-                _db.SaveChanges();
-                msg = "終於成功進DB拉拉拉拉拉!!!灑花~";
-             
-            }
-            catch (Exception ex)
-            {
-                msg = ex.ToString();
-            }
+        //    try
+        //    {
+        //        _db.EcpayOrders.Add(entity);
+        //        _db.SaveChanges();
+        //        msg = "終於成功進DB拉拉拉拉拉!!!灑花~";
 
-            return msg;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        msg = ex.ToString();
+        //    }
 
-        }
+        //    return msg;
+
+        //}
 
         [HttpPost("addPayInfo/{id}")]
         public async Task<IActionResult> AddPayInfo([FromForm] AddPayInfoDTO info)

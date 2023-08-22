@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using System.Security.Policy;
+using System.Text;
 
 namespace FlexCoreService.Controllers
 {
@@ -115,105 +118,159 @@ namespace FlexCoreService.Controllers
         }
 
 		[HttpPost("EnterCustomerChoose")]
-		public async Task<ShoesOrderDto> Register([FromBody] ShoesOrderDto dto)
+		public async Task<ActionResult<string>> ChooseSizeandQty([FromBody] ShoesOrderDto dto)
 		{
-			ShoesOrder order = new ShoesOrder
+            string input = Guid.NewGuid().ToString(); // 生成一個唯一的 GUID
+            byte[] bytes = Encoding.UTF8.GetBytes(input);
+            string hash = string.Empty;
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] hashBytes = md5.ComputeHash(bytes);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("x2")); // 將每個位元組轉換為兩位的十六進制數字
+                }
+                hash = sb.ToString();
+                dto.ShoesOrderId = hash; // 將雜湊賦值給 ShoesOrderId
+            }
+
+            ShoesOrder order = new ShoesOrder
 			{
-				ShoesOrderId = dto.ShoesOrderId,
-				Qty = dto.Qty,
-				fk_ShoesSizeId = dto.fk_ShoesSizeId,
+				//ShoesOrderId = dto.ShoesOrderId,
+				Qty = dto.Qty.Value,
+				fk_ShoesSizeId = dto.fk_ShoesSizeId.Value,
 				Remark = dto.Remark,
 			};
 
 			_db.ShoesOrders.Add(order);
 			await _db.SaveChangesAsync();
-			return dto;
+			return Ok(hash);
 		}
 
-		//[HttpGet("Detail/{ShoesProductId}")]
-		//public async Task<ActionResult<CustomizedShoesPo>> GetShoesDetail(int shoesId)
-		//{
-		//    if (_db.CustomizedShoesPos == null)
-		//    {
-		//        return NotFound();
-		//    }
-		//    var shoes = await _db.CustomizedShoesPos.FirstOrDefaultAsync(p => p.ShoesProductId == shoesId);
+        [HttpPost("ChoseAllOptions")]
+        public async Task<CustomeShoesGroupDto> ChooseAllOptions ([FromBody] CustomeShoesGroupDto dto)
+        {
+            ShoesGroup shoesgroup = new ShoesGroup
+            {
+                ShoesGroupId = dto.ShoesGroupId,
+                fk_ShoesMainId = dto.ShoesMainId,
+                fk_OptionId = dto.OptionId,
+                fk_MaterialId = dto.MaterialId,
+                fk_ShoesColorId = dto.ShoesColorId,
+                //fk_CustomerOrderId = dto.CustomerOrderId,
+            };
 
-		//    if (shoes == null)
-		//    {
-		//        return NotFound();
-		//    }
+            _db.ShoesGroups.Add(shoesgroup);
+            await _db.SaveChangesAsync();
+            return dto;
+        }
 
-		//    return shoes;
-		//}
+        [HttpGet("shoes/Customization/Order/{ShoesOrderId}")]
+        public async Task<ActionResult<ShoesTotalOrderVM>> GetShoesOrderTotal(string ShoesOrderId)
+        {
+            var server = new CustomeShoesService(_repo);
 
-		//// PUT: api/CustomizedShoesPo/5
-		//// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		//[HttpPut("{id}")]
-		//public async Task<IActionResult> PutShoes(int id, CustomizedShoesPo shoes)
-		//{
-		//	if (id != shoes.ShoesProductId)
-		//	{
-		//		return BadRequest();
-		//	}
+            var shoes = server.GetShoesTotalOrder(ShoesOrderId);
 
-		//	_db.Entry(shoes).State = EntityState.Modified;
+            var chooseserver = new ShoesChoosesService(_chooserepo);
 
-		//	try
-		//	{
-		//		await _db.SaveChangesAsync();
-		//	}
-		//	catch (DbUpdateConcurrencyException)
-		//	{
-		//		if (!ShoesExists(id))
-		//		{
-		//			return NotFound();
-		//		}
-		//		else
-		//		{
-		//			throw;
-		//		}
-		//	}
+            var chooses = chooseserver.GetAllOptions(ShoesOrderId).ToList();
 
-		//	return NoContent();
-		//}
+            var vm = shoes.ToTotalOrderVM(chooses);
 
-		//// POST: api/CustomizedShoesPo
-		//// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		//[HttpPost]
-		//public async Task<ActionResult<CustomizedShoesPo>> PostShoes(CustomizedShoesPo shoes)
-		//{
-		//	if (_db.CustomizedShoesPos == null)
-		//	{
-		//		return Problem("Entity set 'AppDbContext.CustomizedShoesPo'  is null.");
-		//	}
-		//	_db.CustomizedShoesPos.Add(shoes);
-		//	await _db.SaveChangesAsync();
+            if (vm == null)
+            {
+                return NotFound();
+            }
 
-		//	return CreatedAtAction("GetShoes", new { id = shoes.ShoesProductId }, shoes);
-		//}
+            return vm;
+        }
 
-		// DELETE: api/CustomizedShoesPo/5
-		//[HttpDelete("{id}")]
-		//public async Task<IActionResult> DeleteShoes(int id)
-		//{
-		//	if (_db.CustomizedShoesPos == null)
-		//	{
-		//		return NotFound();
-		//	}
-		//	var shoes = await _db.CustomizedShoesPos.FindAsync(id);
-		//	if (shoes == null)
-		//	{
-		//		return NotFound();
-		//	}
+        //[HttpGet("Detail/{ShoesProductId}")]
+        //public async Task<ActionResult<CustomizedShoesPo>> GetShoesDetail(int shoesId)
+        //{
+        //    if (_db.CustomizedShoesPos == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var shoes = await _db.CustomizedShoesPos.FirstOrDefaultAsync(p => p.ShoesProductId == shoesId);
 
-		//	_db.CustomizedShoesPos.Remove(shoes);
-		//	await _db.SaveChangesAsync();
+        //    if (shoes == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-		//	return NoContent();
-		//}
+        //    return shoes;
+        //}
 
-		private bool ShoesExists(int id)
+        //// PUT: api/CustomizedShoesPo/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutShoes(int id, CustomizedShoesPo shoes)
+        //{
+        //	if (id != shoes.ShoesProductId)
+        //	{
+        //		return BadRequest();
+        //	}
+
+        //	_db.Entry(shoes).State = EntityState.Modified;
+
+        //	try
+        //	{
+        //		await _db.SaveChangesAsync();
+        //	}
+        //	catch (DbUpdateConcurrencyException)
+        //	{
+        //		if (!ShoesExists(id))
+        //		{
+        //			return NotFound();
+        //		}
+        //		else
+        //		{
+        //			throw;
+        //		}
+        //	}
+
+        //	return NoContent();
+        //}
+
+        //// POST: api/CustomizedShoesPo
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<CustomizedShoesPo>> PostShoes(CustomizedShoesPo shoes)
+        //{
+        //	if (_db.CustomizedShoesPos == null)
+        //	{
+        //		return Problem("Entity set 'AppDbContext.CustomizedShoesPo'  is null.");
+        //	}
+        //	_db.CustomizedShoesPos.Add(shoes);
+        //	await _db.SaveChangesAsync();
+
+        //	return CreatedAtAction("GetShoes", new { id = shoes.ShoesProductId }, shoes);
+        //}
+
+        // DELETE: api/CustomizedShoesPo/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteShoes(int id)
+        //{
+        //	if (_db.CustomizedShoesPos == null)
+        //	{
+        //		return NotFound();
+        //	}
+        //	var shoes = await _db.CustomizedShoesPos.FindAsync(id);
+        //	if (shoes == null)
+        //	{
+        //		return NotFound();
+        //	}
+
+        //	_db.CustomizedShoesPos.Remove(shoes);
+        //	await _db.SaveChangesAsync();
+
+        //	return NoContent();
+        //}
+
+        private bool ShoesExists(int id)
 		{
 			return (_db.CustomizedShoesPos?.Any(e => e.ShoesProductId == id)).GetValueOrDefault();
 		}
