@@ -221,6 +221,7 @@ import { ref, watch, provide } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 import axios from 'axios';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 let photo = ref(null); //保存 <input> 元素的參考
 let imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑
@@ -467,6 +468,11 @@ function save() {
       console.log(err);
     });
   //todo傳給後端
+
+  Swal.fire({
+    icon: 'success',
+    title: '個人資料更新成功',
+  });
 }
 
 if (isSubscribeNews.value == true) {

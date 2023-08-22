@@ -9,6 +9,7 @@ import vue3GoogleLogin from 'vue3-google-login';
 import coupon from 'v-coupon';
 //import { VueDatePickerProps } from '@vuepic/vue-datepicker';
 import VueDatePicker from '@vuepic/vue-datepicker';
+import swal from 'sweetalert2';
 
 const pinia = createPinia();
 const CLIENT_ID =

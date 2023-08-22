@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-//import router from '../router'; 打開才可以執行，但是打開會有可怕的超連結樣式
 
 //第一個參數getApiData指的是整個store的id
 //官方建議pinia function 為use開頭
@@ -18,8 +17,7 @@ export const useGetApiDataStore = defineStore('getApiData', {
   },
   actions: {
     setLoginSuccess(value) {
-      this.loginSuccess = value; //顯示登入字
-      console.log('轉成大頭' + this.loginSuccess);
+      this.loginSuccess = value;
     },
     handleLogout() {
       this.memberInfo = null;
@@ -31,10 +29,10 @@ export const useGetApiDataStore = defineStore('getApiData', {
       axios
         .delete(uri)
         .then((res) => {
-          //console.log('delet API');
+          console.log('登出成功', res);
         })
         .catch((err) => {
-          console.error(err);
+          console.error('登出失敗', err);
         });
 
       //router.push({ path: '/login' });

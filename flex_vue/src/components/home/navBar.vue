@@ -8,7 +8,7 @@
           <a href="/login">登入</a>
         </li>
         <li class="p-relative userIcon" v-if="loginSuccess">
-          <a href="/orders" @mouseenter="showList"
+          <a href="" @mouseenter="showList" @click.prevent
             ><i class="bi bi-person-circle"></i
           ></a>
           <userList v-if="isListVisible" @mouseleave="hideList"></userList>
@@ -159,6 +159,7 @@ const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs�
 const { memberInfo } = storeToRefs(getApiStore);
 const { setLoginSuccess } = getApiStore; //function透過store取資料
 const { getData } = getApiStore;
+
 const loggedInUser = localStorage.getItem('loggedInUser');
 const imgBaseUrl = ref(baseAddress);
 let memberId = 0;
@@ -214,17 +215,12 @@ onMounted(() => {
   sendFunctionToParent();
 });
 
-watch(memberInfo, (newValue) => {
-  if (newValue) {
-    setLoginSuccess(true);
-    //console.log('人頭' + loginSuccess.value);
-
-    loginSuccess.value = true;
-  } else {
-    setLoginSuccess(false);
-    loginSuccess.value = false;
-  }
-});
+//登入人頭
+if (loggedInUser) {
+  loginSuccess.value = true;
+} else {
+  loginSuccess.value = false;
+}
 </script>
 
 <style lang="scss">
