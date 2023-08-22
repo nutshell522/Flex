@@ -5,11 +5,12 @@
     class="container likeProductCard"
     v-for="(product, index) in likeProducts"
     :key="index"
+    v-if="cardAll"
   >
     <div class="card mb-3 likeCard">
       <div class="row g-0">
         <div class="col-md-4">
-          <!-- <img
+          <!--商品完整路徑 <img
             src="https://localhost:7183/Public/Img/550af4ee0a2047d69bf578c0bbe63fa7.jpg"
           /> -->
           <img :src="baseAddress + 'Public/Img/' + product.firstImgPath" />
@@ -21,9 +22,11 @@
             <p class="card-text">{{ product.salesPrice }}</p>
             <div class="allBtn">
               <div class="likeBtn">
-                <button class="" style="font-size: 20px" @click="collect">
-                  <i class="bi bi-heart" style="color: red" v-if="!like"></i
-                  ><i class="bi bi-heart-fill" style="color: red" v-else></i>
+                <button class="" style="font-size: 20px" @click="removeLike">
+                  <i class="bi bi-heart-fill" style="color: red"></i>
+                  <label for="" v-if="likeProName">{{
+                    product.productName
+                  }}</label>
                 </button>
               </div>
               <div>
@@ -48,7 +51,8 @@ import axios from 'axios';
 //const likeProductNames = ref([]);
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const likeProducts = ref([]);
-const like = ref(true);
+const likeProName = ref(false);
+const cardAll = ref(true);
 
 onMounted(() => {
   // 判斷使用者id從 localstorage 撈出來
@@ -68,17 +72,18 @@ onMounted(() => {
       .get(getLikeProductUri)
       .then((res) => {
         likeProducts.value = res.data;
-        console.log('商品湯圓', likeProducts);
+        //console.log('商品湯圓', likeProducts);
       })
       .catch((err) => {
         err;
       });
   }
 });
-// 77如果不要綁在一起
-function collect() {
-  like.value = !like.value;
-  if (like.value) {
+
+function removeLike() {
+  if ((likeProName.value = true)) {
+    console.log('likeProducts', likeProducts);
+    cardAll.value = false; //77現在會全部關掉
   }
 }
 </script>

@@ -120,7 +120,7 @@
       <button
         type="submit"
         class="btn btn btn-outline-dark registerBtn"
-        @click="register"
+        @click="registerBtn"
         v-if="unRegistered"
       >
         註冊
@@ -139,6 +139,8 @@
       <a href="#" class="underline">隱私權及網站使用條款</a>
     </div>
   </div>
+  <!-- 註冊請收驗證信 -->
+  <register v-if="registercheck"></register>
   <!-- 忘記密碼請收驗證信 -->
   <forgetPwdAndSetPwd
     v-if="forgetPwdSetPwd"
@@ -151,6 +153,7 @@ import axios from 'axios';
 import navBar from '@/components/home/navBar.vue';
 import { ref, onMounted } from 'vue';
 import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
+import register from '@/components/user/register.vue';
 import datepicker from '@/components/user/datepicker.vue';
 
 //google
@@ -225,8 +228,6 @@ function ValidatedIdentity() {
   localStorage.setItem('userAcc', account.value);
 
   //loading.value = true;
-  //alert('loginAndRegister');
-  //未填寫
   if (account.value === '') {
     errors.value = [];
     loading.value = false;
@@ -251,8 +252,8 @@ function ValidatedIdentity() {
           validated.value = true;
           accInput.value = false;
           registered.value = false;
-          //忘記密碼
 
+          //忘記密碼寄送驗證信
           forgetPwd.value = true;
           arrow.value = true;
           //loading.value = false;
@@ -288,7 +289,6 @@ function prePage() {
 }
 
 function Login() {
-  //alert('Login');
   //todo是否與資料庫的密碼相符
   loginData.EncryptedPassword = password.value;
   //console.log(loginData);
@@ -350,17 +350,19 @@ function handleSuccessfulLogin(memberInfo) {
   //console.log(loggedInUser.value);
 }
 
-const regUri = `${baseAddress}/Users/Register`;
-var registerData = {};
+//註冊
+const registercheck = ref(false);
 
-function register() {
-  //alert('register');
-  //todo檢查信箱格式
+function registerBtn() {
+  const regUri = `${baseAddress}/Users/Register`;
+  var registerData = {};
+
+  //帳號
   if (email.value === '') {
     errors.value = [];
     errors.value.push('欄位尚未填寫完畢');
   } else {
-    //格式驗證通過
+    //註冊資料
     errors.value = [];
     registerData.Account = account.value;
     registerData.EncryptedPassword = password.value;
@@ -369,16 +371,23 @@ function register() {
     registerData.Birthday = birthday.value;
     registerData.Mobile = mobile.value;
     registerData.CommonAddress = address.value;
-    console.log(registerData);
+
     axios
       .post(regUri, registerData)
       .then((res) => {
         registerData.value = res.data;
         //console.log(registerData.value);
-        //驗證信驗證完囉
-        window.location.reload();
+
+        //todo驗證信驗證
+        loginBox.value = false;
+        registercheck.value = true;
+
+        //todo顯示註冊成功畫面--註冊成功請至信箱收信
+        //window.location.reload();
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log('註冊失敗', err);
+      });
   }
 }
 const loginBox = ref(true);

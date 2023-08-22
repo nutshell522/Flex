@@ -14,7 +14,7 @@ namespace FlexCoreService.UserCtrl.Infa
             mms.From = new MailAddress(senderemail);
             mms.To.Add(email);
             mms.Subject = "flex 註冊驗證信";
-            mms.Body = "感謝您註冊成為 flex 的會員!請點擊連結...來啟用您的帳戶";
+            mms.Body = "感謝您註冊成為 flex 的會員!請點擊連結: https://localhost:8080/login 來啟用您的帳戶";
 
             //設定郵件主機
             SmtpClient client = new SmtpClient("smtp.gmail.com");

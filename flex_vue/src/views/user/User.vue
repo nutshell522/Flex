@@ -1,5 +1,7 @@
 <template>
-  <navBar></navBar>
+  <div>
+    <navBar></navBar>
+  </div>
   <div>
     <userBar></userBar>
   </div>
@@ -355,8 +357,7 @@ axios
     if (isSubscribeNews.value != true) {
       isSubscribeNews.value = true;
     }
-    console.log(res.data);
-    console.log(res.data.imgsPath);
+    //console.log(res.data);
     if (res.data.imgsPath != null) {
       imgsPath.value = res.data.imgsPath;
     } else {

@@ -7,11 +7,11 @@
 
       <li class="mb-2"><router-link to="/favorites">收藏清單</router-link></li>
 
-      <li class="mb-2"><a href="javascript:;">積分中心</a></li>
+      <!-- <li class="mb-2"><a href="javascript:;">積分中心</a></li>
 
       <li class="mb-2"><router-link to="/coupon">優惠券</router-link></li>
 
-      <li class="mb-2"><a href="javascript:;">瀏覽紀錄</a></li>
+      <li class="mb-2"><a href="javascript:;">瀏覽紀錄</a></li> -->
 
       <li class="mb-2"><a href="javascript:;">購物車</a></li>
     </ul>
