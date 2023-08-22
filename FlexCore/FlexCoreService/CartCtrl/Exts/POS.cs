@@ -1,4 +1,5 @@
 ﻿using FlexCoreService.CartCtrl.Exts.Discount_dll;
+using FlexCoreService.CartCtrl.Models.vm;
 
 namespace FlexCoreService.CartCtrl.Exts
 {
@@ -14,7 +15,7 @@ namespace FlexCoreService.CartCtrl.Exts
 			cart.TotalPrice = cart.OriginalTotalAmount;
 			foreach (var rule in this.ActivedRules)
 			{
-				
+
 				var discounts = rule.Process(cart);
 				if(discounts != null)
 				{

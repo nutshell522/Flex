@@ -301,18 +301,28 @@ RedeemedDate = GETDATE(),
 RedemptionStatus = 1
 WHERE SendingId = 54
 
-select * from CouponSendings
-select 
-c.CouponId as Id, c.fk_CouponCategoryId as CouponCategoryId, cs.SendingId, c.CouponName, c.MinimumPurchaseAmount,
-c.DiscountType, c.DiscountValue, cs.StartDate, cs.EndDate 
-from CouponSendings as cs
-inner join Coupons as c on c.CouponId = cs.fk_CouponId
-where cs.SendingId = 7
+select * from discounts as d
+where d.StartDate <= getdate() 
+and ( d.EndDate > getdate() OR d.EndDate IS NULL) 
+and d.status = 1
 
-select 
-c.CouponId as Id, c.fk_CouponCategoryId as CouponCategoryId, cs.SendingId, c.CouponName, c.MinimumPurchaseAmount,
-c.DiscountType, c.DiscountValue, cs.StartDate, cs.EndDate 
-from CouponSendings as cs
-inner join Coupons as c on c.CouponId = cs.fk_CouponId
-where cs.fk_MemberId = 1 and RedemptionStatus = 0
-and cs.StartDate <= CURRENT_TIMESTAMP and (cs.EndDate > CURRENT_TIMESTAMP or cs.EndDate is null);
+select * from ProjectTagItems as pti
+join ProjectTags as pt on pt.ProjectTagId = pti.fk_ProjectTagId
+join Discounts as d on d.fk_ProjectTagId = pt.ProjectTagId
+join Products as p on p.ProductId = pti.fk_ProductId
+join ProductSubCategories as psc on psc.ProductSubCategoryId = p.fk_ProductSubCategoryId
+join ProductCategories as pc on pc.ProductCategoryId = psc.fk_ProductCategoryId
+join SalesCategories as ssc on ssc.SalesCategoryId = pc.fk_SalesCategoryId
+join(
+    SELECT *
+    FROM ProductImgs AS pi
+    WHERE pi.ProductImgId = (
+        SELECT TOP 1 pi2.ProductImgId
+        FROM ProductImgs AS pi2
+        WHERE pi2.fk_ProductId = pi.fk_ProductId
+        ORDER BY pi2.ProductImgId
+    )
+) AS pir ON pir.fk_ProductId = p.ProductId
+where d.DiscountId = 10 and ssc.SalesCategoryId = 2
+
+select * from ProductImgs

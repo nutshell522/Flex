@@ -15,16 +15,17 @@ namespace FlexCoreService.CartCtrl.Interface
 		void CreateCartItem(CartItemDto dto);
 		void UpdateCartItemQty(CartItemDto dto);
 		void DeleteCartItem(CartItemDto dto);
+		void DeleteCartItem(int CartItemId);
 		(bool DoesExist, int CartItemId,int Qty) ExistsCartItem(int memberId, int productId);
 		IEnumerable<ProductDiscountDto> GetActiveDiscounts();
 		IEnumerable<CouponDto> GetMemberCoupons(int memberId);
 		CouponDto GetCouponById(int sendingId);
-		void UpdateCouponUsage(CouponDto dto, DateTime date);
-		bool CheckIfProductGroupHasSufficientQty(CartItemDto dto,int memberId);
+		void UpdateCouponUsage(int couponSendingId);
+		bool CheckIfProductGroupHasSufficientQty(CartItemDto dto);
 		int GetOriginProductQty(CartItemDto dto) ;
 		void UpdateProductGroupQty(CartItemDto dto, int qty);
 		int CreateOrder(CartContext cartContext, string orderCode);
-		void CreateOrderItem(CartItemDto dto,int newId);
+		void CreateOrderItem(CartItemDto dto,int newId,int TotalDiscount);
 		IEnumerable<CouponSendingDto> GetPresentCoupon();
         void SendNewCouponAfterCheckout(CouponSendingDto dto,int memberId);
 

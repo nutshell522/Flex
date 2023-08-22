@@ -43,8 +43,15 @@ namespace FlexCoreService.Controllers
             return Ok(result);
         }
 
-        // POST: api/Cart/GetTotalAmount
-        [HttpPost("GetTotalAmount")]
+        // Delete: api/Cart/DeleteUpdateItem
+        [HttpDelete("DeleteUpdateItem")]
+        public async Task<ActionResult<Result>> DeleteUpdateItem([FromBody] CartItemUpdateVM vm)
+		{
+            return await Task.Run(() => _service.DeleteCartItem(vm.CartItem.CartItemId.Value,vm.MemberId));			
+		}
+
+		// POST: api/Cart/GetTotalAmount
+		[HttpPost("GetTotalAmount")]
         public async Task<ActionResult<CartContext>> GetTotalAmount([FromBody] CartItemsVM vm)
         {
             var result = await Task.Run(() => _service.GetCartItems(vm.MemberId).Select(x => x.ToViewModel()));

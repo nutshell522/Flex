@@ -13,7 +13,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.Common;
 
-namespace FlexCoreService.CartCtrl.Infra
+namespace FlexCoreService.CartCtrl.Infra.Dapper
 {
     public class CartDapperRepository : ICartRepository
     {
@@ -297,6 +297,10 @@ where sc.fk_MemberID = @MemberId
 
         public void DeleteCartItem(CartItemDto dto)
         {
+            DeleteCartItem(dto.CartItemId.HasValue ? dto.CartItemId.Value : 0);
+        }
+        public void DeleteCartItem(int cartItemId)
+        {
             using (var connection = new SqlConnection(_connStr))
             {
                 connection.Open();
@@ -306,7 +310,7 @@ DELETE FROM CartItems
 WHERE CartItemId = @CartItemId"
 ;
 
-                var parameters = new { CartItemId = dto.CartItemId.Value };
+                var parameters = new { CartItemId = cartItemId };
 
                 connection.Execute(sql, parameters);
             }
@@ -366,7 +370,7 @@ where cs.SendingId = @SendingId
             }
         }
 
-        public void UpdateCouponUsage(CouponDto dto, DateTime date)
+        public void UpdateCouponUsage(int couponSendingId)
         {
             using (var connection = new SqlConnection(_connStr))
             {
@@ -374,19 +378,18 @@ where cs.SendingId = @SendingId
                 string sql = @"
 UPDATE CouponSendings SET
 RedemptionStatus = 1,
-RedeemedDate = @RedeemedDate
+RedeemedDate = getdate()
 WHERE SendingId = @SendingId
 ";
                 var parameters = new
                 {
-                    SendingId = dto.SendingId,
-                    RedeemedDate = date
+                    SendingId = couponSendingId,
                 };
                 connection.Execute(sql, parameters);
             }
         }
 
-        public bool CheckIfProductGroupHasSufficientQty(CartItemDto dto, int memberId)
+        public bool CheckIfProductGroupHasSufficientQty(CartItemDto dto)
         {
             using (var connection = new SqlConnection(_connStr))
             {
@@ -394,7 +397,7 @@ WHERE SendingId = @SendingId
 
                 string sql = @"
 SELECT CASE WHEN EXISTS (SELECT 1 FROM ProductGroups WHERE ProductGroupId = @ProductGroupId AND Qty > @Qty) THEN 1 ELSE 0 END";
-                bool result = connection.QuerySingle<bool>(sql, new { ProductGroupId = dto.ProductId, Qty = dto.Qty });
+                bool result = connection.QuerySingle<bool>(sql, new { ProductGroupId = dto.ProductId, dto.Qty });
 
                 return result;
             }
@@ -440,16 +443,16 @@ SELECT SCOPE_IDENTITY();
 ;
                 var parameters = new
                 {
-                    MemberId = cartContext.MemberId,
-                    TotalQty = cartContext.TotalQty,
+                    cartContext.MemberId,
+                    cartContext.TotalQty,
                     PayMethod = cartContext.checkoutData.PaymentInfo.PaymentMethod,
                     CouponName = cartContext.Coupon != null ? cartContext.Coupon.Name : null,
                     CouponDiscount = cartContext.CouponValue != null ? cartContext.CouponValue : 0,
                     Freight = cartContext.DeliveryFee,
-                    TotalPrice = cartContext.TotalPrice,
+                    cartContext.TotalPrice,
                     Receiver = cartContext.checkoutData.ContactInfo.ContactName,
                     CellPhone = cartContext.checkoutData.ContactInfo.Phone,
-                    Address = cartContext.checkoutData.ContactInfo.Address,
+                    cartContext.checkoutData.ContactInfo.Address,
                     OrderCode = orderCode,
                     Biller = cartContext.checkoutData.BillingAddress.Name,
                     BillCellPhone = cartContext.checkoutData.BillingAddress.Phone,
@@ -461,7 +464,7 @@ SELECT SCOPE_IDENTITY();
             }
         }
 
-        public void CreateOrderItem(CartItemDto dto, int newId)
+        public void CreateOrderItem(CartItemDto dto, int newId, int TotalDiscount)
         {
             using (var connection = new SqlConnection(_connStr))
             {
@@ -479,17 +482,17 @@ values(
                 var parameters = new
                 {
                     OrderId = newId,
-                    ProductName = dto.Product.ProductName,
+                    dto.Product.ProductName,
                     PerPrice = dto.Product.SalesPrice,
                     Qty = dto.Qty.HasValue ? dto.Qty.Value : 0,
                     DiscountName = dto.Product.MatchDiscounts
                                         .Where(x => x.DiscountName != null)
                                         .Select(x => x.DiscountName)
                                         .Aggregate("", (current, next) => current + (current != "" ? ", " : "") + next),
-                    DiscountSubTotal = dto.Product.MatchDiscounts.Sum(x => x.DiscountValue),
-                    SubTotal = dto.Product.SalesPrice * dto.Qty.Value - dto.Product.MatchDiscounts.Sum(x => x.DiscountValue),
+                    DiscountSubTotal = TotalDiscount,
+                    SubTotal = dto.Product.SalesPrice * dto.Qty.Value - TotalDiscount,
                     ColorAndSize = $"顏色:{dto.Product.Color} - 尺寸:{dto.Product.Size}",
-                    ProductId = dto.ProductId,
+                    dto.ProductId,
                 };
                 connection.Execute(sql, parameters);
             }

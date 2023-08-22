@@ -11,5 +11,10 @@
 		public string? Color { get; set; }
         public IEnumerable<ProductDiscountDto>? MatchDiscounts { get; set; }
         public string? ImgPath { get; set; }
-	}
+		public int DiscountValue { get; set; }
+        public CartItemProductDto()
+        {
+            DiscountValue = 0;
+        }
+    }
 }

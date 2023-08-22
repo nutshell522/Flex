@@ -26,7 +26,7 @@
                   </li>
                 </ul>
               </div>
-              <i class="bi bi-trash3"></i>
+              <i @click="deleteCartItem(cartItem)" class="bi bi-trash3"></i>
               <div>
                 <div class="d-flex">
                   <button @click="decrementCartItem(cartItem)">
@@ -137,6 +137,27 @@ const loadTotal = async () => {
       alert(error);
     });
 };
+
+const deleteCartItem = async (cartItem: CartItem) => {
+  const result = confirm("是否刪除此商品？");
+  if (result) {
+    const request = {
+      CartItem: cartItem,
+      memberId: memberId,
+    };
+    let url: string = `${baseAddress}api/Cart/DeleteUpdateItem`;
+    await axios
+      .delete(url, { data: request })
+      .then((response) => {
+
+        loadCartItems();
+
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }
+}
 
 const discountCount = computed(() => {
   return subTotal.value - deliveryFee.value - originalTotalAmount.value;
