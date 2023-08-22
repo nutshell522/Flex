@@ -80,7 +80,7 @@ namespace FlexCoreService.CartCtrl.Service
 		{
 			// TODO 驗證券是否是該會員的
 
-			// TODO 驗證券是否過期
+			// TODO 驗證券是否過期及是否已用過
 
 			DateTime date = DateTime.Now;
 			_repo.UpdateCouponUsage(dto, date);

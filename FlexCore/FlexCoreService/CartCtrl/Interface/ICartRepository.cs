@@ -1,4 +1,5 @@
-﻿using FlexCoreService.CartCtrl.Models.Dtos;
+﻿using FlexCoreService.CartCtrl.Exts;
+using FlexCoreService.CartCtrl.Models.Dtos;
 using FlexCoreService.CartCtrl.Models.vm;
 using FlexCoreService.ProductCtrl.Models.Dtos;
 
@@ -19,6 +20,11 @@ namespace FlexCoreService.CartCtrl.Interface
 		IEnumerable<CouponDto> GetMemberCoupons(int memberId);
 		CouponDto GetCouponById(int sendingId);
 		void UpdateCouponUsage(CouponDto dto, DateTime date);
-		
-	}
+		bool CheckIfProductGroupHasSufficientQty(CartItemDto dto,int memberId);
+		void UpdateProductGroupQty(CartItemDto dto);
+		int CreateOrder(CartContext cartContext);
+		void CreateOrderItem(CartItemProductDto dto,int memberId);
+		void SendNewCouponAfterCheckout(CouponDto dto,int memberId);
+
+    }
 }

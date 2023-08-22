@@ -38,7 +38,7 @@
     public class PaymentInfoVM
     {
         public int? CouponId { get; set; }
-        public string? PaymentMethod { get; set; }
+        public int? PaymentMethod { get; set; }
         public string? CardName { get; set; }
         public string? CardNumber { get; set; }
         public string? Expiration { get; set; }
