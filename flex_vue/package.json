@@ -21,16 +21,20 @@
     "bootstrap-icons": "^1.10.5",
     "flatpickr": "^4.6.13",
     "js-cookie": "^3.0.5",
+    "lodash": "^4.17.21",
     "pinia": "^2.1.6",
+    "twzipcode-vue": "^2.2.2",
     "twzipcode.js": "^3.0.1",
+    "v-coupon": "^0.3.8",
     "vue": "^3.3.4",
     "vue-axios": "^3.5.2",
     "vue-flip-down": "^3.1.0",
     "vue-meta": "^3.0.0-alpha.8",
     "vue-multiselect": "^3.0.0-beta.2",
     "vue-router": "^4.2.4",
+    "vue3-carousel": "^0.3.1",
     "vue3-google-login": "^2.0.18",
-    "vue3-carousel": "^0.3.1"
+    "vue3-recaptcha2": "^1.8.0"
   },
   "devDependencies": {
     "@types/node": "^20.4.5",
@@ -43,6 +47,7 @@
     "tslint": "^5.20.1",
     "tslint-config-standard": "^9.0.0",
     "tslint-loader": "^3.5.4",
+    "twzipcode-data": "^2.0.0",
     "typescript": "^4.4.4",
     "vite": "^4.4.6",
     "vite-plugin-mkcert": "^1.16.0"

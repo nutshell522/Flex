@@ -162,7 +162,9 @@
                 </button>
               </div>
               <div class="col-6">
-                <button class="form-control">加入購物車</button>
+                <button @click="joinCartItemEventHandler" class="form-control">
+                  加入購物車
+                </button>
               </div>
             </div>
           </div>
@@ -343,21 +345,10 @@
               <i class="bi bi-chevron-right similarIcon"></i>
             </button>
           </div>
-          <Carousel
-            :items-to-show="3"
-            :wrap-around="true"
-            ref="similarCarousel"
-          >
-            <Slide
-              v-for="card in similarProducts"
-              :key="card.productId"
-              class="card text-center"
-            >
+          <Carousel :items-to-show="4" :wrap-around="true" ref="similarCarousel">
+            <Slide v-for="card in similarProducts" :key="card.productId" class="card text-center">
               <ProductCard :card="card"></ProductCard>
             </Slide>
-            <!-- <template #addons>
-              <Navigation />
-            </template> -->
           </Carousel>
         </div>
       </div>
@@ -379,11 +370,12 @@
 
 <script setup>
 import axios from "axios";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch, inject, toRef, defineProps } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import ProductCard from "@/components/product/ProductCard.vue";
 import { useProductRoute } from "@/stores/useProductRoute.js";
 import { Carousel, Slide } from "vue3-carousel";
+import navBar from "@/components/home/navBar.vue";
 
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
@@ -399,7 +391,7 @@ const showCommentDiv = ref(true);
 const showDetailDiv = ref(true);
 const cards = ref([]);
 const productStore = useProductRoute();
-const productName = ref("");
+//const productName = ref("");
 const similarProducts = ref([]);
 const totalPages = ref(1);
 const thePage = ref(1);
@@ -429,7 +421,7 @@ let getData = async () => {
     .then((response) => {
       //console.log(response.data.productName);
       productDetail.value = response.data;
-      productName.value = response.data.productName;
+      //productName.value = response.data.productName;
       const firstColor = Object.keys(productDetail.value.productGroup)[0];
       //console.log(firstColor);
       if (firstColor) {
@@ -652,7 +644,6 @@ onMounted(() => {
   getImgs();
   getComment();
   getSimilarProducts();
-  //updateVisibleCards();
 });
 
 //const likeProduct = ref(null);
@@ -702,15 +693,53 @@ function collect() {
     alert("請先登入囉!");
   }
 }
+const props = defineProps({
+  updateCartFunction: Function
+});
+const joinCartItemEventHandler = async () => {
+  const storedUser = localStorage.getItem("loggedInUser");
+  if (storedUser) {
+    const userObject = JSON.parse(storedUser);
+    const product = document.querySelector(".sizeActive");
+    if (product) {
+      const productId = product.getAttribute("data-productgroupid");
+      const Qty = document.querySelector("#productQty").value;
+      const requestData = {
+        MemberId: parseInt(userObject.memberId),
+        CartItem: {
+          ProductId: parseInt(productId),
+          Qty: parseInt(Qty)
+        }
+      };
+      console.log(requestData);
+      await axios
+        .put(`${baseAddress}api/Cart/UpdateItem`, requestData)
+        .then((response) => {
+          if (props.updateCartFunction) {
+            props.updateCartFunction();
+          }
+        })
+        .catch((err) => {
+          alert('加入購物車錯誤', err);
+        });
+    }
+    else {
+      alert('請選擇尺寸');
+    }
+  } else {
+    alert("請先登入囉!");
+  }
+};
 </script>
 
-<style>
+<style scoped>
 .detailImgbox {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2px;
 }
+
 .detailImg {
   width: 490px;
   height: 520px;
@@ -723,14 +752,17 @@ function collect() {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap; /* 换行排列 */
+  flex-wrap: wrap;
+  /* 换行排列 */
 }
+
 .detailImgList {
   margin-bottom: 20px;
   width: 80%;
   height: auto;
   display: block;
 }
+
 .color-list {
   height: 60px;
   display: flex;
@@ -849,6 +881,7 @@ function collect() {
   border-radius: 50%;
   background-color: #dbdbdb;
 }
+
 .similarBtn:hover {
   background-color: #ababab;
 }

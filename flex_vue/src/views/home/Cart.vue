@@ -1,5 +1,5 @@
 <template>
-  <navBar></navBar>
+  <navBar @UpdateCart="getUpdateFunc"></navBar>
   <main>
     <div class="container">
       <div class="row gx-4">
@@ -7,14 +7,18 @@
         <div class="left col-12 col-lg-8">
           <ul class="cart">
             <li v-for="cartItem in cartItems" :key="cartItem.cartItemId" class="cart-item">
-              <a class="pd-img-wrapper" href="javascript:;">
+              <a class="pd-img-wrapper"
+                :href="webBaseAddress + cartItem.product.categorySubStr + '/detail/' + cartItem.product.productSaleId">
                 <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath" :title="cartItem.product.productName" />
               </a>
               <div class="item-info-wrapper me-auto">
                 <a href="javascript:;" class="fw-bold">{{ cartItem.product.productName }}-{{
-                  cartItem.product.salesCategoryNameStr }}-{{ cartItem.product.color }}</a>
-                <div>尺寸 <a href="javascript:;"><span>{{ cartItem.product.size }}</span><i
-                      class="bi bi-chevron-down"></i></a></div>
+                  cartItem.product.salesCategoryNameStr
+                }}-{{ cartItem.product.color }}</a>
+                <div>
+                  尺寸
+                  <a href="javascript:;"><span>{{ cartItem.product.size }}</span><i class="bi bi-chevron-down"></i></a>
+                </div>
                 <ul class="d-flex px-0">
                   <li class="me-2" v-for="matchDiscount in cartItem.product.matchDiscounts"
                     :key="matchDiscount.discountId">
@@ -25,13 +29,19 @@
               <i class="bi bi-trash3"></i>
               <div>
                 <div class="d-flex">
-                  <button @click="decrementCartItem(cartItem)"><i class="bi bi-dash-lg"></i></button>
+                  <button @click="decrementCartItem(cartItem)">
+                    <i class="bi bi-dash-lg"></i>
+                  </button>
                   <div>{{ cartItem.qty }}</div>
-                  <button @click="incrementCartItem(cartItem)"><i class="bi bi-plus-lg"></i></button>
+                  <button @click="incrementCartItem(cartItem)">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
                 </div>
               </div>
               <div class="px-4">
-                <div v-if="cartItem.unitSubTotal !== null">{{ cartItem.unitSubTotal }}</div>
+                <div v-if="cartItem.unitSubTotal !== null">
+                  {{ cartItem.unitSubTotal }}
+                </div>
                 <div>{{ cartItem.subTotal }}</div>
               </div>
             </li>
@@ -52,11 +62,13 @@
             <div>運費</div>
             <div>{{ deliveryFee }}</div>
           </div>
-          <div class="d-flex justify-content-between border border-start-0 border-end-0 py-2 ">
+          <div class="d-flex justify-content-between border border-start-0 border-end-0 py-2">
             <div>總計</div>
             <div>{{ subTotal }}</div>
           </div>
-          <button class="btn btn-dark w-100 my-3 py-3 rounded-5">結帳</button>
+          <button @click="goToCheckoutPageEventHandler" class="btn btn-dark w-100 my-3 py-3 rounded-5">
+            結帳
+          </button>
         </div>
       </div>
     </div>
@@ -65,30 +77,42 @@
 </template>
     
 <script setup lang="ts">
-import NavBar from '@/components/home/navBar.vue';
-import HomeFooter from '@/components/home/footer.vue';
+import NavBar from "@/components/home/navBar.vue";
+import HomeFooter from "@/components/home/footer.vue";
 import axios from "axios";
 import { ref, onMounted, computed } from "vue";
-import { CartItem, ShoppingCartItem } from '@/types/type';
-
+import { CartItem, ShoppingCartItem } from "@/types/type";
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
+const webBaseAddress = 'https://localhost:8080/';
 const imgBaseUrl = ref(baseAddress);
 const cartItems = ref<CartItem[]>([]);
 const originalTotalAmount = ref<number>();
 const subTotal = ref<number>();
 const deliveryFee = ref<number>();
-
+const loggedInUser = localStorage.getItem("loggedInUser")!;
+const memberInfo = JSON.parse(loggedInUser);
+const memberId: number = memberInfo.memberId;
+let UpdateCartHandler: (() => void) | null = null;
+const getUpdateFunc = (func: (() => void) | null) => {
+  UpdateCartHandler = func;
+};
 
 // 載入購物車
 const loadCartItems = async () => {
   let url: string = `${baseAddress}api/Cart`;
   await axios
-    .post<CartItem[]>(url)
+    .post<CartItem[]>(url, memberId, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
     .then((response) => {
       cartItems.value = response.data;
       loadTotal();
-      // console.log(cartItems.value);
+      if (UpdateCartHandler) {
+        UpdateCartHandler();
+      }
     })
     .catch((error) => {
       alert(error);
@@ -97,19 +121,22 @@ const loadCartItems = async () => {
 
 // 載入折扣後的結帳金額
 const loadTotal = async () => {
-  let url: string = `${baseAddress}api/Cart/Checkout`;
+  const request = {
+    CartItems: cartItems.value,
+    memberId: memberId,
+  };
+  let url: string = `${baseAddress}api/Cart/GetTotalAmount`;
   await axios
-    .post<number>(url)
+    .post<number>(url, request)
     .then((response) => {
       originalTotalAmount.value = response.data.originalTotalAmount;
       subTotal.value = response.data.totalPrice;
       deliveryFee.value = response.data.deliveryFee;
-      // console.log(subTotal.value);
     })
     .catch((error) => {
       alert(error);
     });
-}
+};
 
 const discountCount = computed(() => {
   return subTotal.value - deliveryFee.value - originalTotalAmount.value;
@@ -123,28 +150,31 @@ onMounted(() => {
 type Callback = () => void;
 
 function processCallbacks(...callbacks: Callback[]) {
-  callbacks.forEach(callback => callback());
+  callbacks.forEach((callback) => callback());
 }
 
 const incrementCartItem = async (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem)
+  const shoppingCart = new ShoppingCartItem(cartItem, memberId);
   await shoppingCart.addOneItem(() => {
     processCallbacks(loadCartItems);
   });
 };
 
 const decrementCartItem = async (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem);
+  const shoppingCart = new ShoppingCartItem(cartItem, memberId);
   await shoppingCart.removeOneItem(() => {
     processCallbacks(loadCartItems);
   });
 };
 
 const getCartItemQty = (cartItem: CartItem) => {
-  const shoppingCart = new ShoppingCartItem(cartItem);
+  const shoppingCart = new ShoppingCartItem(cartItem, memberId);
   return shoppingCart.getCartItemQty();
 };
 
+const goToCheckoutPageEventHandler = () => {
+  window.location.href = "/buy";
+};
 </script>
     
 <style scoped lang="scss">

@@ -14,7 +14,7 @@ namespace FlexCoreService.CartCtrl.Interface
 		void CreateCartItem(CartItemDto dto);
 		void UpdateCartItemQty(CartItemDto dto);
 		void DeleteCartItem(CartItemDto dto);
-		(bool DoesExist, int CartItemId) ExistsCartItem(int memberId, int productId);
+		(bool DoesExist, int CartItemId,int Qty) ExistsCartItem(int memberId, int productId);
 		IEnumerable<ProductDiscountDto> GetActiveDiscounts();
 		IEnumerable<CouponDto> GetMemberCoupons(int memberId);
 		CouponDto GetCouponById(int sendingId);

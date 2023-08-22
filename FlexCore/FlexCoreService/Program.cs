@@ -3,6 +3,7 @@ using FlexCoreService.ActivityCtrl.Infra.DPRepository;
 using FlexCoreService.ActivityCtrl.Interface;
 using FlexCoreService.CartCtrl.Infra;
 using FlexCoreService.CartCtrl.Interface;
+using FlexCoreService.Controllers;
 using FlexCoreService.CustomeShoes.Infra.DPRepository;
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.ProductCtrl.Infra.DPRepository;
@@ -50,6 +51,7 @@ namespace FlexCoreService
             builder.Services.AddScoped<ICustomerChooseRepository, ShoesChooseDPRepository>();
             builder.Services.AddScoped<IReservationDPRepository, ReservationDPRepositorycs>();
             builder.Services.AddScoped<IFavoriteDPRepository, FavoriteDPRepository>();
+            builder.Services.AddScoped<PaymentDPRepository>();
 
 
             builder.Services.AddHttpContextAccessor();
@@ -74,7 +76,9 @@ namespace FlexCoreService
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+			builder.Services.AddSingleton<WebSocketController>();
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -91,7 +95,12 @@ namespace FlexCoreService
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseStaticFiles();
+			app.UseWebSockets(new WebSocketOptions
+			{
+				KeepAliveInterval = TimeSpan.FromSeconds(30)
+			});
+
+			app.UseStaticFiles();
 
             app.UseHttpsRedirection();
 

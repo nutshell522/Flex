@@ -171,12 +171,10 @@ d.ConditionType, d.ConditionValue, d.OrderBy, ssc.SalesCategoryName ,p.ProductNa
 ORDER BY p.ProductId asc, d.OrderBy asc;
 
 -- 
-select *
-from CartItems
-select TOP 1 1
-from CartItems as ci
-join ShoppingCarts as sc on sc.CartId = ci.fk_CardId
-where sc.fk_MemberID = 1 and ci.fk_ProductId = 1
+SELECT TOP 1 ci.cartitemId,ci.Qty
+FROM CartItems AS ci
+JOIN ShoppingCarts AS sc ON sc.CartId = ci.fk_CardId
+WHERE sc.fk_MemberID = 1 AND ci.fk_ProductId = 21
 
 select * from CartItems
 
@@ -197,4 +195,56 @@ from CouponSendings as cs
 inner join Coupons as c on c.CouponId = cs.fk_CouponId
 where cs.fk_MemberId = 1 and RedemptionStatus = 0
 and cs.StartDate <= CURRENT_TIMESTAMP and (cs.EndDate > CURRENT_TIMESTAMP or cs.EndDate is null);
+
+
+SELECT 
+    ci.CartItemId, c.CartId, pg.ProductGroupId as ProductId, ci.Qty, p.ProductId as ProductSaleId, 
+    p.ProductName, p.UnitPrice, p.SalesPrice, sc.SizeName as Size, cc.ColorName as Color, 
+    pir.ImgPath, ssc.SalesCategoryName, 
+    CASE 
+        WHEN d.DiscountId IS NULL THEN NULL 
+        WHEN d.StartDate > GETDATE() OR (d.EndDate IS NOT NULL AND d.EndDate <= GETDATE()) THEN NULL 
+        ELSE d.DiscountId 
+    END AS DiscountId, 
+    MAX(d.DiscountName) as DiscountName, MAX(d.DiscountDescription) as DiscountDescription, 
+    MAX(d.DiscountType) as DiscountType, MAX(d.DiscountValue) as DiscountValue, 
+    MAX(d.ConditionType) as ConditionType, MAX(d.ConditionValue) as ConditionValue, 
+    MAX(d.OrderBy) as DiscountOrder
+FROM CartItems as ci
+INNER JOIN ShoppingCarts as C ON c.CartId = ci.fk_CardId
+INNER JOIN ProductGroups as pg ON pg.ProductGroupId = ci.fk_ProductId
+INNER JOIN Products as p ON p.ProductId = pg.fk_ProductId
+INNER JOIN ColorCategories as cc ON cc.ColorId = pg.fk_ColorId
+INNER JOIN SizeCategories as sc ON sc.SizeId = pg.fk_SizeId
+INNER JOIN ProductSubCategories as psc ON psc.ProductSubCategoryId = p.fk_ProductSubCategoryId
+INNER JOIN ProductCategories as pc ON pc.ProductCategoryId = psc.fk_ProductCategoryId
+INNER JOIN SalesCategories as ssc ON ssc.SalesCategoryId = pc.fk_SalesCategoryId
+LEFT JOIN ProjectTagItems as pti ON pti.fk_ProductId = p.ProductId
+LEFT JOIN(
+    SELECT
+        pi.fk_ProductId,
+        pi.ProductImgId,
+        pi.ImgPath
+    FROM ProductImgs AS pi
+    WHERE pi.ProductImgId = (
+        SELECT TOP 1 pi2.ProductImgId
+        FROM ProductImgs AS pi2
+        WHERE pi2.fk_ProductId = pi.fk_ProductId
+        ORDER BY pi2.ProductImgId
+    )
+) AS pir ON pir.fk_ProductId = p.ProductId
+LEFT JOIN Discounts as d ON d.fk_ProjectTagId = pti.fk_ProjectTagId
+WHERE p.Status = 0 AND p.LogOut = 0 AND c.fk_MemberID = 1 
+AND (
+    (d.StartDate <= GETDATE() AND (d.EndDate > GETDATE() OR d.EndDate IS NULL) AND d.status = 1)
+    OR d.DiscountId IS NULL
+    OR (d.StartDate > GETDATE() OR (d.EndDate IS NOT NULL AND d.EndDate <= GETDATE()))
+)
+GROUP BY
+    ci.CartItemId, c.CartId, pg.ProductGroupId, ci.Qty, p.ProductId,
+    p.UnitPrice, p.SalesPrice, sc.SizeName, cc.ColorName, pir.ImgPath,
+    d.DiscountId, ssc.SalesCategoryName, p.ProductName,d.EndDate,d.StartDate
+HAVING COUNT(p.ProductId) >= 1
+ORDER BY p.ProductId asc, MAX(d.OrderBy) asc;
+
 

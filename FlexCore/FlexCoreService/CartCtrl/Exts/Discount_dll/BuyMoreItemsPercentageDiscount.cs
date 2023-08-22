@@ -45,8 +45,8 @@ namespace FlexCoreService.CartCtrl.Exts.Discount_dll
                 {
                     Rule = this,
                     Products = matchedProducts.Select(x => x.Product).ToArray(),
-                    Amount = (decimal)matchedProducts.Sum(x => x.SubTotal) * _percentOff / 100
-                };
+                    Amount = Math.Round((decimal)matchedProducts.Sum(x => x.SubTotal) * _percentOff / 100, MidpointRounding.AwayFromZero)
+				};
             }
             return null;
         }

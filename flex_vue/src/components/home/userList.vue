@@ -9,7 +9,7 @@
 
       <li class="mb-2"><a href="javascript:;">積分中心</a></li>
 
-      <li class="mb-2"><a href="javascript:;">優惠券</a></li>
+      <li class="mb-2"><router-link to="/coupon">優惠券</router-link></li>
 
       <li class="mb-2"><a href="javascript:;">瀏覽紀錄</a></li>
 

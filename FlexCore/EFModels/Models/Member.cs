@@ -11,10 +11,12 @@ namespace EFModels.Models
         {
             CouponSendings = new HashSet<CouponSending>();
             CustomizedOrders = new HashSet<CustomizedOrder>();
+            Favorites = new HashSet<Favorite>();
+            MemberImgs = new HashSet<MemberImg>();
             OneToOneReservations = new HashSet<OneToOneReservation>();
             PointHistories = new HashSet<PointHistory>();
             PointTradeIns = new HashSet<PointTradeIn>();
-            ProductComments = new HashSet<ProductComment>();
+            ReservationReviews = new HashSet<ReservationReview>();
             ShoppingCarts = new HashSet<ShoppingCart>();
             orders = new HashSet<order>();
         }
@@ -42,10 +44,12 @@ namespace EFModels.Models
         public virtual MemberPoint MemberPoint { get; set; }
         public virtual ICollection<CouponSending> CouponSendings { get; set; }
         public virtual ICollection<CustomizedOrder> CustomizedOrders { get; set; }
+        public virtual ICollection<Favorite> Favorites { get; set; }
+        public virtual ICollection<MemberImg> MemberImgs { get; set; }
         public virtual ICollection<OneToOneReservation> OneToOneReservations { get; set; }
         public virtual ICollection<PointHistory> PointHistories { get; set; }
         public virtual ICollection<PointTradeIn> PointTradeIns { get; set; }
-        public virtual ICollection<ProductComment> ProductComments { get; set; }
+        public virtual ICollection<ReservationReview> ReservationReviews { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; }
         public virtual ICollection<order> orders { get; set; }
     }

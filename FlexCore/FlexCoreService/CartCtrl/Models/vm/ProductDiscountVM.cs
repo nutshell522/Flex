@@ -10,7 +10,5 @@
 		public int? ConditionType { get; set; }
 		public int? ConditionValue { get; set; }
 		public int DiscountOrder { get; set; }
-
-
 	}
 }

@@ -2,14 +2,17 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useGetApiDataStore } from "../stores/useGetApiDataStore";
 import { useProductRoute } from "../stores/useProductRoute";
 import { storeToRefs } from "pinia";
+import { useActivityRoute } from "../stores/useActivityRoute";
 import User from "../views/user/User.vue";
 import Favorites from "../views/user/Favorites.vue";
+import Coupon from "../views/user/Coupon.vue";
 import Login from "../views/user/Login.vue";
 import ActivityInfo from "../views/activity/ActivityInfo.vue";
 import ActivitySignUp from "../views/activity/ActivitySignUp.vue";
 import ActivityIndex from "../views/activity/ActivityIndex.vue";
 import ReservationIndex from "../views/reservation/ReservationIndex.vue";
 import SpeakerInfo from "../views/reservation/SpeakerInfo.vue";
+import PaymentSuccess from "../views/activity/PaymentSuccess.vue";
 const webTitle = "FLEX - ";
 
 // 路由設定
@@ -33,6 +36,12 @@ const routes = [
     meta: { title: `${webTitle}結帳` },
   },
   {
+    //http://loaclhost/onSale
+    path: '/onSale',
+    component: () => import('@/views/home/Sale.vue'),
+    meta: { title: `${webTitle}特惠專區` },
+  },
+  {
     //http://loaclhost/User
     path: "/user",
     component: User,
@@ -45,6 +54,12 @@ const routes = [
     meta: { title: `${webTitle}收藏清單`, require: true },
   },
   {
+    //http://loaclhost/Coupon
+    path: "/coupon",
+    component: Coupon,
+    meta: { title: `${webTitle}優惠券`, require: true },
+  },
+  {
     //http://loaclhost/Login
     path: "/login",
     component: Login,
@@ -56,16 +71,28 @@ const routes = [
     meta: { title: `${webTitle}訂單` },
   },
   {
+    path: '/activityIndex',
+    component: ActivityIndex,
+    meta: { title: `${webTitle}活動首頁` },
+  },
+  {
     //http://loaclhost/activityInfo
     path: "/activityInfo/:id",
     component: ActivityInfo,
     meta: { title: `${webTitle}活動` },
   },
-
   {
-    path: "/activityIndex",
-    component: ActivityIndex,
-    meta: { title: `${webTitle}活動首頁` },
+    //http://loaclhost/activitySignUp
+    path: '/activitySignUp/:id',
+    component: ActivitySignUp,
+    name: "activitySignUp",
+    meta: { title: `${webTitle}活動報名`, require: true },
+  },
+  {
+    //http://loaclhost/paymentSuccess
+    // path: '/paymentSuccess/:TradeAmt/:TradeNo/:ActivityName',
+    // component: PaymentSuccess,
+    // meta: { title: `${webTitle}訂單資訊` },
   },
   {
     path: "/reservationIndex",
@@ -78,26 +105,10 @@ const routes = [
     meta: { title: `${webTitle}講師資訊` },
   },
   {
-    //http://loaclhost/Login
-    path: "/login",
-    component: Login,
-  },
-  {
     //http://loaclhost/orders
     path: "/orders",
     component: () => import("../views/orders/orderindex.vue"),
     meta: { title: `${webTitle}訂單` },
-  },
-  {
-    //http://loaclhost/activityInfo
-    path: "/activityInfo",
-    component: ActivityInfo,
-    meta: { title: `${webTitle}活動` },
-  },
-  {
-    path: "/activitySignUp",
-    component: ActivitySignUp,
-    meta: { title: `${webTitle}活動報名`, require: true },
   },
   {
     //http://loaclhost/Login
@@ -323,8 +334,14 @@ router.beforeEach((to, from, next) => {
 
   //檢查是否需要驗證，如果需要，則檢查是否已登入
   if (to.meta.require && !loginSuccess) {
-    console.log("nologin");
-    next({ path: "/login" });
+    console.log('nologin');
+    console.log(44332211);
+    next({ path: '/login' });
+  } else if (to.path == '/login' && loginSuccess) {
+    console.log('already logged in');
+    console.log(11223344);
+    next({ path: '/' }); // 或其他您希望導向的頁面
+    // next({ path: "/login" });
   } else {
     //console.log('login');
     next();

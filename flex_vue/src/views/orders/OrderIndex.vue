@@ -1,6 +1,6 @@
 <template>
-  <OrdernavBar></OrdernavBar>
-  <div id="searchorderout" class="container">
+  <navBar></navBar>
+  <div id="searchorderout" class="container ">
     <div id="srarchdate" class="col-3">
       <input type="text" v-model="begintime" @searchInputbegintime="inputbegintime" class="form-control datePicker"
         placeholder="輸入開始日期" />
@@ -425,6 +425,41 @@
       </div>
     </div>
   </template>
+
+  <div class="chat" style="display: none;">
+    <!-- <div class="showcon" id="showcon">
+        <div class="container" id="app">
+          <div class="row">
+            <input class="col-4 m-1" id="userName" placeholder="User name" />
+            <input class="col-6 m-1" id="message" placeholder="Message" />
+            <button class="col-1 m-1" id="send">Send</button>
+          </div>
+          <div class="p-2 chat">
+            <ul id="list">
+            </ul>
+          </div>
+        </div>
+      </div>
+      <input type="text" id="msg" />
+      <button @click="send()">發送</button> -->
+    <div id="showcon" class="showcon">
+      <div class="container">
+        <div v-for="message in messages" :key="message.id">
+          <ul>
+            <li :class="{ 'align-left': message.userName === 'min', 'align-right': message.userName !== 'min' }">{{
+              message.userName }} 說：{{ message.message }}</li>
+          </ul>
+        </div>
+        <div class="p-2 chat">
+        </div>
+      </div>
+    </div>
+    <input v-model="userName" placeholder="使用者名稱">
+    <input id="msg" v-model="messageText" placeholder="訊息">
+    <button @click="sendMessage()">送出</button>
+  </div>
+  <button class="chat2" @click="toggleContainer()">客服</button>
+
   <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
@@ -452,7 +487,8 @@
   </div> -->
 </template>
 <script setup>
-import OrdernavBar from "@/components/Order/OrdernavBar.vue";
+//import OrdernavBar from "@/components/Order/OrdernavBar.vue";
+import navBar from '@/components/home/navBar.vue';
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import flatpickr from "flatpickr";
@@ -478,6 +514,11 @@ const commentProductid = ref("");
 const commentstar = ref("");
 const commentdescription = ref("");
 const commentId = ref("");
+var wsUrl = `wss://localhost:7183`;
+var socket = null;
+const messages = ref([]);
+const userName = ref("");
+const messageText = ref("");
 
 const loadGetOrders = async () => {
   const begintimeValue = begintime.value;
@@ -571,6 +612,8 @@ const CancelReturnOrders = async () => {
       //console.log(response.data);
       alert(response.data);
       loadGetOrders();
+      returnaccount.value = "";
+      returnreason.value = "";
     })
     .catch((error) => {
       alert(error);
@@ -635,7 +678,6 @@ const Returndetail = async () => {
 
   if (showError) {
     await CancelReturnAndCloseOrders();
-    return;
   }
   const requestData = {
     退貨轉帳帳號: returnaccount.value,
@@ -760,6 +802,29 @@ const closecomment = async () => {
 //       alert(error);
 //     });
 // };
+
+const connect = () => {
+  socket = new WebSocket(wsUrl + '/ws');
+  socket.onmessage = (e) => processMessage(e.data);
+};
+const processMessage = (data) => {
+  const content = JSON.parse(data);
+  messages.value.push(content);
+};
+const sendMessage = () => {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    const data = {
+      userName: userName.value,
+      message: messageText.value
+    };
+    socket.send(JSON.stringify(data));
+    messageText.value = "";
+  }
+};
+
+
+
+
 const formatOrderTime = (ordertime) => {
   const dateTimeObject = new Date(ordertime);
   const year = dateTimeObject.getFullYear();
@@ -809,6 +874,14 @@ const toggleDetails = (itemId) => {
 const returncomment = () => {
   return;
 }
+const toggleContainer = () => {
+  var container = document.querySelector(".chat");
+  if (container.style.display === "none" || container.style.display === "") {
+    container.style.display = "block";
+  } else {
+    container.style.display = "none";
+  }
+}
 onMounted(() => {
   Type.value = 1;
   commentstar.value = 1;
@@ -820,6 +893,7 @@ onMounted(() => {
   activityclose();
   loadGetOrders();
   fetchReturnReasons();
+  connect();
 });
 </script>
 <style scoped>
@@ -873,6 +947,11 @@ onMounted(() => {
   padding-right: 20px;
   margin-right: 80px;
   font-size: 30px;
+}
+
+#searchorderout {
+  max-width: 800px;
+  margin: 0 700px;
 }
 
 #searchorder {
@@ -980,5 +1059,58 @@ _::-moz-range-track {
 [type="range"]::-moz-range-thumb {
   width: 0;
   opacity: 0;
+}
+
+.chat {
+  width: 350px;
+  text-align: center;
+  padding: 20px 0;
+  max-width: 0 auto;
+  overflow: auto;
+  background-color: rgb(149, 236, 149);
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+.chat2 {
+  width: 100px;
+  text-align: center;
+  padding: 20px 0;
+  max-width: 0 auto;
+  /* overflow: auto; */
+  background-color: rgb(185, 235, 236);
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+.chat .showcon {
+  width: 330px;
+  height: 300px;
+  padding: 10px;
+  overflow: auto;
+  background-color: #fff;
+  margin: 0 auto 10px;
+}
+
+#msg {
+  width: 230px;
+  height: 40px;
+  margin-bottom: 60px;
+}
+
+.chat button {
+  width: 50px;
+  height: 40px;
+  vertical-align: middle;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.align-right {
+  text-align: right;
 }
 </style>

@@ -30,7 +30,24 @@ namespace FlexCoreService.CartCtrl.Models.vm
 				}
 			}
 		}
-        public HashSet<string> Tags;
+		public string CategorySubStr
+		{
+			get
+			{
+				switch (SalesCategoryName)
+				{
+					case "男裝":
+						return "men";
+					case "女裝":
+						return "women";
+					case "童裝":
+						return "kid";
+					default:
+						return "";
+				}
+			}
+		}
+		public HashSet<string> Tags;
 
         public string TagsValue
         {

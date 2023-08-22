@@ -1,6 +1,11 @@
 <template>
   <navBar></navBar>
   <div class="container loginBox" v-if="loginBox">
+    <div class="arrow" :class="{ show: arrow }" @click="prePage">
+      <button>
+        <i class="bi bi-arrow-left"></i>
+      </button>
+    </div>
     <div class="loginText">
       <h4>Flex Your Journey. Join us!</h4>
     </div>
@@ -8,6 +13,12 @@
       <ul class="mb-3 errorsText">
         <span v-for="error in errors" class="text-danger">{{ error }}</span>
       </ul>
+    </div>
+    <!-- Loading -->
+    <div class="text-center" v-if="loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
     <!-- 欄位 -->
     <div class="from-group mb-3">
@@ -83,7 +94,7 @@
         id="address"
         v-model="address"
         class="form-control"
-        placeholder="收件地址套用選項按鈕阿"
+        placeholder="ex.OO市OO區OO路O號O樓"
       />
     </div>
     <!-- 按鈕 -->
@@ -105,6 +116,11 @@
       >
         登入
       </button>
+      <!-- 我不是機器人 -->
+      <GoogleReCaptchaV2
+        class="from-group mb-3 reCaptchaV2"
+        v-if="unRegistered"
+      ></GoogleReCaptchaV2>
       <div class="forgetPwd" v-if="forgetPwd" @click="forgetPwdClick">
         <a href="#" class="underline">忘記密碼 ?</a>
       </div>
@@ -145,10 +161,13 @@ import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
 
 //google
 import googleLogin from '@/components/user/googleLogin.vue';
+import GoogleReCaptchaV2 from '@/components/user/GoogleReCaptchaV2.vue';
+
 //pinia
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+import { useActivityRoute } from '@/stores/useActivityRoute.js';
 
 axios.defaults.withCredentials = true;
 
@@ -159,6 +178,10 @@ const router = useRouter();
 
 const userAcc = ref(null);
 const loggedInUser = ref(null);
+
+const getActivityStore = useActivityRoute();
+const originalRoute = ref(null);
+const activityId = localStorage.getItem('activityId');
 
 onMounted(() => {
   //檢查本地儲存是否有登錄信息
@@ -180,6 +203,7 @@ const errors = ref([]);
 const userData = ref([]);
 const accInput = ref(true);
 const validated = ref(false); //初始化狀態為不顯示
+const loading = ref(false);
 const unValidated = ref(false);
 
 const nameInput = ref(false);
@@ -194,6 +218,7 @@ const unRegistered = ref(false);
 //登入表單
 const account = ref('');
 const password = ref('');
+const arrow = ref(false);
 
 //註冊表單
 const name = ref('');
@@ -210,12 +235,13 @@ function ValidatedIdentity() {
   //存入帳號
   localStorage.setItem('userAcc', account.value);
 
-  //載入開始
+  //loading.value = true;
   //alert('loginAndRegister');
   //未填寫
   if (account.value === '') {
     errors.value = [];
-    errors.value.push('沒有填誰知道你是誰'); //結束載入
+    loading.value = false;
+    errors.value.push('請確實填寫');
   } else {
     //已填寫
     errors.value = [];
@@ -225,7 +251,6 @@ function ValidatedIdentity() {
     axios
       .post(uri, loginData)
       .then((res) => {
-        //結束載入
         userData.value = res.data;
         //console.log('帳號' + userData.value); //後端return的訊息
 
@@ -233,19 +258,23 @@ function ValidatedIdentity() {
         //已註冊
         if (userData.value == account.value) {
           //console.log('帳號驗證成功囉!');
+
           validated.value = true;
           accInput.value = false;
           registered.value = false;
           //忘記密碼
+
           forgetPwd.value = true;
+          arrow.value = true;
+          //loading.value = false;
         } else {
           //未註冊
+          arrow.value = true;
           validated.value = false;
-          //console.log('帳號驗證失敗');
           logAndRegBtn.value = false;
 
           errors.value = [];
-          errors.value.push('484沒有註冊');
+          errors.value.push('此帳號尚未註冊');
           validated.value = true;
           unValidated.value = true; //信箱
           nameInput.value = true;
@@ -259,12 +288,16 @@ function ValidatedIdentity() {
         }
       })
       .catch((err) => {
-        //結束載入
+        loading.value = false;
         alert('API請求失敗：' + err.message);
       });
   }
 }
-uri;
+
+function prePage() {
+  window.location.reload();
+}
+
 function Login() {
   //alert('Login');
   //todo是否與資料庫的密碼相符
@@ -274,7 +307,7 @@ function Login() {
   //未填寫密碼
   if (password.value === '') {
     errors.value = [];
-    errors.value.push('密碼沒有填想怎樣');
+    errors.value.push('請確實填寫');
     return;
   }
 
@@ -307,14 +340,24 @@ function Login() {
         }
         //alert('登入成功啦港動~~~');
         handleSuccessfulLogin(memberInfo);
-        router.replace({ path: '/' });
+
+        originalRoute.value = localStorage.getItem('originalRoute');
+        console.log(originalRoute.value);
+        if (originalRoute.value.includes('/activityInfo')) {
+          // const resolvedRoute = router.resolve({ path: '/activitySignUp/:activityId', params: { activityId: activityId } });
+          router.replace({
+            name: 'activitySignUp',
+            params: { id: activityId },
+          });
+          // router.replace({path:resolvedRoute.href});
+        } else {
+          router.replace({ path: '/' });
+        }
       }
     })
     .catch((err) => {
       errors.value = [];
       errors.value.push('密碼累計錯誤1次');
-
-      //errors.value.push('密碼錯誤');
 
       console.error(err);
       //todo錯誤累計三次
@@ -338,7 +381,7 @@ function register() {
   //todo檢查信箱格式
   if (email.value === '') {
     errors.value = [];
-    errors.value.push('給我確實填寫喔');
+    errors.value.push('欄位尚未填寫完畢');
   } else {
     //格式驗證通過
     errors.value = [];
@@ -392,7 +435,7 @@ function forgetPwdClick() {
   width: 23%;
   justify-content: center;
   align-items: center;
-  padding: 45px;
+  padding: 20px 45px 45px 45px;
   margin-top: 150px;
   border: solid 1px;
 }
@@ -474,6 +517,23 @@ p::after {
   justify-content: center;
 }
 .secret a {
+  display: flex;
+  justify-content: center;
+}
+.arrow {
+  font-size: 28px;
+  padding-bottom: 10px;
+  visibility: hidden; /* 初始隱藏，但保留位置 */
+}
+
+.arrow.show {
+  visibility: visible; /* 當有 show 類名時顯示 */
+}
+
+.arrow:hover {
+  color: #bb3e20;
+}
+.reCaptchaV2 {
   display: flex;
   justify-content: center;
 }

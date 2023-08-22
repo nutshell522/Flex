@@ -131,7 +131,7 @@
                   <input type="checkbox" id="confirm-terms" class="buy-checkbox" />
                   確認你同意 Flex 付款的 <a href="javascript:;">條款與條件</a>
                 </label>
-                <button type="submit" id="send-order" class="next-step-btn">
+                <button @click="checkoutEventHandler" type="button" id="send-order" class="next-step-btn">
                   下訂單
                 </button>
               </div>
@@ -174,34 +174,42 @@
           </div>
         </div>
         <div class="buy-summary col-12 col-lg-5">
-          <div>
-            <h2>訂單摘要</h2>
+          <div class="mb-5">
+            <h2 class="mb-3">訂單摘要</h2>
+            <div class="d-flex">
+              <div>小計</div>
+              <div class="me-auto border border-1 rounded-5 px-2">?<span></span></div>
+              <div v-if="cart">{{ formatter.format(cart.originalTotalAmount) }}</div>
+            </div>
             <div class="d-flex">
               <div class="me-auto">運費</div>
-              <div>{{ cart?.deliveryFee }}</div>
+              <div v-if="cart">{{ formatter.format(cart.deliveryFee) }}</div>
             </div>
             <hr>
             <div class="d-flex">
               <div class="me-auto">總計</div>
-              <div>{{ cart?.totalPrice }}</div>
+              <div v-if="cart">{{ formatter.format(cart.totalPrice) }}</div>
             </div>
           </div>
           <div class="order-item-area">
-            <h2>訂單詳情</h2>
+            <h2 class="mb-4">訂單詳情</h2>
             <ul>
-              <li v-if="cart" v-for="item in cart.cartItems" :key="item.cartItemId" class="d-flex">
-                <div class="item-img-wrapper"><img :src="imgBaseUrl + 'Public/Img/' + item.product.imgPath" alt=""></div>
+              <li v-if="cart" v-for="item in cart.cartItems" :key="item.cartItemId" class="d-flex mb-4">
+                <div class="item-img-wrapper me-2"><img :src="imgBaseUrl + 'Public/Img/' + item.product.imgPath" alt="">
+                </div>
                 <div class="item-info">
-                  <div>{{ item.product.productName }}</div>
-                  <div>{{ item.product.salesCategoryNameStr }}</div>
-                  <div>{{ item.qty }}</div>
-                  <div>{{ item.product.size }}</div>
-                  <div>{{ item.product.color }}</div>
-                  <div>{{ item.subTotal }}</div>
-                  <ul class="d-flex">
-                    <li v-for="matchDiscount in item.product.matchDiscounts" :key="matchDiscount.discountId">{{
-                      matchDiscount.discountName }}</li>
-                  </ul>
+                  <div class="text-black fw-bold title">{{ item.product.productName }}</div>
+                  <div v-if="item.product.matchDiscounts.length != 0" class="d-flex text-black">
+                    適用折扣:
+                    <ul class="d-flex">
+                      <li class="me-1 text-black" v-for="matchDiscount in item.product.matchDiscounts"
+                        :key="matchDiscount.discountId">{{
+                          matchDiscount.discountName }}</li>
+                    </ul>
+                  </div>
+                  <div class="text-secondary">規格:{{ item.product.color }} 尺寸:{{ item.product.size }}</div>
+                  <div class="text-secondary">數量: {{ item.qty }}</div>
+                  <div class="text-secondary">{{ formatter.format(item.subTotal) }}</div>
                 </div>
               </li>
             </ul>
@@ -260,16 +268,16 @@
 <script setup lang='ts'>
 import axios from "axios";
 import { Input } from "postcss";
-import { ref, onMounted, onUpdated, onUnmounted, computed } from "vue";
-import { ShoppingCart, Member, Coupon } from "@/types/type";
-import { storeToRefs } from "pinia";
-import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
+import { ref, onMounted, onUpdated, onUnmounted, computed, toRaw } from "vue";
+import { CartItem, ShoppingCart, Member, Coupon } from "@/types/type";
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
-const getApiStore = useGetApiDataStore();
-const { memberInfo } = storeToRefs(getApiStore);
-const memberId = getApiStore.getMemberId;
+
+const loggedInUser = localStorage.getItem('loggedInUser')!;
+const memberInfo = JSON.parse(loggedInUser);
+const memberId: number = memberInfo.memberId;
 const cart = ref<ShoppingCart>();
+const cartItems = ref<CartItem[]>([]);
 const member = ref<Member>();
 const coupons = ref<Coupon[]>([]);
 const imgBaseUrl = ref(baseAddress);
@@ -280,11 +288,38 @@ const addresses = ref({
 });
 const isActive = ref(false);
 
+// 載入購物車
+const loadCartItems = async () => {
+  let url: string = `${baseAddress}api/Cart`;
+  await axios
+    .post<CartItem[]>(url, memberId, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => {
+      cartItems.value = response.data;
+      loadCart(loadMember);
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
+loadCartItems();
 //
 const loadCart = async (callback?: () => Promise<void>): Promise<void> => {
-  let url: string = `${baseAddress}api/Cart/Checkout`;
+  let url: string = `${baseAddress}api/Cart/GetTotalAmount`;
+  const request = {
+    CartItems: cartItems.value,
+    memberId: memberId,
+  }
   await axios
-    .post<ShoppingCart>(url)
+    .post<ShoppingCart>(url, request, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
     .then((response) => {
       cart.value = response.data;
       callback?.();
@@ -295,7 +330,7 @@ const loadCart = async (callback?: () => Promise<void>): Promise<void> => {
 };
 
 const loadMember = async (): Promise<void> => {
-  let url: string = `${baseAddress}api/Users/1`;
+  let url: string = `${baseAddress}api/Users/${memberId}`;
   await axios
     .get<Member>(url)
     .then((response) => {
@@ -322,7 +357,7 @@ const loadMember = async (): Promise<void> => {
 const loadCoupons = async (): Promise<void> => {
   let url: string = `${baseAddress}api/Cart/GetMemberAllCoupons`;
   await axios
-    .post<Coupon[]>(url, 1, {
+    .post<Coupon[]>(url, memberId, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -479,13 +514,49 @@ const couponComfirmEventHandler = () => {
       cart.value.couponValue = response.data.couponValue;
       cart.value.deliveryFee = response.data.deliveryFee;
       cart.value.totalPrice = response.data.totalPrice;
-      console.log(cart.value.coupon);
-
+      cart.value.cartItems = response.data.cartItems;
     }
     hideCouponAreaEventHandler()
   }).catch(error => {
     console.error(error);
   })
+}
+
+const formatter = new Intl.NumberFormat('zh-TW', {
+  style: 'currency',
+  currency: 'TWD',
+  minimumFractionDigits: 0, // 最少保留小數位數
+  maximumFractionDigits: 0, // 最多保留小數位數
+});
+
+const checkoutEventHandler = async () => {
+  const ids: number[] = [];
+  cart.value?.cartItems.forEach(item => {
+    ids.push(item.cartItemId);
+  })
+  const request = {
+    memberId: memberId,
+    CartItemIds: ids,
+    CouponId: null as null | number,
+    checkoutData: {
+      contactInfo: toRaw(cart.value?.checkoutData.contactInfo),
+      billingAddress: toRaw(cart.value?.checkoutData.billingAddress),
+      paymentInfo: toRaw(cart.value?.checkoutData.paymentInfo)
+    }
+  }
+  if (cart.value?.coupon?.id) {
+    request.CouponId = cart.value.coupon.id
+  }
+  console.log(request.checkoutData);
+
+  await axios
+    .post(`${baseAddress}api/Cart/Checkout`, request)
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      alert(error);
+    });
 }
 
 class FlexCheckoutProcess {
@@ -648,7 +719,7 @@ class FlexCheckoutProcess {
     });
   }
 }
-loadCart(loadMember);
+// loadCart(loadMember);
 loadCoupons();
 
 onMounted(() => {
@@ -927,6 +998,35 @@ main {
 
                 &:hover {
                   background-color: #eee;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // 購物摘要
+      .buy-summary {
+        .order-item-area {
+          &>ul {
+            padding: 0;
+
+            &>li {
+
+              .item-img-wrapper {
+                width: 130px;
+                height: 130px;
+              }
+
+              .item-info {
+                font-size: 13px;
+
+                .title {
+                  font-size: 14px;
+                }
+
+                ul {
+                  padding: 0;
                 }
               }
             }

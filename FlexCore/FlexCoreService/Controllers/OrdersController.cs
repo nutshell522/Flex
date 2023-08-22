@@ -5,7 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Net.WebSockets;
+using System.Text;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
+using System.Collections.Concurrent;
 
 namespace FlexCoreService.Controllers
 {
@@ -15,6 +20,7 @@ namespace FlexCoreService.Controllers
 	public class OrdersController : ControllerBase
 	{
 		private readonly AppDbContext _context;
+		static ConcurrentDictionary<int, WebSocket> WebSockets = new ConcurrentDictionary<int, WebSocket>();
 		public OrdersController(AppDbContext context)
 		{
 			_context = context;
@@ -55,13 +61,13 @@ namespace FlexCoreService.Controllers
 			}
 			if (begintime.HasValue && endtime.HasValue)
 			{
-				
-					query = query.Where(o =>
-					o.ordertime >= begintime.Value && o.ordertime <= endtime.Value
-				);
-				
+
+				query = query.Where(o =>
+				o.ordertime >= begintime.Value && o.ordertime <= endtime.Value
+			);
+
 			}
-			var result=query.Select(p => new OrdersIndexVM
+			var result = query.Select(p => new OrdersIndexVM
 			{
 				Id = p.Id,
 				ordertime = p.ordertime,
@@ -82,11 +88,11 @@ namespace FlexCoreService.Controllers
 				recipient_address = p.recipient_address,
 				order_description = p.order_description,
 				close = (bool)p.close,
-				close_time=p.close_time,
+				close_time = p.close_time,
 				total_price = p.total_price,
 				fk_typeId = p.fk_typeId,
 				orderItems = (List<OrderItemsVM>)GetOrderItemsIndex(p.Id)
-			});		
+			});
 			return Ok(result);
 		}
 		private static IEnumerable<OrderItemsVM> GetOrderItemsIndex(int orderId)
@@ -110,7 +116,6 @@ namespace FlexCoreService.Controllers
 					discount_subtotal = o.discount_subtotal,
 					Items_description = o.Items_description,
 					productcommit = o.productcommit,
-					comment = o.comment,
 				})
 				.ToList();
 
@@ -139,7 +144,7 @@ namespace FlexCoreService.Controllers
 				emp.order_status_Id = 7;
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
-			     emp.close = true;
+				emp.close = true;
 				_context.Entry(emp).State = EntityState.Modified;
 				await _context.SaveChangesAsync();
 				return "已取消訂單";
@@ -270,7 +275,7 @@ namespace FlexCoreService.Controllers
 			{
 				return "訂單尚未領取";
 			}
-			
+
 		}
 		[HttpPut("cancelChange")]
 		public async Task<string> CancelChange(int orderid)
@@ -309,9 +314,9 @@ namespace FlexCoreService.Controllers
 			order emp = await _context.orders.FindAsync(orderid);
 			emp.close = true;
 			_context.Entry(emp).State = EntityState.Modified;
-				await _context.SaveChangesAsync();
-				return "已過鑑賞期";
-			
+			await _context.SaveChangesAsync();
+			return "已過鑑賞期";
+
 		}
 		[HttpPost("NewReturn")]
 		public async Task<string> Return(ReturnVM reDTO, int orderid)
@@ -320,7 +325,7 @@ namespace FlexCoreService.Controllers
 			{
 				退貨日期 = DateTime.Now,
 				fk訂單 = orderid,
-				退貨轉帳帳號 = reDTO.退貨轉帳帳號,
+				//退貨轉帳帳號 = reDTO.退貨轉帳帳號,
 				退款狀態 = false,
 				退貨理由 = reDTO.退貨理由,
 			};
@@ -343,8 +348,8 @@ namespace FlexCoreService.Controllers
 				});
 			return Reason;
 		}
-		[HttpGet("ReturnReasons")] 
-		public async Task<IEnumerable<ReturnReaasonVM>> GetReturnReasons() 
+		[HttpGet("ReturnReasons")]
+		public async Task<IEnumerable<ReturnReaasonVM>> GetReturnReasons()
 		{
 			var db = _context;
 			var Reasons = db.ReturnResons
@@ -356,26 +361,26 @@ namespace FlexCoreService.Controllers
 				});
 			return Reasons;
 		}
-	    [HttpPut("activitycolse")]
-	     public async Task<string> Activitycolse()
-	{
-		var allOrders = await _context.orders.ToListAsync();
-
-		// 獲取目前時間
-		DateTime currentTime = DateTime.Now;
-
-		foreach (var order in allOrders)
+		[HttpPut("activitycolse")]
+		public async Task<string> Activitycolse()
 		{
-			// 判斷是否有 close_time 值且該值小於目前時間
-			if (order.close_time.HasValue && order.close_time.Value < currentTime)
+			var allOrders = await _context.orders.ToListAsync();
+
+			// 獲取目前時間
+			DateTime currentTime = DateTime.Now;
+
+			foreach (var order in allOrders)
 			{
-				// 將 order_status_Id 改成 6
-				order.order_status_Id = 6;
+				// 判斷是否有 close_time 值且該值小於目前時間
+				if (order.close_time.HasValue && order.close_time.Value < currentTime)
+				{
+					// 將 order_status_Id 改成 6
+					order.order_status_Id = 6;
+				}
 			}
-		}
-		// 儲存變更回資料庫
-		await _context.SaveChangesAsync();
-		return "活動已結束";
+			// 儲存變更回資料庫
+			await _context.SaveChangesAsync();
+			return "活動已結束";
 		}
 
 		[HttpPost("Newcommit")]
@@ -395,22 +400,66 @@ namespace FlexCoreService.Controllers
 
 			return "評論成功";
 		}
-		[HttpPut("fincomment")]
-		public async Task<string> Closecomment(int orderid)
-		{
-			var db = _context;
-			if (_context.orders == null)
-			{
-				return null;
-			}
-			orderItem emp = await _context.orderItems.FindAsync(orderid);
 
-				emp.comment = true;
-				_context.Entry(emp).State = EntityState.Modified;
-				await _context.SaveChangesAsync();
-				return "感謝您的評論";
 
-		}
+
+
+		//public async Task Connect()
+		//{
+		//	if (HttpContext.WebSockets.IsWebSocketRequest)
+		//	{
+		//		using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+		//		await ProcessWebSocket(webSocket);
+		//	}
+		//	else
+		//	{
+		//		HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+		//	}
+		//}
+
+		//public async Task ProcessWebSocket(WebSocket webSocket)
+		//{
+		//	WebSockets.TryAdd(webSocket.GetHashCode(), webSocket);
+		//	var buffer = new byte[1024 * 4];
+		//	var res = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+		//	string? UserName = null;
+		//	while (!res.CloseStatus.HasValue)
+		//	{
+		//		UserName = "匿名";
+		//		var cmd = Encoding.UTF8.GetString(buffer, 0, res.Count);
+		//		JObject data = JObject.Parse(cmd);
+		//		string? Name = Convert.ToString(data["userName"]);
+		//		string? Message = $"{Convert.ToString(data["message"])} at {DateTime.Now}";
+		//		if (!string.IsNullOrEmpty(Name))
+		//		{
+		//			UserName = Name;
+		//		}
+		//		Broadcast(JsonConvert.SerializeObject(new
+		//		{
+		//			userName = UserName,
+		//			message = Message
+		//		}));
+		//		res = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+		//	}
+		//	await webSocket.CloseAsync(res.CloseStatus.Value, res.CloseStatusDescription, CancellationToken.None);
+		//	WebSockets.TryRemove(webSocket.GetHashCode(), out var removed); // removed允許未宣告
+		//	Broadcast(JsonConvert.SerializeObject(new
+		//	{
+		//		userName = UserName,
+		//		message = "離開聊天室"
+		//	}));
+		//}
+
+		//public void Broadcast(string message)
+		//{
+		//	var buff = Encoding.UTF8.GetBytes(message);
+		//	var data = new ArraySegment<byte>(buff, 0, buff.Length);
+		//	Parallel.ForEach(WebSockets.Values, async (webSocket) =>
+		//	{
+		//		if (webSocket.State == WebSocketState.Open)
+		//			await webSocket.SendAsync(data, WebSocketMessageType.Text, true, CancellationToken.None);
+		//	});
+		//}
 	}
-	
+
 }
