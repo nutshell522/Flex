@@ -425,12 +425,38 @@
       </div>
     </div>
   </template>
+
   <div class="chat" style="display: none;">
-    <div class="showcon" id="showcon"></div>
-    <input type="text" id="msg" />
-    <button @click="send()">發送</button>
+    <!-- <div class="showcon" id="showcon">
+        <div class="container" id="app">
+          <div class="row">
+            <input class="col-4 m-1" id="userName" placeholder="User name" />
+            <input class="col-6 m-1" id="message" placeholder="Message" />
+            <button class="col-1 m-1" id="send">Send</button>
+          </div>
+          <div class="p-2 chat">
+            <ul id="list">
+            </ul>
+          </div>
+        </div>
+      </div>
+      <input type="text" id="msg" />
+      <button @click="send()">發送</button> -->
+    <div id="showcon" class="showcon">
+      <div class="container">
+        <div class="p-2 chat">
+          <ul>
+            <li v-for="message in messages" :key="message.id">{{ message.userName }} 說：{{ message.message }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <input v-model="userName" placeholder="使用者名稱">
+    <input id="msg" v-model="messageText" placeholder="訊息">
+    <button @click="sendMessage()">送出</button>
   </div>
-  <button class="chat2" @click="toggleContainer()">test</button>
+  <button class="chat2" @click="toggleContainer(); connect()">客服</button>
+
   <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
@@ -485,6 +511,11 @@ const commentProductid = ref("");
 const commentstar = ref("");
 const commentdescription = ref("");
 const commentId = ref("");
+var wsUrl = `wss://localhost:7183`;
+var socket = null;
+const messages = ref([]);
+const userName = ref("");
+const messageText = ref("");
 
 const loadGetOrders = async () => {
   const begintimeValue = begintime.value;
@@ -768,6 +799,29 @@ const closecomment = async () => {
 //       alert(error);
 //     });
 // };
+
+const connect = () => {
+  socket = new WebSocket(wsUrl + '/ws');
+  socket.onmessage = (e) => processMessage(e.data);
+};
+const processMessage = (data) => {
+  const content = JSON.parse(data);
+  messages.value.push(content);
+};
+const sendMessage = () => {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    const data = {
+      userName: userName.value,
+      message: messageText.value
+    };
+    socket.send(JSON.stringify(data));
+    messageText.value = "";
+  }
+};
+
+
+
+
 const formatOrderTime = (ordertime) => {
   const dateTimeObject = new Date(ordertime);
   const year = dateTimeObject.getFullYear();
@@ -1016,7 +1070,7 @@ _::-moz-range-track {
 }
 
 .chat2 {
-  width: 250px;
+  width: 100px;
   text-align: center;
   padding: 20px 0;
   max-width: 0 auto;
