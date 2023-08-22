@@ -264,7 +264,7 @@ function ValidatedIdentity() {
           logAndRegBtn.value = false;
 
           errors.value = [];
-          errors.value.push('此帳號尚未註冊');
+          errors.value.push('請先註冊帳號');
           validated.value = true;
           unValidated.value = true; //信箱
           nameInput.value = true;
@@ -379,11 +379,16 @@ function registerBtn() {
         //console.log(registerData.value);
 
         //todo驗證信驗證
-        loginBox.value = false;
-        registercheck.value = true;
+        //loginBox.value = false;
+        //registercheck.value = true;
 
-        //todo顯示註冊成功畫面--註冊成功請至信箱收信
-        //window.location.reload();
+        //todo顯示註冊成功畫面--註冊成功
+        Swal.fire({
+          icon: 'success',
+          title: '註冊成功',
+          text: `請至 ${registerData.Email} 啟用此帳號`,
+        });
+        window.location.reload();
       })
       .catch((err) => {
         console.log('註冊失敗', err);
