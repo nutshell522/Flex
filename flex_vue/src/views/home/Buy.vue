@@ -395,6 +395,8 @@
             @click="selectCouponEventHandler"
           >
             <div class="coupon-body">
+              <div class="coupon-top"></div>
+              <div class="coupon-bottom"></div>
               <div class="coupon-discount-box">
                 <div v-if="coupon.discountType == 2" class="coupon-discount">
                   免運費
@@ -567,7 +569,6 @@ const loadCoupons = async (): Promise<void> => {
     })
     .then((response) => {
       coupons.value = response.data;
-      console.log(coupons.value);
     })
     .catch((error) => {
       alert(error);
@@ -696,6 +697,7 @@ const couponComfirmEventHandler = () => {
     .querySelector(".selected")
     ?.getAttribute("data-id") as string;
   const couponId = parseInt(dataId);
+
   let request: object = {};
   const cartItemIds: number[] = [];
   if (cart.value) {
@@ -709,7 +711,6 @@ const couponComfirmEventHandler = () => {
     };
     cart.value.coupon = new Coupon();
     cart.value.coupon.sendingId = couponId;
-    console.log(request);
   }
   const headers = {
     "Content-Type": "application/json",
@@ -756,17 +757,20 @@ const checkoutEventHandler = async () => {
     },
   };
   if (request.checkoutData.paymentInfo) {
-    request.checkoutData.paymentInfo.paymentMethod = "2";
+    request.checkoutData.paymentInfo.paymentMethod = 2;
   }
   if (cart.value?.coupon?.id) {
-    request.CouponId = cart.value.coupon.id;
+    request.CouponId = cart.value.coupon.sendingId;
   }
-  console.log(request.checkoutData);
 
   await axios
     .post(`${baseAddress}api/Cart/Checkout`, request)
     .then((response) => {
-      console.log(response.data);
+      if (response.data.isSuccess) {
+        alert("結帳成功");
+      } else {
+        alert(response.data.errorMessage);
+      }
     })
     .catch((error) => {
       alert(error);
@@ -1336,7 +1340,12 @@ main {
           cursor: pointer;
 
           &.selected {
-            border-color: #9bf;
+            // border-color: #9bf;
+            .coupon-discount {
+              background-color: #333;
+              color: #eee;
+              font-size: 20px;
+            }
           }
         }
 
@@ -1349,6 +1358,45 @@ main {
           width: 98%;
           height: 90%;
           border: 2px solid blue;
+          border-radius: 10px;
+          position: relative;
+          .coupon-top {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            top: -8px;
+            background-color: #fff;
+          }
+          &::before {
+            content: "";
+            width: 15px;
+            height: 15px;
+            background-color: #fff;
+            position: absolute;
+            top: -8px;
+            left: 102px;
+            border-radius: 50px;
+            border: 2px solid blue;
+          }
+          .coupon-bottom {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            bottom: -8px;
+            background-color: #fff;
+            z-index: 100;
+          }
+          &::after {
+            content: "";
+            width: 15px;
+            height: 15px;
+            background-color: #fff;
+            position: absolute;
+            bottom: -8px;
+            left: 102px;
+            border-radius: 50px;
+            border: 2px solid blue;
+          }
 
           .coupon-discount-box {
             border-right: 1px dashed blue;

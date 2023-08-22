@@ -21,10 +21,12 @@ namespace FlexCoreService.CartCtrl.Interface
 		CouponDto GetCouponById(int sendingId);
 		void UpdateCouponUsage(CouponDto dto, DateTime date);
 		bool CheckIfProductGroupHasSufficientQty(CartItemDto dto,int memberId);
-		void UpdateProductGroupQty(CartItemDto dto);
-		int CreateOrder(CartContext cartContext);
-		void CreateOrderItem(CartItemProductDto dto,int memberId);
-		void SendNewCouponAfterCheckout(CouponDto dto,int memberId);
+		int GetOriginProductQty(CartItemDto dto) ;
+		void UpdateProductGroupQty(CartItemDto dto, int qty);
+		int CreateOrder(CartContext cartContext, string orderCode);
+		void CreateOrderItem(CartItemDto dto,int newId);
+		IEnumerable<CouponSendingDto> GetPresentCoupon();
+        void SendNewCouponAfterCheckout(CouponSendingDto dto,int memberId);
 
     }
 }

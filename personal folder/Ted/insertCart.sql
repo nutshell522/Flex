@@ -280,10 +280,14 @@ WHERE ProductGroupId = 1
 select * from ProductGroups
 where ProductGroupId = 1 and Qty > 20
 
-SELECT CASE WHEN EXISTS (SELECT 1 FROM ProductGroups WHERE ProductGroupId = @ProductGroupId AND Qty >= @Qty) THEN 1 ELSE 0 END
+SELECT CASE WHEN EXISTS (SELECT 1 FROM ProductGroups WHERE ProductGroupId = 1 AND Qty >= 1) THEN 1 ELSE 0 END
 
-select * from Coupons where fk_CouponCategoryId = 4 and Status = 1 and StartDate <= GETDATE() and  (EndDate > GETDATE() or EndDate is null)
+select qty from ProductGroups where ProductGroupId = 1
 
+select CouponId, EndType,EndDate,RequirementType,Requirement 
+from Coupons where fk_CouponCategoryId = 4 and Status = 1 and StartDate <= GETDATE() and  (EndDate > GETDATE() or EndDate is null)
+
+select * from Coupons
 select * from CouponSendings
 
 insert CouponSendings(
@@ -296,3 +300,19 @@ UPDATE CouponSendings SET
 RedeemedDate = GETDATE(),
 RedemptionStatus = 1
 WHERE SendingId = 54
+
+select * from CouponSendings
+select 
+c.CouponId as Id, c.fk_CouponCategoryId as CouponCategoryId, cs.SendingId, c.CouponName, c.MinimumPurchaseAmount,
+c.DiscountType, c.DiscountValue, cs.StartDate, cs.EndDate 
+from CouponSendings as cs
+inner join Coupons as c on c.CouponId = cs.fk_CouponId
+where cs.SendingId = 7
+
+select 
+c.CouponId as Id, c.fk_CouponCategoryId as CouponCategoryId, cs.SendingId, c.CouponName, c.MinimumPurchaseAmount,
+c.DiscountType, c.DiscountValue, cs.StartDate, cs.EndDate 
+from CouponSendings as cs
+inner join Coupons as c on c.CouponId = cs.fk_CouponId
+where cs.fk_MemberId = 1 and RedemptionStatus = 0
+and cs.StartDate <= CURRENT_TIMESTAMP and (cs.EndDate > CURRENT_TIMESTAMP or cs.EndDate is null);
