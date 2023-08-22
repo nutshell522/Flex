@@ -142,7 +142,17 @@ namespace FlexCoreService.Controllers
                 orderCode = info.TradeNo
             };
 
-            _repo.UpdateOrderInfo(orders);
+            var newId=_repo.UpdateOrderInfo(orders);
+
+            ActivityToOrderItemDTO item = new ActivityToOrderItemDTO
+            {
+                order_Id = newId,
+                product_name = tradeDesc,
+                per_price = info.TradeAmt,
+                subtotal = info.TradeAmt,
+                discount_subtotal = info.TradeAmt
+            };
+            _repo.UpdateOrderItemInfo(item);
 
 
             return Redirect($"https://localhost:8080/paymentSuccess/{info.TradeAmt}/{tradeNo}/{encodedString}");

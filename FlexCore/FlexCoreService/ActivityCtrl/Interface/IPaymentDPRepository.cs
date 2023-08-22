@@ -8,6 +8,7 @@ namespace FlexCoreService.ActivityCtrl.Interface
 
         public OrderDetailDTO GetTradeDesc(string tradeNo);
 
-        void UpdateOrderInfo(ActivityToOrdersDTO order);
+        int UpdateOrderInfo(ActivityToOrdersDTO order);
+        void UpdateOrderItemInfo(ActivityToOrderItemDTO orderItem);
     }
 }
