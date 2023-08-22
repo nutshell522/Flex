@@ -33,5 +33,11 @@ namespace FlexCoreService.CustomeShoes.Service
             var result = _repo.GetSize();
             return result;
         }
+
+        public IEnumerable<ShoesAllOptionsDto> GetAllOptions(string ShoesOrderId)
+        {
+            var shoesAllOptions = _repo.GetAllOptions(ShoesOrderId);
+            return shoesAllOptions;
+        }
     }
 }

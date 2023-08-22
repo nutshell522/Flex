@@ -82,7 +82,7 @@ const routes = [
   {
     //http://loaclhost/paymentSuccess
     path: '/paymentSuccess/:TradeAmt/:TradeNo/:ActivityName',
-    component: PaymentSuccess,
+    //component: PaymentSuccess,
     meta: { title: `${webTitle}訂單資訊` },
   },
   {
@@ -268,12 +268,22 @@ const routes = [
     },
   },
   {
-    //http://loaclhost/CustomeShoes/detail/shoesProductId
+    //http://loaclhost/CustomeShoes/detail/Customization/shoesProductId
     path: '/CustomeShoes/detail/Customization/:shoesProductId',
     component: () => import('../views/CustomeShoes/CustomerPage.vue'),
     meta: {},
     beforeEnter(to, from, next) {
       document.title = `${webTitle}商品客製化頁面${to.params.shoesProductId}`;
+      next();
+    },
+  },
+  {
+    //http://loaclhost/CustomeShoes/detail/Customization/order/ShoesOrderId
+    path: '/CustomeShoes/detail/Customization/order/:ShoesOrderId',
+    component: () => import('../views/CustomeShoes/ShoesOrderlist.vue'),
+    meta: {},
+    beforeEnter(to, from, next) {
+      document.title = `${webTitle}結帳頁面${to.params.ShoesOrderId}`;
       next();
     },
   },

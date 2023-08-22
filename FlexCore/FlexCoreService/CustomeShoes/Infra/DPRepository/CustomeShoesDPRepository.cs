@@ -42,6 +42,20 @@ where fk_ShoesPictureProduct_Id='" + @shoesproductId + "'";
             return result;
         }
 
+        public ShoesAllTotalDto GetShoesTotalOrder(string ShoesOrderId)
+        {
+            string sql = @"select ShoesOrderId,Qty,ShoesSizes.SizeId,ShoesSizes.SizeName,CustomizedShoesPo.ShoesProductId,CustomizedShoesPo.ShoesName,CustomizedShoesPo.ShoesUnitPrice,Remark
+from ShoesOrders
+join ShoesGroups on ShoesGroups.fk_CustomerOrderId = ShoesOrders.ShoesOrderId
+join CustomizedShoesPo on ShoesGroups.fk_ShoesMainId = CustomizedShoesPo.ShoesProductId
+join ShoesSizes on ShoesOrders.fk_ShoesSizeId = ShoesSizes.SizeId
+where ShoesOrders.ShoesOrderId ='" + @ShoesOrderId + "'";
+
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.QueryFirstOrDefault<ShoesAllTotalDto>(sql, new { ShoesOrderId });
+            return result;
+        }
+
         public IEnumerable<CustomeShoesDto> SearchCustomeShoes()
 		{
 			string sql = @"select c.ShoesProductId, c.ShoesName, c.ShoesUnitPrice, sc.ShoesCategoryName, MIN(sp.ShoesPictureUrl) AS FirstImgPath 

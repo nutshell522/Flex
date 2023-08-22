@@ -84,10 +84,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[EcpayOrders]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[JobTitles]",
          "ObjectType": 0
       },
@@ -188,10 +184,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[ReservationReviews]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[ReservationStatuses]",
          "ObjectType": 0
       },
@@ -268,7 +260,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "desktop-3rgs82c.Flex.dbo",
+   "UiHint": "desktop-paksetb.Flex.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
