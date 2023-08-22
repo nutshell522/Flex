@@ -84,7 +84,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Favorites]",
+         "Name": "[dbo].[EcpayOrders]",
          "ObjectType": 0
       },
       {
@@ -196,6 +196,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ReservationReviews]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ReservationStatuses]",
          "ObjectType": 0
       },
@@ -272,7 +276,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "lun.Flex.dbo",
+   "UiHint": "desktop-iq9m2qc.Flex.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,

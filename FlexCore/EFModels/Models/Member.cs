@@ -16,6 +16,7 @@ namespace EFModels.Models
             OneToOneReservations = new HashSet<OneToOneReservation>();
             PointHistories = new HashSet<PointHistory>();
             PointTradeIns = new HashSet<PointTradeIn>();
+            ReservationReviews = new HashSet<ReservationReview>();
             ShoppingCarts = new HashSet<ShoppingCart>();
             orders = new HashSet<order>();
         }
@@ -40,7 +41,6 @@ namespace EFModels.Models
         public virtual BlackList fk_BlackList { get; set; }
         public virtual MembershipLevel fk_Level { get; set; }
         public virtual AlternateAddress AlternateAddress { get; set; }
-        public virtual MemberImg MemberImg { get; set; }
         public virtual MemberPoint MemberPoint { get; set; }
         public virtual ICollection<CouponSending> CouponSendings { get; set; }
         public virtual ICollection<CustomizedOrder> CustomizedOrders { get; set; }
@@ -49,6 +49,7 @@ namespace EFModels.Models
         public virtual ICollection<OneToOneReservation> OneToOneReservations { get; set; }
         public virtual ICollection<PointHistory> PointHistories { get; set; }
         public virtual ICollection<PointTradeIn> PointTradeIns { get; set; }
+        public virtual ICollection<ReservationReview> ReservationReviews { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; }
         public virtual ICollection<order> orders { get; set; }
     }

@@ -17,6 +17,8 @@ namespace EFModels.Models
         public int? discount_subtotal { get; set; }
         public string Items_description { get; set; }
         public int? fk_typeId { get; set; }
+        public int? productcommit { get; set; }
+        public bool? comment { get; set; }
 
         public virtual Type fk_type { get; set; }
         public virtual order order { get; set; }
