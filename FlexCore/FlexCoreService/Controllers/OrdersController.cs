@@ -319,7 +319,7 @@ namespace FlexCoreService.Controllers
 			{
 				退貨日期 = DateTime.Now,
 				fk訂單 = orderid,
-				退貨轉帳帳號 = reDTO.退貨轉帳帳號,
+				//退貨轉帳帳號 = reDTO.退貨轉帳帳號,
 				退款狀態 = false,
 				退貨理由 = reDTO.退貨理由,
 			};

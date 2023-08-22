@@ -86,7 +86,7 @@ namespace FlexCoreService.Controllers
                 AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
                 AlternateAddress2 = m.AlternateAddress.AlternateAddress2,
                 IsSubscribeNews = m.IsSubscribeNews,
-                ImgsPath=m.MemberImg.ImgsPath
+                //ImgsPath=m.MemberImg.ImgsPath
             }).First();
 
 
@@ -243,7 +243,7 @@ namespace FlexCoreService.Controllers
                         await image.CopyToAsync(stream);
                     }
 
-                    existingImg.ImgsPath = image.FileName;
+                    //existingImg.ImgsPath = image.FileName;
                 }
                 else
                 {
@@ -259,7 +259,7 @@ namespace FlexCoreService.Controllers
                         await image.CopyToAsync(stream);
                     }
 
-                    img.ImgsPath = image.FileName;
+                    //img.ImgsPath = image.FileName;
                     _db.MemberImgs.Add(img);
                 }
 

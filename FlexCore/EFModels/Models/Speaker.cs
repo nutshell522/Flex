@@ -11,6 +11,7 @@ namespace EFModels.Models
         {
             Activities = new HashSet<Activity>();
             OneToOneReservations = new HashSet<OneToOneReservation>();
+            ReservationReviews = new HashSet<ReservationReview>();
         }
 
         public int SpeakerId { get; set; }
@@ -26,5 +27,6 @@ namespace EFModels.Models
         public virtual SpeakerField fk_SpeakerField { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }
         public virtual ICollection<OneToOneReservation> OneToOneReservations { get; set; }
+        public virtual ICollection<ReservationReview> ReservationReviews { get; set; }
     }
 }
