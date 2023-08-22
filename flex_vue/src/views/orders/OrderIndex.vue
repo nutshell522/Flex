@@ -623,7 +623,7 @@ const CancelReturnAndCloseOrders = async () => {
 const Returndetail = async () => {
   let showError = false;
 
-  if (!returnaccount.value || isNaN(returnaccount.value)) {
+  if (!returnaccount.value || isNaN(returnaccount.value) || returnaccount.value.length < 10) {
     alert("請輸入有效的退款帳號（數字）");
     showError = true;
   }
