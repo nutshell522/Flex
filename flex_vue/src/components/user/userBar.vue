@@ -1,8 +1,8 @@
 <template>
   <!-- 77可以切換了但是怪怪-->
   <div class="container">
-    <div class="card card-header">
-      <ul class="nav-tabs card-header-tabs">
+    <div class="card card-header navTabs">
+      <ul class="card-header-tabs">
         <ul
           class="nav nav-tabs d-flex"
           style="align-items: center; justify-content: center"
@@ -36,7 +36,7 @@
               <router-link to="/favorites">收藏清單</router-link>
             </button>
           </li>
-          <li class="nav-item" role="presentation">
+          <!-- <li class="nav-item" role="presentation">
             <button
               class="nav-link"
               data-bs-toggle="tab"
@@ -45,7 +45,7 @@
             >
               <router-link to="">積分中心</router-link>
             </button>
-          </li>
+          </li> -->
           <li class="nav-item" role="presentation">
             <button
               class="nav-link"
@@ -56,7 +56,7 @@
               <router-link to="/coupon">優惠券</router-link>
             </button>
           </li>
-          <li class="nav-item" role="presentation">
+          <!-- <li class="nav-item" role="presentation">
             <button
               class="nav-link"
               data-bs-toggle="tab"
@@ -65,7 +65,7 @@
             >
               <router-link to="">瀏覽紀錄</router-link>
             </button>
-          </li>
+          </li> -->
           <li class="nav-item" role="presentation">
             <button
               class="nav-link"
@@ -83,9 +83,9 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref } from 'vue';
 
-const page = ref("favorites");
+const page = ref('favorites');
 </script>
 
 <style scoped>
@@ -95,23 +95,20 @@ const page = ref("favorites");
   justify-content: center;
 }
 
-.nav ul {
+.navTabs ul {
   background-color: #f5f5f5;
   border-bottom: solid 1px lightgray;
 }
 
-.nav-tabs {
+.navTabs {
   justify-content: center;
 }
 
-.nav-tabs li {
+.navTabs li {
   margin-right: 50px;
 }
-
-.pills {
-  background-color: rebeccapurple;
-  width: 20%;
-  display: flex;
-  justify-content: center;
+.card {
+  width: 100%;
+  height: 0%;
 }
 </style>
