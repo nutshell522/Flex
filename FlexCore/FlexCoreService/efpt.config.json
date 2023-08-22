@@ -24,6 +24,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ActivityImg]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ActivityStatuses]",
          "ObjectType": 0
       },
@@ -80,11 +84,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[EcpayOrders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Favorites]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[JobTitles]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[logistics_companies]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MemberImg]",
          "ObjectType": 0
       },
       {
@@ -176,7 +192,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ReservationImg]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ReservationReviews]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ReservationStatuses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ReturnResons]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Returns]",
          "ObjectType": 0
       },
       {
@@ -200,7 +232,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ShoesOrders]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ShoesPictures]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ShoesSizes]",
          "ObjectType": 0
       },
       {
@@ -236,7 +276,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "lun.Flex.dbo",
+   "UiHint": "desktop-40dj1an.Flex.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
@@ -245,7 +285,7 @@
    "UseFluentApiOnly": true,
    "UseHandleBars": false,
    "UseHierarchyId": false,
-   "UseInflector": false,
+   "UseInflector": true,
    "UseLegacyPluralizer": false,
    "UseManyToManyEntity": false,
    "UseNoDefaultConstructor": false,
