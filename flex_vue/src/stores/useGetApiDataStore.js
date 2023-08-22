@@ -12,6 +12,7 @@ export const useGetApiDataStore = defineStore('getApiData', {
       memberInfo: {
         username: null,
         memberId: null,
+        memberPhoto: null,
       },
     };
   },
@@ -35,7 +36,6 @@ export const useGetApiDataStore = defineStore('getApiData', {
           console.error('登出失敗', err);
         });
 
-      //router.push({ path: '/login' });
       window.location.href = '/login';
     },
     setMemberUsername(memberInfo) {

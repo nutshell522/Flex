@@ -189,7 +189,7 @@
     <!-- 上傳圖片 -->
     <div class="col-md-6 userImg">
       <div>
-        <img :src="imageSrc + imgPath" alt="" id="profileImage" />
+        <img :src="imageSrc + imgPath" id="profileImage" />
         <input
           id="photo-input"
           ref="photo"
@@ -224,7 +224,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 let photo = ref(null); //保存 <input> 元素的參考
-let imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑
+let imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑C
 
 //使用 Vue Composition API 設定區塊
 function fileChange(event) {
@@ -270,24 +270,10 @@ const uploadImages = async () => {
   // inputElement.click(); // 直接觸發 input 元素的點擊事件
 };
 
-//--
-
 const getApiStore = useGetApiDataStore();
-const { memberInfo } = storeToRefs(getApiStore);
-
 const userProfile = ref([]);
 const id = ref('');
 
-// const photo = ref(null);
-// const account = ref(""); // 初始化為空字符串
-// const id = ref("");
-// const fileChange = (e) => {
-//   console.log(e.target.files);
-// };
-// const uploadImages = () => {
-//   photo.value.click();
-// };
-// let level = ref('');
 const levelName = ref('');
 const name = ref('');
 const email = ref('');
@@ -321,14 +307,8 @@ axios
   .get(uri)
   .then((res) => {
     userProfile.value = res.data;
-    //console.log('userProfile', userProfile.value);
 
     id.value = res.data.memberId;
-    //console.log(id);
-
-    // level.value = res.data.fk_Level;
-    // levelName.value = res.data.levelName;
-    // name.value = res.data.name;
     email.value = res.data.email;
     mobile.value = res.data.mobile;
     birthday.value = res.data.birthday;

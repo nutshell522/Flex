@@ -115,6 +115,10 @@ namespace FlexCoreService.Controllers
             }
             else
             {
+                var memberImg = _db.MemberImgs
+                     .Where(img => img.fk_memberId== userData.MemberId)
+                     .FirstOrDefault();
+
                 //驗證密碼
                 userPassword = userData.EncryptedPassword;
 
@@ -125,7 +129,9 @@ namespace FlexCoreService.Controllers
                     new Claim(ClaimTypes.Name, userData.Account),
                     new Claim("UserPassword", userData.EncryptedPassword),
                     new Claim("FullName", userData.Name),
-                    new Claim("MemberId",userData.MemberId.ToString())//MemberId為自訂宣告的Type名稱
+                    new Claim("MemberId",userData.MemberId.ToString()),//MemberId為自訂宣告的Type名稱
+                    new Claim("MemberImg", userData.MemberImgs.FirstOrDefault()?.ImgPath ?? "member.jpg")
+
                    // new Claim(ClaimTypes.Role, "Administrator")//管理角色
                     };
 

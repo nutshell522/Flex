@@ -178,15 +178,14 @@ const loggedInUser = ref(null);
 onMounted(() => {
   //檢查本地儲存是否有登錄信息
   const storedUser = localStorage.getItem('loggedInUser');
-  //console.log('storedUser', storedUser);
 
   if (storedUser) {
     loggedInUser.value = JSON.parse(storedUser);
+
     // 同步到 pinia store
     getApiStore.setMemberUsername(loggedInUser.value.username);
     getApiStore.setMemberUsername(loggedInUser.value.memberId);
-    console.log('onMountedusername', loggedInUser.value.username);
-    console.log('onMountedmemberId', loggedInUser.value.memberId);
+    getApiStore.setMemberUsername(loggedInUser.value.userPhoto);
     setLoginSuccess(true);
   }
 });
@@ -194,10 +193,9 @@ onMounted(() => {
 const errors = ref([]);
 const userData = ref([]);
 const accInput = ref(true);
-const validated = ref(false); //初始化狀態為不顯示
+const validated = ref(false);
 const loading = ref(false);
 const unValidated = ref(false);
-
 const nameInput = ref(false);
 const birInput = ref(false);
 const mobInput = ref(false);
@@ -236,19 +234,13 @@ function ValidatedIdentity() {
     //已填寫
     errors.value = [];
     loginData.Account = account.value;
-    //console.log(loginData.Account.value);
 
     axios
       .post(uri, loginData)
       .then((res) => {
         userData.value = res.data;
-        //console.log('帳號' + userData.value); //後端return的訊息
-
-        //從回傳的資料中取得帳號並進行比較
         //已註冊
         if (userData.value == account.value) {
-          //console.log('帳號驗證成功囉!');
-
           validated.value = true;
           accInput.value = false;
           registered.value = false;
@@ -288,6 +280,7 @@ function prePage() {
   window.location.reload();
 }
 
+//登入
 function Login() {
   //todo是否與資料庫的密碼相符
   loginData.EncryptedPassword = password.value;
@@ -307,7 +300,6 @@ function Login() {
       const userPassword = jsonData.find(
         (claim) => claim.Type === 'UserPassword'
       );
-      //console.log(userPassword.Value);
 
       if (userPassword.Value === password.value) {
         //密碼正確
@@ -316,18 +308,18 @@ function Login() {
         //取得登入者資料
         const userName = jsonData.find((claim) => claim.Type === 'FullName');
         const userId = jsonData.find((claim) => claim.Type === 'MemberId');
+        const userPhoto = jsonData.find((claim) => claim.Type === 'MemberImg');
 
         //登入者資料包成物件
         const memberInfo = {
           username: userName.Value,
           memberId: userId.Value,
+          memberPhoto: userPhoto.Value,
         };
 
         if (memberInfo) {
           setMemberUsername(memberInfo);
-          //console.log('memberInfo', memberInfo);
         }
-        //alert('登入成功啦港動~~~');
         handleSuccessfulLogin(memberInfo);
         router.replace({ path: '/' });
       }
@@ -341,13 +333,13 @@ function Login() {
     });
 }
 
+// 將用戶信息轉成字串儲存到本地存儲中
 function handleSuccessfulLogin(memberInfo) {
-  // 將用戶信息轉成字串儲存到本地存儲中
   localStorage.setItem('loggedInUser', JSON.stringify(memberInfo));
 
   // 同步用戶信息到 pinia store
   loggedInUser.value = memberInfo;
-  //console.log(loggedInUser.value);
+  //console.log('loggedInUser', loggedInUser.value);
 }
 
 //註冊

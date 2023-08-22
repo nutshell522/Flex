@@ -136,9 +136,6 @@
             </div>
           </div>
         </div>
-        <pre>
-          <p>{{ memberInfo.username }}</p>
-        </pre>
       </div>
     </div>
   </nav>
