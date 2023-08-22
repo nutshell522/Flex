@@ -444,10 +444,13 @@
       <button @click="send()">發送</button> -->
     <div id="showcon" class="showcon">
       <div class="container">
-        <div class="p-2 chat">
+        <div v-for="message in messages" :key="message.id">
           <ul>
-            <li v-for="message in messages" :key="message.id">{{ message.userName }} 說：{{ message.message }}</li>
+            <li :class="{ 'align-left': message.userName === 'min', 'align-right': message.userName !== 'min' }">{{
+              message.userName }} 說：{{ message.message }}</li>
           </ul>
+        </div>
+        <div class="p-2 chat">
         </div>
       </div>
     </div>
@@ -455,7 +458,7 @@
     <input id="msg" v-model="messageText" placeholder="訊息">
     <button @click="sendMessage()">送出</button>
   </div>
-  <button class="chat2" @click="toggleContainer(); connect()">客服</button>
+  <button class="chat2" @click="toggleContainer()">客服</button>
 
   <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
@@ -890,6 +893,7 @@ onMounted(() => {
   activityclose();
   loadGetOrders();
   fetchReturnReasons();
+  connect();
 });
 </script>
 <style scoped>
@@ -1100,5 +1104,13 @@ _::-moz-range-track {
   width: 50px;
   height: 40px;
   vertical-align: middle;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.align-right {
+  text-align: right;
 }
 </style>
