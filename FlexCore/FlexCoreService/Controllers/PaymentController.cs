@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cors;
 using FlexCoreService.ActivityCtrl.Infra.DPRepository;
 using FlexCoreService.ActivityCtrl.Models.Dtos;
+using NuGet.Protocol.Plugins;
 
 namespace FlexCoreService.Controllers
 {
@@ -85,7 +86,7 @@ namespace FlexCoreService.Controllers
                 _db.EcpayOrders.Add(entity);
                 _db.SaveChanges();
                 msg = "終於成功進DB拉拉拉拉拉!!!灑花~";
-
+             
             }
             catch (Exception ex)
             {
@@ -97,7 +98,7 @@ namespace FlexCoreService.Controllers
         }
 
         [HttpPost("addPayInfo/{id}")]
-        public IActionResult AddPayInfo([FromForm] AddPayInfoDTO info)
+        public async Task<IActionResult> AddPayInfo([FromForm] AddPayInfoDTO info)
         {
             //用AddPayInfoDTO接一個綠界回傳的JSON物件
             if (info.RtnMsg.Contains("Succeeded"))
@@ -126,9 +127,22 @@ namespace FlexCoreService.Controllers
             OrderDetailDTO result = _repo.GetTradeDesc(tradeNo);
             string tradeDesc = result.ActivityName;
             string encodedString = HttpUtility.UrlEncode(tradeDesc);
-            //return Ok(tradeDesc);
 
+            var member = await _actRepo.GetMembreInfoAsync(result.MemberID);
+            var activity = _actRepo.GetActivityInfo(result.ItemId);
+            ActivityToOrdersDTO orders = new ActivityToOrdersDTO
+            {
+                ordertime = DateTime.Parse(result.TradeDate),
+                fk_member_Id = result.MemberID,
+                pay_method_Id = info.PaymentType.Contains("TWQR") ? 3 : 2,
+                cellphone = member.Mobile,
+                receiver = activity.SpeakerName,
+                recipient_address = activity.ActivityPlace,
+                close_time = activity.ActivityDate,
+                orderCode = info.TradeNo
+            };
 
+            _repo.UpdateOrderInfo(orders);
 
 
             return Redirect($"https://localhost:8080/paymentSuccess/{info.TradeAmt}/{tradeNo}/{encodedString}");

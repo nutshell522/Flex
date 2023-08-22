@@ -7,5 +7,7 @@ namespace FlexCoreService.ActivityCtrl.Interface
         void UpdatePayInfo(AddPayInfoDTO info);
 
         public OrderDetailDTO GetTradeDesc(string tradeNo);
+
+        void UpdateOrderInfo(ActivityToOrdersDTO order);
     }
 }
