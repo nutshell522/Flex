@@ -142,7 +142,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, defineEmits } from 'vue';
+import { ref, onMounted, defineEmits } from 'vue';
 import userList from '../home/userList.vue';
 import Cookies from 'js-cookie';
 import axios from 'axios';

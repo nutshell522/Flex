@@ -52,8 +52,16 @@ namespace FlexCoreService.Controllers
             {
                 return NotFound();
             }
-
             string userEmail = member.Email;
+
+            //把密碼設為預設密碼
+            member.EncryptedPassword = "d52hlew";
+            await _db.SaveChangesAsync();
+
+            //todo寄有預設密碼的信
+            ForgetPwdEmail sendEmail = new ForgetPwdEmail();
+            sendEmail.Sendemail(userEmail);
+
             return Ok(userEmail);
         }
 
@@ -191,23 +199,46 @@ namespace FlexCoreService.Controllers
         [HttpPost("Register")]
         public async Task<RegisterDto> Register([FromBody] RegisterDto regdto)
         {
-            Member member = new Member
+            //如果有照片代表示google註冊的
+
+            if (regdto.ImgPath != "")
             {
-                Account = regdto.Account,
-                EncryptedPassword = regdto.EncryptedPassword,
-                Name = regdto.Name,
-                Email = regdto.Email,
-                Birthday = regdto.Birthday,
-                Mobile = regdto.Mobile,
-                CommonAddress = regdto.CommonAddress,
-                fk_LevelId = 1//一般會員
-            };
+                MemberImg memberImg = new MemberImg
+                {
+                    ImgPath = regdto.ImgPath
+                };
+                Member member = new Member
+                {
+                    Account = regdto.Email,
+                    EncryptedPassword = regdto.Email,
+                    Name = regdto.Name,
+                    Email = regdto.Email,
+                    Mobile = "0921554545",//todo自動給或留空
+                    fk_LevelId = 1//一般會員                
+                };
+                _db.Members.Add(member);
 
-            //發送驗證信
-            SendEmail sendEmail = new SendEmail();
-            sendEmail.Sendemail(regdto.Email);
+            }
+            else
+            {
+                Member member = new Member
+                {
+                    Account = regdto.Account,
+                    EncryptedPassword = regdto.EncryptedPassword,
+                    Name = regdto.Name,
+                    Email = regdto.Email,
+                    Birthday = regdto.Birthday,
+                    Mobile = regdto.Mobile,
+                    CommonAddress = regdto.CommonAddress,
+                    fk_LevelId = 1//一般會員                
+                };
+                //發送驗證信
+                SendEmail sendEmail = new SendEmail();
+                sendEmail.Sendemail(regdto.Email);
 
-            _db.Members.Add(member);
+                _db.Members.Add(member);
+            }            
+            
             await _db.SaveChangesAsync();
             return regdto;
         }
