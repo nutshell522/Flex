@@ -72,7 +72,7 @@ namespace FlexCoreService.Controllers
             {
                 return null;
             }
-            ProfileDto proDto = _db.Members.Include(m => m.fk_Level).Where(m => m.MemberId == memberId).Select(m => new ProfileDto
+            ProfileDto proDto = _db.Members.Where(m => m.MemberId == memberId).Select(m => new ProfileDto
             {
                 MemberId = m.MemberId,
                 fk_Level = m.fk_LevelId,
@@ -86,7 +86,7 @@ namespace FlexCoreService.Controllers
                 AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
                 AlternateAddress2 = m.AlternateAddress.AlternateAddress2,
                 IsSubscribeNews = m.IsSubscribeNews,
-                //ImgsPath=m.MemberImg.ImgsPath
+                ImgPath=m.MemberImgs.FirstOrDefault(p=>p.fk_memberId== memberId).ImgPath,
             }).First();
 
 
@@ -115,6 +115,10 @@ namespace FlexCoreService.Controllers
             }
             else
             {
+                var memberImg = _db.MemberImgs
+                     .Where(img => img.fk_memberId== userData.MemberId)
+                     .FirstOrDefault();
+
                 //驗證密碼
                 userPassword = userData.EncryptedPassword;
 
@@ -125,7 +129,9 @@ namespace FlexCoreService.Controllers
                     new Claim(ClaimTypes.Name, userData.Account),
                     new Claim("UserPassword", userData.EncryptedPassword),
                     new Claim("FullName", userData.Name),
-                    new Claim("MemberId",userData.MemberId.ToString())//MemberId為自訂宣告的Type名稱
+                    new Claim("MemberId",userData.MemberId.ToString()),//MemberId為自訂宣告的Type名稱
+                    new Claim("MemberImg", userData.MemberImgs.FirstOrDefault()?.ImgPath ?? "member.jpg")
+
                    // new Claim(ClaimTypes.Role, "Administrator")//管理角色
                     };
 
@@ -243,7 +249,7 @@ namespace FlexCoreService.Controllers
                         await image.CopyToAsync(stream);
                     }
 
-                    //existingImg.ImgsPath = image.FileName;
+                    existingImg.ImgPath = image.FileName;
                 }
                 else
                 {
@@ -259,7 +265,7 @@ namespace FlexCoreService.Controllers
                         await image.CopyToAsync(stream);
                     }
 
-                    //img.ImgsPath = image.FileName;
+                    img.ImgPath = image.FileName;
                     _db.MemberImgs.Add(img);
                 }
 

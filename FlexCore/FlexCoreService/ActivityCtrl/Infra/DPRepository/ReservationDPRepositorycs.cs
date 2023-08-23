@@ -122,5 +122,40 @@ ORDER BY creationTime DESC";
                 return await conn.QueryAsync<ReservationCommentDTO>(sql, new { id });
             }
         }
+
+        public async Task<IEnumerable<TopThreeSpeakerDTO>> GetTopThreeSpeakersAsync()
+        {
+            string sql = @"	SELECT Top(3)
+    SubQuery.fk_ReservationSpeakerId,
+    SpeakerName,
+    SpeakerImg,
+    FieldName,
+    BranchName,
+    SubQuery.TotalReservation
+FROM 
+    (
+        SELECT 
+            fk_ReservationSpeakerId,
+            COUNT(*) AS TotalReservation
+        FROM 
+            OneToOneReservations
+        GROUP BY 
+            fk_ReservationSpeakerId
+    ) AS SubQuery
+JOIN 
+    Speakers ON SubQuery.fk_ReservationSpeakerId = Speakers.SpeakerId
+JOIN 
+    SpeakerFields ON SpeakerFields.FieldId = Speakers.fk_SpeakerFieldId
+JOIN 
+    Branches ON Speakers.fk_SpeakerBranchId = Branches.BranchId
+Order By TotalReservation DESC, fk_ReservationSpeakerId ";
+
+            using (var conn = new SqlConnection(_connStr))
+            {
+                return await conn.QueryAsync<TopThreeSpeakerDTO>(sql);
+            }
+        }
+
+       
     }
 }

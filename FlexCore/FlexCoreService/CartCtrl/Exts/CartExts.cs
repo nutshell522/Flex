@@ -13,6 +13,7 @@ namespace FlexCoreService.CartCtrl.Exts
 				ProductId = dto.ProductId,
 				Qty = dto.Qty,
 				Product = dto.Product == null ? null : dto.Product.ToViewModel(),
+				TotalDiscountValue = dto.TotalDiscountValue,
 			};
 		}
 		public static CartItemProductVM ToViewModel(this CartItemProductDto dto)
@@ -28,7 +29,7 @@ namespace FlexCoreService.CartCtrl.Exts
 				UnitPrice = dto.UnitPrice,
 				MatchDiscounts = dto.MatchDiscounts == null ? null : dto.MatchDiscounts.Select(x => x.ToViewModel()),
 				SalesCategoryName = dto.SalesCategoryName,
-
+				DiscountValue = dto.DiscountValue,
 			};
 		}
 		public static ProductDiscountVM ToViewModel(this ProductDiscountDto dto)
@@ -55,6 +56,7 @@ namespace FlexCoreService.CartCtrl.Exts
 				ProductId = vm.ProductId,
 				Qty = vm.Qty,
 				Product = vm.Product == null ? null : vm.Product.ToDto(),
+				TotalDiscountValue = vm.TotalDiscountValue,
 			};
 		}
 		public static CartItemProductDto ToDto(this CartItemProductVM vm)
@@ -70,7 +72,7 @@ namespace FlexCoreService.CartCtrl.Exts
 				UnitPrice = vm.UnitPrice,
 				MatchDiscounts = vm.MatchDiscounts == null ? null : vm.MatchDiscounts.Select(x => x.ToDto()),
 				SalesCategoryName = vm.SalesCategoryName,
-
+				DiscountValue = vm.DiscountValue,
 			};
 		}
 		public static ProductDiscountDto ToDto(this ProductDiscountVM vm)

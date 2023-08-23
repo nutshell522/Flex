@@ -7,11 +7,11 @@
 
       <li class="mb-2"><router-link to="/favorites">收藏清單</router-link></li>
 
-      <li class="mb-2"><a href="javascript:;">積分中心</a></li>
+      <!-- <li class="mb-2"><a href="javascript:;">積分中心</a></li>
 
       <li class="mb-2"><router-link to="/coupon">優惠券</router-link></li>
 
-      <li class="mb-2"><a href="javascript:;">瀏覽紀錄</a></li>
+      <li class="mb-2"><a href="javascript:;">瀏覽紀錄</a></li> -->
 
       <li class="mb-2"><a href="javascript:;">購物車</a></li>
     </ul>
@@ -25,10 +25,9 @@ import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 const getApiStore = useGetApiDataStore();
 const { handleLogout } = getApiStore; //function透過store取資料
 
+//登出
 function logout() {
-  // 登入狀態
   localStorage.removeItem('loggedInUser');
-  //呼叫 Pinia 的登出函數
   handleLogout();
 }
 </script>
@@ -37,7 +36,6 @@ function logout() {
 .list {
   background-color: #fff;
   z-index: 9999;
-  /* 設置較大的 z-index 值 */
   border: solid 2px;
   position: absolute;
   right: 0;

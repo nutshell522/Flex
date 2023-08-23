@@ -1,8 +1,11 @@
 using EFModels.Models;
 using FlexCoreService.ActivityCtrl.Infra.DPRepository;
 using FlexCoreService.ActivityCtrl.Interface;
-using FlexCoreService.CartCtrl.Infra;
+using FlexCoreService.CartCtrl.Infra.Dapper;
+using FlexCoreService.CartCtrl.Infra.EntityFramework;
 using FlexCoreService.CartCtrl.Interface;
+using FlexCoreService.CartCtrl.Service;
+using FlexCoreService.Controllers;
 using FlexCoreService.CustomeShoes.Infra.DPRepository;
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.ProductCtrl.Infra.DPRepository;
@@ -46,7 +49,9 @@ namespace FlexCoreService
             builder.Services.AddScoped<ActivityDPRepository>();
             builder.Services.AddScoped<ICustomeShoesRepository, CustomeShoesDPRepository>();
             builder.Services.AddScoped<ICartRepository, CartDapperRepository>();
-            builder.Services.AddScoped<IShoesCategoryRepository, ShoesCategoryDPRepository>();
+			builder.Services.AddScoped<ISaleRepository, SaleEFRepository>();
+			builder.Services.AddScoped<SaleService>();
+			builder.Services.AddScoped<IShoesCategoryRepository, ShoesCategoryDPRepository>();
             builder.Services.AddScoped<ICustomerChooseRepository, ShoesChooseDPRepository>();
             builder.Services.AddScoped<IReservationDPRepository, ReservationDPRepositorycs>();
             builder.Services.AddScoped<IFavoriteDPRepository, FavoriteDPRepository>();
@@ -75,7 +80,9 @@ namespace FlexCoreService
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+			builder.Services.AddSingleton<WebSocketController>();
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -92,7 +99,12 @@ namespace FlexCoreService
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseStaticFiles();
+			app.UseWebSockets(new WebSocketOptions
+			{
+				KeepAliveInterval = TimeSpan.FromSeconds(30)
+			});
+
+			app.UseStaticFiles();
 
             app.UseHttpsRedirection();
 

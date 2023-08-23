@@ -17,5 +17,6 @@ namespace FlexCoreService.ActivityCtrl.Interface
         Task AddReservationCommentAsync(AddReservationCommentDTO dto);
 
         Task<IEnumerable<ReservationCommentDTO>> GetAllCommentAsync(int id);
+        Task<IEnumerable<TopThreeSpeakerDTO>> GetTopThreeSpeakersAsync();
     }
 }

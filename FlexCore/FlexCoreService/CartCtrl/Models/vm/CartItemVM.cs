@@ -7,6 +7,7 @@
 		public int? ProductId { get; set; }
 		public int? Qty { get; set; }
 		public CartItemProductVM? Product { get; set; }
+		public int? TotalDiscountValue { get; set; }
 		public int? SubTotal => Product != null ? Product.SalesPrice * Qty : 0;
 		public int? UnitSubTotal => Product != null ? Product.UnitPrice * Qty : 0;
 	}

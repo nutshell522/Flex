@@ -104,5 +104,17 @@ namespace FlexCoreService.Controllers
             }
             return result;
         }
+
+        [HttpGet("GetTopThreeSpeaker")]
+        public async Task<ActionResult<IEnumerable<TopThreeSpeakerDTO>>> GetTopThreeSpeakersAsync()
+        {
+            var result = await _service.GetTopThreeSpeakersAsync();
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
     }
 }

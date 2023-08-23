@@ -10,6 +10,7 @@ namespace FlexCoreService.CartCtrl.Models.vm
 		public int? SalesPrice { get; set; }
 		public string? Size { get; set; }
 		public string? Color { get; set; }
+		public int DiscountValue { get; set; }
 		public IEnumerable<ProductDiscountVM>? MatchDiscounts { get; set; }
 		public string? ImgPath { get; set; }
 		public string? SalesCategoryName { get; set; }
@@ -56,6 +57,10 @@ namespace FlexCoreService.CartCtrl.Models.vm
                 if (this.Tags == null || this.Tags.Count == 0) return "";
                 return string.Join(",", this.Tags.Select(t => '#' + t));
             }
+        }
+        public CartItemProductVM()
+        {
+			DiscountValue = 0;
         }
     }
 }

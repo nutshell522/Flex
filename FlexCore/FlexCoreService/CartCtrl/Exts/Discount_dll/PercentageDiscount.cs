@@ -31,6 +31,11 @@ namespace FlexCoreService.CartCtrl.Exts.Discount_dll
 
 			if (totalAmount >= _itemsAmount)
 			{
+				foreach (CartItemVM p in matchedProducts)
+				{
+					int value = (int)Math.Round((decimal)(p.SubTotal.Value * _percentOff / 100), MidpointRounding.AwayFromZero);
+					p.Product.DiscountValue = value;
+				}
 				return new ItemDiscount()
 				{
 					Rule = this,
