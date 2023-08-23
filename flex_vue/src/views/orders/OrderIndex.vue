@@ -461,7 +461,7 @@
     <input id="msg" v-model="messageText" placeholder="訊息">
     <button @click="sendMessage()">送出</button>
   </div>
-  <button class="chat2" @click="toggleContainer(); connect();">客服</button>
+  <button class="chat2" @click="toggleContainer(); connect();"><i class="bi bi-chat-right-dots">客服</i></button>
 
 
   <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
@@ -1079,7 +1079,8 @@ _::-moz-range-track {
 }
 
 .chat2 {
-  width: 100px;
+  width: 200px;
+  height: 50px;
   text-align: center;
   padding: 20px 0;
   max-width: 0 auto;
