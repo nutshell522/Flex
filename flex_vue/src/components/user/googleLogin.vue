@@ -1,9 +1,9 @@
 <template>
   <div v-if="loggedIn">
-    <button @click="logout">Logout</button>
+    <!-- <button @click="logout">Logout</button>
     <h2>name:{{ user.name }}</h2>
     <h2>email:{{ user.email }}</h2>
-    <img :src="user.picture" />
+    <img :src="user.picture" /> -->
   </div>
   <div v-else>
     <GoogleLogin :callback="callback" prompt auto-login></GoogleLogin>
@@ -22,9 +22,15 @@ export default {
       callback: (response) => {
         console.log('googleLoginSuccess');
         this.loggedIn = true;
-        //console.log(response);
+        window.location.href = '/';
         this.user = decodeCredential(response.credential);
-        console.log(this.user);
+        console.log(this.user.email);
+        console.log(this.user.name);
+        console.log(this.user.picture);
+
+        // const googleLogin = JSON.stringify(this.user);
+        // console.log(googleLogin.user);
+        //把登入資訊包在一起傳給本地
       },
     };
   },

@@ -238,7 +238,7 @@ const address = ref('');
 
 const baseAddress = 'https://localhost:7183/api';
 const uri = `${baseAddress}/Users/Login`;
-var loginData = {}; //儲存傳給後端的登入資料
+var loginData = {};
 
 function ValidatedIdentity() {
   //存入帳號
@@ -300,7 +300,6 @@ function prePage() {
 function Login() {
   //todo是否與資料庫的密碼相符
   loginData.EncryptedPassword = password.value;
-  //console.log(loginData);
 
   //未填寫密碼
   if (password.value === '') {
@@ -326,7 +325,7 @@ function Login() {
         const userId = jsonData.find((claim) => claim.Type === 'MemberId');
         const userPhoto = jsonData.find((claim) => claim.Type === 'MemberImg');
 
-        //登入者資料包成物件
+        //一般登入者資料包成物件
         const memberInfo = {
           username: userName.Value,
           memberId: userId.Value,
@@ -337,7 +336,7 @@ function Login() {
           setMemberUsername(memberInfo);
         }
         handleSuccessfulLogin(memberInfo);
-        router.replace({ path: '/' });
+        window.location.reload();
       }
     })
     .catch((err) => {
@@ -382,7 +381,7 @@ function registerBtn() {
     registerData.Birthday = birthday.value;
     registerData.Mobile = mobile.value;
     registerData.CommonAddress = address.value;
-
+    //todo google登入者資料包成物件,直接註冊不要alert
     axios
       .post(regUri, registerData)
       .then((res) => {
