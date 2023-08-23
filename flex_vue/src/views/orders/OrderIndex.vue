@@ -12,6 +12,9 @@
       <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control" placeholder="輸入名稱" />
       <button class="button" @click="keywordSearch">搜尋</button>
     </div>
+    <!-- 測試 -->
+    <input v-model="membersId" placeholder="使用者名稱">
+    <!-- 測試 -->
   </div>
   <div id="cate" class="container">
     <button @click="
@@ -458,7 +461,8 @@
     <input id="msg" v-model="messageText" placeholder="訊息">
     <button @click="sendMessage()">送出</button>
   </div>
-  <button class="chat2" @click="toggleContainer()">客服</button>
+  <button class="chat2" @click="toggleContainer(); connect();">客服</button>
+
 
   <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
@@ -519,6 +523,7 @@ var socket = null;
 const messages = ref([]);
 const userName = ref("");
 const messageText = ref("");
+const membersId = ref("");
 
 const loadGetOrders = async () => {
   const begintimeValue = begintime.value;
@@ -804,7 +809,7 @@ const closecomment = async () => {
 // };
 
 const connect = () => {
-  socket = new WebSocket(wsUrl + '/ws');
+  socket = new WebSocket(wsUrl + `/ws?membersId=${membersId.value}`);
   socket.onmessage = (e) => processMessage(e.data);
 };
 const processMessage = (data) => {
@@ -893,7 +898,7 @@ onMounted(() => {
   activityclose();
   loadGetOrders();
   fetchReturnReasons();
-  connect();
+  //connect();
 });
 </script>
 <style scoped>
