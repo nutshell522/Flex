@@ -19,5 +19,11 @@ namespace FlexCoreService.CustomeShoes.Service
 			return result;
 		}
 
+        public IEnumerable<ShoesCategoryDto> SearchCategory()
+        {
+            var result = _repo.SearchCategory();
+            return result;
+        }
+
     }
 }
