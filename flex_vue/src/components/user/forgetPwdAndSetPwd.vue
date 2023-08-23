@@ -55,26 +55,7 @@ const reset = ref(false);
 const forgetArea = ref(true);
 
 function nextBtn() {
-  // if (checkNum.value == '') {
-  //   //alert('next');
-
-  //   errors.value = [];
-  //   //errors.value.push('就跟你說了收信');
-  // } else if (checkNum.value) {
-  //   errors.value = [];
-  //   // 驗證碼正確
-  //   // 進入重新設定密碼
-  //   forgetArea.value = false;
-  //   reset.value = true;
-  // } else {
-  //   //驗證碼錯誤重新寄發;
-  //   //停留驗整碼畫面
-  //   console.log('驗證密碼錯誤');
-  // }
-
-  //todo驗證是否啟用驗證信
-  forgetArea.value = false;
-  reset.value = true;
+  window.location.reload();
 }
 </script>
 

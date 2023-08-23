@@ -1,4 +1,5 @@
 ﻿using EFModels.Models;
+using FlexCoreService.CartCtrl.Exts;
 using FlexCoreService.CartCtrl.Interface;
 using FlexCoreService.CartCtrl.Models.vm;
 using FlexCoreService.CartCtrl.Service;
@@ -19,12 +20,27 @@ namespace FlexCoreService.Controllers
 			_service = service;
 		}
 
-		// POST: api/Sale/
-		//[HttpPost]
-		//public async Task<ActionResult<IEnumerable<CartItemVM>>> GetAllActiveDiscount()
-		//{
-		//	//var cartItems = await Task.Run(() => _service.GetCartItems(memberId).Select(x => x.ToViewModel()));
-		//	//return Ok(cartItems);
-		//}
+		//GET: api/Sale/
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<ActiveDiscountVM>>> GetAllActiveDiscount()
+		{
+			var result = await Task.Run(() => _service.GetActiveDiscounts().Select(x => x.ToViewModel()));
+			return Ok(result);
+		}
+		//GET: api/Sale/GetProductCategories
+		[HttpGet("GetProductCategories")]
+		public async Task<ActionResult<IEnumerable<OnSaleCategoryVM>>> GetProductCategories()
+		{
+			var result = await Task.Run(() => _service.GetCategories().Select(x => x.ToViewModel()));
+			return Ok(result);
+		}
+		//GET: api/Sale/
+		[HttpGet("GetDiscountProducts/{discountId}/{productCategoryId}")]
+		public async Task<ActionResult<IEnumerable<OnSaleProductVM>>> GetDiscountProducts(int discountId, int? productCategoryId = null)
+		{
+			if (productCategoryId == 0) productCategoryId = null;
+			var result = await Task.Run(() => _service.GetOnSaleProducts(discountId,productCategoryId).Select(x => x.ToViewModel()));
+			return Ok(result);
+		}
 	}
 }

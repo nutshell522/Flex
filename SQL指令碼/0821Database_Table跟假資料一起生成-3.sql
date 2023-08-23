@@ -1,5 +1,4 @@
-﻿
-/****** Object:  Table [dbo].[Activities]    Script Date: 2023/8/21 下午 03:55:41 ******/
+﻿/****** Object:  Table [dbo].[Activities]    Script Date: 2023/8/21 下午 03:55:41 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -950,7 +949,7 @@ CREATE TABLE [dbo].[ShoesGroups](
 	[fk_OptionId] [int] NOT NULL,
 	[fk_MaterialId] [int] NOT NULL,
 	[fk_ShoesColorId] [int] NOT NULL,
-	[fk_CustomerOrderId] [int] NOT NULL,
+	[fk_CustomerOrderId] [nvarchar](40) NOT NULL,
  CONSTRAINT [PK_ShoesGroups] PRIMARY KEY CLUSTERED 
 (
 	[ShoesGroupId] ASC
@@ -963,7 +962,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ShoesOrders](
-	[ShoesOrderId] [int] IDENTITY(1,1) NOT NULL,
+	[ShoesOrderId] [nvarchar](40) NOT NULL,
 	[Qty] [int] NOT NULL,
 	[fk_ShoesSizeId] [int] NOT NULL,
 	[Remark] [nvarchar](300) NULL,
@@ -4639,9 +4638,7 @@ values
 ('鞋尖'),
 ('護邊'),
 ('鞋領'),
-('孔眼片'),
-('內襯'),
-('後踵加強片');
+('孔眼片');
 
 
 insert into CustomizedShoesPo (ShoesName,ShoesDescription,ShoesOrigin,ShoesUnitPrice,StartTime,EndTime,fk_ShoesCategoryId,fk_ShoesColorId,DataCreateTime,DataEditTime)

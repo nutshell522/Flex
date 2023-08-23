@@ -77,11 +77,19 @@
               </div>
             </div>
           </div>
-                <div class="col-6 mt-5 ms-6">
-                  <button type="submit" class="btn btn-primary comenextBtn">
+              <div class="col-4 ms-6">
+                <label for="paymentMethod">付款方式 : </label>
+                <select id="paymentMethod" v-model="selectedPaymentMethod" class="form-select mt-2">
+                  <option value="creditCard">信用卡結帳</option>
+                  <option value="cash">現金付款</option>
+                </select>
+                <button v-if="selectedPaymentMethod === 'creditCard'" type="submit" class="btn btn-primary comenextBtn mt-4">
+                    前往信用卡結帳頁面
+                </button>
+                <button v-else-if="selectedPaymentMethod === 'cash'" @click="checkoutSuccess" type="submit" class="btn btn-primary comenextBtn mt-4">
                     結帳
-                  </button>
-                </div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -103,10 +111,24 @@ const shoesOrderDetail = ref({});
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
 
+const selectedPaymentMethod = ref("creditCard"); // 預設選中信用卡結帳
+
 const totalPrice = computed(() => {
   return shoesOrderDetail.qty * shoesOrderDetail.shoesUnitPrice;
 });
 
+const checkoutSuccess = () => {
+  // 顯示提示訊息
+  alert("恭喜結帳成功，五秒後跳轉回商品頁面");
+
+  // 模擬延遲後再導向
+  setTimeout(() => {
+    // 導向商品頁面（將 'product-page-path' 替換為實際的路徑）
+    // 例如，如果商品頁面名稱是 'ProductPage.vue'，並且位於 'views' 資料夾中
+    // 可以使用：router.push('/product-page-path');
+    router.push('/CustomeShoes/CustomeShoesLayout');
+  }, 5000); // 5000 毫秒 = 5 秒
+};
 
 let getData = async () => {
   try {

@@ -36,15 +36,33 @@
     <div class="from-group mb-3" v-if="validated">
       <label for="password" class="mb-1">密碼</label>
       <input
-        type="password"
+        :type="eye1 ? 'text' : 'password'"
         name="password"
         id="password"
         v-model="password"
         class="form-control"
-        placeholder="輸入6-20碼英數字"
+        placeholder="輸入6-10碼英數字"
+        maxlength="10"
       />
+      <div v-if="validated" @click="openEye1">
+        <i class="bi" :class="eye1 ? 'bi-eye' : 'bi-eye-slash'"></i>
+      </div>
     </div>
-    <!-- 00再次輸入確認密碼 -->
+    <div class="from-group mb-3" v-if="unValidated">
+      <label for="password" class="mb-1">確認密碼</label>
+      <input
+        :type="eye2 ? 'text' : 'password'"
+        name="password"
+        id="password"
+        v-model="passwordCheck"
+        class="form-control"
+        placeholder="請再次輸入密碼"
+        maxlength="10"
+      />
+      <div v-if="validated" @click="openEye2">
+        <i class="bi" :class="eye2 ? 'bi-eye' : 'bi-eye-slash'"></i>
+      </div>
+    </div>
     <div class="from-group mb-3" v-if="nameInput">
       <label for="name">姓名</label>
       <input
@@ -130,7 +148,10 @@
       <p>或</p>
     </div>
     <div class="from-group mb-3 registerBtn">
-      <googleLogin></googleLogin>
+      <googleLogin
+        :googleUser="googleLoginUserData"
+        @googleLoginUserData="handleGoogleLoginUserData"
+      ></googleLogin>
     </div>
     <div class="secret">
       <div>擁有帳號即表示你同意</div>
@@ -155,6 +176,7 @@ import { ref, onMounted } from 'vue';
 import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
 import register from '@/components/user/register.vue';
 import datepicker from '@/components/user/datepicker.vue';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 //google
 import googleLogin from '@/components/user/googleLogin.vue';
@@ -167,6 +189,7 @@ import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 
 axios.defaults.withCredentials = true;
 
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const getApiStore = useGetApiDataStore();
 const { setMemberUsername } = getApiStore;
 const { setLoginSuccess } = getApiStore;
@@ -208,6 +231,7 @@ const unRegistered = ref(false);
 //登入表單
 const account = ref('');
 const password = ref('');
+const passwordCheck = ref('');
 const arrow = ref(false);
 
 //註冊表單
@@ -216,10 +240,10 @@ const email = ref('');
 const birthday = ref('');
 const mobile = ref('');
 const address = ref('');
+const googleUser = ref(null);
 
-const baseAddress = 'https://localhost:7183/api';
-const uri = `${baseAddress}/Users/Login`;
-var loginData = {}; //儲存傳給後端的登入資料
+const uri = `${baseAddress}api/Users/Login`;
+var loginData = {};
 
 function ValidatedIdentity() {
   //存入帳號
@@ -244,11 +268,8 @@ function ValidatedIdentity() {
           validated.value = true;
           accInput.value = false;
           registered.value = false;
-
-          //忘記密碼寄送驗證信
           forgetPwd.value = true;
           arrow.value = true;
-          //loading.value = false;
         } else {
           //未註冊
           arrow.value = true;
@@ -284,7 +305,6 @@ function prePage() {
 function Login() {
   //todo是否與資料庫的密碼相符
   loginData.EncryptedPassword = password.value;
-  //console.log(loginData);
 
   //未填寫密碼
   if (password.value === '') {
@@ -310,7 +330,7 @@ function Login() {
         const userId = jsonData.find((claim) => claim.Type === 'MemberId');
         const userPhoto = jsonData.find((claim) => claim.Type === 'MemberImg');
 
-        //登入者資料包成物件
+        //一般登入者資料包成物件
         const memberInfo = {
           username: userName.Value,
           memberId: userId.Value,
@@ -321,7 +341,7 @@ function Login() {
           setMemberUsername(memberInfo);
         }
         handleSuccessfulLogin(memberInfo);
-        router.replace({ path: '/' });
+        window.location.reload();
       }
     })
     .catch((err) => {
@@ -339,31 +359,32 @@ function handleSuccessfulLogin(memberInfo) {
 
   // 同步用戶信息到 pinia store
   loggedInUser.value = memberInfo;
-  //console.log('loggedInUser', loggedInUser.value);
 }
 
-//註冊
+//一般註冊
 const registercheck = ref(false);
 
+const regUri = `${baseAddress}api/Users/Register`;
 function registerBtn() {
-  const regUri = `${baseAddress}/Users/Register`;
-  var registerData = {};
-
   //帳號
   if (email.value === '') {
     errors.value = [];
     errors.value.push('欄位尚未填寫完畢');
+  } else if (password.value != passwordCheck.value) {
+    errors.value = [];
+    errors.value.push('密碼或確認密碼錯誤');
   } else {
     //註冊資料
     errors.value = [];
-    registerData.Account = account.value;
-    registerData.EncryptedPassword = password.value;
-    registerData.Name = name.value;
-    registerData.Email = email.value;
-    registerData.Birthday = birthday.value;
-    registerData.Mobile = mobile.value;
-    registerData.CommonAddress = address.value;
-
+    const registerData = {
+      Account: account.value,
+      EncryptedPassword: password.value,
+      Name: name.value,
+      Email: email.value,
+      Birthday: birthday.value,
+      Mobile: mobile.value,
+      CommonAddress: address.value,
+    };
     axios
       .post(regUri, registerData)
       .then((res) => {
@@ -375,18 +396,46 @@ function registerBtn() {
         //registercheck.value = true;
 
         //todo顯示註冊成功畫面--註冊成功
+        //todo註冊很常死亡
         Swal.fire({
           icon: 'success',
           title: '註冊成功',
           text: `請至 ${registerData.Email} 啟用此帳號`,
+          //todo 按下ok才跳頁
         });
-        window.location.reload();
+        //window.location.reload();
       })
       .catch((err) => {
         console.log('註冊失敗', err);
       });
   }
 }
+
+//google 註冊及登入
+// 子组件傳來的資料
+function handleGoogleLoginUserData(googleLoginUserData) {
+  const email = googleLoginUserData.email;
+  console.log('Email:', email);
+
+  //todo如果不存在就註冊;
+  //todo如果存在帳號就把登入訊息存在本機
+  // axios
+  //   .post(regUri, googleLoginUserData)
+  //   .then((res) => {
+  //     const googleEmail = res.data.email;
+  //     console.log(googleEmail);
+
+  //     if (googleLoginUserData.email == googleEmail.value) {
+  //       console.log('帳號存在喔');//想想
+  //     }
+
+  window.location.href = '/';
+  //   })
+  //   .catch((err) => {
+  //     console.log('google登入或註冊失敗', err);
+  //   });
+}
+
 const loginBox = ref(true);
 const forgetPwdSetPwd = ref(false);
 userAcc.value = localStorage.getItem('userAcc');
@@ -395,21 +444,27 @@ userAcc.value = localStorage.getItem('userAcc');
 function forgetPwdClick() {
   loginBox.value = false;
   forgetPwdSetPwd.value = true;
-  //呼叫api取得信箱
   if (userAcc.value) {
-    const forgetUri = `${baseAddress}/Users/account/` + userAcc.value;
-    //console.log(forgetUri);
-    // 呼叫 API 取得信箱
+    const forgetUri = `${baseAddress}api/Users/account/` + userAcc.value;
+    //  取得信箱
     axios
       .get(forgetUri)
       .then((res) => {
-        email.value = res.data; // 回傳信箱
-        //console.log('Email:', email.value);
+        email.value = res.data;
       })
       .catch((err) => {
         console.error('Error:', err);
       });
   }
+}
+// 眼睛
+const eye1 = ref(false);
+const eye2 = ref(false);
+function openEye1() {
+  eye1.value = !eye1.value;
+}
+function openEye2() {
+  eye2.value = !eye2.value;
 }
 </script>
 <style scoped>
@@ -422,6 +477,12 @@ function forgetPwdClick() {
   margin-top: 150px;
   border: solid 1px;
 }
+/* todo眼睛放在input裡面 */
+.password-input {
+  display: flex;
+  align-items: center;
+}
+
 .loginText {
   display: flex;
   justify-content: center;

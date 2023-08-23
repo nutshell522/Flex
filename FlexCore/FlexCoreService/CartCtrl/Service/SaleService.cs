@@ -1,4 +1,6 @@
-﻿using FlexCoreService.CartCtrl.Interface;
+﻿using EFModels.Models;
+using FlexCoreService.CartCtrl.Interface;
+using FlexCoreService.CartCtrl.Models.Dtos;
 
 namespace FlexCoreService.CartCtrl.Service
 {
@@ -9,5 +11,12 @@ namespace FlexCoreService.CartCtrl.Service
 		{
 			_repo = repo;
 		}
+		public IEnumerable<ActiveDiscountDto> GetActiveDiscounts()
+			=> _repo.GetActiveDiscounts();
+		public IEnumerable<OnSaleCategoryDto> GetCategories()
+			=> _repo.GetAllProductCategories();
+		public IEnumerable<OnSaleProductDto> GetOnSaleProducts(int discountId, int? productCategoryId = null)
+			=> _repo.GetOnSaleProducts(discountId, productCategoryId);
+		
 	}
 }

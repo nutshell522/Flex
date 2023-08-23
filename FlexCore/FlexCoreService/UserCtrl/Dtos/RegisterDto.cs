@@ -17,5 +17,8 @@
         public string? CommonAddress { get; set; }
 
         public int? fk_LevelId { get; set; }
+
+        public string? ImgPath { get; set; }
+
     }
 }
