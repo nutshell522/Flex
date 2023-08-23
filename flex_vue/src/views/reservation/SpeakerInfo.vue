@@ -117,7 +117,21 @@
 
 
       <div class="col-md-4">
-        右
+        右 <div class="text-end">
+          <a href="https://localhost:8080" class="btn button" @click="getActivityId">
+            <!-- icon -->
+            <span class="icon">
+              <img
+                width="100"
+                height="100"
+                src="https://img.icons8.com/stickers/100/exercise.png"
+                alt="exercise"
+              />
+            </span>
+            <!-- 按鈕文字 -->
+            <span style="font-size: 50px"> 預約 </span>
+          </a>
+        </div>
 
         <h2>人氣講師</h2>
         <h2>最多人預約</h2>
@@ -639,5 +653,13 @@ const formatDateTime = (dateString) => {
     height: 100%;
     object-fit: cover;
   }
+
+  .icon {
+  display: inline-block;
+  margin-right: 10px;
+  /* 調整圖標和文字之間的間距 */
+  font-size: 20px;
+  /* 調整圖標大小 */
+}
 
 </style>
