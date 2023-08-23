@@ -2,7 +2,7 @@
 {
     public class ShoesAllOptionsDto
     {
-        public string? ShoesOrderId { get; set; }
+        public string ShoesOrderId { get; set; }
 
         public int OptionId { get; set; }
         public string? OptinName { get; set; }

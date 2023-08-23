@@ -1018,6 +1018,10 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ShoesGroup>(entity =>
             {
+                entity.Property(e => e.fk_CustomerOrderId)
+                    .IsRequired()
+                    .HasMaxLength(40);
+
                 entity.HasOne(d => d.fk_CustomerOrder)
                     .WithMany(p => p.ShoesGroups)
                     .HasForeignKey(d => d.fk_CustomerOrderId)
@@ -1051,6 +1055,8 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ShoesOrder>(entity =>
             {
+                entity.Property(e => e.ShoesOrderId).HasMaxLength(40);
+
                 entity.Property(e => e.Remark).HasMaxLength(300);
 
                 entity.HasOne(d => d.fk_ShoesSize)

@@ -2,7 +2,7 @@
 {
     public class ShoesAllTotalDto
     {
-        public string? ShoesOrderId { get; set; }
+        public string ShoesOrderId { get; set; }
 
         public int ShoesProductId { get; set; }
 
