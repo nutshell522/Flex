@@ -36,15 +36,33 @@
     <div class="from-group mb-3" v-if="validated">
       <label for="password" class="mb-1">密碼</label>
       <input
-        type="password"
+        :type="eye1 ? 'text' : 'password'"
         name="password"
         id="password"
         v-model="password"
         class="form-control"
-        placeholder="輸入6-20碼英數字"
+        placeholder="輸入6-10碼英數字"
+        maxlength="10"
       />
+      <div v-if="validated" @click="openEye1">
+        <i class="bi" :class="eye1 ? 'bi-eye' : 'bi-eye-slash'"></i>
+      </div>
     </div>
-    <!-- 00再次輸入確認密碼 -->
+    <div class="from-group mb-3" v-if="unValidated">
+      <label for="password" class="mb-1">確認密碼</label>
+      <input
+        :type="eye2 ? 'text' : 'password'"
+        name="password"
+        id="password"
+        v-model="passwordCheck"
+        class="form-control"
+        placeholder="請再次輸入密碼"
+        maxlength="10"
+      />
+      <div v-if="validated" @click="openEye2">
+        <i class="bi" :class="eye2 ? 'bi-eye' : 'bi-eye-slash'"></i>
+      </div>
+    </div>
     <div class="from-group mb-3" v-if="nameInput">
       <label for="name">姓名</label>
       <input
@@ -208,6 +226,7 @@ const unRegistered = ref(false);
 //登入表單
 const account = ref('');
 const password = ref('');
+const passwordCheck = ref('');
 const arrow = ref(false);
 
 //註冊表單
@@ -353,6 +372,9 @@ function registerBtn() {
   if (email.value === '') {
     errors.value = [];
     errors.value.push('欄位尚未填寫完畢');
+  } else if (password.value != passwordCheck.value) {
+    errors.value = [];
+    errors.value.push('密碼或確認密碼錯誤');
   } else {
     //註冊資料
     errors.value = [];
@@ -411,6 +433,15 @@ function forgetPwdClick() {
       });
   }
 }
+// 眼睛
+const eye1 = ref(false);
+const eye2 = ref(false);
+function openEye1() {
+  eye1.value = !eye1.value;
+}
+function openEye2() {
+  eye2.value = !eye2.value;
+}
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap');
@@ -422,6 +453,12 @@ function forgetPwdClick() {
   margin-top: 150px;
   border: solid 1px;
 }
+/* todo眼睛放在input裡面 */
+.password-input {
+  display: flex;
+  align-items: center;
+}
+
 .loginText {
   display: flex;
   justify-content: center;

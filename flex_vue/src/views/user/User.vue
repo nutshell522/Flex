@@ -18,8 +18,9 @@
             type="password"
             class="form-control"
             id="editPwdInput"
-            placeholder="輸入6-20碼英數字"
+            placeholder="輸入6-10碼英數字"
             v-model="editPwd"
+            maxlength="10"
           />
         </div>
       </div>
@@ -32,6 +33,7 @@
             id="checkPwdInput"
             placeholder="請重新輸入修改密碼"
             v-model="checkPwd"
+            maxlength="10"
           />
         </div>
       </div>
