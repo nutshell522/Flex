@@ -11,11 +11,16 @@
       <button class="">變更密碼<i class="bi bi-pencil-square"></i></button>
     </div>
     <div class="col-md-6 editPwdAll" v-if="editPwdShow">
+      <div class="from-group" v-if="errors.length">
+        <ul class="mb-3 errorsText">
+          <span v-for="error in errors" class="text-danger">{{ error }}</span>
+        </ul>
+      </div>
       <div class="col-md-6">
         <div class="input-group" v-if="editPwdShow">
           <label for="editPwdInput" class="text">修改密碼</label>
           <input
-            type="password"
+            :type="eye1 ? 'text' : 'password'"
             class="form-control"
             id="editPwdInput"
             placeholder="輸入6-10碼英數字"
@@ -23,18 +28,24 @@
             maxlength="10"
           />
         </div>
+        <div @click="openEye1">
+          <i class="bi" :class="eye1 ? 'bi-eye' : 'bi-eye-slash'"></i>
+        </div>
       </div>
       <div class="col-md-6" v-if="editPwdShow">
         <div class="input-group">
           <label for="checkPwdInput" class="text">確認密碼</label>
           <input
-            type="password"
+            :type="eye2 ? 'text' : 'password'"
             class="form-control"
             id="checkPwdInput"
             placeholder="請重新輸入修改密碼"
             v-model="checkPwd"
             maxlength="10"
           />
+        </div>
+        <div @click="openEye2">
+          <i class="bi" :class="eye2 ? 'bi-eye' : 'bi-eye-slash'"></i>
         </div>
       </div>
       <div class="btn btn-info" v-if="editPwdShow" @click="updatePwd">
@@ -226,7 +237,17 @@ import axios from 'axios';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 let photo = ref(null); //保存 <input> 元素的參考
-let imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑C
+let imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑
+
+const errors = ref([]);
+const eye1 = ref(false);
+const eye2 = ref(false);
+function openEye1() {
+  eye1.value = !eye1.value;
+}
+function openEye2() {
+  eye2.value = !eye2.value;
+}
 
 //使用 Vue Composition API 設定區塊
 function fileChange(event) {
@@ -406,19 +427,30 @@ function updatePwd() {
   //alert('updatePwd');
   var uri = `${baseAddress}/Users/UpdatePwd?id=${id.value}`;
   var editUserProfile = {};
-  if (editPwd.value == checkPwd.value) {
+
+  if (editPwd.value == '' || checkPwd.value == '') {
+    errors.value = [];
+    errors.value.push('請確實填寫');
+  } else if (editPwd.value == checkPwd.value) {
     editUserProfile.EncryptedPassword = checkPwd.value;
-  }
-  axios
-    .put(uri, editUserProfile)
-    .then((res) => {
-      userData.value = res.data;
-      console.log(userData.value);
-    })
-    .catch((err) => {
-      console.log(err);
+
+    axios
+      .put(uri, editUserProfile)
+      .then((res) => {
+        userData.value = res.data;
+        console.log(userData.value);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    Swal.fire({
+      icon: 'success',
+      title: '密碼更新成功',
     });
-  window.location.reload();
+  } else {
+    errors.value = [];
+    errors.value.push('修改密碼或確認密碼填寫錯誤');
+  }
 }
 //更新資料
 function save() {

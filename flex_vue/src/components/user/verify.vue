@@ -9,13 +9,19 @@
           <span v-for="error in errors" class="text-danger">{{ error }}</span>
         </ul>
       </div>
-      <input
-        type="password"
-        class="form-control input"
-        id="verify"
-        placeholder="請輸入登入密碼"
-        v-model="password"
-      />
+      <div class="eyeAndInput">
+        <input
+          :type="eye ? 'text' : 'password'"
+          class="form-control input"
+          id="verify"
+          placeholder="請輸入登入密碼"
+          v-model="password"
+          maxlength="10"
+        />
+        <div @click="openEye">
+          <i class="bi" :class="eye ? 'bi-eye' : 'bi-eye-slash'"></i>
+        </div>
+      </div>
       <button type="button" class="btn btn-info" @click="send">送出</button>
     </div>
     <div class="col-md-6">
@@ -35,6 +41,7 @@ import axios from 'axios';
 
 const errors = ref([]);
 const password = ref(null);
+const eye = ref(false);
 const verifyArea = inject('verifyArea');
 const close = () => {
   verifyArea.value = false;
@@ -67,7 +74,7 @@ function send() {
       })
       .catch((err) => {
         errors.value = [];
-        errors.value.push('你是誰!');
+        errors.value.push('密碼驗證錯誤');
         //console.log(err);
       });
   }
@@ -75,9 +82,15 @@ function send() {
 function closeBtn() {
   //alert('close');
 }
+function openEye() {
+  eye.value = !eye.value;
+}
 </script>
 
 <style scoped>
+.eyeAndInput {
+  display: flex;
+}
 .pwdInput {
   margin: auto;
   margin-right: 60px;
