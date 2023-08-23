@@ -13,11 +13,11 @@ namespace FlexCoreService.CartCtrl.Infra.EntityFramework
 			_db = db;
 		}
 
-		public IEnumerable<ActiveDiscountDto> GetactiveDiscounts()
+		public IEnumerable<ActiveDiscountDto> GetActiveDiscounts()
 		{
-			var activeDiscounts = _db.Discounts
+			return _db.Discounts
 				.AsNoTracking()
-				.Where(x => x.EndDate > DateTime.Now && x.StartDate <= DateTime.Now && x.Status == true)
+				.Where(x => (x.EndDate > DateTime.Now || x.EndDate == null) && x.StartDate <= DateTime.Now && x.Status == true)
 				.Select(x => new ActiveDiscountDto
 				{
 					DiscountId = x.DiscountId,
@@ -27,53 +27,62 @@ namespace FlexCoreService.CartCtrl.Infra.EntityFramework
 					StartDate = x.StartDate,
 					EndDate = x.EndDate
 				});
-
-			return activeDiscounts;
 		}
 
-		public IEnumerable<OnSaleProductDto> GetOnSaleProducts(int discountId, int productCategoryId)
+		public IEnumerable<OnSaleCategoryDto> GetAllProductCategories()
 		{
-			var result = _db.ProjectTagItems
-				.Join(_db.ProjectTags, pti => pti.fk_ProjectTagId, pt => pt.ProjectTagId, (pti, pt) => new { pti, pt })
-				.Join(_db.Discounts, j1 => j1.pt.ProjectTagId, d => d.fk_ProjectTagId, (j1, d) => new { j1.pti, j1.pt, d })
-				.Join(_db.Products, j2 => j2.pti.fk_ProductId, p => p.ProductId, (j2, p) => new { j2.pti, j2.pt, j2.d, p })
-				.Join(_db.ProductSubCategories, j3 => j3.p.fk_ProductSubCategoryId, psc => psc.ProductSubCategoryId, (j3, psc) => new { j3.pti, j3.pt, j3.d, j3.p, psc })
-				.Join(_db.ProductCategories, j4 => j4.psc.fk_ProductCategoryId, pc => pc.ProductCategoryId, (j4, pc) => new { j4.pti, j4.pt, j4.d, j4.p, j4.psc, pc })
-				.Join(_db.SalesCategories, j5 => j5.pc.fk_SalesCategoryId, ssc => ssc.SalesCategoryId, (j5, ssc) => new { j5.pti, j5.pt, j5.d, j5.p, j5.psc, j5.pc, ssc })
-				.Join(
-					_db.ProductImgs.Where(pi => pi.ProductImgId == _db.ProductImgs
-						.Where(pi2 => pi2.fk_ProductId == pi.fk_ProductId)
-						.OrderBy(pi2 => pi2.ProductImgId)
-						.Select(pi2 => pi2.ProductImgId)
-						.FirstOrDefault()
-					),
-					j6 => j6.p.ProductId,
-					pir => pir.fk_ProductId,
-					(j6, pir) => new { j6.pti, j6.pt, j6.d, j6.p, j6.psc, j6.pc, j6.ssc, pir }
-				)
-				.Where(j7 => j7.d.DiscountId == discountId && j7.ssc.SalesCategoryId == productCategoryId)
-				.Select(j7 => new
+			return _db.SalesCategories
+				.AsNoTracking()
+				.Select(x => new OnSaleCategoryDto
 				{
-					j7.pti,
-					j7.pt,
-					j7.d,
-					j7.p,
-					j7.psc,
-					j7.pc,
-					j7.ssc,
-					j7.pir
+					id = x.SalesCategoryId,
+					SalesCategoryName = x.SalesCategoryName
 				});
+		}
 
-			foreach (var item in result)
+		public IEnumerable<OnSaleProductDto> GetOnSaleProducts(int discountId, int? productCategoryId)
+		{
+			var query = from pti in _db.ProjectTagItems
+						join pt in _db.ProjectTags on pti.fk_ProjectTagId equals pt.ProjectTagId
+						join d in _db.Discounts on pt.ProjectTagId equals d.fk_ProjectTagId
+						join p in _db.Products on pti.fk_ProductId equals p.ProductId
+						join psc in _db.ProductSubCategories on p.fk_ProductSubCategoryId equals psc.ProductSubCategoryId
+						join pc in _db.ProductCategories on psc.fk_ProductCategoryId equals pc.ProductCategoryId
+						join ssc in _db.SalesCategories on pc.fk_SalesCategoryId equals ssc.SalesCategoryId
+						join pir in (
+							from pi in _db.ProductImgs
+							where pi.ProductImgId == (
+								from pi2 in _db.ProductImgs
+								where pi2.fk_ProductId == pi.fk_ProductId
+								orderby pi2.ProductImgId
+								select pi2.ProductImgId
+							).FirstOrDefault()
+							select pi
+						) on p.ProductId equals pir.fk_ProductId
+						where d.DiscountId == discountId && (productCategoryId == null || ssc.SalesCategoryId == productCategoryId)
+						select new
+						{
+							ProjectTagItem = pti,
+							ProjectTag = pt,
+							Discount = d,
+							Product = p,
+							ProductSubCategory = psc,
+							ProductCategory = pc,
+							SalesCategory = ssc,
+							ProductImg = pir
+						};
+
+			foreach (var item in query)
 			{
 				yield return new OnSaleProductDto
 				{
-					ProductId=item.p.ProductId,
-					ProductDescription = item.p.ProductDescription,
-					ProductName = item.p.ProductName,
-					SalesPrice = item.p.SalesPrice,
-					UnitPrice = item.p.UnitPrice,
-					ImgPath = item.pir.ImgPath,
+					ProductId = item.Product.ProductId,
+					ProductDescription = item.Product.ProductDescription,
+					ProductName = item.Product.ProductName,
+					SalesPrice = item.Product.SalesPrice,
+					UnitPrice = item.Product.UnitPrice,
+					ImgPath = item.ProductImg.ImgPath,
+					SalesCategoryId = item.SalesCategory.SalesCategoryId,
 				};
 			}
 		}

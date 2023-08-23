@@ -8,5 +8,7 @@
 		public int? UnitPrice { get; set; }
 		public string? ProductDescription { get; set; }
 		public string? ImgPath { get; set; }
-    }
+		public int SalesCategoryId { get; set; }
+
+	}
 }
