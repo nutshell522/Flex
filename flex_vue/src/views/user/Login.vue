@@ -148,7 +148,10 @@
       <p>或</p>
     </div>
     <div class="from-group mb-3 registerBtn">
-      <googleLogin></googleLogin>
+      <googleLogin
+        :googleUser="googleLoginUserData"
+        @googleLoginUserData="handleGoogleLoginUserData"
+      ></googleLogin>
     </div>
     <div class="secret">
       <div>擁有帳號即表示你同意</div>
@@ -173,6 +176,7 @@ import { ref, onMounted } from 'vue';
 import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
 import register from '@/components/user/register.vue';
 import datepicker from '@/components/user/datepicker.vue';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 //google
 import googleLogin from '@/components/user/googleLogin.vue';
@@ -185,6 +189,7 @@ import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 
 axios.defaults.withCredentials = true;
 
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const getApiStore = useGetApiDataStore();
 const { setMemberUsername } = getApiStore;
 const { setLoginSuccess } = getApiStore;
@@ -235,9 +240,9 @@ const email = ref('');
 const birthday = ref('');
 const mobile = ref('');
 const address = ref('');
+const googleUser = ref(null);
 
-const baseAddress = 'https://localhost:7183/api';
-const uri = `${baseAddress}/Users/Login`;
+const uri = `${baseAddress}api/Users/Login`;
 var loginData = {};
 
 function ValidatedIdentity() {
@@ -354,16 +359,13 @@ function handleSuccessfulLogin(memberInfo) {
 
   // 同步用戶信息到 pinia store
   loggedInUser.value = memberInfo;
-  //console.log('loggedInUser', loggedInUser.value);
 }
 
-//註冊
+//一般註冊
 const registercheck = ref(false);
 
+const regUri = `${baseAddress}api/Users/Register`;
 function registerBtn() {
-  const regUri = `${baseAddress}/Users/Register`;
-  var registerData = {};
-
   //帳號
   if (email.value === '') {
     errors.value = [];
@@ -374,14 +376,15 @@ function registerBtn() {
   } else {
     //註冊資料
     errors.value = [];
-    registerData.Account = account.value;
-    registerData.EncryptedPassword = password.value;
-    registerData.Name = name.value;
-    registerData.Email = email.value;
-    registerData.Birthday = birthday.value;
-    registerData.Mobile = mobile.value;
-    registerData.CommonAddress = address.value;
-    //todo google登入者資料包成物件,直接註冊不要alert
+    const registerData = {
+      Account: account.value,
+      EncryptedPassword: password.value,
+      Name: name.value,
+      Email: email.value,
+      Birthday: birthday.value,
+      Mobile: mobile.value,
+      CommonAddress: address.value,
+    };
     axios
       .post(regUri, registerData)
       .then((res) => {
@@ -393,18 +396,46 @@ function registerBtn() {
         //registercheck.value = true;
 
         //todo顯示註冊成功畫面--註冊成功
+        //todo註冊很常死亡
         Swal.fire({
           icon: 'success',
           title: '註冊成功',
           text: `請至 ${registerData.Email} 啟用此帳號`,
+          //todo 按下ok才跳頁
         });
-        window.location.reload();
+        //window.location.reload();
       })
       .catch((err) => {
         console.log('註冊失敗', err);
       });
   }
 }
+
+//google 註冊及登入
+// 子组件傳來的資料
+function handleGoogleLoginUserData(googleLoginUserData) {
+  const email = googleLoginUserData.email;
+  console.log('Email:', email);
+
+  //todo如果不存在就註冊;
+  //todo如果存在帳號就把登入訊息存在本機
+  // axios
+  //   .post(regUri, googleLoginUserData)
+  //   .then((res) => {
+  //     const googleEmail = res.data.email;
+  //     console.log(googleEmail);
+
+  //     if (googleLoginUserData.email == googleEmail.value) {
+  //       console.log('帳號存在喔');//想想
+  //     }
+
+  window.location.href = '/';
+  //   })
+  //   .catch((err) => {
+  //     console.log('google登入或註冊失敗', err);
+  //   });
+}
+
 const loginBox = ref(true);
 const forgetPwdSetPwd = ref(false);
 userAcc.value = localStorage.getItem('userAcc');
@@ -414,7 +445,7 @@ function forgetPwdClick() {
   loginBox.value = false;
   forgetPwdSetPwd.value = true;
   if (userAcc.value) {
-    const forgetUri = `${baseAddress}/Users/account/` + userAcc.value;
+    const forgetUri = `${baseAddress}api/Users/account/` + userAcc.value;
     //  取得信箱
     axios
       .get(forgetUri)

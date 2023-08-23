@@ -20,14 +20,18 @@ export default {
       user: null,
 
       callback: (response) => {
-        console.log('googleLoginSuccess');
         this.loggedIn = true;
-        window.location.href = '/';
         this.user = decodeCredential(response.credential);
-        console.log(this.user.email);
-        console.log(this.user.name);
-        console.log(this.user.picture);
-
+        console.log(this.user);
+        const googleLoginUserData = {
+          email: this.user.email,
+          name: this.user.name,
+          imgPath: this.user.picture,
+        };
+        //傳送給父元件
+        this.$emit('googleLoginUserData', googleLoginUserData);
+        //console.log(googleLoginUserData);
+        //window.location.href = '/';
         // const googleLogin = JSON.stringify(this.user);
         // console.log(googleLogin.user);
         //把登入資訊包在一起傳給本地
