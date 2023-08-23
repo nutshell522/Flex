@@ -6,7 +6,6 @@
     <userBar></userBar>
   </div>
   <div class="container userDatas" v-if="showUserData">
-    <!-- 變更密碼 -->
     <div class="col-md-6 editPwdIcon" @click="editPwdBtn">
       <button class="">變更密碼<i class="bi bi-pencil-square"></i></button>
     </div>
@@ -60,7 +59,6 @@
       </div>
 
       <div class="level mb-3">
-        <!-- <label for="">{{ level }}</label> -->
         <label for="">{{ userProfile.levelName }}</label>
       </div>
     </div>
@@ -76,7 +74,6 @@
         />
         <label class="form-check-label ms-1" for="genderRadio1"> 生理男 </label>
       </div>
-
       <div class="radioBtn">
         <input
           class="form-check-input"
@@ -88,7 +85,6 @@
         <label class="form-check-label ms-1" for="genderRadio2">生理女 </label>
       </div>
     </div>
-
     <div class="col-md-6">
       <div class="input-group">
         <label for="emailInput" class="text">信箱</label>
@@ -101,7 +97,7 @@
         />
       </div>
     </div>
-    <!-- 77手機信箱input右邊的圓角 -->
+    <!-- todo手機信箱input右邊的圓角 -->
     <div class="col-md-6">
       <div class="input-group">
         <label for="mobileInput" class="text">手機</label>
@@ -124,7 +120,8 @@
         ></datepicker>
       </div>
     </div>
-    <!-- 地址 -->
+    <!-- todoUpdate -->
+    <!-- <twzipcode></twzipcode> -->
     <div class="col-md-6">
       <div class="input-group">
         <label for="addressInput" class="text">地址</label>
@@ -135,7 +132,6 @@
           placeholder="common address"
           v-model="commonAddress"
         />
-
         <div class="col-md-1 addressBtn">
           <button type="button">
             <i
@@ -153,7 +149,6 @@
           </button>
         </div>
       </div>
-      <!-- 備用地址 -->
       <div class="addressInput">
         <input
           type="text"
@@ -172,12 +167,10 @@
           v-if="addAddressInput2"
         />
       </div>
-
-      <!-- 之後增加 -->
+      <!-- todoAdd -->
       <!-- <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="載具先不寫" />
+      <input type="text" class="form-control" placeholder="載具" />
     </div>
-
     <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="取貨店鋪預約" />
     </div> -->
@@ -194,12 +187,10 @@
         </div>
         <div class="form-check-label" for="subscribeBtn">訂閱</div>
       </div>
-      <!-- 更新資料按鈕 -->
-      <div class="col-md-6 btn btn-outline-info save">
-        <button type="button" @click="save">更新資料</button>
+      <div class="col-md-6 btn btn-outline-info saveBtn">
+        <button type="button" @click="saveBtn">更新資料</button>
       </div>
     </div>
-    <!-- 上傳圖片 -->
     <div class="col-md-6 userImg">
       <div>
         <img :src="imageSrc + imgPath" id="profileImage" />
@@ -217,10 +208,7 @@
         </label>
       </div>
     </div>
-    <!-- <twzipcode></twzipcode> -->
   </div>
-
-  <!-- 驗證畫面 -->
   <verify class="verify" v-if="verifyArea"></verify>
 </template>
 
@@ -231,25 +219,28 @@ import userBar from '@/components/user/userBar.vue';
 // import twzipcode from './twzipcode.vue';
 import datepicker from '@/components/user/datepicker.vue';
 import { ref, watch, provide } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 import axios from 'axios';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
-
-let photo = ref(null); //保存 <input> 元素的參考
-let imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑
 
 const errors = ref([]);
 const eye1 = ref(false);
 const eye2 = ref(false);
+
+const photo = ref(null);
+const imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑
+
+//檢查是否有登入
+const storedUser = localStorage.getItem('loggedInUser');
+const userObject = JSON.parse(storedUser);
+
 function openEye1() {
   eye1.value = !eye1.value;
 }
+
 function openEye2() {
   eye2.value = !eye2.value;
 }
 
-//使用 Vue Composition API 設定區塊
 function fileChange(event) {
   const selectedFile = event.target.files[0]; //獲取所選圖片
   var reader = new FileReader();
@@ -269,68 +260,46 @@ function fileChange(event) {
       }
     )
     .then((res) => {
-      console.log('hello', res);
+      console.log(res);
     })
     .catch((err) => {
       console.log(err);
     });
-
-  console.log(response.data);
-  // 更新成功後，也可以更新本地的圖片路徑
-  imageSrc.value = URL.createObjectURL(photo.value.files[0]);
 }
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const edituri = `${baseAddress}api/Users/EditUserPhoto?id=${userObject.memberId}`;
 
-//檢查本地儲存是否有登錄信息
-const storedUser = localStorage.getItem('loggedInUser');
-const userObject = JSON.parse(storedUser);
-
-const edituri = `${baseAddress}/Users/EditUserPhoto?id=${userObject.memberId}`;
-//選擇圖片時被觸發
-const uploadImages = async () => {
-  console.log('click搞事');
-  //photo.value.click();
-  const inputElement = photo.value;
-  // inputElement.click(); // 直接觸發 input 元素的點擊事件
-};
-
-const getApiStore = useGetApiDataStore();
 const userProfile = ref([]);
-const id = ref('');
+const editPwd = ref('');
+const checkPwd = ref('');
+const editPwdShow = ref(false);
 
-const levelName = ref('');
-const name = ref('');
+const id = ref('');
 const email = ref('');
 const mobile = ref('');
 const birthday = ref('');
 const gender = ref(false);
 const commonAddress = ref('');
+const alternateAddress1 = ref(null);
+const alternateAddress2 = ref(null);
+const isSubscribeNews = ref(true);
+
 const addressBtn = ref(false);
 const addAddressInput1 = ref(false);
 const addAddressInput2 = ref(false);
-const alternateAddress1 = ref(null);
-const alternateAddress2 = ref(null);
-const editPwd = ref('');
-const checkPwd = ref('');
-const editPwdShow = ref(false);
-const isSubscribeNews = ref(true);
+
 const imgPath = ref('');
-
-const memberId = getApiStore.getMemberId;
 const verifyArea = ref(true);
-provide('verifyArea', verifyArea);
 
+provide('verifyArea', verifyArea);
 const showUserData = ref(false);
 
-const baseAddress = 'https://localhost:7183/api';
-const uri = `${baseAddress}/Users/` + memberId;
-
-//console.log('uri', uri);
-
+//取得會員資料
+const uri = `${baseAddress}api/Users/` + userObject.memberId;
 axios
   .get(uri)
   .then((res) => {
     userProfile.value = res.data;
-
     id.value = res.data.memberId;
     email.value = res.data.email;
     mobile.value = res.data.mobile;
@@ -341,12 +310,7 @@ axios
     alternateAddress2.value = res.data.alternateAddress2;
     isSubscribeNews.value = res.data.isSubscribeNews;
 
-    console.log(alternateAddress1.value);
-    //console.log(alternateAddress2.value);
-    //console.log('gender', gender.value);
-    console.log(isSubscribeNews.value);
-    console.log(imgPath.value);
-    //顯示控制項
+    //地址控制項
     if (alternateAddress1.value) {
       addAddressInput1.value = true;
     } else if (alternateAddress2.value) {
@@ -360,7 +324,8 @@ axios
     if (isSubscribeNews.value != true) {
       isSubscribeNews.value = true;
     }
-    //console.log(res.data);
+
+    //照片
     if (res.data.imgPath != null) {
       imgPath.value = res.data.imgPath;
     } else {
@@ -368,17 +333,20 @@ axios
     }
   })
   .catch((err) => {
-    err;
+    console.log(err);
   });
 
-// 這裡執行 watch 邏輯
+if (isSubscribeNews.value == true) {
+  isSubscribeNews.value = false;
+}
+
 watch(verifyArea, (newValue) => {
   if (!newValue) {
     showUserData.value = true;
   }
 });
 
-// 77地址增減怪怪的
+// todoFix地址增減怪怪的
 function addBtn() {
   if (commonAddress.value && addAddressInput1.value == false) {
     addAddressInput1.value = true;
@@ -393,6 +361,7 @@ function addBtn() {
     addressBtn.value = true;
   }
 }
+
 function minusBtn() {
   if (!alternateAddress2.value) {
     addAddressInput2.value = false;
@@ -410,35 +379,24 @@ function minusBtn() {
   }
 }
 
-function changePhoto() {
-  alert('changePhoto');
-}
-
 function editPwdBtn() {
-  //alert('editPwd');
   editPwdShow.value = !editPwdShow.value;
-  //editPwdShow.value = true;
 }
 
-const userData = ref([]);
-
-//更新密碼
 function updatePwd() {
-  //alert('updatePwd');
-  var uri = `${baseAddress}/Users/UpdatePwd?id=${id.value}`;
+  var uri = `${baseAddress}api/Users/UpdatePwd?id=${id.value}`;
   var editUserProfile = {};
 
   if (editPwd.value == '' || checkPwd.value == '') {
     errors.value = [];
     errors.value.push('請確實填寫');
   } else if (editPwd.value == checkPwd.value) {
+    errors.value = [];
     editUserProfile.EncryptedPassword = checkPwd.value;
-
     axios
       .put(uri, editUserProfile)
       .then((res) => {
-        userData.value = res.data;
-        console.log(userData.value);
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -452,45 +410,36 @@ function updatePwd() {
     errors.value.push('修改密碼或確認密碼填寫錯誤');
   }
 }
-//更新資料
-function save() {
-  //alert('save');
-  //todo檢查欄位有沒有確實填寫
 
-  var uri = `${baseAddress}/Users/Id?id=${id.value}`;
-  var editUserProfile = {};
+function saveBtn() {
+  //todo必填欄位
+  var uri = `${baseAddress}api/Users/Id?id=${id.value}`;
+  var editUserProfile = {
+    gender: gender.value,
+    email: userProfile.value.email,
+    mobile: mobile.value,
+    birthday: birthday.value, //todo為什麼值會選到前一天
+    commonAddress: commonAddress.value,
+    alternateAddress1: alternateAddress1.value,
+    alternateAddress2: alternateAddress2.value,
+    isSubscribeNews: isSubscribeNews.value,
+  };
 
-  editUserProfile.gender = gender.value;
-  editUserProfile.email = userProfile.value.email;
-  editUserProfile.mobile = mobile.value;
-  editUserProfile.birthday = birthday.value;
-  editUserProfile.commonAddress = commonAddress.value;
-  editUserProfile.alternateAddress1 = alternateAddress1.value;
-  editUserProfile.alternateAddress2 = alternateAddress2.value;
-  editUserProfile.isSubscribeNews = isSubscribeNews.value;
-
-  //todo檔案更新成功畫面
+  //todoChange檔案更新成功畫面
 
   axios
     .put(uri, editUserProfile)
     .then((res) => {
-      userData.value = res.data;
-      //console.log('uri', uri);
-      console.log(userData.value);
+      console.log(res);
     })
     .catch((err) => {
       console.log(err);
     });
-  //todo傳給後端
 
   Swal.fire({
     icon: 'success',
     title: '個人資料更新成功',
   });
-}
-
-if (isSubscribeNews.value == true) {
-  isSubscribeNews.value = false;
 }
 </script>
 
@@ -498,7 +447,7 @@ if (isSubscribeNews.value == true) {
 .gender {
   display: flex;
   align-items: center;
-  /* 77文字跟按鈕沒有水平 */
+  /* todo文字跟按鈕沒有水平 */
 }
 
 .text {
@@ -510,7 +459,7 @@ if (isSubscribeNews.value == true) {
   display: flex;
   padding-left: 10px;
   justify-content: center;
-  /*77這個按鈕怎麼水平置中*/
+  /*todo這個按鈕怎麼水平置中*/
 }
 
 .level {
@@ -553,7 +502,7 @@ if (isSubscribeNews.value == true) {
 }
 
 // 77按鈕的儲存字歪歪的
-.save {
+.saveBtn {
   width: 100px;
   margin-top: 20px;
 }

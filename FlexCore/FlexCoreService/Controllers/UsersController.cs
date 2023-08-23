@@ -52,8 +52,16 @@ namespace FlexCoreService.Controllers
             {
                 return NotFound();
             }
-
             string userEmail = member.Email;
+
+            //把密碼設為預設密碼
+            member.EncryptedPassword = "d52hlew";
+            await _db.SaveChangesAsync();
+
+            //todo寄有預設密碼的信
+            ForgetPwdEmail sendEmail = new ForgetPwdEmail();
+            sendEmail.Sendemail(userEmail);
+
             return Ok(userEmail);
         }
 

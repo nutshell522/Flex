@@ -263,11 +263,8 @@ function ValidatedIdentity() {
           validated.value = true;
           accInput.value = false;
           registered.value = false;
-
-          //忘記密碼寄送驗證信
           forgetPwd.value = true;
           arrow.value = true;
-          //loading.value = false;
         } else {
           //未註冊
           arrow.value = true;
@@ -417,16 +414,13 @@ userAcc.value = localStorage.getItem('userAcc');
 function forgetPwdClick() {
   loginBox.value = false;
   forgetPwdSetPwd.value = true;
-  //呼叫api取得信箱
   if (userAcc.value) {
     const forgetUri = `${baseAddress}/Users/account/` + userAcc.value;
-    //console.log(forgetUri);
-    // 呼叫 API 取得信箱
+    //  取得信箱
     axios
       .get(forgetUri)
       .then((res) => {
-        email.value = res.data; // 回傳信箱
-        //console.log('Email:', email.value);
+        email.value = res.data;
       })
       .catch((err) => {
         console.error('Error:', err);
