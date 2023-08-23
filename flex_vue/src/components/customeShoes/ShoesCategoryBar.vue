@@ -2,13 +2,12 @@
   <aside class="side-bar">
     <ul class="list-unstyled">
       <li
-        v-for="shoescategory in shoescategories"
-        :key="shoescategory.shoesCategoryId"
+        v-for="shoescategory in shoesCategories"
+        :key="shoescategory.shoesCategoryName"
         class="shoescategory"
-      >
-        <router-link :to="getCategoryRoute(shoescategory.shoesCategoryName)">{{
+      >{{
           shoescategory.shoesCategoryName
-        }}</router-link>
+        }}
         <!-- <a :href="'/men/' + categoryName">{{ categoryName }}</a> -->
       </li>
     </ul>
@@ -24,38 +23,19 @@ const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
 const router = useRouter();
 const shoescategories = ref({});
-const localStorageKey = "originalPath";
 
-//設置路徑
-if (route.path.includes("/CustomeShoes")) {
-  localStorage.setItem(localStorageKey, "/CustomeShoes");
-}
 
-// 使用 ref 來儲存 localStorage 中的值
-const originalPath = ref(localStorage.getItem(localStorageKey));
-
-const getCategoryRoute = (categoryName) => {
-  return {
-    path: originalPath.value,
-    query: {
-      categoryName: encodeURIComponent(categoryName),
-    },
-  };
+let getshoesCategory = async () => {
+  await axios
+    .get(`${baseAddress}api/ShoesCategory/CategoryList`)
+    .then((response) => {
+     shoescategories.value = response.data.shoesCategories;
+    })
+    .catch((error) => {
+      alert(error);
+    });
 };
-
-const getshoesCategory = async () => {
-  try {
-    const response = await axios.get(`${baseAddress}api/ShoesCategory`);
-    shoescategories.value = response.data; // 將整個回應資料賦值給 shoescategories
-    console.log(shoescategories.value);
-  } catch (error) {
-    alert("無法獲取分類資料，請稍後再試。");
-    console.error(error); // 輸出錯誤到控制台
-  }
-};
-
 onMounted(() => {
-  originalPath.value = localStorage.getItem(localStorageKey);
   getshoesCategory();
 });
 </script>

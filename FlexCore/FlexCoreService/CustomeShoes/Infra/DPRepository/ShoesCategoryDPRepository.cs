@@ -2,6 +2,7 @@
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.CustomeShoes.Models.Dtos;
 using FlexCoreService.ProductCtrl.Models.Dtos;
+using FlexCoreService.ProductCtrl.Models.VM;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -26,5 +27,15 @@ namespace FlexCoreService.CustomeShoes.Infra.DPRepository
 			return result;
 		}
 
+        public IEnumerable<ShoesCategoryDto> SearchCategory()
+        {
+            string sql = @"select sc.ShoesCategoryId, sc.ShoesCategoryName 
+from ShoesCategories as sc
+";
+
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.Query<ShoesCategoryDto>(sql);
+            return result;
+        }
     }
 }

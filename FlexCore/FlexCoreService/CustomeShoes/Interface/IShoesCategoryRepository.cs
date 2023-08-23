@@ -7,5 +7,7 @@ namespace FlexCoreService.CustomeShoes.Interface
 	{
 		IEnumerable<ShoesCategoryDto> GetAllCategory();
 
+        IEnumerable<ShoesCategoryDto> SearchCategory();
+
     }
 }

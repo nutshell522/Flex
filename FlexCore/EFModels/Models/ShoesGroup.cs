@@ -12,7 +12,7 @@ namespace EFModels.Models
         public int fk_OptionId { get; set; }
         public int fk_MaterialId { get; set; }
         public int fk_ShoesColorId { get; set; }
-        public int fk_CustomerOrderId { get; set; }
+        public string fk_CustomerOrderId { get; set; }
 
         public virtual ShoesOrder fk_CustomerOrder { get; set; }
         public virtual Customized_material fk_Material { get; set; }
