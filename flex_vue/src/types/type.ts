@@ -124,7 +124,7 @@ export class BillingAddress {
 
 export class PaymentInfo {
   constructor(
-    public paymentMethod: string = "",
+    public paymentMethod: number = 0,
     public cardName: string = "",
     public cardNumber: string = "",
     public expiration: string = "",

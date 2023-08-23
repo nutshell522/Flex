@@ -74,146 +74,246 @@
               </div>
             </div>
           </div>
+            <div class="row">
+                <div class="col-12">
+                  <label for="sizeSelect">Size:</label>
+                  <select
+                    id="sizeSelect"
+                    v-model="selectedSize"
+                    @change="handleSizeChange">
+                    <option
+                      v-for="size in shoesDetail.shoesSize"
+                      :key="size.sizeId"
+                      :value="size">
+                      {{ size.sizeName }}
+                    </option>
+                  </select>
+                </div>
+                  <div class="d-flex me-3 col-3">
+                    <span
+                      class="col-3"
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                      >數量:</span>
+                  <div>
+                    <button
+                      @click="decrementProductQty()"
+                      class="increaseAndDecrease"
+                    >
+                      <i class="bi bi-dash-lg"></i>
+                    </button>
+                    <input
+                      type="text"
+                      name="productQty"
+                      id="productQty"
+                      class="form-control text-center"
+                      style="border-radius: 0"
+                      v-model="buyQty"
+                      @input="handleQyt"
+                    />
+                    <button
+                      @click="incrementProductQty()"
+                      class="increaseAndDecrease"
+                    >
+                      <i class="bi bi-plus-lg"></i>
+                    </button>
+                  </div>
+                 </div>
+                  <div class="col-6">
+                    <div class="form-control">
+                      <span>總金額${{ totalPrice }}</span>
+                    </div>
+                  </div>
+          </div>
           <hr />
-          <div class="mt-3 d-flex">
-            <div class="col-12">
-              <button class="btn btn-primary" @click="addNewFields">
-                新增客製化選項
-              </button>
-            </div>
+          <div class="row mt-3 d-flex selectbox">
+            <div class="col-4">
+                  <label for="optionsSelect">鞋面</label>
+                </div>
+                <div class="col-4">
+                  <label for="materialsSelect">材質:</label>
+                  <select
+                    id="materialsSelect"
+                    v-model="selectedMaterials1"
+                    @change="handleMaterialsChange1">
+                    <option
+                      v-for="material in shoesChoose.shoesMaterials"
+                      :key="material.shoesmaterial_Id"
+                      :value="material">
+                      {{ material.material_Name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-4">
+                  <label for="colorsSelect">顏色:</label>
+                  <select
+                    id="colorsSelect"
+                    v-model="selectedColors1"
+                    @change="handleColorsChange1">
+                    <option
+                      v-for="color in shoesChoose.shoesColors"
+                      :key="color.shoesColorId"
+                      :value="color">
+                      {{ color.colorName }}
+                    </option>
+                  </select>
+                </div>
           </div>
           <div class="row mt-3 d-flex selectbox">
-            <div v-for="(field, index) in newFields" :key="index" class="col-4">
-              <label :for="`newSelect${index}`">{{ field.label }}:</label>
-              <select
-                :id="`newSelect${index}`"
-                v-model="field.value"
-                @change="onChange(index)"
-              >
-                <option
-                  v-for="item in field.options"
-                  :key="
-                    item.optionId || item.shoesmaterial_Id || item.shoesColorId
-                  "
-                  :value="
-                    item.optinName || item.material_Name || item.colorName
-                  "
-                >
-                  {{ item.optinName || item.material_Name || item.colorName }}
-                </option>
-              </select>
-            </div>
+            <div class="col-4">
+                  <label for="optionsSelect">鞋尖</label>
+                </div>
+                <div class="col-4">
+                  <label for="materialsSelect">材質:</label>
+                  <select
+                    id="materialsSelect"
+                    v-model="selectedMaterials2"
+                    @change="handleMaterialsChange2">
+                    <option
+                      v-for="material in shoesChoose.shoesMaterials"
+                      :key="material.shoesmaterial_Id"
+                      :value="material">
+                      {{ material.material_Name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-4">
+                  <label for="colorsSelect">顏色:</label>
+                  <select
+                    id="colorsSelect"
+                    v-model="selectedColors2"
+                    @change="handleColorsChange2">
+                    <option
+                      v-for="color in shoesChoose.shoesColors"
+                      :key="color.shoesColorId"
+                      :value="color">
+                      {{ color.colorName }}
+                    </option>
+                  </select>
+                </div>
           </div>
-          <div class="mt-3 d-flex">
-            <div class="col-12">
-              <button class="btn btn-danger" @click="removeAllFields">
-                刪除客製化選項
-              </button>
-            </div>
+          <div class="row mt-3 d-flex selectbox">
+            <div class="col-4">
+                  <label for="optionsSelect">護邊</label>
+                </div>
+                <div class="col-4">
+                  <label for="materialsSelect">材質:</label>
+                  <select
+                    id="materialsSelect"
+                    v-model="selectedMaterials3"
+                    @change="handleMaterialsChange3">
+                    <option
+                      v-for="material in shoesChoose.shoesMaterials"
+                      :key="material.shoesmaterial_Id"
+                      :value="material">
+                      {{ material.material_Name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-4">
+                  <label for="colorsSelect">顏色:</label>
+                  <select
+                    id="colorsSelect"
+                    v-model="selectedColors3"
+                    @change="handleColorsChange3">
+                    <option
+                      v-for="color in shoesChoose.shoesColors"
+                      :key="color.shoesColorId"
+                      :value="color">
+                      {{ color.colorName }}
+                    </option>
+                  </select>
+                </div>
+          </div>
+          <div class="row mt-3 d-flex selectbox">
+            <div class="col-4">
+                  <label for="optionsSelect">鞋領</label>
+                </div>
+                <div class="col-4">
+                  <label for="materialsSelect">材質:</label>
+                  <select
+                    id="materialsSelect"
+                    v-model="selectedMaterials4"
+                    @change="handleMaterialsChange4">
+                    <option
+                      v-for="material in shoesChoose.shoesMaterials"
+                      :key="material.shoesmaterial_Id"
+                      :value="material">
+                      {{ material.material_Name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-4">
+                  <label for="colorsSelect">顏色:</label>
+                  <select
+                    id="colorsSelect"
+                    v-model="selectedColors4"
+                    @change="handleColorsChange4">
+                    <option
+                      v-for="color in shoesChoose.shoesColors"
+                      :key="color.shoesColorId"
+                      :value="color">
+                      {{ color.colorName }}
+                    </option>
+                  </select>
+                </div>
+          </div>
+          <div class="row mt-3 d-flex selectbox">
+            <div class="col-4">
+                  <label for="optionsSelect">孔眼片</label>
+                </div>
+                <div class="col-4">
+                  <label for="materialsSelect">材質:</label>
+                  <select
+                    id="materialsSelect"
+                    v-model="selectedMaterials5"
+                    @change="handleMaterialsChange5">
+                    <option
+                      v-for="material in shoesChoose.shoesMaterials"
+                      :key="material.shoesmaterial_Id"
+                      :value="material">
+                      {{ material.material_Name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-4">
+                  <label for="colorsSelect">顏色:</label>
+                  <select
+                    id="colorsSelect"
+                    v-model="selectedColors5"
+                    @change="handleColorsChange5">
+                    <option
+                      v-for="color in shoesChoose.shoesColors"
+                      :key="color.shoesColorId"
+                      :value="color">
+                      {{ color.colorName }}
+                    </option>
+                  </select>
+                </div>
           </div>
           <hr />
           <div class="mt-3 mb-3 col-12">
             <div class="d-flex row">
-              <div class="d-flex me-3 col-5">
-                <span
-                  class="col-3"
-                  style="
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                  "
-                >
-                  數量:
-                </span>
-                <input
-                  type="text"
-                  name="productQty"
-                  id="productQty"
-                  class="form-control text-center"
-                  style="border-radius: 0"
-                  v-model="buyQty"
-                  @input="handleQyt"
-                />
-              </div>
-              <div class="col-6">
-                <div class="form-control">
-                  <span>總金額${{ totalPrice }}</span>
-                </div>
-              </div>
               <textarea
                 class="form-control mt-3"
                 rows="10"
                 placeholder="請詳細說明您的需求"
                 name="message"
+                v-model="remark"
                 required
               ></textarea>
+          </div>
               <div class="col-6 mt-5 ms-6">
-                <button class="form-control">商品結帳</button>
+                <button class="form-control" @click="intoOrder">商品結帳頁面</button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="showToast" class="toast">
-      {{ toastMessage }}
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-12">
-      <ul
-        class="nav nav-tabs d-flex"
-        style="align-items: center; justify-content: center"
-        id="myTab"
-        role="tablist"
-      >
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link active"
-            id="home-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#home-tab-pane"
-            type="button"
-            role="tab"
-            aria-controls="home-tab-pane"
-            aria-selected="true"
-          >
-            商品資訊
-          </button>
-        </li>
-      </ul>
-      <div class="tab-content mt-3" id="myTabContent">
-        <div
-          class="tab-pane fade show active commentDiv"
-          id="home-tab-pane"
-          role="tabpanel"
-          aria-labelledby="home-tab"
-          tabindex="0"
-        >
-          <div style="width: 95%; position: relative" class="p-3">
-            <h1 style="display: inline">商品資訊</h1>
-            <span style="right: 0%; position: absolute; font-size: 30px"
-              ><i
-                class="bi bi-plus-lg"
-                v-if="!showDetailDiv"
-                @click="showDetailDiv = !showDetailDiv"
-              ></i
-              ><i
-                class="bi bi-dash-lg"
-                v-else
-                @click="showDetailDiv = !showDetailDiv"
-              ></i
-            ></span>
-            <div class="mt-3 ms-3" v-if="showDetailDiv">
-              <div>產地:{{ shoesChoose.shoesOrigin }}</div>
-              <div>類別:{{ shoesChoose.shoesCategoryName }}</div>
-              <div>描述:{{ shoesChoose.shoesDescription }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
   <homeFooter></homeFooter>
 </template>
 
@@ -225,84 +325,230 @@ import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
 
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
-const selectedMaterials = ref("");
-const selectedColors = ref("");
-const selectedOptions = ref("");
+const selectedSize = ref("");
 const shoesChoose = ref({});
+const shoesDetail = ref({});
 const route = useRoute();
 const fieldGroups = ref([]);
 const buyQty = ref(1);
+const remark = ref("");
 const showDetailDiv = ref(true);
+
+const selectedMaterials1 = ref(""); // 第一組選擇框
+const selectedColors1 = ref(""); // 第一組選擇框
+
+const selectedMaterials2 = ref(""); // 第二組選擇框
+const selectedColors2 = ref(""); // 第二組選擇框
+
+const selectedMaterials3 = ref(""); // 第三組選擇框
+const selectedColors3 = ref(""); // 第三組選擇框
+
+const selectedMaterials4 = ref(""); // 第四組選擇框
+const selectedColors4 = ref(""); // 第四組選擇框
+
+const selectedMaterials5 = ref(""); // 第五組選擇框
+const selectedColors5 = ref(""); // 第五組選擇框
+
 const totalPrice = computed(() => {
   return buyQty.value * shoesChoose.value.shoesUnitPrice;
 });
 
-const newFields = ref([]);
-const showToast = ref(false);
-const toastMessage = ref("");
+const shoesProductId = route.params.shoesProductId;
 
-//客製化選項的下拉清單
-const addNewFields = () => {
-  if (newFields.value.length < 15) {
-    const newOption = {
-      label: "部位",
-      value: "",
-      options: shoesChoose.value.shoesOptions,
-    };
 
-    const existingNames = newFields.value.map((field) => field.value);
-    if (existingNames.includes(newOption.value)) {
-      showToastMessage(
-        "Duplicate value detected. Please choose a different value."
-      );
+const handleSizeChange = () => {
+  console.log("Selected size changed:", selectedSize.value);
+};
+
+
+
+const handleMaterialsChange1 = () => {
+  console.log("Selected materials changed:", selectedMaterials1.value);
+};
+
+const handleColorsChange1 = () => {
+  console.log("Selected color changed:", selectedColors1.value);
+};
+
+
+const handleMaterialsChange2 = () => {
+  console.log("Selected materials changed:", selectedMaterials2.value);
+};
+
+const handleColorsChange2 = () => {
+  console.log("Selected color changed:", selectedColors2.value);
+};
+
+
+const handleMaterialsChange3 = () => {
+  console.log("Selected materials changed:", selectedMaterials3.value);
+};
+
+const handleColorsChange3 = () => {
+  console.log("Selected color changed:", selectedColors3.value);
+};
+
+
+const handleMaterialsChange4 = () => {
+  console.log("Selected materials changed:", selectedMaterials4.value);
+};
+
+const handleColorsChange4 = () => {
+  console.log("Selected color changed:", selectedColors4.value);
+};
+
+
+const handleMaterialsChange5 = () => {
+  console.log("Selected materials changed:", selectedMaterials5.value);
+};
+
+const handleColorsChange5 = () => {
+  console.log("Selected color changed:", selectedColors5.value);
+};
+
+
+const errors = ref([]);
+
+//商品數量的增減事件
+let handleQyt = (event) => {
+  buyQty.value = event.target.value.replace(/\D/g, "");
+  if (buyQty.value <= 1) {
+    buyQty.value = 1;
+  }
+  if (buyQty.value >= 99) {
+    buyQty.value = 99;
+  }
+};
+
+let decrementProductQty = () => {
+  if (buyQty.value <= 1) {
+    buyQty.value = 1;
+  } else {
+    buyQty.value--;
+  }
+};
+
+let incrementProductQty = () => {
+  if (buyQty.value >= 99) {
+    buyQty.value = 99;
+  } else {
+    buyQty.value++;
+  }
+};
+
+//塞入資料到資料庫
+const orderUri = `${baseAddress}api/CustomeShoes/EnterCustomerChoose`;
+const optionsUri = `${baseAddress}api/CustomeShoes/ChoseAllOptions`;
+
+var orderData = {};
+let ShoesOrderId = '';
+function intoOrder() {
+  
+  if (selectedSize.value.sizeId === undefined) {
+    //todo檢查有沒有選擇size
+    errors.value = [];
+    errors.value.push("Size還未選擇，請先選擇");
+  } else {
+    errors.value = [];
+    // orderData.shoesOrderId = shoesOrderId;
+    orderData.fk_ShoesSizeId = selectedSize.value.sizeId;
+    orderData.qty = buyQty.value;
+    orderData.remark = remark.value;
+    
+    axios
+      .post(orderUri, orderData)
+      .then((res) => {
+        ShoesOrderId=res.data;
+        console.log(res.data)
+        intoOptions();
+        
+      })
+      .catch((error) => {
+        console.error("POST request error:", error);
+      });
+
+  }
+}
+
+//塞入各式選項到資料庫
+
+var optionsData = {};
+
+function intoOptions() {
+  const nodeList = document.querySelectorAll('select');
+  let flag =false;
+  let selectStr = '';
+  nodeList.forEach(item=>{
+    
+    if(item.value = "" || item.value==null){
+      selectStr=item.getAttribute('data-select');
+      flag=true;
       return;
     }
+  })
+  if (flag) {
+    if (selectStr == '部位') {      
+      //todo檢查有沒有選擇部位
+      errors.value = [];
+      errors.value.push("還沒有任何客製化選項，請先選擇");
+    }
+    else if (selectStr == '材質') {
+    //todo檢查有沒有選擇材質
+    errors.value = [];
+    errors.value.push("還沒有選擇材質，請先選擇");
+    }else if (selectStr == '顏色') {
+    //todo檢查有沒有選擇顏色
+    errors.value = [];
+    errors.value.push("還沒有選擇顏色，請先選擇");
+  }}
+    else {
+    console.log(123);
+    errors.value = [];
+    for (let i = 1; i <= 5; i++) {
+      const currentSelectedMaterials = eval(`selectedMaterials${i}`);
+      const currentSelectedColors = eval(`selectedColors${i}`);
 
-    newFields.value.push(newOption);
-    newFields.value.push({
-      label: "材質",
-      value: "",
-      options: shoesChoose.value.shoesMaterials,
-    });
+      const optionsData = {
+        shoesMainId: route.params.shoesProductId,
+        optionId: i,
+        materialId: currentSelectedMaterials.value.shoesmaterial_Id,
+        shoesColorId: currentSelectedColors.value.shoesColorId,
+        customerOrderId: ShoesOrderId
+      };
 
-    newFields.value.push({
-      label: "顏色",
-      value: "",
-      options: shoesChoose.value.shoesColors,
-    });
+      console.log(optionsData.customerOrderId)
 
-    const uniqueShoesOptions = shoesChoose.value.shoesOptions.filter(
-      (option) => !existingNames.includes(option.optinName)
+      axios
+        .post(optionsUri, optionsData, {
+      headers: {
+        'Content-Type': 'application/json',
+          },
+        })
+        .then((res) => {
+          console.log(`Option ${i} added:`, res.data);
+        })
+        .catch((error) => {
+          console.error(`POST request error for option ${i}:`, error);
+        });
+    }
+  }
+}
+
+
+//抓api資料
+let getDataSize = async () => {
+  try {
+    const response = await axios.get(
+      `${baseAddress}api/CustomeShoes/shoes/Detail/${route.params.shoesProductId}`
     );
-    newOption.options = uniqueShoesOptions;
+    console.log(response.data);
+    shoesDetail.value = response.data;
+    if (shoesDetail.value.shoesSize && shoesDetail.value.shoesSize.length > 0) {
+      selectedSize.value = shoesDetail.value.shoesSize[0].sizeName;
+    }
+  } catch (error) {
+    alert(error);
   }
-};
-
-//移除選項的按鈕
-const removeAllFields = () => {
-  if (newFields.value.length >= 3) {
-    newFields.value.splice(newFields.value.length - 3, 3);
-  }
-};
-
-//錯誤訊息
-const showToastMessage = (message) => {
-  toastMessage.value = message;
-  showToast.value = true;
-  console.log("Show toast");
-  setTimeout(() => {
-    showToast.value = false;
-    console.log("Hide toast");
-  }, 3000);
-};
-
-//變更下拉清單的事件
-const onChange = (index) => {
-  handleNewFieldChange(index);
-};
-
-const handleNewFieldChange = (index) => {
-  console.log(`New Field ${index} changed:`, newFields.value[index].value);
 };
 
 //抓api資料
@@ -312,9 +558,20 @@ const getData = async () => {
       `${baseAddress}api/CustomeShoes/shoes/Customization/${route.params.shoesProductId}`
     );
     shoesChoose.value = response.data;
-    selectedColors.value = shoesChoose.value.shoesColors[0].colorName;
-    selectedOptions.value = shoesChoose.value.shoesOptions[0].optinName;
-    selectedMaterials.value = shoesChoose.value.shoesMaterials[0].material_Name;
+    selectedColors1.value = shoesChoose.value.shoesColors[0];
+    selectedMaterials1.value = shoesChoose.value.shoesMaterials[0];
+
+    selectedColors2.value = shoesChoose.value.shoesColors[0];
+    selectedMaterials2.value = shoesChoose.value.shoesMaterials[0];
+    
+    selectedColors3.value = shoesChoose.value.shoesColors[0];
+    selectedMaterials3.value = shoesChoose.value.shoesMaterials[0];
+
+    selectedColors4.value = shoesChoose.value.shoesColors[0];
+    selectedMaterials4.value = shoesChoose.value.shoesMaterials[0];
+
+    selectedColors5.value = shoesChoose.value.shoesColors[0];
+    selectedMaterials5.value = shoesChoose.value.shoesMaterials[0];
   } catch (error) {
     alert(error);
   }
@@ -322,36 +579,14 @@ const getData = async () => {
 
 //啟用方法
 onMounted(() => {
+  getDataSize();
   getData();
 });
+
+
 </script>
 
 <style>
 /* ... (樣式代碼) */
-.selectbox {
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgb(185, 184, 184);
-  border-radius: 10px;
-}
 
-textarea {
-  max-width: 400px;
-  max-height: 200px;
-  color: #000;
-  letter-spacing: 1px;
-}
-
-.dscene {
-  width: 800px;
-  height: 800px;
-  margin-left: auto;
-  margin-top: auto;
-}
-
-.part {
-  width: 800px;
-  height: 800px;
-  margin-right: auto;
-}
 </style>

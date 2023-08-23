@@ -32,6 +32,12 @@ namespace FlexCoreService.CustomeShoes.Service
             return shoesDetails;
         }
 
+        public ShoesAllTotalDto GetShoesTotalOrder(string ShoesOrderId)
+        {
+            var shoesOrders = _repo.GetShoesTotalOrder(ShoesOrderId);
+            return shoesOrders;
+        }
+
         public IEnumerable<ShoesImgsDto> GetShoesImgs(int shoesproductId)
         {
             var imgs = _repo.GetShoesImgs(shoesproductId);

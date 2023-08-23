@@ -12,6 +12,9 @@ namespace FlexCoreService.CustomeShoes.Interface
         ShoesDetailDto GetShoesDetail(int shoesproductId);
 
         IEnumerable<ShoesImgsDto> GetShoesImgs(int shoesproductId);
+
+        ShoesAllTotalDto GetShoesTotalOrder(string ShoesOrderId);
+
     }
 }
 

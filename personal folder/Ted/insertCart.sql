@@ -248,3 +248,81 @@ HAVING COUNT(p.ProductId) >= 1
 ORDER BY p.ProductId asc, MAX(d.OrderBy) asc;
 
 
+select * from orders order by id desc
+select * from orderItems order by id desc
+
+insert orders(
+ordertime, fk_member_Id, total_quantity, order_status_Id, pay_method_Id,
+pay_status_Id, coupon_name, coupon_discount, freight, total_price,
+receiver, cellphone, recipient_address,fk_typeId,orderCode,
+biller,bill_cellphone,bill_address,agreement)
+values(
+getdate(),1,1,1,2,
+3,null,0,500,1000,
+'David','09999','中壢',1,'123456789',
+'David','09999','中壢',1)
+
+insert orderItems(
+order_Id, product_name, per_price, quantity, discount_name,
+discount_subtotal, subtotal, Items_description, fk_typeId,productcommit,
+comment)
+values(
+17,'衣服',1000,1,null,
+0,1000,'顏色:灰-尺寸:M',1,10,
+0)
+
+select * from ProductGroups
+
+UPDATE ProductGroups SET
+Qty = 15
+WHERE ProductGroupId = 1
+
+select * from ProductGroups
+where ProductGroupId = 1 and Qty > 20
+
+SELECT CASE WHEN EXISTS (SELECT 1 FROM ProductGroups WHERE ProductGroupId = 1 AND Qty >= 1) THEN 1 ELSE 0 END
+
+select qty from ProductGroups where ProductGroupId = 1
+
+select CouponId, EndType,EndDate,RequirementType,Requirement 
+from Coupons where fk_CouponCategoryId = 4 and Status = 1 and StartDate <= GETDATE() and  (EndDate > GETDATE() or EndDate is null)
+
+select * from Coupons
+select * from CouponSendings
+
+insert CouponSendings(
+fk_CouponId, fk_MemberId, SentDate, StartDate, EndDate,
+RedemptionStatus, RedeemedDate)
+values(4,1,GETDATE(),GETDATE(),null,
+0,null)
+
+UPDATE CouponSendings SET
+RedeemedDate = GETDATE(),
+RedemptionStatus = 1
+WHERE SendingId = 54
+
+select * from discounts as d
+where d.StartDate <= getdate() 
+and ( d.EndDate > getdate() OR d.EndDate IS NULL) 
+and d.status = 1
+
+select * from ProjectTagItems as pti
+join ProjectTags as pt on pt.ProjectTagId = pti.fk_ProjectTagId
+join Discounts as d on d.fk_ProjectTagId = pt.ProjectTagId
+join Products as p on p.ProductId = pti.fk_ProductId
+join ProductSubCategories as psc on psc.ProductSubCategoryId = p.fk_ProductSubCategoryId
+join ProductCategories as pc on pc.ProductCategoryId = psc.fk_ProductCategoryId
+join SalesCategories as ssc on ssc.SalesCategoryId = pc.fk_SalesCategoryId
+join(
+    SELECT *
+    FROM ProductImgs AS pi
+    WHERE pi.ProductImgId = (
+        SELECT TOP 1 pi2.ProductImgId
+        FROM ProductImgs AS pi2
+        WHERE pi2.fk_ProductId = pi.fk_ProductId
+        ORDER BY pi2.ProductImgId
+    )
+) AS pir ON pir.fk_ProductId = p.ProductId
+where d.DiscountId = 10 and ssc.SalesCategoryId = 2
+
+select * from ProductImgs
