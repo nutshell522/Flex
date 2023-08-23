@@ -5,7 +5,7 @@
         <ProductCard :card="card"></ProductCard>
       </li>
     </ul>
-    <div class="d-flex" style="justify-content: center">
+    <div class="d-flex mb-4" style="justify-content: center">
       <button
         @click="loadMoreProducts"
         class="form-control btn btn-secondary"

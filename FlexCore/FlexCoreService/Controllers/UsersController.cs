@@ -453,20 +453,24 @@ namespace FlexCoreService.Controllers
         /// <returns></returns>
         [HttpPost("SaveFavorites")]
 
-        public async Task<ActionResult<string>> SaveFavorites(FavoritesDto favoritesdto)
+        public async Task<ActionResult<string>> SaveFavoritesProduct(FavoritesDto favoritesdto)
         {
-            Member member = await _db.Members.FirstOrDefaultAsync(x => x.MemberId == favoritesdto.MemberId);
-            Product product = await _db.Products.FirstOrDefaultAsync(p => p.ProductId == favoritesdto.ProductId);
 
-            Favorite favorites = new Favorite
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.ProductId == favoritesdto.ProductId);
+            if (product == null)
             {
-                fk_memberId = favoritesdto.MemberId,
-                fk_productId = favoritesdto.ProductId
-            };
-
-            _db.Favorites.Add(favorites);
-            await _db.SaveChangesAsync();
-            return Ok("喜愛商品收藏成功");
+                return Ok("無此商品");
+            }
+            var service = new FavoriteService(_repo);
+            var result = service.SaveFavoritesProduct(favoritesdto.MemberId, favoritesdto.ProductId);
+            if (result.IsSuccess)
+            {
+                return Ok("喜愛商品收藏成功");
+            }else
+            {
+                return Ok("喜愛商品收藏失敗");
+            }
+            
         }
 
         /// <summary>
@@ -493,6 +497,35 @@ namespace FlexCoreService.Controllers
             var result = new List<ProductCardDto>();
             return Ok(pro);
         }
+
+
+        [HttpGet("IsFavorite")]
+        public async Task<ActionResult<bool>> GetIsFavorite(int memberId,string productId)
+        {
+
+            var service = new FavoriteService(_repo);
+            var isFavorite = service.GetIsFavorite(memberId, productId);
+
+            return Ok(isFavorite);
+        }
+
+        [HttpDelete("DeleteFavorite")]
+        public async Task<ActionResult<string>>DeleteFavoriteProduct(FavoritesDto dto)
+        {
+            var checkIsFavorite = await _db.Favorites.FirstOrDefaultAsync(p => p.fk_memberId == dto.MemberId && p.fk_productId == dto.ProductId);
+            if (checkIsFavorite==null)
+            {
+                return Ok("查無收藏紀錄");
+            }
+            var service=new FavoriteService(_repo);
+            var result = service.DeleteFavoriteProduct(dto.MemberId,dto.ProductId);
+            if (result.IsSuccess)
+            {
+                return Ok("已成功取消收藏");
+            }
+            return Ok("取消收藏失敗");
+        }
+
         private bool MemberExists(int id)
         {
             return (_db.Members?.Any(e => e.MemberId == id)).GetValueOrDefault();
