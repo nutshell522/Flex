@@ -190,17 +190,18 @@ namespace FlexCoreService.Controllers
 
 
         [HttpPost("addReservationOrderInfo")]
-        public string ReservationAddOrder(int memberId, string cellphone, string speakerName, string branchAddress, DateTime startTime)
+        public async Task<string> ReservationAddOrder([FromBody]ReservationAddOrderDTO dto)
         {
+            var memberInfo = await _actRepo.GetMembreInfoAsync(dto.memberId);
             var order = new ReservationToOrdersDTO
             {
                 orderCode = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 16),
                 ordertime = DateTime.Now,
-                fk_member_Id = memberId,
-                cellphone = cellphone,
-                receiver = speakerName,
-                recipient_address = branchAddress,
-                close_time = startTime
+                fk_member_Id = dto.memberId,
+                cellphone = memberInfo.Mobile,
+                receiver = dto.speakerName,
+                recipient_address = dto.branchAddress,
+                close_time = dto.startTime
             };
 
 

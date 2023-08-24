@@ -14,9 +14,6 @@
         <p>駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})</p>
 
 
-
-
-
         <!-- 預約系統 -->
         <p>預約時間表</p>
         <div id="datePicker">
@@ -71,7 +68,7 @@
   新增心得
 </button>
 
-<!-- Modal -->
+<!-- 新增評論的Modal -->
 <div class="modal fade modal-dialog modal-dialog-centered" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog ">
     <div class="modal-content">
@@ -82,15 +79,13 @@
       <form @submit.prevent="addComment">
    
         <div class="modal-body">
-            <!-- 新增評論的表單 -->
-                <div class="comment-form">              
-                   <p>{{userAccount}}</p>
-                    <textarea v-model="newComment.content" placeholder="課程心得" required></textarea>
-
-                    <star-rating @update:rating="setRating"></star-rating>              
-                </div>
+          <!-- 新增評論的表單 -->
+          <div class="comment-form">              
+              <p>{{userAccount}}</p>
+              <textarea v-model="newComment.content" placeholder="課程心得" required></textarea>
+              <star-rating @update:rating="setRating"></star-rating>              
+          </div>
         </div>
-
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary reviewButton" data-bs-dismiss="modal">取消</button>
           <button type="submit" data-bs-dismiss="modal" class="btn btn-primary reviewButton">送出</button>
@@ -139,14 +134,13 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{Name}}您好</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{userName}} 您好</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         您預約的是{{ speaker.speakerName }}講師的諮詢服務
         <br>
-        時間：{{  }}
-        您想要預約 {{date}} 的 {{time}}點 嗎
+        時間： {{date}} 的 {{time}}點 
         <br>
         地點：{{ speaker.branchName  }}
         <br>
@@ -169,7 +163,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary">確認</button>
+        <button type="button" class="btn btn-primary" @click="addReservationOrderInfo" data-bs-dismiss="modal">確認</button>
       </div>
     </div>
   </div>
@@ -231,6 +225,8 @@ const TopThreeSpeaker = ref([]);
 const date = ref('');
 const time = ref('');
 const fullDateTime = ref('');
+const userName = JSON.parse(localStorage.getItem('loggedInUser')).username;
+const addReservationOrderInfo = ref(null);
 
 
 
@@ -240,6 +236,7 @@ onMounted(() => {
   const nextButton = document.querySelector("#nextButton");
   const currentDateDisplay = document.querySelector("#currentDate");
   const schedule = document.querySelector("#schedule");
+  
 
   let newDateResult;
   let newTimeResult;
@@ -282,6 +279,7 @@ onMounted(() => {
   const hasTime = formatTime(testTime);
   console.log(hasTime);
 
+  
   //呼叫後端，從資料庫得到這位講師已經被預約的時間
   const loadReservationHistory = async (id) => {
     axios
@@ -375,6 +373,7 @@ onMounted(() => {
         cell.classList.add("schedule-cell");
         const day = new Date(currentDate); //取得今天日期時間
         day.setDate(currentDate.getDate() + i);
+        
         //使用 data- 屬性來在元素上儲存自定義的資料
         cell.dataset.date = day.toLocaleDateString();
         cell.dataset.time = timeSlot.substring(0, 2); //取出開始時間點
@@ -410,17 +409,34 @@ onMounted(() => {
       const year = parseInt(parts[0]);
       const month = parseInt(parts[1]) - 1;
       const day = parseInt(parts[2]);
-      fullDateTime.value = new Date(year, month, day, time2);
-      // alert(fullDateTime);
+      // 取得台北標準時間的時區偏移量（分鐘）
+      const dt = new Date(year, month, day, time2);
+      const taipeiTimezoneOffset = dt.getTimezoneOffset();
 
-      axios
-        .post("https://localhost:7183/api/Reservation/AddReservation", {
-          fk_BookerId: 4,
+      // 計算時差（以分鐘為單位）
+      const timeDifferenceMinutes = -taipeiTimezoneOffset;
+
+      // 在前台時間上添加時差
+      const utcTimestamp = new Date(dt.getTime() + (timeDifferenceMinutes * 60 * 1000));
+
+      // 將前台時間轉換為ISO 8601格式的字符串
+      const utcTimeString = utcTimestamp.toISOString();
+
+      fullDateTime.value = new Date(utcTimeString)
+      
+      // alert(fullDateTime.value);
+      const reqBody = {
+          fk_BookerId:fk_memberId,
           ReservationStartTime: fullDateTime.value,
           fk_ReservationSpeakerId: speakerId,
           fk_BranchId: speaker.value.branchId,
-        })
+        };
+        // alert(reqBody.ReservationStartTimeTest);
+      axios
+        .post("https://localhost:7183/api/Reservation/AddReservation",reqBody )
         .then((res) => {
+          
+          // 再叫一次
           console.log(res.data);
         })
         .catch((err) => {
@@ -430,6 +446,7 @@ onMounted(() => {
   }
 
   prevButton.addEventListener("click", () => {
+    
     currentDate.setDate(currentDate.getDate() - 7);
     updateCalendar();
   });
@@ -445,19 +462,47 @@ onMounted(() => {
   }
 
 
-  //得到前三名講師
-  const topThreeSpeaker = ()=>{
-    axios.get("https://localhost:7183/api/Reservation/GetTopThreeSpeaker")
-        .then(res=>{
-          console.log(res.data);
-          TopThreeSpeaker.value = res.data;
-        })
+  addReservationOrderInfo.value=()=>{
+    // alert('呼叫我啦呼叫我啦~');
+    loadReservationHistory(speakerId);
+    updateCalendar();
+    const reqBody = {
+        memberId:fk_memberId,
+        speakerName:speaker.value.speakerName,
+        branchAddress:speaker.value.branchName,
+        startTime:fullDateTime.value
+      };
+      console.log(speaker);
+   
+      axios.post("https://localhost:7183/api/Payment/addReservationOrderInfo", reqBody, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }).then(res=>{
+        console.log(res.data);
+      })
         .catch(err=>{
           console.log(err);
         })
   }
+
+
+  //得到前三名講師
+  function topThreeSpeaker() {
+    axios.get("https://localhost:7183/api/Reservation/GetTopThreeSpeaker")
+      .then(res => {
+        console.log(res.data);
+        TopThreeSpeaker.value=res.data;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
   topThreeSpeaker();
 });
+
+
+
 
 //心得script
 //從後端得到該講者的全部心得評論紀錄
@@ -558,10 +603,6 @@ const formatDateTime = (dateString) => {
     const formattedDateTime = `${year}/${month}/${day} ${hours}:${minutes}`;
     return formattedDateTime;
 }
-
-
-
-
 
 
 </script>
