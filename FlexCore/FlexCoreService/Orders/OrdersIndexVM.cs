@@ -21,6 +21,10 @@
 		public string? receiver { get; set; }
 		public string? recipient_address { get; set; }
 		public string? order_description { get; set; }
+		public string? biller { get; set; }
+		public string? biller_adress { get; set; }
+		public string? biller_cellphone { get; set; }
+		public string? orderCode { get; set; }
 		public int total_price { get; set; }
 		public bool? close { get; set; }
 		public DateTime? close_time { get; set; }

@@ -1,432 +1,463 @@
 <template>
-  <navBar></navBar>
-  <div id="searchorderout" class="container ">
-    <div id="srarchdate" class="col-3">
-      <input type="text" v-model="begintime" @searchInputbegintime="inputbegintime" class="form-control datePicker"
-        placeholder="輸入開始日期" />
-      ~
-      <input type="text" v-model="endtime" @searchInputendtime="inputendtime" class="form-control datePicker"
-        placeholder="輸入結束日期" />
+  <div style="height: 1200px;">
+    <navBar></navBar>
+    <div id="searchorderout" class="container ">
+      <div id="srarchdate" class="col-3">
+        <label>訂單時間:</label>
+        <input type="text" v-model="begintime" @searchInputbegintime="inputbegintime" class="form-control datePicker"
+          placeholder="輸入開始日期" />
+        ~
+        <input type="text" v-model="endtime" @searchInputendtime="inputendtime" class="form-control datePicker"
+          placeholder="輸入結束日期" />
+      </div>
+      <div id="searchorder" class="col-3">
+        <label>輸入關鍵字:</label>
+        <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control"
+          placeholder="輸入商品/活動/課程名稱" />
+        <button class="button" @click="keywordSearch">搜尋</button>
+      </div>
     </div>
-    <div id="searchorder" class="col-3">
-      <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control" placeholder="輸入名稱" />
-      <button class="button" @click="keywordSearch">搜尋</button>
+    <div id="cate">
+      <button @click="
+        setTypeValue('1');
+      setostatusValue('');">
+        商品
+      </button>
+
+      <button @click="
+        setTypeValue('4');
+      setostatusValue('');
+      ">
+        客製化
+      </button>
+
+      <button @click="
+        setTypeValue('2');
+      setostatusValue('1');
+      ">
+        活動
+      </button>
+
+      <button @click="
+        setTypeValue('3');
+      setostatusValue('1');
+      ">
+        課程
+      </button>
     </div>
-  </div>
-  <div id="cate" class="container">
-    <button @click="
-      setTypeValue('1');
-    setostatusValue('');">
-      商品
-    </button>
-
-    <button @click="
-      setTypeValue('4');
-    setostatusValue('');
-    ">
-      客製化
-    </button>
-
-    <button @click="
-      setTypeValue('2');
-    setostatusValue('1');
-    ">
-      活動
-    </button>
-
-    <button @click="
-      setTypeValue('3');
-    setostatusValue('1');
-    ">
-      課程
-    </button>
-  </div>
-  <div class="container" v-if="Type == 1">
-    <table class="table" style="width: 100%">
-      <thead>
-        <tr>
-          <th></th>
-          <th>訂單日期</th>
-          <th>訂單編號</th>
-          <th>總數量</th>
-          <th>總金額</th>
-          <th>付款方式</th>
-          <th>發票編號</th>
-          <th>訂單狀態</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template v-for="item in GetOrders" :key="item.id">
-          <tr class="firstTr" @click="toggleDetails(item.id)">
-            <td class="firstTr"><button>收合/展開</button></td>
-            <td class="firstTr">{{ formatOrderTime(item.ordertime) }}</td>
-            <td class="firstTr">{{ item.id }}</td>
-            <td class="firstTr">{{ item.total_quantity }}</td>
-            <td class="firstTr">{{ item.total_price }}</td>
-            <td class="firstTr">{{ item.pay_method }}</td>
-            <td class="firstTr">{{ item.receipt }}</td>
-            <td class="firstTr">{{ item.order_status }}</td>
-          </tr>
+    <div class="container" v-if="Type == 1">
+      <table class="table" style="width: 1300px">
+        <thead>
           <tr>
-            <td colspan="8">
-              <table class="table" style="text-align: left; border: 2px solid black"
-                v-show="expandedItems.includes(item.id)">
-                <tr>
-                  <td colspan="8" style="text-align: right">
-                    <div style="text-align: right">
-                      <button v-if="item.order_status_Id !== 7 &&
-                        item.order_status_Id !== 9 &&
-                        item.order_status_Id !== 8 &&
-                        item.close !== true
-                        " @click="setcancelProductIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px">
-                        申請取消
-                      </button>
-                      <button v-if="item.order_status_Id !== 7 &&
-                        item.order_status_Id !== 9 &&
-                        item.order_status_Id !== 8 &&
-                        item.close !== true
-                        " @click="setreturnIdValue(item.id)" class="btn btn-primary" :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null
+            <!-- <th></th> -->
+            <th>訂單日期</th>
+            <th>訂單編號</th>
+            <th>總數量</th>
+            <th>總金額</th>
+            <th>付款方式</th>
+            <th>發票編號</th>
+            <th>訂單狀態</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-for="item in GetOrders" :key="item.id">
+            <tr class="firstTr" @click="toggleDetails(item.id)">
+              <!-- <td class="firstTr"><button><i class="bi bi-chevron-down"></i></button></td> -->
+              <td class="firstTr">{{ formatOrderTime(item.ordertime) }}</td>
+              <td class="firstTr">{{ item.id }}</td>
+              <td class="firstTr">{{ item.total_quantity }}</td>
+              <td class="firstTr">{{ item.total_price }}</td>
+              <td class="firstTr">{{ item.pay_method }}</td>
+              <td class="firstTr">{{ item.receipt }}</td>
+              <td class="firstTr">{{ item.order_status }}</td>
+            </tr>
+            <tr>
+              <td colspan="8">
+                <table class="table" style="text-align: left; border: 2px solid black"
+                  v-show="expandedItems.includes(item.id)">
+                  <tr>
+                    <td colspan="8" style="text-align: right">
+                      <div style="text-align: right">
+                        <button v-if="item.order_status_Id !== 7 &&
+                          item.order_status_Id !== 9 &&
+                          item.order_status_Id !== 8 &&
+                          item.close !== true
+                          " @click="setcancelProductIdValue(item.id)" class="btn btn-primary"
+                          style="margin-right: 30px">
+                          申請取消
+                        </button>
+                        <button v-if="item.order_status_Id !== 7 &&
+                          item.order_status_Id !== 9 &&
+                          item.order_status_Id !== 8 &&
+                          item.close !== true
+                          " @click="setreturnIdValue(item.id)" class="btn btn-primary" :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null
     " :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null
     ">
-                        申請退貨
-                      </button>
-                      <button v-if="item.order_status_Id == 9" type="button" class="btn btn-secondary"
-                        @click="setcancelreturnIdValue2(item.id)">
-                        取消退貨
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-                  <td class="sceTr">商品名稱：{{ orderItem.product_name }}</td>
-                  <td class="sceTr">數量：{{ orderItem.quantity }}</td>
-                  <td class="sceTr">價格：{{ orderItem.per_price }}</td>
-                  <td class="sceTr">規格：{{ orderItem.items_description }}</td>
-                  <td><button v-if="item.order_status_Id == 6 && orderItem.comment !== true &&
-                    item.close == true" class="btn btn-primary" :data-bs-toggle="'modal'
+                          申請退貨
+                        </button>
+                        <button v-if="item.order_status_Id == 9" type="button" class="btn btn-secondary"
+                          @click="setcancelreturnIdValue2(item.id)">
+                          取消退貨
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+                    <td class="sceTr">商品名稱：{{ orderItem.product_name }}</td>
+                    <td class="sceTr">數量：{{ orderItem.quantity }}</td>
+                    <td class="sceTr">價格：{{ orderItem.per_price }}</td>
+                    <td class="sceTr">規格：{{ orderItem.items_description }}</td>
+                    <td><button v-if="item.order_status_Id == 6 && orderItem.comment !== true &&
+                      item.close == true" class="btn btn-primary" :data-bs-toggle="'modal'
     " :data-bs-target="'#exampleModal2'
     " @click="prepareCommentData(item.fk_member_Id, orderItem.productcommit, orderItem.id)">留下評論</button></td>
-                </tr>
-                <hr />
-                <tr style="justify-content: center">
-                  <td colspan="8">
-                    <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
-                      <tr>
-                        <td style="
+                  </tr>
+                  <hr />
+                  <tr style="justify-content: center">
+                    <td colspan="8">
+                      <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
+                        <tr>
+                          <td id="orderpeopleDetail" style="
                             padding: 0 200px 80px 20px;
                             border-right: 2px solid black;
                             width: 500px;
                           ">
-                          <h3>收件資訊</h3>
-                          <br />
-                          <div>地址：{{ item.recipient_address }}</div>
-                          <br />
-                          <div>姓名:{{ item.receiver }}</div>
-                          <br />
-                          <div>電話:{{ item.cellphone }}</div>
-                        </td>
-                        <td id="orderItemDetail" style="padding-left: 30px; width: 800px">
-                          <h6>運費</h6>
-                          <div>{{ item.freight }}</div>
-                          <h6>運費折扣</h6>
-                          <h6>已使用優惠券</h6>
-                          <div>{{ item.coupon_name }}</div>
-                          <h6>優惠券折扣</h6>
-                          <div>{{ item.coupon_discount }}</div>
-                          <h6>訂單金額</h6>
-                          <div>{{ item.total_price }}</div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
-  </div>
-  <div class="container" v-if="Type == 4">
-    <table class="table" style="width: 100%">
-      <thead>
-        <tr>
-          <th></th>
-          <th>訂單日期</th>
-          <th>訂單編號</th>
-          <th>總數量</th>
-          <th>總金額</th>
-          <th>付款方式</th>
-          <th>發票編號</th>
-          <th>訂單狀態</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template v-for="item in GetOrders" :key="item.id">
+                            <h6>商品收件資訊</h6>
+
+                            <div>地址：{{ item.recipient_address }}</div>
+
+                            <div>姓名:{{ item.receiver }}</div>
+
+                            <div>電話:{{ item.cellphone }}</div>
+                            <hr>
+                            <h6>發票收件資訊</h6>
+
+                            <div>地址：{{ item.biller_address }}</div>
+
+                            <div>姓名:{{ item.billerr }}</div>
+
+                            <div>電話:{{ item.biller_cellphone }}</div>
+                          </td>
+                          <td id="orderItemDetail" style="padding-left: 30px; width: 800px">
+                            <h6>運費</h6>
+                            <div>{{ item.freight }}</div>
+                            <h6>運費折扣</h6>
+                            <h6>已使用優惠券</h6>
+                            <div>{{ item.coupon_name }}</div>
+                            <h6>優惠券折扣</h6>
+                            <div>{{ item.coupon_discount }}</div>
+                            <h6>訂單金額</h6>
+                            <div>{{ item.total_price }}</div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+    <div class="container" v-if="Type == 4">
+      <table class="table" style="width: 1300px">
+        <thead>
           <tr>
-            <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
-            <td>{{ formatOrderTime(item.ordertime) }}</td>
-            <td>{{ item.id }}</td>
-            <td>{{ item.total_quantity }}</td>
-            <td>{{ item.total_price }}</td>
-            <td>{{ item.pay_method }}</td>
-            <td>{{ item.receipt }}</td>
-            <td>{{ item.order_status }}</td>
+            <!-- <th></th> -->
+            <th>訂單日期</th>
+            <th>訂單編號</th>
+            <th>總數量</th>
+            <th>總金額</th>
+            <th>付款方式</th>
+            <th>發票編號</th>
+            <th>訂單狀態</th>
           </tr>
-          <tr>
-            <td colspan="8">
-              <table class="table" style="text-align: left; border: 2px solid black"
-                v-show="expandedItems.includes(item.id)">
-                <tr>
-                  <td colspan="4" style="text-align: right">
-                    <div style="text-align: right">
-                      <button v-if="item.order_status_Id !== 7 &&
-                        item.order_status_Id !== 9 &&
-                        item.order_status_Id !== 8 &&
-                        item.order_status_Id !== 10 &&
-                        item.close !== true
-                        " @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px">
-                        申請取消
-                      </button>
-                      <button v-if="item.order_status_Id !== 7 &&
-                        item.order_status_Id !== 9 &&
-                        item.order_status_Id !== 8 &&
-                        item.order_status_Id !== 10 &&
-                        item.close !== true
-                        " @click="setchangeIdValue(item.id)" class="btn btn-primary">
-                        申請換貨
-                      </button>
-                      <button v-if="item.order_status_Id == 10" type="button" class="btn btn-secondary"
-                        @click="setcancelreturnIdValue3(item.id)">
-                        取消換貨
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-                  <td>商品名稱：{{ orderItem.product_name }}</td>
-                  <td>數量：{{ orderItem.quantity }}</td>
-                  <td>價格：{{ orderItem.per_price }}</td>
-                  <td>規格：{{ orderItem.items_description }}</td>
-                </tr>
-                <hr />
-                <tr style="justify-content: center">
-                  <td colspan="8">
-                    <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
-                      <tr>
-                        <td style="
+        </thead>
+        <tbody>
+          <template v-for="item in GetOrders" :key="item.id">
+            <tr class="firstTr" @click="toggleDetails(item.id)">
+              <!-- <td><button @click="toggleDetails(item.id)"><i class="bi bi-chevron-down"></i></button></td> -->
+              <td class="firstTr">{{ formatOrderTime(item.ordertime) }}</td>
+              <td class="firstTr">{{ item.id }}</td>
+              <td class="firstTr">{{ item.total_quantity }}</td>
+              <td class="firstTr">{{ item.total_price }}</td>
+              <td class="firstTr">{{ item.pay_method }}</td>
+              <td class="firstTr">{{ item.receipt }}</td>
+              <td class="firstTr">{{ item.order_status }}</td>
+            </tr>
+            <tr>
+              <td colspan="8">
+                <table class="table" style="text-align: left; border: 2px solid black"
+                  v-show="expandedItems.includes(item.id)">
+                  <tr>
+                    <td colspan="4" style="text-align: right">
+                      <div style="text-align: right">
+                        <button v-if="item.order_status_Id !== 7 &&
+                          item.order_status_Id !== 9 &&
+                          item.order_status_Id !== 8 &&
+                          item.order_status_Id !== 10 &&
+                          item.close !== true
+                          " @click="setcancelIdValue(item.id)" class="btn btn-primary" style="margin-right: 30px">
+                          申請取消
+                        </button>
+                        <button v-if="item.order_status_Id !== 7 &&
+                          item.order_status_Id !== 9 &&
+                          item.order_status_Id !== 8 &&
+                          item.order_status_Id !== 10 &&
+                          item.close !== true
+                          " @click="setchangeIdValue(item.id)" class="btn btn-primary">
+                          申請換貨
+                        </button>
+                        <button v-if="item.order_status_Id == 10" type="button" class="btn btn-secondary"
+                          @click="setcancelreturnIdValue3(item.id)">
+                          取消換貨
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+                    <td>商品名稱：{{ orderItem.product_name }}</td>
+                    <td>數量：{{ orderItem.quantity }}</td>
+                    <td>價格：{{ orderItem.per_price }}</td>
+                    <td>規格：{{ orderItem.items_description }}</td>
+                  </tr>
+                  <hr />
+                  <tr style="justify-content: center">
+                    <td colspan="8">
+                      <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
+                        <tr>
+                          <td style="
                             padding: 0 200px 80px 20px;
                             border-right: 2px solid black;
                             width: 500px;
                           ">
-                          <h3>收件資訊</h3>
-                          <div>地址：{{ item.recipient_address }}</div>
-                          <br />
-                          <div>姓名:{{ item.receiver }}</div>
-                          <br />
-                          <div>電話{{ item.cellphone }}</div>
-                        </td>
-                        <td id="orderItemDetail" style="padding-left: 30px; width: 800px">
-                          <h6>運費</h6>
-                          <div>{{ item.freight }}</div>
-                          <h6>運費折扣</h6>
-                          <h6>已使用優惠券</h6>
-                          <div>{{ item.coupon_name }}</div>
-                          <h6>優惠券折扣</h6>
-                          <div>{{ item.coupon_discount }}</div>
-                          <h6>訂單金額</h6>
-                          <div>{{ item.total_price }}</div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
-  </div>
-  <div class="container" v-if="Type == 2">
-    <table class="table" style="width: 100%">
-      <div id="cateorder" class="container">
-        <button @click="setostatusValue('1')">即將開始</button>
+                            <h3>收件資訊</h3>
+                            <div>地址：{{ item.recipient_address }}</div>
+                            <br />
+                            <div>姓名:{{ item.receiver }}</div>
+                            <br />
+                            <div>電話{{ item.cellphone }}</div>
+                          </td>
+                          <td id="orderItemDetail" style="padding-left: 30px; width: 800px">
+                            <h6>運費</h6>
+                            <div>{{ item.freight }}</div>
+                            <h6>運費折扣</h6>
+                            <h6>已使用優惠券</h6>
+                            <div>{{ item.coupon_name }}</div>
+                            <h6>優惠券折扣</h6>
+                            <div>{{ item.coupon_discount }}</div>
+                            <h6>訂單金額</h6>
+                            <div>{{ item.total_price }}</div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+    <div class="container" v-if="Type == 2">
+      <table class="table" style="width: 100%">
+        <div id="cateorder">
+          <button @click="setostatusValue('1')">即將開始</button>
 
-        <button @click="setostatusValue('7')">已取消</button>
+          <button @click="setostatusValue('7')">已取消</button>
 
-        <button @click="setostatusValue('6')">已結束</button>
-      </div>
-      <thead>
-        <h3>我報名的活動</h3>
-      </thead>
-      <tbody>
-        <template v-for="item in GetOrders" :key="item.id">
-          <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-            <td style="text-align: left">
-              <div>活動名稱：{{ orderItem.product_name }}</div>
-              <div>活動時間:{{ formatOrderTime(item.close_time) }}</div>
-              <div>活動地點：{{ item.recipient_address }}</div>
-              <div>活動講師:{{ item.receiver }}</div>
-              <div>費用：{{ orderItem.per_price }}</div>
-            </td>
-            <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
-          </tr>
-          <tr>
-            <td colspan="8">
-              <table class="table" style="text-align: left; border: 2px solid black"
-                v-show="expandedItems.includes(item.id)">
-                <tr style="justify-content: center">
-                  <td colspan="8">
-                    <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
-                      <tr>
-                        <td style="padding: 10px 200px 20px 20px; width: 500px">
-                          <h3>訂單詳請</h3>
-                          <div>
-                            購買時間：{{ formatOrderTime(item.ordertime) }}
-                          </div>
-                          <div>訂單編號:{{ item.id }}</div>
-                          <div>發票編號{{ item.receipt }}</div>
-                          <button v-if="item.order_status_Id !== 7 &&
-                            item.order_status_Id !== 6
-                            " @click="setcancelIdValue(item.id)" class="btn btn-success">
-                            申請取消
-                          </button>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
-  </div>
-  <div class="container" v-if="Type == 3">
-    <table class="table" style="width: 100%">
-      <div id="cateorder" class="container">
-        <button @click="setostatusValue('1')">即將開始</button>
+          <button @click="setostatusValue('6')">已結束</button>
+        </div>
+        <thead>
+          <h3>我報名的活動</h3>
+        </thead>
+        <tbody>
+          <template v-for="item in GetOrders" :key="item.id">
+            <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+              <td style="text-align: left" @click="toggleDetails(item.id)">
+                <div>活動名稱：{{ orderItem.product_name }}</div>
+                <div>活動時間:{{ formatOrderTime(item.close_time) }}</div>
+                <div>活動地點：{{ item.recipient_address }}</div>
+                <div>活動講師:{{ item.receiver }}</div>
+                <div>費用：{{ orderItem.per_price }}</div>
+              </td>
+              <!-- <td><button @click="toggleDetails(item.id)">收合/展開</button></td> -->
+            </tr>
+            <tr>
+              <td colspan="8">
+                <table class="table" style="text-align: left; border: 2px solid black"
+                  v-show="expandedItems.includes(item.id)">
+                  <tr style="justify-content: center">
+                    <td colspan="8">
+                      <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
+                        <tr>
+                          <td style="padding: 10px 200px 20px 20px; width: 500px">
+                            <h3>訂單詳請</h3>
+                            <div>
+                              購買時間：{{ formatOrderTime(item.ordertime) }}
+                            </div>
+                            <div>訂單編號:{{ item.id }}</div>
+                            <div>發票編號{{ item.receipt }}</div>
+                            <button v-if="item.order_status_Id !== 7 &&
+                              item.order_status_Id !== 6
+                              " @click="setcancelIdValue(item.id)" class="btn btn-success">
+                              申請取消
+                            </button>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+    <div class="container" v-if="Type == 3">
+      <table class="table" style="width: 100%">
+        <div id="cateorder">
+          <button @click="setostatusValue('1')">即將開始</button>
 
-        <button @click="setostatusValue('7')">已取消</button>
+          <button @click="setostatusValue('7')">已取消</button>
 
-        <button @click="setostatusValue('6')">已結束</button>
-      </div>
-      <thead>
-        <h3>我報名的課程</h3>
-      </thead>
-      <tbody>
-        <template v-for="item in GetOrders" :key="item.id">
-          <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
-            <td style="text-align: left">
-              <div>課程名稱：{{ orderItem.product_name }}</div>
-              <div>課程時間:{{ formatOrderTime(item.close_time) }}</div>
-              <div>課程地點：{{ item.recipient_address }}</div>
-              <div>課程講師:{{ item.receiver }}</div>
-            </td>
-            <td><button @click="toggleDetails(item.id)">收合/展開</button></td>
-          </tr>
-          <tr>
-            <td colspan="8">
-              <table class="table" style="text-align: left; border: 2px solid black"
-                v-show="expandedItems.includes(item.id)">
-                <tr style="justify-content: center">
-                  <td colspan="8">
-                    <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
-                      <tr>
-                        <td style="padding: 10px 200px 20px 20px; width: 500px">
-                          <h3>訂單詳請</h3>
-                          <div>
-                            購買時間：{{ formatOrderTime(item.ordertime) }}
-                          </div>
-                          <div>訂單編號:{{ item.id }}</div>
-                          <button v-if="item.order_status_Id !== 7 &&
-                            item.order_status_Id !== 6
-                            " @click="setcancelcourseIdValue(item.id)" class="btn btn-success">
-                            申請取消
-                          </button>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
-  </div>
+          <button @click="setostatusValue('6')">已結束</button>
+        </div>
+        <thead>
+          <h3>我報名的課程</h3>
+        </thead>
+        <tbody>
+          <template v-for="item in GetOrders" :key="item.id">
+            <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+              <td style="text-align: left" @click="toggleDetails(item.id)">
+                <div>課程名稱：{{ orderItem.product_name }}</div>
+                <div>課程時間:{{ formatOrderTime(item.close_time) }}</div>
+                <div>課程地點：{{ item.recipient_address }}</div>
+                <div>課程講師:{{ item.receiver }}</div>
+              </td>
+              <!-- <td><button @click="toggleDetails(item.id)">收合/展開</button></td> -->
+            </tr>
+            <tr>
+              <td colspan="8">
+                <table class="table" style="text-align: left; border: 2px solid black"
+                  v-show="expandedItems.includes(item.id)">
+                  <tr style="justify-content: center">
+                    <td colspan="8">
+                      <table class="" style="text-align: left" v-show="expandedItems.includes(item.id)">
+                        <tr>
+                          <td style="padding: 10px 200px 20px 20px; width: 500px">
+                            <h3>訂單詳請</h3>
+                            <div>
+                              購買時間：{{ formatOrderTime(item.ordertime) }}
+                            </div>
+                            <div>訂單編號:{{ item.id }}</div>
+                            <button v-if="item.order_status_Id !== 7 &&
+                              item.order_status_Id !== 6
+                              " @click="setcancelcourseIdValue(item.id)" class="btn btn-success">
+                              申請取消
+                            </button>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
 
-  <template v-for="item in GetOrders" :key="item.id">
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label class="form-label">退款帳號:</label>
-              <input type="text" class="form-control" v-model="returnaccount" maxlength="16" />
+    <template v-for="item in GetOrders" :key="item.id">
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="form-group">
-              <label class="form-label">退貨原因:</label>
-              <select class="form-control" v-model="returnreason">
-                <option v-for="reason in reReason" :key="reason.id" :value="reason.id">
-                  {{ reason.退貨理由 }}
-                </option>
-              </select>
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="form-label">退款帳號:</label>
+                <input type="text" class="form-control" v-model="returnaccount" maxlength="16" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">退貨原因:</label>
+                <select class="form-control" v-model="returnreason">
+                  <option v-for="reason in reReason" :key="reason.id" :value="reason.id">
+                    {{ reason.退貨理由 }}
+                  </option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
-              關閉
-            </button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
-              確定
-            </button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
+                關閉
+              </button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
+                確定
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </template>
+    </template>
 
-  <template v-for="item in GetOrders" :key="item.id">
-    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">評分</h5>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label class="form-label">分數:</label>
-              <!-- <input type="text" class="form-control" v-model="commentstar" /> -->
-              <input class="form-range" type="range" min="0" max="5" step="1" v-model="commentstar"
-                @input="handleInput()" />
+    <template v-for="item in GetOrders" :key="item.id">
+      <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">評分</h5>
             </div>
-            <div class="form-group">
-              <label class="form-label">評論:</label>
-              <textarea class="form-control" v-model="commentdescription"></textarea>
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="form-label">分數:</label>
+                <!-- <input type="text" class="form-control" v-model="commentstar" /> -->
+                <input class="form-range" type="range" min="0" max="5" step="1" v-model="commentstar"
+                  @input="handleInput()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">評論:</label>
+                <textarea class="form-control" v-model="commentdescription"></textarea>
+              </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="returncomment()">
-              關閉
-            </button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="comment()">
-              確定
-            </button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="returncomment()">
+                關閉
+              </button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="comment()">
+                確定
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </template>
+    </template>
 
-  <div class="chat" style="display: none;">
+    <div class="chat" style="display: none;">
+      <h4>聊天室</h4>
+      <div id="showcon" class="showcon">
+        <div>
+          <div v-for="message in messages" :key="message.id">
+            <ul :class="{ 'align-left': message.userName === 'min', 'align-right': message.userName !== 'min' }">
+              <li>{{
+                message.userName }} ：{{ message.message }}</li>
+            </ul>
+          </div>
+          <div class="p-2 chat">
+          </div>
+        </div>
+      </div>
+      <!-- <input v-model="userName" placeholder="使用者名稱"> -->
+      <input id="msg" v-model="messageText" placeholder="訊息">
+      <button @click="sendMessage()">送出</button>
+    </div>
+    <button class="chat2" @click="toggleContainer();"><i class="bi bi-chat-right-dots">客服</i></button>
     <!-- <div class="showcon" id="showcon">
         <div class="container" id="app">
           <div class="row">
@@ -442,26 +473,8 @@
       </div>
       <input type="text" id="msg" />
       <button @click="send()">發送</button> -->
-    <div id="showcon" class="showcon">
-      <div class="container">
-        <div v-for="message in messages" :key="message.id">
-          <ul>
-            <li :class="{ 'align-left': message.userName === 'min', 'align-right': message.userName !== 'min' }">{{
-              message.userName }} 說：{{ message.message }}</li>
-          </ul>
-        </div>
-        <div class="p-2 chat">
-        </div>
-      </div>
-    </div>
-    <!-- <input v-model="userName" placeholder="使用者名稱"> -->
-    <input id="msg" v-model="messageText" placeholder="訊息">
-    <button @click="sendMessage()">送出</button>
-  </div>
-  <button class="chat2" @click="toggleContainer(); connect();"><i class="bi bi-chat-right-dots">客服</i></button>
 
-
-  <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+    <!-- <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
       <div class="modal-content">
@@ -486,6 +499,7 @@
       </div>
     </div>
   </div> -->
+  </div>
 </template>
 <script setup>
 //import OrdernavBar from "@/components/Order/OrdernavBar.vue";
@@ -901,7 +915,7 @@ onMounted(() => {
   activityclose();
   loadGetOrders();
   fetchReturnReasons();
-  //connect();
+  connect();
 });
 </script>
 <style scoped>
@@ -932,42 +946,62 @@ onMounted(() => {
 }
 
 #cate>button {
+  border-right: gray solid 2px;
+  border-top: gray solid 2px;
+  border-left: gray solid 2px;
   text-align: center;
-  padding-right: 20px;
-  margin-right: 80px;
+  padding: 0 5px 0 5px;
+  margin: 0 0 0 50px;
   font-size: 30px;
+  border-radius: 10% 10% 0 0;
+}
+
+#cate>button:hover {
+  background-color: rgb(66, 226, 213);
+  color: #ededef;
 }
 
 #cate {
-  background-color: antiquewhite;
+  justify-content: center;
   text-align: center;
   width: 60%;
+  margin: 0 0 0 0px;
 }
 
 #cateorder {
   background-color: antiquewhite;
   text-align: center;
-  width: 60%;
+  width: 40%;
+  border-radius: 15%;
 }
 
 #cateorder>button {
   text-align: center;
   padding-right: 20px;
-  margin-right: 80px;
+  margin: 10px 30px 10px 10px;
   font-size: 30px;
+  border: skyblue solid 2px;
+  border-radius: 10%;
 }
-
+#cateorder>button:hover {
+  background-color: rgb(41, 180, 60);
+  color: #ededef;
+}
 #searchorderout {
-  max-width: 800px;
-  margin: 0 700px;
+  width: 50%;
+  margin: 0 500px 30px;
+  justify-content: center;
+  text-align: center;
+  border: #dfd8cda4 solid 2px;
 }
 
 #searchorder {
   text-align: center;
-  width: 60%;
+  width: 70%;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
+  margin-left: 15px;
 }
 
 #searchorder>input {
@@ -985,7 +1019,7 @@ onMounted(() => {
 
 #srarchdate {
   text-align: center;
-  width: 60%;
+  width: 64%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -994,7 +1028,7 @@ onMounted(() => {
 #srarchdate>input {
   margin: 20px;
   padding: 10px;
-  width: 300px;
+  width: 200px;
 }
 
 .firstTr {
@@ -1078,20 +1112,22 @@ _::-moz-range-track {
   background-color: rgb(149, 236, 149);
   position: fixed;
   bottom: 0;
-  right: 0;
+  right: 200px;
+  border-radius: 5%;
 }
 
 .chat2 {
   width: 200px;
   height: 50px;
   text-align: center;
-  padding: 20px 0;
+  padding: 0 0;
   max-width: 0 auto;
   /* overflow: auto; */
   background-color: rgb(185, 235, 236);
   position: fixed;
   bottom: 0;
   right: 0;
+  border-radius: 5%;
 }
 
 .chat .showcon {
@@ -1101,25 +1137,76 @@ _::-moz-range-track {
   overflow: auto;
   background-color: #fff;
   margin: 0 auto 10px;
+  border-radius: 5%;
 }
 
 #msg {
-  width: 230px;
+  width: 270px;
   height: 40px;
-  margin-bottom: 60px;
+  margin-bottom: 10px;
+  border-radius: 5%;
 }
 
 .chat button {
   width: 50px;
   height: 40px;
   vertical-align: middle;
+  border-radius: 5%;
 }
 
 .align-left {
   text-align: left;
 }
 
+.align-left>li {
+  border-radius: 5px;
+  background-color: rgb(247, 206, 93);
+  padding: 5px;
+  display: inline-block;
+  /* 让气泡宽度根据内容自动调整 */
+  white-space: normal;
+  /* 允许文本换行 */
+  max-width: 80%;
+  /* 可选：限制气泡的最大宽度，以免过宽 */
+  margin: 5px 0;
+  /* 可选：调整气泡之间的垂直间距 */
+}
+
 .align-right {
   text-align: right;
 }
-</style>
+
+.align-right>li {
+  border-radius: 5px;
+  background-color: aquamarine;
+  padding: 5px;
+  display: inline-block;
+  /* 让气泡宽度根据内容自动调整 */
+  white-space: normal;
+  /* 允许文本换行 */
+  max-width: 80%;
+  /* 可选：限制气泡的最大宽度，以免过宽 */
+  margin: 5px 0;
+  /* 可选：调整气泡之间的垂直间距 */
+}
+
+#orderpeopleDetail {
+  justify-content: center;
+  align-items: center;
+}
+
+#orderpeopleDetail>div {
+  padding-bottom: 5px;
+}
+
+.activityordertable {
+  border: #f59b00 solid 2px;
+}
+
+.container {
+  border-top: gray solid 2px;
+  border-left: gray solid 2px;
+  border-right: gray solid 2px;
+  border-radius: 5px;
+  padding-top: 10px;
+}</style>
