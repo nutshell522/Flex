@@ -14,11 +14,11 @@ namespace FlexCoreService.ProductCtrl.Service
             _db = new AppDbContext();
         }
 
-        //public IEnumerable<ProductCardDto> SearchProducts()
-        //{
-        //    var products = _repo.SearchProducts();
-        //    return products;
-        //}
+        public IEnumerable<ProductCardDto> SearchProductByKeyword(string? keyword) 
+        {
+            var products = _repo.SearchProductByKeyword(keyword);
+            return products;
+        }
 
         public IEnumerable<ProductCardDto> SearchProducts(int? salesId, string? categoryName, string? subCategoryName)
         {

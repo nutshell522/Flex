@@ -68,8 +68,8 @@
             <div class="text-center">
               <button
                 type="button"
-                class="form-control btn btn-secondary"
-                style="font-size: 20px"
+                class="form-control btn sizeTableBtn"
+                style="font-size: 15px"
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
                 v-if="productDetail.salesCategoryName !== '配件'"
@@ -115,14 +115,11 @@
                 </div>
               </div>
             </div>
-            <div class="ms-3 text-center">
-              <button
-                class="form-control"
-                style="font-size: 20px"
-                @click="collect"
-              >
+            <div class="ms-5 favoriteBtn">
+              <button style="font-size: 15px" @click="collect">
                 <i class="bi bi-heart" style="color: red" v-if="!like"></i
-                ><i class="bi bi-heart-fill" style="color: red" v-else></i>
+                ><i class="bi bi-heart-fill" style="color: red" v-else></i
+                ><span class="ms-1">收藏</span>
               </button>
             </div>
           </div>
@@ -345,8 +342,16 @@
               <i class="bi bi-chevron-right similarIcon"></i>
             </button>
           </div>
-          <Carousel :items-to-show="4" :wrap-around="true" ref="similarCarousel">
-            <Slide v-for="card in similarProducts" :key="card.productId" class="card text-center">
+          <Carousel
+            :items-to-show="4"
+            :wrap-around="true"
+            ref="similarCarousel"
+          >
+            <Slide
+              v-for="card in similarProducts"
+              :key="card.productId"
+              class="card text-center"
+            >
               <ProductCard :card="card"></ProductCard>
             </Slide>
           </Carousel>
@@ -370,7 +375,15 @@
 
 <script setup>
 import axios from "axios";
-import { computed, onMounted, ref, watch, inject, toRef, defineProps } from "vue";
+import {
+  computed,
+  onMounted,
+  ref,
+  watch,
+  inject,
+  toRef,
+  defineProps,
+} from "vue";
 import { useRouter, useRoute } from "vue-router";
 import ProductCard from "@/components/product/ProductCard.vue";
 import { useProductRoute } from "@/stores/useProductRoute.js";
@@ -399,8 +412,11 @@ const currentIndex = ref(0);
 const visibleCards = ref([]);
 const sizeImg = ref("");
 const sizeTable = ref("");
-const like = ref(false);
+const like = ref();
 //let likeProductName = '';
+//檢查本地儲存是否有登錄信息
+const storedUser = localStorage.getItem("loggedInUser");
+
 const similarCarousel = ref(null);
 
 //輪播自訂切換
@@ -644,57 +660,64 @@ onMounted(() => {
   getImgs();
   getComment();
   getSimilarProducts();
+  isFavorite();
 });
 
-//const likeProduct = ref(null);
 function collect() {
-  //檢查本地儲存是否有登錄信息
-  const storedUser = localStorage.getItem("loggedInUser");
   if (storedUser) {
-    //alert('天阿!好喜翻呀~~~');
     const userObject = JSON.parse(storedUser);
     like.value = !like.value;
+    const data = {
+      MemberId: userObject.memberId,
+      ProductId: `${route.params.productId}`,
+    };
     if (like.value) {
-      //alert('我喜翻');
-      //點選喜歡，把喜歡存到localstorge
-      // const likeProduct = JSON.parse(localStorage.getItem('likeProduct')) || [];
-      // likeProduct.push(likeProductName);
-      // localStorage.setItem('likeProduct', JSON.stringify(likeProduct));
-
       //呼叫api(memberId、productId)存進去
-      const baseAddress = "https://localhost:7183/api";
-      const uri = `${baseAddress}/Users/SaveFavorites`;
-
-      const data = {
-        MemberId: userObject.memberId,
-        ProductId: `${route.params.productId}`,
-      };
-
       axios
-        .post(uri, data)
-        .then((res) => {
-          //alert(res.data);
-          console.log(res.data);
+        .post(`${baseAddress}api/Users/SaveFavorites`, data)
+        .then((response) => {
+          alert(response.data);
         })
-        .catch((err) => {
-          err;
+        .catch((error) => {
+          alert(error);
         });
     } else {
-      //alert('我不喜翻');
-      //點選不喜歡，把它從localstorege移除
-      //localStorage.removeItem('likeProduct');
-      // const likeProduct = JSON.parse(localStorage.getItem('likeProduct')) || [];
-      // const updatedLikeProduct = likeProduct.filter(
-      //   (product) => product !== likeProductName
-      // );
-      // localStorage.setItem('likeProduct', JSON.stringify(updatedLikeProduct));
+      axios
+        .delete(`${baseAddress}api/Users/DeleteFavorite`, { data: data })
+        .then((response) => {
+          alert(response.data);
+        })
+        .catch((error) => {
+          alert(error);
+        });
     }
   } else {
     alert("請先登入囉!");
   }
 }
+
+//檢查有沒有在最愛裡，有的話要給like綁訂定true
+const isFavorite = async () => {
+  if (storedUser) {
+    await axios
+      .get(
+        `${baseAddress}api/Users/IsFavorite?memberId=${
+          JSON.parse(storedUser).memberId
+        }&productId=${route.params.productId}`
+      )
+      .then((response) => {
+        like.value = response.data;
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  } else {
+    like.value = false;
+  }
+};
+
 const props = defineProps({
-  updateCartFunction: Function
+  updateCartFunction: Function,
 });
 const joinCartItemEventHandler = async () => {
   const storedUser = localStorage.getItem("loggedInUser");
@@ -708,8 +731,8 @@ const joinCartItemEventHandler = async () => {
         MemberId: parseInt(userObject.memberId),
         CartItem: {
           ProductId: parseInt(productId),
-          Qty: parseInt(Qty)
-        }
+          Qty: parseInt(Qty),
+        },
       };
       console.log(requestData);
       await axios
@@ -720,11 +743,10 @@ const joinCartItemEventHandler = async () => {
           }
         })
         .catch((err) => {
-          alert('加入購物車錯誤', err);
+          alert("加入購物車錯誤", err);
         });
-    }
-    else {
-      alert('請選擇尺寸');
+    } else {
+      alert("請選擇尺寸");
     }
   } else {
     alert("請先登入囉!");
@@ -899,5 +921,15 @@ const joinCartItemEventHandler = async () => {
   background-color: white;
   color: #acaba9;
   border: 1px dotted #acaba9;
+}
+
+.sizeTableBtn {
+  border: none;
+}
+
+.favoriteBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

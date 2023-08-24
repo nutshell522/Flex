@@ -28,6 +28,22 @@ namespace FlexCoreService.Controllers
             _repo = repo;
         }
 
+        [HttpGet("SearchProductByKeyword")]
+        public async Task<ActionResult<IEnumerable<ProductCardVM>>> SearchProductByKeyword(string? keyword)
+        {
+            var result=new List<ProductCardVM>();
+
+            if (string.IsNullOrEmpty(keyword))
+            {
+                return Ok(result);
+            }
+
+            var service = new ProductService(_repo);
+            result = service.SearchProductByKeyword(keyword).Select(p=>p.ToCardVM()).ToList();
+            return Ok(result);
+
+        }
+
         // GET: api/Products/
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetProducts(string? categoryPath, string? categoryName = null, string? subCategoryName = null,int? minPrice=null,int? maxPrice=null,int page=1)
@@ -52,11 +68,8 @@ namespace FlexCoreService.Controllers
             }
 
             var server = new ProductService(_repo);
-            var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
-            if (products.Count == 0)
-            {
-                return BadRequest();
-            }
+            var products = new List<ProductCardVM>();
+            products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
 
             if (minPrice > 0 && maxPrice > 0 && minPrice < maxPrice)
             {
@@ -73,48 +86,6 @@ namespace FlexCoreService.Controllers
 
             return Ok(products);
         }
-
-        // GET: api/Products/Men
-        //[HttpGet("men")]
-        //public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetMenProducts(string? categoryName = null, string? subCategoryName = null)
-        //{
-        //    int salesId = 1;
-        //    var server = new ProductService(_repo);
-        //    var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
-        //    if (products.Count == 0)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    return Ok(products);
-        //}
-
-        // GET: api/Products/Women
-        //[HttpGet("women")]
-        //public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetWomenProducts(string? categoryName = null, string? subCategoryName = null)
-        //{
-        //    int salesId = 2;
-        //    var server = new ProductService(_repo);
-        //    var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
-        //    if (products.Count == 0)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    return Ok(products);
-        //}
-
-        // GET: api/Products/Kid
-        //[HttpGet("kid")]
-        //public async Task<ActionResult<IEnumerable<ProductCardVM>>> GetKidProducts(string? categoryName = null, string? subCategoryName = null)
-        //{
-        //    int salesId = 3;
-        //    var server = new ProductService(_repo);
-        //    var products = server.SearchProducts(salesId, categoryName, subCategoryName).Select(p => p.ToCardVM()).ToList();
-        //    if (products.Count == 0)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    return Ok(products);
-        //}
 
         //GET: api/Products/Detial/productId
         [HttpGet("Detail/{productId}")]
