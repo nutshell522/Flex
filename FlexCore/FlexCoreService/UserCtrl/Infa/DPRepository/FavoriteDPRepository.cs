@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using FlexCoreService.ProductCtrl.Exts;
 using FlexCoreService.ProductCtrl.Models.Dtos;
 using FlexCoreService.UserCtrl.Interface;
 using Microsoft.Data.SqlClient;
@@ -14,6 +15,16 @@ namespace FlexCoreService.UserCtrl.Infa.DPRepository
         {
             _configuration = configuration;
             _connStr = _configuration.GetConnectionString("AppDbContext");
+        }
+
+        public void DeleteFavoriteProduct(int memberId, string productId)
+        {
+
+            string sql = @"delete from Favorites 
+where fk_memberId=@memberId and fk_productId=@productId";
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            dbConnection.Execute(sql, new { memberId = memberId, productId = productId });
+           
         }
 
         public IEnumerable<ProductCardDto> GetFavorites(int memberId)
@@ -37,5 +48,26 @@ having p.Status=0 and p.LogOut=0 and f.fk_memberId=@memberId " +
             return result;
         }
 
+        public bool GetIsFavorite(int memberId, string productId)
+        {
+            string sql = @"select case when exists(
+select 1 from Favorites as f 
+where f.fk_memberId=@memberId and f.fk_productId=@productId)
+then 'true' else 'false'
+end as result";
+
+            using IDbConnection dbConnection=new SqlConnection(_connStr);
+            var result = dbConnection.QueryFirstOrDefault<string>(sql, new { memberId = memberId, productId = productId });
+
+            return result=="true"?true:false;
+        }
+
+        public void SaveFavoritesProduct(int memberId, string productId)
+        {
+            string sql = @"insert Favorites(fk_memberId,fk_productId) values 
+(@memberId,@productId)";
+            using IDbConnection dbConnection=new SqlConnection(_connStr);
+            dbConnection.Execute(sql, new {memberId= memberId, productId= productId});
+        }
     }
 }

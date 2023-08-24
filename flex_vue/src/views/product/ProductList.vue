@@ -1,15 +1,22 @@
 <template>
   <div class="container-body">
     <ul class="d-flex flex-wrap">
-      <li v-for="card in cards" :key="card.productId" class="card text-center">
+      <li
+        v-if="cards.length != 0"
+        v-for="card in cards"
+        :key="card.productId"
+        class="card text-center"
+      >
         <ProductCard :card="card"></ProductCard>
       </li>
+      <img :src="baseAddress + 'Public/Img/no_data.png'" v-else />
     </ul>
-    <div class="d-flex" style="justify-content: center">
+    <div class="d-flex mb-4" style="justify-content: center">
       <button
         @click="loadMoreProducts"
         class="form-control btn btn-secondary"
         style="width: 150px"
+        v-if="cards.length % 16 == 0 && cards.length != 0"
       >
         載入更多...
       </button>
