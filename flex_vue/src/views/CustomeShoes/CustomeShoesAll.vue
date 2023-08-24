@@ -15,11 +15,9 @@
   const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
   
   const cards = ref([]);
-  
-  //監聽選擇的分類資料，一旦資料變動，重新加載 cards
-  //根據選擇的分類資料重新叫用API
   const route = useRoute();
-  
+  const shoesCategoryId = ref(null);
+
   // 獲取當前的路由參數
   //const id = route.params.id;
   
@@ -27,7 +25,9 @@
   //const query = route.query;
   
   watch(
-    () => route.params, //route.query,
+    [
+    () => route.query,
+    ], //route.query,
     () => {
       loadShoesProducts();
     }
@@ -35,12 +35,13 @@
   
   const loadShoesProducts = async () => {
     let url;
-    if (route.params.shoescategoryName) {
-      url = `${baseAddress}api/ShoesCategory/customeshoes?shoescategoryName=${route.params.shoescategoryName}`;
+
+    if (route.query.shoesCategoryId) {
+      url = `${baseAddress}api/CustomeShoes?shoescategoryId=${route.query.shoesCategoryId}`;
     }  else {
       url = `${baseAddress}api/CustomeShoes/GetAll`;
     }
-    console.log(url);
+    console.log(route.query);
     await axios
       .get(url)
       .then((response) => {
@@ -51,6 +52,7 @@
         alert(error);
       });
   };
+
   onMounted(() => {
     loadShoesProducts();
   });

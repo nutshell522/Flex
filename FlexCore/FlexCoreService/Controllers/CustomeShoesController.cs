@@ -45,16 +45,19 @@ namespace FlexCoreService.Controllers
 			return shoes;
 		}
 
-		// GET: api/CustomizedShoesPo
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<CustomizedShoesPo>>> GetShoes()
-		{
-			if (_db.CustomizedShoesPos == null)
-			{
-				return NotFound();
-			}
-			return await _db.CustomizedShoesPos.ToListAsync();
-		}
+        // Get: api/CustomizedShoesPo
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CustomeShoesVM>>> SearchCustomeShoesCategory(int shoescategoryId)
+        {
+            var server = new CustomeShoesService(_repo);
+            var shoes = server.SearchCustomeShoesCategory(shoescategoryId).Select(p => p.ToCardVM()).ToList();
+            if (shoes.Count == 0)
+            {
+                return BadRequest();
+            }
+            return Ok(shoes);
+        }
+
 
         // GET: api/CustomizedShoesPo/5
         [HttpGet("shoes/Customization/{shoesProductId}")]

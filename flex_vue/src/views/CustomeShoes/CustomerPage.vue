@@ -88,41 +88,41 @@
                       {{ size.sizeName }}
                     </option>
                   </select>
+                  <label class="ms-2">請先選擇尺寸</label>
                 </div>
-                  <div class="d-flex me-3 col-3">
-                    <span
-                      class="col-3"
-                      style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                      "
-                      >數量:</span>
-                  <div>
-                    <button
-                      @click="decrementProductQty()"
-                      class="increaseAndDecrease"
-                    >
-                      <i class="bi bi-dash-lg"></i>
-                    </button>
-                    <input
-                      type="text"
-                      name="productQty"
-                      id="productQty"
-                      class="form-control text-center"
-                      style="border-radius: 0"
-                      v-model="buyQty"
-                      @input="handleQyt"
-                    />
-                    <button
-                      @click="incrementProductQty()"
-                      class="increaseAndDecrease"
-                    >
-                      <i class="bi bi-plus-lg"></i>
-                    </button>
-                  </div>
+                  <div class="row d-flex me-3 col-8">
+                      <span
+                        class="col-3"
+                        style="
+                          display: flex;
+                          align-items: center;
+                        "
+                        >數量:</span>
+                    <div class="">
+                      <button
+                        @click="decrementProductQty()"
+                        class="increaseAndDecrease"
+                      >
+                        <i class="bi bi-dash-lg"></i>
+                      </button>
+                      <input
+                        type="text"
+                        name="productQty"
+                        id="productQty"
+                        class="form-control text-center"
+                        style="border-radius: 0"
+                        v-model="buyQty"
+                        @input="handleQyt"
+                      />
+                      <button
+                        @click="incrementProductQty()"
+                        class="increaseAndDecrease"
+                      >
+                        <i class="bi bi-plus-lg"></i>
+                      </button>
+                    </div>
                  </div>
-                  <div class="col-6">
+                  <div class="col-4">
                     <div class="form-control">
                       <span>總金額${{ totalPrice }}</span>
                     </div>
@@ -379,6 +379,7 @@ const shoesProductId = route.params.shoesProductId;
 
 const handleSizeChange = () => {
   console.log("Selected size changed:", selectedSize.value);
+  agreeToCreateOrder.value = false;
 };
 
 
@@ -457,6 +458,7 @@ let incrementProductQty = () => {
   }
 };
 
+
 //塞入資料到資料庫
 const orderUri = `${baseAddress}api/CustomeShoes/EnterCustomerChoose`;
 const optionsUri = `${baseAddress}api/CustomeShoes/ChoseAllOptions`;
@@ -472,7 +474,15 @@ function intoOrder() {
     //todo檢查有沒有選擇size
     errors.value = [];
     errors.value.push("Size還未選擇，請先選擇");
-  } else {
+    agreeToCreateOrder.value = false;
+    return;}
+
+  if (!agreeToCreateOrder.value) {
+    // 如果勾選框未被選中，不執行建立訂單操作
+    return;
+  }
+
+   else {
     errors.value = [];
     // orderData.shoesOrderId = shoesOrderId;
     orderData.fk_ShoesSizeId = selectedSize.value.sizeId;
