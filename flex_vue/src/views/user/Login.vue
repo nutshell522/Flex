@@ -31,7 +31,7 @@
         placeholder="手機號碼/帳號/Email"
       />
     </div>
-    <div class="from-group mb-3" v-if="validated">
+    <div class="from-group mb-3 pwdInput" v-if="validated">
       <label for="password" class="mb-1">密碼</label>
       <input
         :type="eye1 ? 'text' : 'password'"
@@ -42,11 +42,11 @@
         placeholder="輸入6-10碼英數字"
         maxlength="10"
       />
-      <div v-if="validated" @click="openEye1">
+      <div class="eye" v-if="validated" @click="openEye1">
         <i class="bi" :class="eye1 ? 'bi-eye' : 'bi-eye-slash'"></i>
       </div>
     </div>
-    <div class="from-group mb-3" v-if="unValidated">
+    <div class="from-group mb-3 pwdInput" v-if="unValidated">
       <label for="password" class="mb-1">確認密碼</label>
       <input
         :type="eye2 ? 'text' : 'password'"
@@ -57,7 +57,7 @@
         placeholder="請再次輸入密碼"
         maxlength="10"
       />
-      <div v-if="validated" @click="openEye2">
+      <div class="eye" v-if="validated" @click="openEye2">
         <i class="bi" :class="eye2 ? 'bi-eye' : 'bi-eye-slash'"></i>
       </div>
     </div>
@@ -377,6 +377,46 @@ async function Login2(googleLoginUserData) {
   }
 }
 
+// async function Login2(googleLoginUserData) {
+//   const userDatas = {
+//     account: googleLoginUserData.email,
+//     EncryptedPassword: googleLoginUserData.email,
+//   };
+
+//   try {
+//     const res = await axios.post(uri, userDatas);
+
+//     const jsonData = res.data;
+//     const userPassword = jsonData.find(
+//       (claim) => claim.Type === 'UserPassword'
+//     );
+
+//     const userEmail = jsonData.find((claim) => claim.Type === 'UserPassword');
+//     const userName = jsonData.find((claim) => claim.Type === 'FullName');
+//     const userId = jsonData.find((claim) => claim.Type === 'MemberId');
+//     const userPhoto = jsonData.find((claim) => claim.Type === 'MemberImg');
+
+//     // 一般登入者資料包成物件
+//     const memberInfo = {
+//       userEmail: userEmail.Value,
+//       username: userName.Value,
+//       memberId: userId.Value,
+//       memberPhoto: userPhoto.Value,
+//     };
+
+//     if (memberInfo) {
+//       setMemberUsername(memberInfo);
+//     }
+//     handleSuccessfulLogin(memberInfo);
+//     localStorage.setItem('userAcc', userEmail.Value);
+
+//     return 'loginSuccess';
+//   } catch (err) {
+//     console.log('取得google登入這資訊失敗', err);
+//     return 'userNotFound';
+//   }
+// }
+
 // 將用戶信息轉成字串儲存到本地存儲中
 function handleSuccessfulLogin(memberInfo) {
   localStorage.setItem('loggedInUser', JSON.stringify(memberInfo));
@@ -454,6 +494,18 @@ function handleGoogleLoginUserData(googleLoginUserData) {
             console.log('使用者註冊成功');
 
             Login2(googleLoginUserData);
+            //alert('為什麼要延遲啦');
+            //todo修改
+            Swal.fire({
+              icon: 'success',
+              title: 'Flex歡迎您~~',
+            });
+            setTimeout(() => {
+              Login2(googleLoginUserData);
+              alert('已經延遲一些時間');
+              window.location.href = '/';
+            }, 5000); // 2000 毫秒，即 2 秒
+
             window.location.href = '/';
           })
           .catch((err) => {
@@ -469,7 +521,6 @@ function handleGoogleLoginUserData(googleLoginUserData) {
 const loginBox = ref(true);
 const forgetPwdSetPwd = ref(false);
 userAcc.value = localStorage.getItem('userAcc');
-//console.log('userAcc', userAcc.value);
 
 function forgetPwdClick() {
   loginBox.value = false;
@@ -499,6 +550,14 @@ function openEye2() {
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap');
+.pwdInput {
+  position: relative;
+}
+.eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+}
 .loginBox {
   width: 23%;
   justify-content: center;

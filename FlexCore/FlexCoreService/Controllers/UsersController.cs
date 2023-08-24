@@ -19,6 +19,7 @@ using FlexCoreService.ProductCtrl.Models.Dtos;
 using FlexCoreService.UserCtrl.Interface;
 using FlexCoreService.UserCtrl.Service;
 using FlexCoreService.UserCtrl.Infa;
+//using BCrypt.Net;
 
 namespace FlexCoreService.Controllers
 {
@@ -115,6 +116,10 @@ namespace FlexCoreService.Controllers
 
             var userPassword = string.Empty;
 
+            if (userData == null && value.EncryptedPassword==null)
+            {
+                return Ok(null);
+            }
 
             if (userData == null)
             {
@@ -288,7 +293,7 @@ namespace FlexCoreService.Controllers
                     MemberImg img = new MemberImg();
                     img.fk_memberId = id;
 
-                    string targetDirectory = @"D:\FlexFrontend\FlexFrontendNew\flex_vue\public\imgs";
+                    string targetDirectory = @"~\flex_vue\public\imgs";
                     string imagePath = Path.Combine(targetDirectory, image.FileName);
 
                     using (var stream = new FileStream(imagePath, FileMode.Create))
