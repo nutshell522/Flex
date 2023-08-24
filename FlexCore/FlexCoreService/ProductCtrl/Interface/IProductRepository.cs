@@ -18,6 +18,6 @@ namespace FlexCoreService.ProductCtrl.Interface
         CategoryDto GetProductCategories(string productId);
 
         IEnumerable<ProductCardDto> GetHotSales(bool isNewProduct);
-        IEnumerable<ProductCardDto> SearchProductByKeyword(string? keyword);
+        IEnumerable<ProductCardDto> SearchProductByKeyword(string? keyword, int? salesId);
     }
 }

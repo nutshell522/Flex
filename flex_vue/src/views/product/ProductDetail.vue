@@ -389,6 +389,7 @@ import ProductCard from "@/components/product/ProductCard.vue";
 import { useProductRoute } from "@/stores/useProductRoute.js";
 import { Carousel, Slide } from "vue3-carousel";
 import navBar from "@/components/home/navBar.vue";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
@@ -413,9 +414,30 @@ const visibleCards = ref([]);
 const sizeImg = ref("");
 const sizeTable = ref("");
 const like = ref();
+const router = useRouter();
 //let likeProductName = '';
 //檢查本地儲存是否有登錄信息
 const storedUser = localStorage.getItem("loggedInUser");
+
+function redirectToStoredPath() {
+  const loggedInUser = localStorage.getItem("loggedInUser");
+  if (loggedInUser == null || loggedInUser == undefined) {
+    const localStorageKey = "originalRoute";
+    localStorage.setItem(localStorageKey, route.path);
+  }
+}
+
+//sweetalert樣式
+const Toast = Swal.mixin({
+  toast: true,
+  position: "bottom-end",
+  showConfirmButton: false,
+  timer: 3000,
+  onOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
+});
 
 const similarCarousel = ref(null);
 
@@ -651,6 +673,7 @@ watch(
       getImgs();
       getComment();
       getSimilarProducts();
+      redirectToStoredPath();
     }
   }
 );
@@ -661,6 +684,7 @@ onMounted(() => {
   getComment();
   getSimilarProducts();
   isFavorite();
+  redirectToStoredPath();
 });
 
 function collect() {
@@ -676,23 +700,46 @@ function collect() {
       axios
         .post(`${baseAddress}api/Users/SaveFavorites`, data)
         .then((response) => {
-          alert(response.data);
+          Toast.fire({
+            icon: "success",
+            title: response.data,
+          });
         })
         .catch((error) => {
-          alert(error);
+          Toast.fire({
+            icon: "success",
+            title: response.data,
+          });
         });
     } else {
       axios
         .delete(`${baseAddress}api/Users/DeleteFavorite`, { data: data })
         .then((response) => {
-          alert(response.data);
+          Toast.fire({
+            icon: "success",
+            title: response.data,
+          });
         })
         .catch((error) => {
-          alert(error);
+          Toast.fire({
+            icon: "success",
+            title: response.data,
+          });
         });
     }
   } else {
-    alert("請先登入囉!");
+    Swal.fire({
+      title: "登入",
+      text: "是否前往登入頁面?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "確認",
+      cancelButtonText: "取消",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push("/login");
+      }
+    });
   }
 }
 
@@ -740,16 +787,34 @@ const joinCartItemEventHandler = async () => {
         .then((response) => {
           if (props.updateCartFunction) {
             props.updateCartFunction();
+            Toast.fire({
+              icon: "success",
+              title: "已加入購物車",
+            });
           }
         })
         .catch((err) => {
           alert("加入購物車錯誤", err);
         });
     } else {
-      alert("請選擇尺寸");
+      Swal.fire({
+        icon: "warning",
+        title: "請選擇尺寸",
+      });
     }
   } else {
-    alert("請先登入囉!");
+    Swal.fire({
+      title: "登入",
+      text: "是否前往登入頁面?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "確認",
+      cancelButtonText: "取消",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push("/login");
+      }
+    });
   }
 };
 </script>

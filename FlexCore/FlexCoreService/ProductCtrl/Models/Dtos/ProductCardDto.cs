@@ -11,5 +11,10 @@
         public string? ProductCategoryName { get; set; }
         public string? ProductSubCategoryName { get; set; }
         public string? FirstImgPath { get; set; }
+        public bool IsShow
+        {
+            get { return true; }
+  
+        }
     }
 }
