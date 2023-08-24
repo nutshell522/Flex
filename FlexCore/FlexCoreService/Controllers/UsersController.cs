@@ -119,7 +119,7 @@ namespace FlexCoreService.Controllers
             if (userData == null)
             {
                 //欄位或帳號驗證失敗
-                return Ok(null);
+                return StatusCode(401);
             }
             else
             {

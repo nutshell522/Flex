@@ -14,13 +14,11 @@
         <span v-for="error in errors" class="text-danger">{{ error }}</span>
       </ul>
     </div>
-    <!-- Loading -->
     <div class="text-center" v-if="loading">
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <!-- 欄位 -->
     <div class="from-group mb-3">
       <label for="account" class="mb-1" v-if="accInput">帳號</label>
       <input
@@ -108,7 +106,6 @@
         placeholder="ex.OO市OO區OO路O號O樓"
       />
     </div>
-    <!-- 按鈕 -->
     <div class="from-group mb-3">
       <button
         type="submit"
@@ -127,7 +124,6 @@
       >
         登入
       </button>
-      <!-- 我不是機器人 -->
       <GoogleReCaptchaV2
         class="from-group mb-3 reCaptchaV2"
         v-if="unRegistered"
@@ -160,9 +156,7 @@
       <a href="#" class="underline">隱私權及網站使用條款</a>
     </div>
   </div>
-  <!-- 註冊請收驗證信 -->
   <register v-if="registercheck"></register>
-  <!-- 忘記密碼請收驗證信 -->
   <forgetPwdAndSetPwd
     v-if="forgetPwdSetPwd"
     :email="email"
@@ -199,7 +193,6 @@ const userAcc = ref(null);
 const loggedInUser = ref(null);
 
 onMounted(() => {
-  //檢查本地儲存是否有登錄信息
   const storedUser = localStorage.getItem('loggedInUser');
 
   if (storedUser) {
@@ -214,7 +207,6 @@ onMounted(() => {
 });
 
 const errors = ref([]);
-const userData = ref([]);
 const accInput = ref(true);
 const validated = ref(false);
 const loading = ref(false);
@@ -246,10 +238,8 @@ const uri = `${baseAddress}api/Users/Login`;
 var loginData = {};
 
 function ValidatedIdentity() {
-  //存入帳號
   localStorage.setItem('userAcc', account.value);
 
-  //loading.value = true;
   if (account.value === '') {
     errors.value = [];
     loading.value = false;
@@ -262,9 +252,8 @@ function ValidatedIdentity() {
     axios
       .post(uri, loginData)
       .then((res) => {
-        userData.value = res.data;
         //已註冊
-        if (userData.value == account.value) {
+        if (res.data == account.value) {
           validated.value = true;
           accInput.value = false;
           registered.value = false;
@@ -287,7 +276,6 @@ function ValidatedIdentity() {
           unRegistered.value = true;
 
           //todo驗證帳號是否唯一
-          //todo寄信
         }
       })
       .catch((err) => {
@@ -305,7 +293,6 @@ function prePage() {
 function Login() {
   //todo是否與資料庫的密碼相符
   loginData.EncryptedPassword = password.value;
-
   //未填寫密碼
   if (password.value === '') {
     errors.value = [];
@@ -351,6 +338,43 @@ function Login() {
       console.error(err);
       //todo錯誤累計三次
     });
+}
+
+async function Login2(googleLoginUserData) {
+  const userDatas = {
+    account: googleLoginUserData.email,
+    EncryptedPassword: googleLoginUserData.email,
+  };
+
+  try {
+    const res = await axios.post(uri, userDatas);
+
+    const jsonData = res.data;
+    const userPassword = jsonData.find(
+      (claim) => claim.Type === 'UserPassword'
+    );
+
+    const userName = jsonData.find((claim) => claim.Type === 'FullName');
+    const userId = jsonData.find((claim) => claim.Type === 'MemberId');
+    const userPhoto = jsonData.find((claim) => claim.Type === 'MemberImg');
+
+    // 一般登入者資料包成物件
+    const memberInfo = {
+      username: userName.Value,
+      memberId: userId.Value,
+      memberPhoto: userPhoto.Value,
+    };
+
+    if (memberInfo) {
+      setMemberUsername(memberInfo);
+    }
+    handleSuccessfulLogin(memberInfo);
+
+    return 'loginSuccess'; // 登录成功时直接返回
+  } catch (err) {
+    console.log('取得google登入這資訊失敗', err);
+    return 'userNotFound'; // 登录失败时返回
+  }
 }
 
 // 將用戶信息轉成字串儲存到本地存儲中
@@ -415,25 +439,31 @@ function registerBtn() {
 // 子组件傳來的資料
 function handleGoogleLoginUserData(googleLoginUserData) {
   const email = googleLoginUserData.email;
-  console.log('Email:', email);
 
-  //todo如果不存在就註冊;
-  //todo如果存在帳號就把登入訊息存在本機
-  // axios
-  //   .post(regUri, googleLoginUserData)
-  //   .then((res) => {
-  //     const googleEmail = res.data.email;
-  //     console.log(googleEmail);
+  // 嘗試登入
+  Login2(googleLoginUserData)
+    .then((loginResult) => {
+      if (loginResult === 'loginSuccess') {
+        // 登入成功
+        window.location.href = '/';
+      } else if (loginResult === 'userNotFound') {
+        // 使用者不存在，進行註冊
+        axios
+          .post(regUri, googleLoginUserData)
+          .then(() => {
+            console.log('使用者註冊成功');
 
-  //     if (googleLoginUserData.email == googleEmail.value) {
-  //       console.log('帳號存在喔');//想想
-  //     }
-
-  window.location.href = '/';
-  //   })
-  //   .catch((err) => {
-  //     console.log('google登入或註冊失敗', err);
-  //   });
+            Login2(googleLoginUserData);
+            window.location.href = '/';
+          })
+          .catch((err) => {
+            console.log('使用者註冊失敗', err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.log('google登入失敗', err);
+    });
 }
 
 const loginBox = ref(true);
