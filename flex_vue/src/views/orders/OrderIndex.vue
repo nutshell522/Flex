@@ -454,7 +454,7 @@
         </div>
       </div>
     </div>
-    <input v-model="userName" placeholder="使用者名稱">
+    <!-- <input v-model="userName" placeholder="使用者名稱"> -->
     <input id="msg" v-model="messageText" placeholder="訊息">
     <button @click="sendMessage()">送出</button>
   </div>
@@ -822,7 +822,7 @@ const processMessage = (data) => {
 const sendMessage = () => {
   if (socket && socket.readyState === WebSocket.OPEN) {
     const data = {
-      userName: userName.value,
+      userName: membersId,
       message: messageText.value
     };
     socket.send(JSON.stringify(data));
