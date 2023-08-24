@@ -105,6 +105,7 @@ import { onMounted, ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
+import router from "@/router";
 
 const optionsAll = ref("");
 const shoesOrderDetail = ref({});
@@ -119,15 +120,15 @@ const totalPrice = computed(() => {
 
 const checkoutSuccess = () => {
   // 顯示提示訊息
-  alert("恭喜結帳成功，五秒後跳轉回商品頁面");
+  alert("恭喜結帳成功，3秒後跳轉回商品頁面");
 
   // 模擬延遲後再導向
   setTimeout(() => {
     // 導向商品頁面（將 'product-page-path' 替換為實際的路徑）
     // 例如，如果商品頁面名稱是 'ProductPage.vue'，並且位於 'views' 資料夾中
     // 可以使用：router.push('/product-page-path');
-    router.push('/CustomeShoes/CustomeShoesLayout');
-  }, 5000); // 5000 毫秒 = 5 秒
+    router.push('/CustomeShoes');
+  }, 3000); // 5000 毫秒 = 5 秒
 };
 
 let getData = async () => {

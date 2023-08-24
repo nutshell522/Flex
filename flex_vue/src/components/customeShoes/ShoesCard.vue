@@ -21,10 +21,12 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
 
 const props = defineProps(["card"]);
 const card = computed(() => props.card);
 const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
+const route = useRoute();
 </script>
 
 <style>

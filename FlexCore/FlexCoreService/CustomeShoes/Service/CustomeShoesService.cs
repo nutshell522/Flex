@@ -20,6 +20,12 @@ namespace FlexCoreService.CustomeShoes.Service
 			var customeshoes = _repo.SearchCustomeShoes();
 			return customeshoes;
 		}
+
+        public IEnumerable<CustomeShoesDto> SearchCustomeShoesCategory(int shoescategoryId)
+        {
+            var customeshoes = _repo.SearchCustomeShoesCategory(shoescategoryId);
+            return customeshoes;
+        }
         public CustomeShoesDto SearchOneCustomeShoes(int Id)
         {
             var onecustomeshoes = _repo.SearchOneCustomeShoes(Id);

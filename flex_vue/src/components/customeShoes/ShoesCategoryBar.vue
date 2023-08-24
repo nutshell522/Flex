@@ -2,12 +2,15 @@
   <aside class="side-bar">
     <ul class="list-unstyled">
       <li
-        v-for="shoescategory in shoesCategories"
-        :key="shoescategory.shoesCategoryName"
-        class="shoescategory"
-      >{{
+        v-for="shoescategory in shoescategories"
+        :key="shoescategory"
+        class="shoescategory mt-2"
+      >
+      <router-link :to="`/CustomeShoes?shoesCategoryId=${shoescategory.shoesCategoryId}`">
+      {{
           shoescategory.shoesCategoryName
         }}
+        </router-link>
         <!-- <a :href="'/men/' + categoryName">{{ categoryName }}</a> -->
       </li>
     </ul>
@@ -24,17 +27,19 @@ const route = useRoute();
 const router = useRouter();
 const shoescategories = ref({});
 
-
 let getshoesCategory = async () => {
   await axios
     .get(`${baseAddress}api/ShoesCategory/CategoryList`)
     .then((response) => {
-     shoescategories.value = response.data.shoesCategories;
+     shoescategories.value = response.data;
     })
     .catch((error) => {
       alert(error);
     });
 };
+
+
+
 onMounted(() => {
   getshoesCategory();
 });

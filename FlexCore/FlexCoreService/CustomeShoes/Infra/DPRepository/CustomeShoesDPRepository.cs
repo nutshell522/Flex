@@ -2,6 +2,7 @@
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.CustomeShoes.Models.Dtos;
 using FlexCoreService.ProductCtrl.Models.Dtos;
+using FlexCoreService.ProductCtrl.Models.VM;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -58,11 +59,11 @@ where ShoesOrders.ShoesOrderId ='" + @ShoesOrderId + "'";
 
         public IEnumerable<CustomeShoesDto> SearchCustomeShoes()
 		{
-			string sql = @"select c.ShoesProductId, c.ShoesName, c.ShoesUnitPrice, sc.ShoesCategoryName, MIN(sp.ShoesPictureUrl) AS FirstImgPath 
+			string sql = @"select c.ShoesProductId, c.ShoesName, c.ShoesUnitPrice,sc.ShoesCategoryId, sc.ShoesCategoryName, MIN(sp.ShoesPictureUrl) AS FirstImgPath 
 from CustomizedShoesPo as c
 join ShoesPictures as sp on c.ShoesProductId = sp.fk_ShoesPictureProduct_Id
 join ShoesCategories as sc on sc.ShoesCategoryId = c.fk_ShoesCategoryId
-group by c.ShoesProductId, c.ShoesName, c.ShoesUnitPrice, sc.ShoesCategoryName, c.Status
+group by c.ShoesProductId, c.ShoesName, c.ShoesUnitPrice, sc.ShoesCategoryId, sc.ShoesCategoryName, c.Status
 having c.Status=0
 order by c.ShoesProductId";
 
@@ -70,6 +71,19 @@ order by c.ShoesProductId";
 			var result = dbConnection.Query<CustomeShoesDto>(sql);
 			return result;
 		}
+
+        public IEnumerable<CustomeShoesDto> SearchCustomeShoesCategory(int shoescategoryId)
+        {
+            string sql = @"select CustomizedShoesPo.ShoesProductId, CustomizedShoesPo.ShoesName, CustomizedShoesPo.ShoesUnitPrice, ShoesCategories.ShoesCategoryId, ShoesCategories.ShoesCategoryName,MIN(ShoesPictures.ShoesPictureUrl) AS FirstImgPath from ShoesCategories
+join CustomizedShoesPo on ShoesCategories.ShoesCategoryId = CustomizedShoesPo.fk_ShoesCategoryId
+join ShoesPictures on CustomizedShoesPo.ShoesProductId = ShoesPictures.fk_ShoesPictureProduct_Id
+group by CustomizedShoesPo.ShoesProductId, CustomizedShoesPo.ShoesName, CustomizedShoesPo.ShoesUnitPrice,ShoesCategories.ShoesCategoryId,ShoesCategories.ShoesCategoryName
+having ShoesCategories.ShoesCategoryId=" + shoescategoryId;
+
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.Query<CustomeShoesDto>(sql, new { shoescategoryId });
+            return result;
+        }
 
         public CustomeShoesDto SearchOneCustomeShoes(int Id)
         {

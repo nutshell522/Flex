@@ -3,7 +3,7 @@
     <div class="container mt-4">
       <div class="row">
         <div class="nav-category">
-          <ShoesCategoryBar></ShoesCategoryBar>
+          <ShoesCategoryBar style="position: relative"></ShoesCategoryBar>
         </div>
         <div class="container-body d-flex">
           <div class="list-group"></div>

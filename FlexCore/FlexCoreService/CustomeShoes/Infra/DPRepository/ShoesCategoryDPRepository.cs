@@ -27,14 +27,16 @@ namespace FlexCoreService.CustomeShoes.Infra.DPRepository
 			return result;
 		}
 
-        public IEnumerable<ShoesCategoryDto> SearchCategory()
+        public IEnumerable<ShoesCategoryCardDto> SearchShoesCategory(int shoescategoryId)
         {
-            string sql = @"select sc.ShoesCategoryId, sc.ShoesCategoryName 
-from ShoesCategories as sc
-";
+            string sql = @"select CustomizedShoesPo.ShoesProductId, CustomizedShoesPo.ShoesName, CustomizedShoesPo.ShoesUnitPrice, ShoesCategories.ShoesCategoryId, ShoesCategories.ShoesCategoryName,MIN(ShoesPictures.ShoesPictureUrl) AS FirstImgPath from CustomizedShoesPo
+join ShoesCategories on ShoesCategories.ShoesCategoryId = CustomizedShoesPo.fk_ShoesCategoryId
+join ShoesPictures on CustomizedShoesPo.ShoesProductId = ShoesPictures.fk_ShoesPictureProduct_Id
+group by CustomizedShoesPo.ShoesProductId, CustomizedShoesPo.ShoesName, CustomizedShoesPo.ShoesUnitPrice,ShoesCategories.ShoesCategoryId,ShoesCategories.ShoesCategoryName
+having ShoesCategories.ShoesCategoryId=" + shoescategoryId;
 
             using IDbConnection dbConnection = new SqlConnection(_connStr);
-            var result = dbConnection.Query<ShoesCategoryDto>(sql);
+            var result = dbConnection.Query<ShoesCategoryCardDto>(sql, new { shoescategoryId });
             return result;
         }
     }

@@ -19,9 +19,9 @@ namespace FlexCoreService.CustomeShoes.Service
 			return result;
 		}
 
-        public IEnumerable<ShoesCategoryDto> SearchCategory()
+        public IEnumerable<ShoesCategoryCardDto> SearchShoesCategory(int shoescategoryId)
         {
-            var result = _repo.SearchCategory();
+            var result = _repo.SearchShoesCategory(shoescategoryId);
             return result;
         }
 
