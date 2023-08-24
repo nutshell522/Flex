@@ -16,9 +16,9 @@
                   v-if="cart"
                   v-model="cart.checkoutData.contactInfo.contactName"
                 />
-                <span></span>
+                <span>姓名</span>
               </div>
-              <div class="input-wrapper">
+              <div class="input-wrapper d-none">
                 <input
                   type="text"
                   name="ContactInfo.PostalCode"
@@ -27,7 +27,7 @@
                   v-if="cart"
                   v-model="cart.checkoutData.contactInfo.postalCode"
                 />
-                <span></span>
+                <span>郵遞區號</span>
               </div>
               <div class="input-wrapper">
                 <input
@@ -38,7 +38,7 @@
                   v-if="cart"
                   v-model="cart.checkoutData.contactInfo.address"
                 />
-                <span></span>
+                <span>地址</span>
                 <div class="address-area">
                   <button id="address-btn" type="button">變更地址</button>
                   <ul id="address-box">
@@ -84,7 +84,7 @@
                   v-if="cart"
                   v-model="cart.checkoutData.contactInfo.email"
                 />
-                <span></span>
+                <span>電子郵件</span>
               </div>
               <div class="input-wrapper">
                 <input
@@ -95,13 +95,14 @@
                   v-if="cart"
                   v-model="cart.checkoutData.contactInfo.phone"
                 />
-                <span></span>
+                <span>電話號碼</span>
               </div>
               <button
                 type="button"
                 id="next-step-btn-1"
                 class="change-step-btn next-step-btn"
                 target-step="1"
+                :disabled="step1Disabled"
               >
                 繼續
               </button>
@@ -126,9 +127,9 @@
                     id="bill-name"
                     placeholder="姓名"
                   />
-                  <span></span>
+                  <span>姓名</span>
                 </div>
-                <div class="input-wrapper">
+                <!-- <div class="input-wrapper d-none">
                   <input
                     type="text"
                     name="BillingAddress.PostalCode"
@@ -136,7 +137,7 @@
                     placeholder="郵遞區號"
                   />
                   <span></span>
-                </div>
+                </div> -->
                 <div class="input-wrapper">
                   <input
                     type="text"
@@ -144,7 +145,7 @@
                     id="bill-address"
                     placeholder="地址"
                   />
-                  <span></span>
+                  <span>地址</span>
                 </div>
                 <div class="input-wrapper">
                   <input
@@ -153,7 +154,7 @@
                     id="bill-phone"
                     placeholder="電話號碼"
                   />
-                  <span></span>
+                  <span>電話號碼</span>
                 </div>
               </div>
               <button
@@ -203,7 +204,7 @@
                     v-if="cart"
                     v-model="cart.checkoutData.paymentInfo.cardName"
                   />
-                  <span></span>
+                  <span>Name on card</span>
                 </div>
                 <div class="input-wrapper">
                   <input
@@ -214,7 +215,7 @@
                     v-if="cart"
                     v-model="cart.checkoutData.paymentInfo.cardNumber"
                   />
-                  <span></span>
+                  <span>Card Number</span>
                 </div>
                 <div class="row row-cols-2">
                   <div class="input-wrapper">
@@ -226,7 +227,7 @@
                       v-if="cart"
                       v-model="cart.checkoutData.paymentInfo.expiration"
                     />
-                    <span></span>
+                    <span>MM/YY</span>
                   </div>
                   <div class="input-wrapper">
                     <input
@@ -237,7 +238,7 @@
                       v-if="cart"
                       v-model="cart.checkoutData.paymentInfo.cvv"
                     />
-                    <span></span>
+                    <span>CVV</span>
                   </div>
                 </div>
                 <label class="confirm-terms-label buy-label">
@@ -245,6 +246,7 @@
                     type="checkbox"
                     id="confirm-terms"
                     class="buy-checkbox"
+                    v-model="termsChecked"
                   />
                   確認你同意 Flex 付款的 <a href="javascript:;">條款與條件</a>
                 </label>
@@ -253,6 +255,7 @@
                   type="button"
                   id="send-order"
                   class="next-step-btn"
+                  :disabled="checkoutDisabled"
                 >
                   下訂單
                 </button>
@@ -298,21 +301,29 @@
         <div class="buy-summary col-12 col-lg-5">
           <div class="mb-5">
             <h2 class="mb-3">訂單摘要</h2>
-            <div class="d-flex">
-              <div>小計</div>
-              <div class="me-auto border border-1 rounded-5 px-2">
-                ?<span></span>
-              </div>
+            <div class="d-flex buy-summary-item">
+              <div class="me-auto">小計</div>
               <div v-if="cart">
                 {{ formatter.format(cart.originalTotalAmount) }}
               </div>
             </div>
-            <div class="d-flex">
+            <div class="d-flex buy-summary-item">
+              <div>商品折扣</div>
+              <div class="hint me-auto">?<span>此折扣尚未包含優惠券</span></div>
+              <div v-if="cart" class="text-danger">
+                {{
+                  formatter.format(
+                    cart.totalPrice - cart.totalPrice - cart.couponValue
+                  )
+                }}
+              </div>
+            </div>
+            <div class="d-flex buy-summary-item">
               <div class="me-auto">運費</div>
               <div v-if="cart">{{ formatter.format(cart.deliveryFee) }}</div>
             </div>
             <hr />
-            <div class="d-flex">
+            <div class="d-flex buy-summary-item">
               <div class="me-auto">總計</div>
               <div v-if="cart">{{ formatter.format(cart.totalPrice) }}</div>
             </div>
@@ -473,7 +484,15 @@
 <script setup lang='ts'>
 import axios from "axios";
 import { Input } from "postcss";
-import { ref, onMounted, onUpdated, onUnmounted, computed, toRaw } from "vue";
+import {
+  ref,
+  onMounted,
+  onUpdated,
+  onUnmounted,
+  computed,
+  toRaw,
+  watch,
+} from "vue";
 import { CartItem, ShoppingCart, Member, Coupon } from "@/types/type";
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
@@ -492,6 +511,20 @@ const addresses = ref({
   alternateAddress2: "",
 });
 const isActive = ref(false);
+const step1Disabled = ref<boolean>(false);
+const termsChecked = ref<boolean>(false);
+const checkoutDisabled = ref<boolean>(
+  !cart.value ||
+    cart.value.checkoutData.paymentInfo.cardName == null ||
+    cart.value.checkoutData.paymentInfo.cardName == "" ||
+    cart.value.checkoutData.paymentInfo.cardNumber == null ||
+    cart.value.checkoutData.paymentInfo.cardNumber == "" ||
+    cart.value.checkoutData.paymentInfo.expiration == null ||
+    cart.value.checkoutData.paymentInfo.expiration == "" ||
+    cart.value.checkoutData.paymentInfo.cvv == null ||
+    cart.value.checkoutData.paymentInfo.cvv == "" ||
+    !termsChecked.value
+);
 
 // 載入購物車
 const loadCartItems = async () => {
@@ -578,11 +611,8 @@ const loadCoupons = async (): Promise<void> => {
 // 判斷input的title是否秀出來
 function updateTitleVisibility(
   input: HTMLInputElement,
-  title: HTMLElement,
-  originalPlaceholder: string
+  title: HTMLElement
 ): void {
-  title.innerHTML = originalPlaceholder;
-
   if (input.value !== "") {
     title.classList.add("d-block");
     title.classList.remove("d-none");
@@ -606,7 +636,7 @@ function attachInputEventHandlers(
 
   input.addEventListener("blur", function () {
     input.setAttribute("placeholder", originalPlaceholder);
-    updateTitleVisibility(input, title, originalPlaceholder);
+    updateTitleVisibility(input, title);
   });
 }
 
@@ -627,9 +657,9 @@ function updateBillingAddressFromContactInfo() {
   } else {
     if (cart.value?.checkoutData?.contactInfo) {
       const billName = document.querySelector("#bill-name") as HTMLInputElement;
-      const billPostalCode = document.querySelector(
-        "#bill-postal-code"
-      ) as HTMLInputElement;
+      // const billPostalCode = document.querySelector(
+      //   "#bill-postal-code"
+      // ) as HTMLInputElement;
       const billAddress = document.querySelector(
         "#bill-address"
       ) as HTMLInputElement;
@@ -637,7 +667,7 @@ function updateBillingAddressFromContactInfo() {
         "#bill-phone"
       ) as HTMLInputElement;
       cart.value.checkoutData.billingAddress.name = billName.value;
-      cart.value.checkoutData.billingAddress.postalCode = billPostalCode.value;
+      // cart.value.checkoutData.billingAddress.postalCode = billPostalCode.value;
       cart.value.checkoutData.billingAddress.address = billAddress.value;
       cart.value.checkoutData.billingAddress.phone = billPhone.value;
     }
@@ -787,7 +817,6 @@ class FlexCheckoutProcess {
     // 初始化
     this.setupStep1();
     this.setupStep2();
-    this.setupStep3();
     this.initBtnClickHandler();
   }
 
@@ -880,35 +909,6 @@ class FlexCheckoutProcess {
     );
   }
 
-  setupStep3(): void {
-    const sendOrderBtn = document.querySelector(
-      "#send-order"
-    ) as HTMLButtonElement;
-    const confirmTerms = document.querySelector(
-      "#confirm-terms"
-    ) as HTMLInputElement;
-    const step3Inputs = document.querySelectorAll(
-      "#step-3-area .pay-info-area .input-wrapper input"
-    ) as NodeListOf<HTMLInputElement>;
-
-    const updateStep3Elements = (): void => {
-      // 檢查是否所有 input 都有值
-      const allInputsFilled = Array.from(step3Inputs).every(
-        (input) => input.value.trim() !== ""
-      );
-
-      // 根據 confirmTerms 的狀態和 input 是否都有值，決定是否啟用按鈕
-      sendOrderBtn.disabled = !(confirmTerms.checked && allInputsFilled);
-    };
-
-    confirmTerms.addEventListener("change", updateStep3Elements);
-    updateStep3Elements(); // 初始化時執行一次
-    step3Inputs.forEach((input) => {
-      input.addEventListener("keyup", updateStep3Elements);
-      input.addEventListener("change", updateStep3Elements);
-    });
-  }
-
   private checkInputsAndToggle(
     inputs: NodeListOf<HTMLInputElement>,
     btn: HTMLButtonElement,
@@ -937,7 +937,6 @@ class FlexCheckoutProcess {
     });
   }
 }
-// loadCart(loadMember);
 loadCoupons();
 
 onMounted(() => {
@@ -951,7 +950,72 @@ onMounted(() => {
     event.stopPropagation();
     toggleAddressBoxEventHandler();
   });
+  step1Disabled.value =
+    !cart.value ||
+    cart.value.checkoutData.contactInfo.contactName == null ||
+    cart.value.checkoutData.contactInfo.contactName == "" ||
+    cart.value.checkoutData.contactInfo.address == null ||
+    cart.value.checkoutData.contactInfo.address == "" ||
+    cart.value.checkoutData.contactInfo.email == null ||
+    cart.value.checkoutData.contactInfo.email == "" ||
+    cart.value.checkoutData.contactInfo.phone == null ||
+    cart.value.checkoutData.contactInfo.phone == "";
+
+  checkoutDisabled.value =
+    !cart.value ||
+    cart.value.checkoutData.paymentInfo.cardName == null ||
+    cart.value.checkoutData.paymentInfo.cardName == "" ||
+    cart.value.checkoutData.paymentInfo.cardNumber == null ||
+    cart.value.checkoutData.paymentInfo.cardNumber == "" ||
+    cart.value.checkoutData.paymentInfo.expiration == null ||
+    cart.value.checkoutData.paymentInfo.expiration == "" ||
+    cart.value.checkoutData.paymentInfo.cvv == null ||
+    cart.value.checkoutData.paymentInfo.cvv == "" ||
+    !termsChecked.value;
 });
+watch(
+  [
+    () => cart.value?.checkoutData.paymentInfo.cardName,
+    () => cart.value?.checkoutData.paymentInfo.cardNumber,
+    () => cart.value?.checkoutData.paymentInfo.cvv,
+    () => cart.value?.checkoutData.paymentInfo.expiration,
+    () => termsChecked.value,
+  ],
+  () => {
+    checkoutDisabled.value =
+      !cart.value ||
+      cart.value.checkoutData.paymentInfo.cardName == null ||
+      cart.value.checkoutData.paymentInfo.cardName == "" ||
+      cart.value.checkoutData.paymentInfo.cardNumber == null ||
+      cart.value.checkoutData.paymentInfo.cardNumber == "" ||
+      cart.value.checkoutData.paymentInfo.expiration == null ||
+      cart.value.checkoutData.paymentInfo.expiration == "" ||
+      cart.value.checkoutData.paymentInfo.cvv == null ||
+      cart.value.checkoutData.paymentInfo.cvv == "" ||
+      !termsChecked.value;
+  }
+);
+
+watch(
+  [
+    () => cart.value?.checkoutData.contactInfo.contactName,
+    () => cart.value?.checkoutData.contactInfo.address,
+    () => cart.value?.checkoutData.contactInfo.email,
+    () => cart.value?.checkoutData.contactInfo.phone,
+  ],
+  () => {
+    step1Disabled.value =
+      !cart.value ||
+      cart.value.checkoutData.contactInfo.contactName == null ||
+      cart.value.checkoutData.contactInfo.contactName == "" ||
+      cart.value.checkoutData.contactInfo.address == null ||
+      cart.value.checkoutData.contactInfo.address == "" ||
+      cart.value.checkoutData.contactInfo.email == null ||
+      cart.value.checkoutData.contactInfo.email == "" ||
+      cart.value.checkoutData.contactInfo.phone == null ||
+      cart.value.checkoutData.contactInfo.phone == "";
+  }
+);
 
 onUpdated(() => {
   const textInputs = document.querySelectorAll(
@@ -959,9 +1023,9 @@ onUpdated(() => {
   ) as NodeListOf<HTMLInputElement>;
   const textTitles = document.querySelectorAll(".input-wrapper > span");
   textInputs.forEach((input, index) => {
-    const originalPlaceholder = input.getAttribute("placeholder")!;
+    const originalPlaceholder = textTitles[index].innerHTML!;
     const title = textTitles[index] as HTMLElement;
-    updateTitleVisibility(input, title, originalPlaceholder);
+    updateTitleVisibility(input, title);
     attachInputEventHandlers(input, title, originalPlaceholder);
   });
 
@@ -1220,6 +1284,40 @@ main {
 
       // 購物摘要
       .buy-summary {
+        .buy-summary-item {
+          margin-bottom: 8px;
+          align-items: center;
+          & > div {
+            font-size: 20px;
+          }
+          .hint {
+            position: relative;
+            font-size: 17px;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            margin-left: 10px;
+            &:hover > span {
+              display: block;
+            }
+            & > span {
+              display: none;
+              position: absolute;
+              width: 100px;
+              font-size: 15px;
+              left: calc(100% + 10px);
+              color: #fff;
+              border-radius: 5px;
+              text-align: center;
+              background: rgba($color: #000000, $alpha: 0.6);
+            }
+          }
+        }
         .order-item-area {
           & > ul {
             padding: 0;
@@ -1231,10 +1329,10 @@ main {
               }
 
               .item-info {
-                font-size: 13px;
+                font-size: 16px;
 
                 .title {
-                  font-size: 14px;
+                  font-size: 18px;
                 }
 
                 ul {

@@ -239,6 +239,12 @@ const routes = [
     ],
   },
   {
+    //http://loaclhost/CustomerIndex
+    path: "/CustomerIndex",
+    component: () => import("../views/CustomeShoes/CustomerIndex.vue"),
+    meta: { title: `${webTitle}訂製您的專屬商品` },
+  },
+  {
     //http://loaclhost/CustomeShoes
     path: "/CustomeShoes",
     component: () => import("../views/CustomeShoes/CustomeShoesLayout.vue"),
