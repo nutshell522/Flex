@@ -22,7 +22,7 @@ export default {
       callback: (response) => {
         this.loggedIn = true;
         this.user = decodeCredential(response.credential);
-        console.log(this.user);
+        //console.log(this.user);
         const googleLoginUserData = {
           email: this.user.email,
           name: this.user.name,
