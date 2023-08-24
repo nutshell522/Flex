@@ -4,7 +4,7 @@
 
     <div class="row main bigRow">
       <div class="col-md-8">左
-        <div class="featured-img">
+        <div class="speaker-img">
           <img :src='imgBaseUrl + "/Public/Img/" + speaker.speakerImg' alt="Featured 1" class="speakerImg">
         </div>
 
@@ -73,7 +73,7 @@
 
 <!-- Modal -->
 <div class="modal fade modal-dialog modal-dialog-centered" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog ">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">留下您的心得...</h1>
@@ -118,7 +118,7 @@
 
       <div class="col-md-4">
         右 <div class="text-end">
-          <a href="https://localhost:8080" class="btn button" @click="getActivityId">
+          <a href="https://localhost:8080" class="btn button" @click="getActivityId" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             <!-- icon -->
             <span class="icon">
               <img
@@ -132,6 +132,53 @@
             <span style="font-size: 50px"> 預約 </span>
           </a>
         </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{Name}}您好</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        您預約的是{{ speaker.speakerName }}講師的諮詢服務
+        <br>
+        時間：{{  }}
+        您想要預約 {{date}} 的 {{time}}點 嗎
+        <br>
+        地點：{{ speaker.branchName  }}
+        <br>
+
+        預約注意事項和同意聲明
+        <br>
+
+我們非常歡迎您使用預約講師的服務。請在預約之前仔細閱讀以下注意事項和同意聲明：
+<br>
+
+尊重時間： 預約的時間是有限的資源，請確保您在預約的時間點出現。不要濫用此服務，以確保其他使用者也有機會受益。<br>
+
+取消預約： 如果您無法在預約的時間點出現，請提前來電取消預約，以便其他人可以使用這個時間段。我們建議您提前至少24小時取消預約。<br>
+
+黑名單： 如果您濫用預約服務，我們可能會將您列入黑名單，限制您未來的預約權限。<br>
+
+尊重他人： 請在預約過程中尊重講師的時間和專業。不要發表冒犯性、不當或不尊重的言論。<br>
+
+我明白並同意遵守上述注意事項。我明白如果我不遵守這些規定，我的預約權限可能會受到限制。
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary">確認</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
 
         <h2>人氣講師</h2>
         <h2>最多人預約</h2>
@@ -181,6 +228,9 @@ const setRating = (newRating) => {
   rating.value = newRating;
 };
 const TopThreeSpeaker = ref([]);
+const date = ref('');
+const time = ref('');
+const fullDateTime = ref('');
 
 
 
@@ -349,24 +399,24 @@ onMounted(() => {
   }
 
   function handleCellClick() {
-    const date = this.dataset.date;
-    const time = this.dataset.time;
+    date.value = this.dataset.date;
+    time.value = this.dataset.time;
 
-    if (confirm(`您想要預約 ${date} 的 ${time} 嗎？`)) {
+    if (confirm(`您想要預約 ${date.value} 的 ${time.value} 嗎？`)) {
       this.classList.add("selected");
       this.removeEventListener("click", handleCellClick);
-      const time2 = parseInt(time.substring(0, 2));
-      const parts = date.split("/");
+      const time2 = parseInt(time.value.substring(0, 2));
+      const parts = date.value.split("/");
       const year = parseInt(parts[0]);
       const month = parseInt(parts[1]) - 1;
       const day = parseInt(parts[2]);
-      const fullDateTime = new Date(year, month, day, time2);
+      fullDateTime.value = new Date(year, month, day, time2);
       // alert(fullDateTime);
 
       axios
         .post("https://localhost:7183/api/Reservation/AddReservation", {
           fk_BookerId: 4,
-          ReservationStartTime: fullDateTime,
+          ReservationStartTime: fullDateTime.value,
           fk_ReservationSpeakerId: speakerId,
           fk_BranchId: speaker.value.branchId,
         })
@@ -517,6 +567,11 @@ const formatDateTime = (dateString) => {
 </script>
 
 <style>
+.speaker-img{
+  position: relative;
+   height: 530px; 
+  
+}
 .speakerImg{
     position: absolute;
     top: 0;
@@ -534,6 +589,7 @@ const formatDateTime = (dateString) => {
 #schedule {
   display: flex;
   justify-content: center;
+  margin-top: 300px;
 }
 
 .schedule-table {
