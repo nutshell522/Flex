@@ -98,7 +98,15 @@
         axios.post(uri, data)
              .then(res => {
                     console.log(res.data);
-                    info.value = res.data;
+                    const currentDate = new Date(); //得到目前的日期和時間
+
+                    const filterInfo = res.data.filter((activity)=>{
+                        const activityBookEndTime = new Date(activity.activityBookEndTime);
+                        return activityBookEndTime >= currentDate;
+                    });
+                    
+    
+                    info.value = filterInfo;
                 })
              .catch(err => {
                     console.log(err)
@@ -106,16 +114,6 @@
     }
     
     onMounted(()=>{
-        var uri = "https://localhost:7183/api/Activity/index";
-        // axios.post(uri, data)
-        //      .then(res => {
-        //             console.log(res.data);
-        //             info.value = res.data;
-        //         })
-        //      .catch(err => {
-        //             console.log(err)
-        //         })     
-        
         sendSearchRequest(requestData);
                 
     });

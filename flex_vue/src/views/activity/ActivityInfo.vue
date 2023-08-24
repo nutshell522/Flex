@@ -209,10 +209,12 @@ const getActivityBookingTime = async(id)=>{
   axios.get(`https://localhost:7183/api/Activity/GetActivityBookingTime?id=${id}`)
       .then(res=>{
         console.log(res.data);
-        startTime= res.data;     
-        showDate = formatDateTime(startTime.activityBookStartTime);   
+        const actTime= res.data; 
+        console.log(actTime.activityBookEndTime);    
+        showDate = formatDateTime(actTime.activityBookEndTime);   
         console.log(showDate); //2023/5/7 0:0:0
         endDate.value = new Date(showDate);
+        // console.log(endDate.value);
       })
       .catch(err=>{
         console.log(err);
@@ -221,9 +223,6 @@ const getActivityBookingTime = async(id)=>{
 // console.log(endDate);
 //  getActivityBookingTime(activityId)
 // console.log(startTime);
-
-
-
 
 </script>
 

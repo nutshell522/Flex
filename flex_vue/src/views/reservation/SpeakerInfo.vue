@@ -8,11 +8,12 @@
           <img :src='imgBaseUrl + "/Public/Img/" + speaker.speakerImg' alt="Featured 1" class="speakerImg">
         </div>
 
-        <p>講師姓名：{{ speaker.speakerName }}</p>
-        <p>擅長領域：{{ speaker.fieldName }}</p>
-        <p>講師描述：{{ speaker.speakerDescription }}</p>
-        <p>駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})</p>
-
+        <div class="infoBlock">
+          <p>講師姓名：{{ speaker.speakerName }}</p>
+          <p>擅長領域：{{ speaker.fieldName }}</p>
+          <p>講師描述：{{ speaker.speakerDescription }}</p>
+          <p>駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})</p>
+        </div>
 
         <!-- 預約系統 -->
         <p>預約時間表</p>
@@ -397,20 +398,29 @@ onMounted(() => {
     schedule.appendChild(table);
   }
 
+  let addReservationBody;
+  //最終選擇的是selectedCell
+  let selectedCell = null;
   function handleCellClick() {
-    date.value = this.dataset.date;
-    time.value = this.dataset.time;
+    const clickedCell = this;
+    if(selectedCell){
+      selectedCell.classList.remove("selected");
+      selectedCell.addEventListener("click", handleCellClick);
+    }
 
-    if (confirm(`您想要預約 ${date.value} 的 ${time.value} 嗎？`)) {
-      this.classList.add("selected");
-      this.removeEventListener("click", handleCellClick);
+    selectedCell = clickedCell;
+    date.value = clickedCell.dataset.date;
+    time.value = clickedCell.dataset.time;
+
+    clickedCell.classList.add("selected");
+    clickedCell.removeEventListener("click", handleCellClick);
       const time2 = parseInt(time.value.substring(0, 2));
       const parts = date.value.split("/");
       const year = parseInt(parts[0]);
       const month = parseInt(parts[1]) - 1;
       const day = parseInt(parts[2]);
       // 取得台北標準時間的時區偏移量（分鐘）
-      const dt = new Date(year, month, day, time2);
+      const dt = new Date(year, month, day, time2); 
       const taipeiTimezoneOffset = dt.getTimezoneOffset();
 
       // 計算時差（以分鐘為單位）
@@ -425,24 +435,24 @@ onMounted(() => {
       fullDateTime.value = new Date(utcTimeString)
       
       // alert(fullDateTime.value);
-      const reqBody = {
+      addReservationBody = {
           fk_BookerId:fk_memberId,
           ReservationStartTime: fullDateTime.value,
           fk_ReservationSpeakerId: speakerId,
           fk_BranchId: speaker.value.branchId,
         };
         // alert(reqBody.ReservationStartTimeTest);
-      axios
-        .post("https://localhost:7183/api/Reservation/AddReservation",reqBody )
-        .then((res) => {
+      // axios
+      //   .post("https://localhost:7183/api/Reservation/AddReservation",addReservationBody )
+      //   .then((res) => {
           
-          // 再叫一次
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+      //     // 再叫一次
+      //     console.log(res.data);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+    
   }
 
   prevButton.addEventListener("click", () => {
@@ -463,9 +473,21 @@ onMounted(() => {
 
 
   addReservationOrderInfo.value=()=>{
-    // alert('呼叫我啦呼叫我啦~');
     loadReservationHistory(speakerId);
     updateCalendar();
+    axios
+        .post("https://localhost:7183/api/Reservation/AddReservation",addReservationBody )
+        .then((res) => {
+          loadReservationHistory(speakerId);
+          updateCalendar();
+          // 再叫一次
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    // alert('呼叫我啦呼叫我啦~');
+ 
     const reqBody = {
         memberId:fk_memberId,
         speakerName:speaker.value.speakerName,
@@ -474,6 +496,7 @@ onMounted(() => {
       };
       console.log(speaker);
    
+      //新增預約資訊到order和orderItem資料表
       axios.post("https://localhost:7183/api/Payment/addReservationOrderInfo", reqBody, {
             headers: {
               "Content-Type": "application/json",
@@ -482,8 +505,10 @@ onMounted(() => {
         console.log(res.data);
       })
         .catch(err=>{
+
           console.log(err);
         })
+
   }
 
 
@@ -608,12 +633,16 @@ const formatDateTime = (dateString) => {
 </script>
 
 <style>
+.infoBlock{
+  margin-top: 30px;
+}
 .speaker-img{
   position: relative;
-   height: 530px; 
+  height: 100%;
   
 }
 .speakerImg{
+  
     position: absolute;
     top: 0;
     left: 0;
