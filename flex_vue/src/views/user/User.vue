@@ -109,6 +109,7 @@
           v-model="mobile"
         />
       </div>
+      showUserData
     </div>
     <div class="col-md-6 birthday">
       <div class="input-group">

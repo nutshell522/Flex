@@ -20,6 +20,7 @@ using FlexCoreService.UserCtrl.Interface;
 using FlexCoreService.UserCtrl.Service;
 using FlexCoreService.UserCtrl.Infa;
 
+
 namespace FlexCoreService.Controllers
 {
     [EnableCors("AllowAny")]
@@ -115,47 +116,50 @@ namespace FlexCoreService.Controllers
 
             var userPassword = string.Empty;
 
+            if (userData == null && value.EncryptedPassword == null)
+            {
+                return Ok(null);
+            }
 
             if (userData == null)
             {
                 //欄位或帳號驗證失敗
-                return Ok(null);
+                return StatusCode(401);
             }
             else
             {
                 var memberImg = _db.MemberImgs
-                     .Where(img => img.fk_memberId== userData.MemberId)
+                     .Where(img => img.fk_memberId == userData.MemberId)
                      .FirstOrDefault();
 
                 //驗證密碼
                 userPassword = userData.EncryptedPassword;
 
-                if (userPassword == value.EncryptedPassword)
+                if (value.EncryptedPassword != null)
                 {
-                    var claims = new List<Claim>
-                    {
-                    new Claim(ClaimTypes.Name, userData.Account),
-                    new Claim("UserPassword", userData.EncryptedPassword),
-                    new Claim("FullName", userData.Name),
-                    new Claim("MemberId",userData.MemberId.ToString()),//MemberId為自訂宣告的Type名稱
-                    new Claim("MemberImg", userData.MemberImgs.FirstOrDefault()?.ImgPath ?? "member.jpg")
+                    
+                        var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, userData.Account),
+                new Claim("UserPassword", userData.EncryptedPassword),
+                new Claim("FullName", userData.Name),
+                new Claim("MemberId", userData.MemberId.ToString()),
+                new Claim("MemberImg", userData.MemberImgs.FirstOrDefault()?.ImgPath ?? "member.jpg")
+            };
 
-                   // new Claim(ClaimTypes.Role, "Administrator")//管理角色
-                    };
+                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var authProperties = new AuthenticationProperties
+                        {
+                            IsPersistent = true,
+                            ExpiresUtc = DateTime.UtcNow.AddDays(7),
+                        };
 
-                    var authProperties = new AuthenticationProperties
-                    {
-                        IsPersistent = true,
-                        ExpiresUtc = DateTime.UtcNow.AddDays(7),
-                    };
-                    //todo 帳號沒有被驗證就要擋下來
+                        // 控制登入狀態
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                    //控制登入狀態
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-                    return Ok(JsonConvert.SerializeObject(claims));
+                        return Ok(JsonConvert.SerializeObject(claims));
+                    
                 }
                 return Ok(userData.Account);
             }
@@ -199,9 +203,8 @@ namespace FlexCoreService.Controllers
         [HttpPost("Register")]
         public async Task<RegisterDto> Register([FromBody] RegisterDto regdto)
         {
-            //如果有照片代表示google註冊的
-
-            if (regdto.ImgPath != "")
+            //google註冊
+            if (regdto.ImgPath != null)
             {
                 MemberImg memberImg = new MemberImg
                 {
@@ -221,10 +224,11 @@ namespace FlexCoreService.Controllers
             }
             else
             {
+                //一般註冊
                 Member member = new Member
                 {
                     Account = regdto.Account,
-                    EncryptedPassword = regdto.EncryptedPassword,
+                    EncryptedPassword = Cryptography.Hash(regdto.EncryptedPassword, out string salt),
                     Name = regdto.Name,
                     Email = regdto.Email,
                     Birthday = regdto.Birthday,
@@ -288,7 +292,7 @@ namespace FlexCoreService.Controllers
                     MemberImg img = new MemberImg();
                     img.fk_memberId = id;
 
-                    string targetDirectory = @"D:\FlexFrontend\FlexFrontendNew\flex_vue\public\imgs";
+                    string targetDirectory = @"~\flex_vue\public\imgs";
                     string imagePath = Path.Combine(targetDirectory, image.FileName);
 
                     using (var stream = new FileStream(imagePath, FileMode.Create))

@@ -16,9 +16,8 @@
           id="verify"
           placeholder="請輸入登入密碼"
           v-model="password"
-          maxlength="10"
         />
-        <div @click="openEye">
+        <div class="eye" @click="openEye">
           <i class="bi" :class="eye ? 'bi-eye' : 'bi-eye-slash'"></i>
         </div>
       </div>
@@ -54,7 +53,7 @@ function send() {
   //alert('send');
   if (!password.value) {
     errors.value = [];
-    errors.value.push('填啦填啦');
+    errors.value.push('請確實填寫');
   } else {
     //取得本機儲存使用者id跟輸入的密碼送到後端驗證身分
     const userAcc = localStorage.getItem('userAcc');
@@ -62,20 +61,19 @@ function send() {
       Account: userAcc,
       EncryptedPassword: password.value,
     };
-    //console.log('userInfo', userInfo);
+    console.log(userInfo);
 
     axios
       .post(verifyUri, userInfo)
       .then((res) => {
         if (res.data) {
           verifyArea.value = false;
-          //console.log(res.data);
         }
       })
       .catch((err) => {
         errors.value = [];
         errors.value.push('密碼驗證錯誤');
-        //console.log(err);
+        console.log(err);
       });
   }
 }
@@ -89,7 +87,12 @@ function openEye() {
 
 <style scoped>
 .eyeAndInput {
-  display: flex;
+  position: relative;
+}
+.eye {
+  position: absolute;
+  right: 10px;
+  top: 15%;
 }
 .pwdInput {
   margin: auto;
