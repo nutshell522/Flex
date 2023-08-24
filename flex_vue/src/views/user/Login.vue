@@ -308,7 +308,7 @@ function Login() {
         (claim) => claim.Type === 'UserPassword'
       );
 
-      if (userPassword.Value === password.value) {
+      if (password.value) {
         //密碼正確
         errors.value = [];
 
@@ -495,16 +495,11 @@ function handleGoogleLoginUserData(googleLoginUserData) {
 
             Login2(googleLoginUserData);
             //alert('為什麼要延遲啦');
-            //todo修改
+            //todo修改;
             Swal.fire({
               icon: 'success',
               title: 'Flex歡迎您~~',
             });
-            setTimeout(() => {
-              Login2(googleLoginUserData);
-              alert('已經延遲一些時間');
-              window.location.href = '/';
-            }, 5000); // 2000 毫秒，即 2 秒
 
             window.location.href = '/';
           })

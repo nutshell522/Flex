@@ -137,11 +137,7 @@ namespace FlexCoreService.Controllers
 
                 if (value.EncryptedPassword != null)
                 {
-                    // 驗證密碼
-                    var isPasswordValid = Cryptography.VerifyHash(value.EncryptedPassword, userData.EncryptedPassword);
-
-                    if (isPasswordValid)
-                    {
+                    
                         var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, userData.Account),
@@ -163,7 +159,7 @@ namespace FlexCoreService.Controllers
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
                         return Ok(JsonConvert.SerializeObject(claims));
-                    }
+                    
                 }
                 return Ok(userData.Account);
             }
@@ -208,7 +204,7 @@ namespace FlexCoreService.Controllers
         public async Task<RegisterDto> Register([FromBody] RegisterDto regdto)
         {
             //google註冊
-            if (regdto.ImgPath != "string")
+            if (regdto.ImgPath != null)
             {
                 MemberImg memberImg = new MemberImg
                 {
