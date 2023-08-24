@@ -1,108 +1,71 @@
 <template>
+  <header class="header">
+    <a href="/" class="img-wrapper">
+      <img src="@/../public/LOGO/FlexLogoDark.png" alt="">
+    </a>
+    <div class="buy-header-right">
+      <div>客服專線:0800-000-000</div>
+      <a href="/cart" class="icon"><i class="bi bi-bag"></i></a>
+    </div>
+  </header>
   <main>
     <div class="container">
-      <div class="row gx-4">
+      <div class="row gx-5">
         <div class="buy-info col-12 col-lg-7">
           <form action="" method="post">
             <!-- 寄送資訊 -->
             <div id="step-1-area" class="step-area">
               <h2>輸入你的聯絡資訊:</h2>
               <div class="input-wrapper">
-                <input
-                  type="text"
-                  name="ContactInfo.ContactName"
-                  id="contact-name"
-                  placeholder="姓名"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.contactName"
-                />
-                <span></span>
+                <input type="text" name="ContactInfo.ContactName" id="contact-name" placeholder="姓名" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.contactName" />
+                <span>姓名</span>
+              </div>
+              <div class="input-wrapper d-none">
+                <input type="text" name="ContactInfo.PostalCode" id="postal-code" placeholder="郵遞區號" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.postalCode" />
+                <span>郵遞區號</span>
               </div>
               <div class="input-wrapper">
-                <input
-                  type="text"
-                  name="ContactInfo.PostalCode"
-                  id="postal-code"
-                  placeholder="郵遞區號"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.postalCode"
-                />
-                <span></span>
-              </div>
-              <div class="input-wrapper">
-                <input
-                  type="text"
-                  name="ContactInfo.Address"
-                  id="address"
-                  placeholder="地址"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.address"
-                />
-                <span></span>
+                <input type="text" name="ContactInfo.Address" id="address" placeholder="地址" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.address" />
+                <span>地址</span>
                 <div class="address-area">
                   <button id="address-btn" type="button">變更地址</button>
                   <ul id="address-box">
                     <li>
                       <h2>已儲存地址</h2>
                     </li>
-                    <li
-                      class="address-option"
-                      v-if="
-                        addresses.commonAddress != '' &&
-                        addresses.commonAddress != null
-                      "
-                    >
+                    <li class="address-option" v-if="addresses.commonAddress != '' &&
+                      addresses.commonAddress != null
+                      ">
                       {{ addresses.commonAddress }}
                     </li>
-                    <li
-                      class="address-option"
-                      v-if="
-                        addresses.alternateAddress1 != '' &&
-                        addresses.alternateAddress1 != null
-                      "
-                    >
+                    <li class="address-option" v-if="addresses.alternateAddress1 != '' &&
+                      addresses.alternateAddress1 != null
+                      ">
                       {{ addresses.alternateAddress1 }}
                     </li>
-                    <li
-                      class="address-option"
-                      v-if="
-                        addresses.alternateAddress2 != '' &&
-                        addresses.alternateAddress2 != null
-                      "
-                    >
+                    <li class="address-option" v-if="addresses.alternateAddress2 != '' &&
+                      addresses.alternateAddress2 != null
+                      ">
                       {{ addresses.alternateAddress2 }}
                     </li>
                   </ul>
                 </div>
               </div>
               <div class="input-wrapper">
-                <input
-                  type="email"
-                  name="ContactInfo.Email"
-                  id="email"
-                  placeholder="電子郵件"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.email"
-                />
-                <span></span>
+                <input type="email" name="ContactInfo.Email" id="email" placeholder="電子郵件" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.email" />
+                <span>電子郵件</span>
               </div>
               <div class="input-wrapper">
-                <input
-                  type="tel"
-                  name="ContactInfo.Phone"
-                  id="phone"
-                  placeholder="電話號碼"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.phone"
-                />
-                <span></span>
+                <input type="tel" name="ContactInfo.Phone" id="phone" placeholder="電話號碼" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.phone" />
+                <span>電話號碼</span>
               </div>
-              <button
-                type="button"
-                id="next-step-btn-1"
-                class="change-step-btn next-step-btn"
-                target-step="1"
-              >
+              <button type="button" id="next-step-btn-1" class="change-step-btn next-step-btn" target-step="1"
+                :disabled="step1Disabled">
                 繼續
               </button>
             </div>
@@ -110,25 +73,15 @@
             <div id="step-2-area" class="step-area">
               <h2>輸入你的帳單地址:</h2>
               <label class="same-address-label buy-label">
-                <input
-                  type="checkbox"
-                  id="bill-same-address"
-                  class="buy-checkbox"
-                  checked
-                />
+                <input type="checkbox" id="bill-same-address" class="buy-checkbox" checked />
                 帳單地址同送貨地址
               </label>
               <div id="different-address-area">
                 <div class="input-wrapper">
-                  <input
-                    type="text"
-                    name="BillingAddress.Name"
-                    id="bill-name"
-                    placeholder="姓名"
-                  />
-                  <span></span>
+                  <input type="text" name="BillingAddress.Name" id="bill-name" placeholder="姓名" />
+                  <span>姓名</span>
                 </div>
-                <div class="input-wrapper">
+                <!-- <div class="input-wrapper d-none">
                   <input
                     type="text"
                     name="BillingAddress.PostalCode"
@@ -136,56 +89,31 @@
                     placeholder="郵遞區號"
                   />
                   <span></span>
+                </div> -->
+                <div class="input-wrapper">
+                  <input type="text" name="BillingAddress.Address" id="bill-address" placeholder="地址" />
+                  <span>地址</span>
                 </div>
                 <div class="input-wrapper">
-                  <input
-                    type="text"
-                    name="BillingAddress.Address"
-                    id="bill-address"
-                    placeholder="地址"
-                  />
-                  <span></span>
-                </div>
-                <div class="input-wrapper">
-                  <input
-                    type="tel"
-                    name="BillingAddress.Phone"
-                    id="bill-phone"
-                    placeholder="電話號碼"
-                  />
-                  <span></span>
+                  <input type="tel" name="BillingAddress.Phone" id="bill-phone" placeholder="電話號碼" />
+                  <span>電話號碼</span>
                 </div>
               </div>
-              <button
-                type="button"
-                id="next-step-btn-2"
-                class="change-step-btn next-step-btn"
-                target-step="2"
-              >
+              <button type="button" id="next-step-btn-2" class="change-step-btn next-step-btn" target-step="2">
                 繼續
               </button>
             </div>
             <!-- 付款 -->
             <div id="step-3-area" class="step-area">
               <h2>使用優惠券?</h2>
-              <a
-                @click="showCouponAreaEventHandler"
-                href="javascript:;"
-                class="choose-coupon"
-                >選擇優惠券</a
-              >
+              <a @click="showCouponAreaEventHandler" href="javascript:;" class="choose-coupon">選擇優惠券</a>
               <div class="used-coupon">
                 <p v-if="cart?.coupon" class="show-coupon-info">
                   {{ cart.coupon.name }}，折抵{{ cart?.couponValue }} 元
                 </p>
               </div>
               <h2>付款方式</h2>
-              <input
-                type="hidden"
-                name="payment-method"
-                id="payment-method"
-                value="credit-card"
-              />
+              <input type="hidden" name="payment-method" id="payment-method" value="credit-card" />
               <div class="pay-by-select">
                 <div class="pay-by-btn active" data-value="credit-card">
                   <i class="bi bi-credit-card"></i>
@@ -195,65 +123,33 @@
               <h2>詳細付款資訊:</h2>
               <div class="pay-info-area">
                 <div class="input-wrapper">
-                  <input
-                    type="text"
-                    name="PaymentInfo.CardName"
-                    id="card-name"
-                    placeholder="Name on card"
-                    v-if="cart"
-                    v-model="cart.checkoutData.paymentInfo.cardName"
-                  />
-                  <span></span>
+                  <input type="text" name="PaymentInfo.CardName" id="card-name" placeholder="Name on card" v-if="cart"
+                    v-model="cart.checkoutData.paymentInfo.cardName" />
+                  <span>Name on card</span>
                 </div>
                 <div class="input-wrapper">
-                  <input
-                    type="tel"
-                    name="PaymentInfo.CardNumber"
-                    id="card-number"
-                    placeholder="Card Number"
-                    v-if="cart"
-                    v-model="cart.checkoutData.paymentInfo.cardNumber"
-                  />
-                  <span></span>
+                  <input type="tel" name="PaymentInfo.CardNumber" id="card-number" placeholder="Card Number" v-if="cart"
+                    v-model="cart.checkoutData.paymentInfo.cardNumber" />
+                  <span>Card Number</span>
                 </div>
                 <div class="row row-cols-2">
                   <div class="input-wrapper">
-                    <input
-                      type="text"
-                      name="PaymentInfo.Expiration"
-                      id="expiration"
-                      placeholder="MM/YY"
-                      v-if="cart"
-                      v-model="cart.checkoutData.paymentInfo.expiration"
-                    />
-                    <span></span>
+                    <input type="text" name="PaymentInfo.Expiration" id="expiration" placeholder="MM/YY" v-if="cart"
+                      v-model="cart.checkoutData.paymentInfo.expiration" />
+                    <span>MM/YY</span>
                   </div>
                   <div class="input-wrapper">
-                    <input
-                      type="tel"
-                      name="PaymentInfo.CVV"
-                      id="cvv"
-                      placeholder="CVV"
-                      v-if="cart"
-                      v-model="cart.checkoutData.paymentInfo.cvv"
-                    />
-                    <span></span>
+                    <input type="tel" name="PaymentInfo.CVV" id="cvv" placeholder="CVV" v-if="cart"
+                      v-model="cart.checkoutData.paymentInfo.cvv" />
+                    <span>CVV</span>
                   </div>
                 </div>
                 <label class="confirm-terms-label buy-label">
-                  <input
-                    type="checkbox"
-                    id="confirm-terms"
-                    class="buy-checkbox"
-                  />
+                  <input type="checkbox" id="confirm-terms" class="buy-checkbox" v-model="termsChecked" />
                   確認你同意 Flex 付款的 <a href="javascript:;">條款與條件</a>
                 </label>
-                <button
-                  @click="checkoutEventHandler"
-                  type="button"
-                  id="send-order"
-                  class="next-step-btn"
-                >
+                <button @click="checkoutEventHandler" type="button" id="send-order" class="next-step-btn"
+                  :disabled="checkoutDisabled">
                   下訂單
                 </button>
               </div>
@@ -298,21 +194,29 @@
         <div class="buy-summary col-12 col-lg-5">
           <div class="mb-5">
             <h2 class="mb-3">訂單摘要</h2>
-            <div class="d-flex">
-              <div>小計</div>
-              <div class="me-auto border border-1 rounded-5 px-2">
-                ?<span></span>
-              </div>
+            <div class="d-flex buy-summary-item">
+              <div class="me-auto">小計</div>
               <div v-if="cart">
                 {{ formatter.format(cart.originalTotalAmount) }}
               </div>
             </div>
-            <div class="d-flex">
+            <div class="d-flex buy-summary-item">
+              <div>商品折扣</div>
+              <div class="hint me-auto">?<span>此折扣尚未包含優惠券</span></div>
+              <div v-if="cart" class="text-danger">
+                {{
+                  formatter.format(
+                    cart.originalTotalAmount - cart.totalPrice - cart.couponValue
+                  )
+                }}
+              </div>
+            </div>
+            <div class="d-flex buy-summary-item">
               <div class="me-auto">運費</div>
               <div v-if="cart">{{ formatter.format(cart.deliveryFee) }}</div>
             </div>
             <hr />
-            <div class="d-flex">
+            <div class="d-flex buy-summary-item">
               <div class="me-auto">總計</div>
               <div v-if="cart">{{ formatter.format(cart.totalPrice) }}</div>
             </div>
@@ -320,33 +224,19 @@
           <div class="order-item-area">
             <h2 class="mb-4">訂單詳情</h2>
             <ul>
-              <li
-                v-if="cart"
-                v-for="item in cart.cartItems"
-                :key="item.cartItemId"
-                class="d-flex mb-4"
-              >
+              <li v-if="cart" v-for="item in cart.cartItems" :key="item.cartItemId" class="d-flex mb-4">
                 <div class="item-img-wrapper me-2">
-                  <img
-                    :src="imgBaseUrl + 'Public/Img/' + item.product.imgPath"
-                    alt=""
-                  />
+                  <img :src="imgBaseUrl + 'Public/Img/' + item.product.imgPath" alt="" />
                 </div>
                 <div class="item-info">
                   <div class="text-black fw-bold title">
                     {{ item.product.productName }}
                   </div>
-                  <div
-                    v-if="item.product.matchDiscounts.length != 0"
-                    class="d-flex text-black"
-                  >
+                  <div v-if="item.product.matchDiscounts.length != 0" class="d-flex text-black">
                     適用折扣:
                     <ul class="d-flex">
-                      <li
-                        class="me-1 text-black"
-                        v-for="matchDiscount in item.product.matchDiscounts"
-                        :key="matchDiscount.discountId"
-                      >
+                      <li class="me-1 text-black" v-for="matchDiscount in item.product.matchDiscounts"
+                        :key="matchDiscount.discountId">
                         {{ matchDiscount.discountName }}
                       </li>
                     </ul>
@@ -365,11 +255,7 @@
         </div>
       </div>
     </div>
-    <div
-      @click.self="hideCouponAreaEventHandler"
-      id="coupon-area-bg"
-      :class="{ active: isActive }"
-    >
+    <div @click.self="hideCouponAreaEventHandler" id="coupon-area-bg" :class="{ active: isActive }">
       <div id="coupon-area">
         <i @click="hideCouponAreaEventHandler" class="bi bi-x"></i>
         <div id="coupon-header">
@@ -377,23 +263,16 @@
           <span>可選擇一張</span>
         </div>
         <ul class="coupon-list">
-          <li
-            v-if="coupons.length != 0"
-            v-for="coupon in coupons"
-            :key="coupon.sendingId"
-            :class="[
-              'coupon-item',
-              {
-                disabled:
-                  cart &&
-                  coupon.discountType == 2 &&
-                  cart.deliveryFee == 0 &&
-                  (!cart.coupon?.discountType || cart.coupon.discountType != 2),
-              },
-            ]"
-            :data-id="coupon.sendingId"
-            @click="selectCouponEventHandler"
-          >
+          <li v-if="coupons.length != 0" v-for="coupon in coupons" :key="coupon.sendingId" :class="[
+            'coupon-item',
+            {
+              disabled:
+                cart &&
+                coupon.discountType == 2 &&
+                cart.deliveryFee == 0 &&
+                (!cart.coupon?.discountType || cart.coupon.discountType != 2),
+            },
+          ]" :data-id="coupon.sendingId" @click="selectCouponEventHandler">
             <div class="coupon-body">
               <div class="coupon-top"></div>
               <div class="coupon-bottom"></div>
@@ -401,36 +280,26 @@
                 <div v-if="coupon.discountType == 2" class="coupon-discount">
                   免運費
                 </div>
-                <div
-                  v-else-if="coupon.discountType == 1"
-                  class="coupon-discount"
-                >
+                <div v-else-if="coupon.discountType == 1" class="coupon-discount">
                   {{
                     coupon.discountValue % 10 == 0
-                      ? 10 - coupon.discountValue / 10
-                      : 100 - coupon.discountValue
+                    ? 10 - coupon.discountValue / 10
+                    : 100 - coupon.discountValue
                   }}折
                 </div>
-                <div
-                  v-else-if="coupon.discountType == 0"
-                  class="coupon-discount"
-                >
+                <div v-else-if="coupon.discountType == 0" class="coupon-discount">
                   {{ coupon.discountValue }}元
                 </div>
               </div>
               <div class="coupon-info">
                 <div class="d-flex">
                   <h3 class="me-auto">{{ coupon.couponName }}</h3>
-                  <div
-                    v-if="
-                      cart &&
-                      coupon.discountType == 2 &&
-                      cart.deliveryFee == 0 &&
-                      (!cart.coupon?.discountType ||
-                        cart.coupon.discountType != 2)
-                    "
-                    class="danger-info text-danger"
-                  >
+                  <div v-if="cart &&
+                    coupon.discountType == 2 &&
+                    cart.deliveryFee == 0 &&
+                    (!cart.coupon?.discountType ||
+                      cart.coupon.discountType != 2)
+                    " class="danger-info text-danger">
                     無法使用 已達免運標準
                   </div>
                 </div>
@@ -446,34 +315,36 @@
               </div>
             </div>
           </li>
-          <li
-            v-else
-            class="w-100 h-100 d-flex justify-content-center align-items-center fs-4 text-gray"
-          >
+          <li v-else class="w-100 h-100 d-flex justify-content-center align-items-center fs-4 text-gray">
             無可使用的優惠券
           </li>
         </ul>
         <div class="d-flex px-5">
           <div class="me-auto"></div>
           <button class="btn btn-secondary mt-4 me-3">不使用優惠券</button>
-          <button
-            @click="couponComfirmEventHandler"
-            id="coupon-comfirm-btn"
-            class="btn btn-primary mt-4"
-            disabled
-          >
+          <button @click="couponComfirmEventHandler" id="coupon-comfirm-btn" class="btn btn-primary mt-4" disabled>
             確定
           </button>
         </div>
       </div>
     </div>
   </main>
+  <HomeFooter></HomeFooter>
 </template>
     
 <script setup lang='ts'>
 import axios from "axios";
 import { Input } from "postcss";
-import { ref, onMounted, onUpdated, onUnmounted, computed, toRaw } from "vue";
+import {
+  ref,
+  onMounted,
+  onUpdated,
+  onUnmounted,
+  computed,
+  toRaw,
+  watch,
+} from "vue";
+import HomeFooter from "@/components/home/footer.vue";
 import { CartItem, ShoppingCart, Member, Coupon } from "@/types/type";
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
@@ -492,6 +363,20 @@ const addresses = ref({
   alternateAddress2: "",
 });
 const isActive = ref(false);
+const step1Disabled = ref<boolean>(false);
+const termsChecked = ref<boolean>(false);
+const checkoutDisabled = ref<boolean>(
+  !cart.value ||
+  cart.value.checkoutData.paymentInfo.cardName == null ||
+  cart.value.checkoutData.paymentInfo.cardName == "" ||
+  cart.value.checkoutData.paymentInfo.cardNumber == null ||
+  cart.value.checkoutData.paymentInfo.cardNumber == "" ||
+  cart.value.checkoutData.paymentInfo.expiration == null ||
+  cart.value.checkoutData.paymentInfo.expiration == "" ||
+  cart.value.checkoutData.paymentInfo.cvv == null ||
+  cart.value.checkoutData.paymentInfo.cvv == "" ||
+  !termsChecked.value
+);
 
 // 載入購物車
 const loadCartItems = async () => {
@@ -578,11 +463,8 @@ const loadCoupons = async (): Promise<void> => {
 // 判斷input的title是否秀出來
 function updateTitleVisibility(
   input: HTMLInputElement,
-  title: HTMLElement,
-  originalPlaceholder: string
+  title: HTMLElement
 ): void {
-  title.innerHTML = originalPlaceholder;
-
   if (input.value !== "") {
     title.classList.add("d-block");
     title.classList.remove("d-none");
@@ -606,7 +488,7 @@ function attachInputEventHandlers(
 
   input.addEventListener("blur", function () {
     input.setAttribute("placeholder", originalPlaceholder);
-    updateTitleVisibility(input, title, originalPlaceholder);
+    updateTitleVisibility(input, title);
   });
 }
 
@@ -627,9 +509,9 @@ function updateBillingAddressFromContactInfo() {
   } else {
     if (cart.value?.checkoutData?.contactInfo) {
       const billName = document.querySelector("#bill-name") as HTMLInputElement;
-      const billPostalCode = document.querySelector(
-        "#bill-postal-code"
-      ) as HTMLInputElement;
+      // const billPostalCode = document.querySelector(
+      //   "#bill-postal-code"
+      // ) as HTMLInputElement;
       const billAddress = document.querySelector(
         "#bill-address"
       ) as HTMLInputElement;
@@ -637,7 +519,7 @@ function updateBillingAddressFromContactInfo() {
         "#bill-phone"
       ) as HTMLInputElement;
       cart.value.checkoutData.billingAddress.name = billName.value;
-      cart.value.checkoutData.billingAddress.postalCode = billPostalCode.value;
+      // cart.value.checkoutData.billingAddress.postalCode = billPostalCode.value;
       cart.value.checkoutData.billingAddress.address = billAddress.value;
       cart.value.checkoutData.billingAddress.phone = billPhone.value;
     }
@@ -768,6 +650,7 @@ const checkoutEventHandler = async () => {
     .then((response) => {
       if (response.data.isSuccess) {
         alert("結帳成功");
+        window.location.href = "https://localhost:8080/";
       } else {
         alert(response.data.errorMessage);
       }
@@ -787,7 +670,6 @@ class FlexCheckoutProcess {
     // 初始化
     this.setupStep1();
     this.setupStep2();
-    this.setupStep3();
     this.initBtnClickHandler();
   }
 
@@ -880,35 +762,6 @@ class FlexCheckoutProcess {
     );
   }
 
-  setupStep3(): void {
-    const sendOrderBtn = document.querySelector(
-      "#send-order"
-    ) as HTMLButtonElement;
-    const confirmTerms = document.querySelector(
-      "#confirm-terms"
-    ) as HTMLInputElement;
-    const step3Inputs = document.querySelectorAll(
-      "#step-3-area .pay-info-area .input-wrapper input"
-    ) as NodeListOf<HTMLInputElement>;
-
-    const updateStep3Elements = (): void => {
-      // 檢查是否所有 input 都有值
-      const allInputsFilled = Array.from(step3Inputs).every(
-        (input) => input.value.trim() !== ""
-      );
-
-      // 根據 confirmTerms 的狀態和 input 是否都有值，決定是否啟用按鈕
-      sendOrderBtn.disabled = !(confirmTerms.checked && allInputsFilled);
-    };
-
-    confirmTerms.addEventListener("change", updateStep3Elements);
-    updateStep3Elements(); // 初始化時執行一次
-    step3Inputs.forEach((input) => {
-      input.addEventListener("keyup", updateStep3Elements);
-      input.addEventListener("change", updateStep3Elements);
-    });
-  }
-
   private checkInputsAndToggle(
     inputs: NodeListOf<HTMLInputElement>,
     btn: HTMLButtonElement,
@@ -937,7 +790,6 @@ class FlexCheckoutProcess {
     });
   }
 }
-// loadCart(loadMember);
 loadCoupons();
 
 onMounted(() => {
@@ -951,7 +803,72 @@ onMounted(() => {
     event.stopPropagation();
     toggleAddressBoxEventHandler();
   });
+  step1Disabled.value =
+    !cart.value ||
+    cart.value.checkoutData.contactInfo.contactName == null ||
+    cart.value.checkoutData.contactInfo.contactName == "" ||
+    cart.value.checkoutData.contactInfo.address == null ||
+    cart.value.checkoutData.contactInfo.address == "" ||
+    cart.value.checkoutData.contactInfo.email == null ||
+    cart.value.checkoutData.contactInfo.email == "" ||
+    cart.value.checkoutData.contactInfo.phone == null ||
+    cart.value.checkoutData.contactInfo.phone == "";
+
+  checkoutDisabled.value =
+    !cart.value ||
+    cart.value.checkoutData.paymentInfo.cardName == null ||
+    cart.value.checkoutData.paymentInfo.cardName == "" ||
+    cart.value.checkoutData.paymentInfo.cardNumber == null ||
+    cart.value.checkoutData.paymentInfo.cardNumber == "" ||
+    cart.value.checkoutData.paymentInfo.expiration == null ||
+    cart.value.checkoutData.paymentInfo.expiration == "" ||
+    cart.value.checkoutData.paymentInfo.cvv == null ||
+    cart.value.checkoutData.paymentInfo.cvv == "" ||
+    !termsChecked.value;
 });
+watch(
+  [
+    () => cart.value?.checkoutData.paymentInfo.cardName,
+    () => cart.value?.checkoutData.paymentInfo.cardNumber,
+    () => cart.value?.checkoutData.paymentInfo.cvv,
+    () => cart.value?.checkoutData.paymentInfo.expiration,
+    () => termsChecked.value,
+  ],
+  () => {
+    checkoutDisabled.value =
+      !cart.value ||
+      cart.value.checkoutData.paymentInfo.cardName == null ||
+      cart.value.checkoutData.paymentInfo.cardName == "" ||
+      cart.value.checkoutData.paymentInfo.cardNumber == null ||
+      cart.value.checkoutData.paymentInfo.cardNumber == "" ||
+      cart.value.checkoutData.paymentInfo.expiration == null ||
+      cart.value.checkoutData.paymentInfo.expiration == "" ||
+      cart.value.checkoutData.paymentInfo.cvv == null ||
+      cart.value.checkoutData.paymentInfo.cvv == "" ||
+      !termsChecked.value;
+  }
+);
+
+watch(
+  [
+    () => cart.value?.checkoutData.contactInfo.contactName,
+    () => cart.value?.checkoutData.contactInfo.address,
+    () => cart.value?.checkoutData.contactInfo.email,
+    () => cart.value?.checkoutData.contactInfo.phone,
+  ],
+  () => {
+    step1Disabled.value =
+      !cart.value ||
+      cart.value.checkoutData.contactInfo.contactName == null ||
+      cart.value.checkoutData.contactInfo.contactName == "" ||
+      cart.value.checkoutData.contactInfo.address == null ||
+      cart.value.checkoutData.contactInfo.address == "" ||
+      cart.value.checkoutData.contactInfo.email == null ||
+      cart.value.checkoutData.contactInfo.email == "" ||
+      cart.value.checkoutData.contactInfo.phone == null ||
+      cart.value.checkoutData.contactInfo.phone == "";
+  }
+);
 
 onUpdated(() => {
   const textInputs = document.querySelectorAll(
@@ -959,9 +876,9 @@ onUpdated(() => {
   ) as NodeListOf<HTMLInputElement>;
   const textTitles = document.querySelectorAll(".input-wrapper > span");
   textInputs.forEach((input, index) => {
-    const originalPlaceholder = input.getAttribute("placeholder")!;
+    const originalPlaceholder = textTitles[index].innerHTML!;
     const title = textTitles[index] as HTMLElement;
-    updateTitleVisibility(input, title, originalPlaceholder);
+    updateTitleVisibility(input, title);
     attachInputEventHandlers(input, title, originalPlaceholder);
   });
 
@@ -979,6 +896,38 @@ onUpdated(() => {
 </script>
     
 <style scoped lang="scss">
+.header {
+  width: 100vw;
+  height: 80px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+
+  .img-wrapper {
+    display: block;
+    width: 90px;
+    overflow: hidden;
+  }
+
+  .buy-header-right {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    &>div {
+      font-size: 18px;
+    }
+
+    .icon {
+      font-size: 25px;
+      margin-left: 25px;
+      margin-right: 10px;
+    }
+  }
+}
+
 main {
   width: 70%;
   margin: auto;
@@ -997,7 +946,7 @@ main {
             position: relative;
             margin-bottom: 30px;
 
-            & > span {
+            &>span {
               background-color: #fff;
               position: absolute;
               left: 20px;
@@ -1007,7 +956,7 @@ main {
               color: #999;
             }
 
-            & > input {
+            &>input {
               padding: 20px;
               width: 100%;
               height: 100%;
@@ -1021,7 +970,7 @@ main {
               &:hover {
                 border-color: #333;
 
-                + span {
+                +span {
                   color: #333;
                 }
               }
@@ -1029,7 +978,7 @@ main {
               &:focus {
                 border-color: #333;
 
-                + span {
+                +span {
                   color: #333;
                 }
               }
@@ -1059,11 +1008,11 @@ main {
                 padding: 0;
                 transition: max-height 0.6s;
 
-                & > li:first-child {
+                &>li:first-child {
                   margin-top: 15px;
                 }
 
-                & > li:last-child {
+                &>li:last-child {
                   margin-bottom: 30px;
                 }
 
@@ -1114,7 +1063,7 @@ main {
             font-size: 20px;
             margin-bottom: 50px;
 
-            & > a {
+            &>a {
               text-decoration: underline;
 
               &:hover {
@@ -1182,7 +1131,7 @@ main {
             padding: 30px 0;
             border-top: 1px solid #ccc;
 
-            &.active > h2 {
+            &.active>h2 {
               color: #333;
             }
 
@@ -1195,7 +1144,7 @@ main {
             .show-info {
               position: relative;
 
-              & > p {
+              &>p {
                 margin: 0;
                 color: #999;
               }
@@ -1220,21 +1169,60 @@ main {
 
       // 購物摘要
       .buy-summary {
+        .buy-summary-item {
+          margin-bottom: 8px;
+          align-items: center;
+
+          &>div {
+            font-size: 20px;
+          }
+
+          .hint {
+            position: relative;
+            font-size: 17px;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            margin-left: 10px;
+
+            &:hover>span {
+              display: block;
+            }
+
+            &>span {
+              display: none;
+              position: absolute;
+              width: 100px;
+              font-size: 15px;
+              left: calc(100% + 10px);
+              color: #fff;
+              border-radius: 5px;
+              text-align: center;
+              background: rgba($color: #000000, $alpha: 0.6);
+            }
+          }
+        }
+
         .order-item-area {
-          & > ul {
+          &>ul {
             padding: 0;
 
-            & > li {
+            &>li {
               .item-img-wrapper {
                 width: 130px;
                 height: 130px;
               }
 
               .item-info {
-                font-size: 13px;
+                font-size: 16px;
 
                 .title {
-                  font-size: 14px;
+                  font-size: 18px;
                 }
 
                 ul {
@@ -1264,7 +1252,7 @@ main {
     visibility: visible;
     background: rgba($color: #000, $alpha: 0.5);
 
-    & > #coupon-area {
+    &>#coupon-area {
       height: 80vh;
       min-height: 400px;
       max-height: 700px;
@@ -1340,6 +1328,7 @@ main {
           cursor: pointer;
 
           &.selected {
+
             // border-color: #9bf;
             .coupon-discount {
               background-color: #333;
@@ -1360,6 +1349,7 @@ main {
           border: 2px solid blue;
           border-radius: 10px;
           position: relative;
+
           .coupon-top {
             position: absolute;
             width: 100%;
@@ -1367,6 +1357,7 @@ main {
             top: -8px;
             background-color: #fff;
           }
+
           &::before {
             content: "";
             width: 15px;
@@ -1378,6 +1369,7 @@ main {
             border-radius: 50px;
             border: 2px solid blue;
           }
+
           .coupon-bottom {
             position: absolute;
             width: 100%;
@@ -1386,6 +1378,7 @@ main {
             background-color: #fff;
             z-index: 100;
           }
+
           &::after {
             content: "";
             width: 15px;

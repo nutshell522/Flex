@@ -11,6 +11,7 @@ namespace FlexCoreService.CustomeShoes.Exts
 			{
 				ShoesProductId = dto.ShoesProductId,
 				ShoesName = dto.ShoesName,
+				ShoesCategoryId = dto.ShoesCategoryId,
 				ShoesCategoryName = dto.ShoesCategoryName,
 				ShoesUnitPrice = dto.ShoesUnitPrice,
 				FirstImgPath = dto.FirstImgPath,

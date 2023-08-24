@@ -4,10 +4,7 @@ namespace FlexCoreService.CustomeShoes.Models.VMs
 {
 	public class ShoesCategoryVM
 	{
-        public IEnumerable<ShoesCategoryDto> ShoesCategories { get; set; }
-        public ShoesCategoryVM()
-        {
-            ShoesCategories = new List<ShoesCategoryDto>();
-        }
+        public int ShoesCategoryId { get; set; }
+        public string? ShoesCategoryName { get; set; }
     }
 }

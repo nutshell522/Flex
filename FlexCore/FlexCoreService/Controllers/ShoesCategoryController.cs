@@ -28,13 +28,31 @@ namespace FlexCoreService.Controllers
 
         // Get: api/ShoesCategory/
         [HttpGet("CategoryList")]
-        public async Task<ActionResult<ShoesCategoryVM>> GetShoesCategory()
+        public async Task<ActionResult<IEnumerable<ShoesCategoryVM>>> GetAllCategory() 
         {
             var server = new ShoesCategoryService(_repo);
 
-            var category = server.SearchCategory().ToList();
+            var category = server.GetAllCategory();
 
-            var vm = category.ToCategoryVM();
+            var vm = category.Select(p => p.ToCategoryVM()).ToList();
+
+            if (vm == null)
+            {
+                return NotFound();
+            }
+
+            return vm;
+
+        }
+
+        [HttpGet("Categories")]
+        public async Task<ActionResult<IEnumerable<ShoesCategoryCardVM>>> SearchShoesCategory(int shoescategoryId) 
+        {
+            var server = new ShoesCategoryService(_repo);
+
+            var searchshoes = server.SearchShoesCategory(shoescategoryId);
+
+            var vm = searchshoes.Select(p => p.ToCategoryCardVM()).ToList();
 
             if (vm == null)
             {
@@ -43,7 +61,6 @@ namespace FlexCoreService.Controllers
 
             return vm;
         }
-
 
     }
 }

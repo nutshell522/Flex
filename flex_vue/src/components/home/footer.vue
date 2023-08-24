@@ -15,7 +15,7 @@
                     <ul>
                         <li><a href="javascript:;">售後服務說明</a></li>
                         <li><a href="javascript:;">客服服務</a></li>
-                        <li><a href="javascript:;">客製化服務</a></li>
+                        <li><a href="/CustomerIndex">客製化服務</a></li>
                     </ul>
                 </div>
                 <div class="me-auto">
@@ -58,12 +58,13 @@
 
 </script>
     
-<style lang="scss">
+<style scoped lang="scss">
 footer {
     background-color: #111111;
     padding: 0;
     padding-top: 40px;
     width: 100%;
+    z-index: 200;
 
     .container {
 

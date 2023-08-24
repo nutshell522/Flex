@@ -51,7 +51,7 @@
         <div class="right col-12 col-lg-4">
           <h3>摘要</h3>
           <div class="d-flex justify-content-between">
-            <div>折扣後小計</div>
+            <div>小計</div>
             <div>{{ originalTotalAmount }}</div>
           </div>
           <div class="d-flex justify-content-between">
