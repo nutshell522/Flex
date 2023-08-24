@@ -12,9 +12,6 @@
       <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control" placeholder="輸入名稱" />
       <button class="button" @click="keywordSearch">搜尋</button>
     </div>
-    <!-- 測試 -->
-    <input v-model="membersId" placeholder="使用者名稱">
-    <!-- 測試 -->
   </div>
   <div id="cate" class="container">
     <button @click="
@@ -497,6 +494,9 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+//------get使用者ID--------
+
+//------get使用者ID--------
 
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const GetOrders = ref([]);
@@ -523,8 +523,11 @@ var socket = null;
 const messages = ref([]);
 const userName = ref("");
 const messageText = ref("");
-const membersId = ref("");
-
+//------get使用者ID--------
+const storedUser = localStorage.getItem('loggedInUser');
+const userObject = JSON.parse(storedUser);
+const membersId = userObject ? userObject.memberId : null;
+//------get使用者ID--------
 const loadGetOrders = async () => {
   const begintimeValue = begintime.value;
   const endtimeValue = endtime.value;
@@ -534,7 +537,7 @@ const loadGetOrders = async () => {
   }
   await axios
     .get(
-      `${baseAddress}api/Orders/GetOrders?begintime=${begintime.value}&endtime=${endtime.value}&keyword=${keyword.value}&typeId=${Type.value}&ostatusId=${ostatus.value}`
+      `${baseAddress}api/Orders/GetOrders?begintime=${begintime.value}&endtime=${endtime.value}&keyword=${keyword.value}&typeId=${Type.value}&ostatusId=${ostatus.value}&memberId=${userObject.memberId}`
     )
     .then((response) => {
       console.log(response.data);
@@ -809,7 +812,7 @@ const closecomment = async () => {
 // };
 
 const connect = () => {
-  socket = new WebSocket(wsUrl + `/ws?membersId=${membersId.value}`);
+  socket = new WebSocket(wsUrl + `/ws?membersId=${membersId}`);
   socket.onmessage = (e) => processMessage(e.data);
 };
 const processMessage = (data) => {
