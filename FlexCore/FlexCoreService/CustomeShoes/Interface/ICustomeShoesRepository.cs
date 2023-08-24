@@ -7,6 +7,8 @@ namespace FlexCoreService.CustomeShoes.Interface
 	{
 		IEnumerable<CustomeShoesDto> SearchCustomeShoes();
 
+        IEnumerable<CustomeShoesDto> SearchCustomeShoesCategory(int shoescategoryId);
+
         CustomeShoesDto SearchOneCustomeShoes(int Id);
 
         ShoesDetailDto GetShoesDetail(int shoesproductId);

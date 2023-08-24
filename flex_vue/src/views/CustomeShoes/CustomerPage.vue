@@ -88,41 +88,41 @@
                       {{ size.sizeName }}
                     </option>
                   </select>
+                  <label class="ms-2">請先選擇尺寸</label>
                 </div>
-                  <div class="d-flex me-3 col-3">
-                    <span
-                      class="col-3"
-                      style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                      "
-                      >數量:</span>
-                  <div>
-                    <button
-                      @click="decrementProductQty()"
-                      class="increaseAndDecrease"
-                    >
-                      <i class="bi bi-dash-lg"></i>
-                    </button>
-                    <input
-                      type="text"
-                      name="productQty"
-                      id="productQty"
-                      class="form-control text-center"
-                      style="border-radius: 0"
-                      v-model="buyQty"
-                      @input="handleQyt"
-                    />
-                    <button
-                      @click="incrementProductQty()"
-                      class="increaseAndDecrease"
-                    >
-                      <i class="bi bi-plus-lg"></i>
-                    </button>
-                  </div>
+                  <div class="row d-flex me-3 col-8">
+                      <span
+                        class="col-3"
+                        style="
+                          display: flex;
+                          align-items: center;
+                        "
+                        >數量:</span>
+                    <div class="">
+                      <button
+                        @click="decrementProductQty()"
+                        class="increaseAndDecrease"
+                      >
+                        <i class="bi bi-dash-lg"></i>
+                      </button>
+                      <input
+                        type="text"
+                        name="productQty"
+                        id="productQty"
+                        class="form-control text-center"
+                        style="border-radius: 0"
+                        v-model="buyQty"
+                        @input="handleQyt"
+                      />
+                      <button
+                        @click="incrementProductQty()"
+                        class="increaseAndDecrease"
+                      >
+                        <i class="bi bi-plus-lg"></i>
+                      </button>
+                    </div>
                  </div>
-                  <div class="col-6">
+                  <div class="col-4">
                     <div class="form-control">
                       <span>總金額${{ totalPrice }}</span>
                     </div>
@@ -306,9 +306,17 @@
                 required
               ></textarea>
           </div>
-              <div class="col-6 mt-5 ms-6">
-                <button class="form-control" @click="intoOrder">商品結帳頁面</button>
-              </div>
+          <div class="col-6 mt-5 ms-6">
+                  <label>
+                    <input type="checkbox" v-model="agreeToCreateOrder" />
+                    我同意建立訂單
+                  </label>
+                </div>
+                <router-link v-if="showCheckoutButton" :to="'/CustomeShoes' + '/detail/'+ 'Customization/' + 'order/' + ShoesOrderId">
+                  <div class="col-6 mt-5 ms-6">
+                    <button class="form-control">前往結帳頁面</button>
+                  </div>
+                </router-link>
             </div>
           </div>
         </div>
@@ -319,7 +327,7 @@
 
 <script setup>
 import axios from "axios";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
@@ -349,6 +357,19 @@ const selectedColors4 = ref(""); // 第四組選擇框
 const selectedMaterials5 = ref(""); // 第五組選擇框
 const selectedColors5 = ref(""); // 第五組選擇框
 
+const agreeToCreateOrder = ref(false); // 勾選框的狀態
+
+const showCheckoutButton = ref(false);
+
+// 根據勾選框的狀態更新 showCheckoutButton 標誌
+watch(agreeToCreateOrder, (newVal) => {
+  if (newVal) {
+    // 當勾選框被勾選時，執行 intoOrder 函式
+    intoOrder();
+  }  
+  showCheckoutButton.value = newVal;
+});
+
 const totalPrice = computed(() => {
   return buyQty.value * shoesChoose.value.shoesUnitPrice;
 });
@@ -358,6 +379,7 @@ const shoesProductId = route.params.shoesProductId;
 
 const handleSizeChange = () => {
   console.log("Selected size changed:", selectedSize.value);
+  agreeToCreateOrder.value = false;
 };
 
 
@@ -436,6 +458,7 @@ let incrementProductQty = () => {
   }
 };
 
+
 //塞入資料到資料庫
 const orderUri = `${baseAddress}api/CustomeShoes/EnterCustomerChoose`;
 const optionsUri = `${baseAddress}api/CustomeShoes/ChoseAllOptions`;
@@ -443,12 +466,23 @@ const optionsUri = `${baseAddress}api/CustomeShoes/ChoseAllOptions`;
 var orderData = {};
 let ShoesOrderId = '';
 function intoOrder() {
-  
+  if (!agreeToCreateOrder.value) {
+    // 如果勾選框未被選中，不執行建立訂單操作
+    return;
+  }
   if (selectedSize.value.sizeId === undefined) {
     //todo檢查有沒有選擇size
     errors.value = [];
     errors.value.push("Size還未選擇，請先選擇");
-  } else {
+    agreeToCreateOrder.value = false;
+    return;}
+
+  if (!agreeToCreateOrder.value) {
+    // 如果勾選框未被選中，不執行建立訂單操作
+    return;
+  }
+
+   else {
     errors.value = [];
     // orderData.shoesOrderId = shoesOrderId;
     orderData.fk_ShoesSizeId = selectedSize.value.sizeId;
@@ -460,8 +494,7 @@ function intoOrder() {
       .then((res) => {
         ShoesOrderId=res.data;
         console.log(res.data)
-        intoOptions();
-        
+        intoOptions();    
       })
       .catch((error) => {
         console.error("POST request error:", error);

@@ -4,6 +4,7 @@ using FlexCoreService.CustomeShoes.Exts;
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.CustomeShoes.Models.VMs;
 using FlexCoreService.CustomeShoes.Service;
+using FlexCoreService.ProductCtrl.Exts;
 using FlexCoreService.ProductCtrl.Interface;
 using FlexCoreService.ProductCtrl.Models.VM;
 using FlexCoreService.ProductCtrl.Service;
@@ -24,36 +25,42 @@ namespace FlexCoreService.Controllers
 			_db = db;
 			_repo = repo;
 		}
-		// Get: api/ShoesCategory/
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<ShoesCategoryVM>>> GetAllCategory()
-		{
-			var server = new ShoesCategoryService(_repo);
-			var category = server.GetAllCategory().Select(p => p.ToVM()).ToList();
-			if (category.Count == 0)
-			{
-				return NotFound();
-			}
-			return category;
-		}
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ShoesCategory>> GetCategory(int id)
+        // Get: api/ShoesCategory/
+        [HttpGet("CategoryList")]
+        public async Task<ActionResult<IEnumerable<ShoesCategoryVM>>> GetAllCategory() 
         {
-            if (_db.ShoesCategories == null)
+            var server = new ShoesCategoryService(_repo);
+
+            var category = server.GetAllCategory();
+
+            var vm = category.Select(p => p.ToCategoryVM()).ToList();
+
+            if (vm == null)
             {
                 return NotFound();
             }
-            var shoesCategory = await _db.ShoesCategories.FindAsync(id);
 
-            if (shoesCategory == null)
-            {
-                return NotFound();
-            }
+            return vm;
 
-            return shoesCategory;
         }
 
+        [HttpGet("Categories")]
+        public async Task<ActionResult<IEnumerable<ShoesCategoryCardVM>>> SearchShoesCategory(int shoescategoryId) 
+        {
+            var server = new ShoesCategoryService(_repo);
+
+            var searchshoes = server.SearchShoesCategory(shoescategoryId);
+
+            var vm = searchshoes.Select(p => p.ToCategoryCardVM()).ToList();
+
+            if (vm == null)
+            {
+                return NotFound();
+            }
+
+            return vm;
+        }
 
     }
 }

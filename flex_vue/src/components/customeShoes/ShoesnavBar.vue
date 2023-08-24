@@ -1,73 +1,117 @@
 <template>
-  <header>
-    <div class="container d-flex h-100">
-      <div class="me-auto"></div>
+  <nav class="navbar">
+    <div class="left">
+      <router-link to="/CustomerIndex" class="logo-wrapper">
+        <img src="@/../public/LOGO/FlexLogoLight.png" class="logo" />
+        <h1>FLEX</h1>
+      </router-link>
+    </div>
+    <div class="right">
       <ul>
-        <li><a href="javascript:;">說明</a></li>
-        <li><a href="javascript:;">加入</a></li>
-        <li class="p-relative">
-          <a href="javascript:;" @mouseenter="showList">登入</a>
-          <!-- <userList v-if="showList"></userList> -->
+        <li>
+          <router-link to="/CustomeShoes" class="transetion">
+            <div class="nav-list-item">
+              <div>客製商品</div>
+              <div>客製商品</div>
+            </div>
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/CustomeShoes/Contact" class="transetion">
+            <div class="nav-list-item">
+              <div>合作洽詢</div>
+              <div>合作洽詢</div>
+            </div>
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/CustomeShoes/FAQ" class="transetion">
+            <div class="nav-list-item">
+              <div>常見問題</div>
+              <div>常見問題</div>
+            </div>
+          </router-link>
         </li>
       </ul>
-    </div>
-  </header>
-  <nav>
-    <div class="container">
-      <div class="left">
-        <router-link to="/" class="logo-wrapper">
-          <img
-            src="../../../../public/LOGO/FlexLogoDark.png"
-            alt=""
-            class="logo"
-          />
-          <h1>FLEX</h1>
-        </router-link>
-      </div>
-      <div class="center">
-        <ul>
-          <router-link to="/CustomeShoes" class="transetion">
-            <li>
-              <div class="nav-list-item">
-                <div>客製商品</div>
-              </div>
-            </li>
-          </router-link>
-          <router-link to="/CustomeShoes/Contact" class="transetion">
-            <li>
-              <div class="nav-list-item">
-                <div>合作洽詢</div>
-              </div>
-            </li>
-          </router-link>
-          <router-link to="/CustomeShoes/FAQ" class="transetion">
-            <li>
-              <div class="nav-list-item">
-                <div>常見問題</div>
-              </div>
-            </li>
-          </router-link>
-        </ul>
-      </div>
-      <div class="right">
-        <div class="search-wrapper d-flex">
-          <input type="search" class="search-bar" placeholder="搜尋" />
-          <i class="bi bi-search"></i>
+      <div class="text-white ps-3 pe-1">|</div>
+      <div class="user-box h-100">
+        <a v-if="memberId == 0" href="/login" class="normal">
+          <div>登入</div>
+        </a>
+        <div v-else class="user">
+          <a href="/user" class="personal-img-wrapper">
+            <img
+              v-if="imageSrc && imageSrc.value"
+              :src="`${baseAddress}Public/Img/${imageSrc.value.imgPath}`"
+            />
+            <img v-else :src="`../../../../public/imgs/member.jpg`" alt="" />
+          </a>
+          <div class="drop-list">
+            <h3>Hi,{{ memberName }}</h3>
+            <a href="javascript:;" @click="logout">登出</a>
+          </div>
         </div>
       </div>
+      <router-link to="/" class="normal">
+        <div>Back to Flex<i class="bi bi-chevron-right"></i></div>
+      </router-link>
     </div>
   </nav>
+  <div id="place"></div>
 </template>
 
 <script setup>
 import { ref } from "vue";
+const getApiStore = useGetApiDataStore();
+const { setLoginSuccess } = getApiStore; //function透過store取資料
+const { getData } = getApiStore;
+import { storeToRefs } from "pinia";
+import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
+import axios from "axios";
+const { handleLogout } = getApiStore; //function透過store取資料
 
-function showList() {
-  alert("hi");
+//登出
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  handleLogout();
 }
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const loggedInUser = localStorage.getItem("loggedInUser");
+let memberId = 0;
+if (loggedInUser) {
+  const memberInfo = JSON.parse(loggedInUser);
+  memberId = memberInfo.memberId;
+} else {
+  memberId = 0;
+}
+
+const imageSrc = ref();
+const memberName = ref("");
+
+if (memberId != 0) {
+  axios
+    .get(`${baseAddress}api/Users/${memberId}`)
+    .then((response) => {
+      memberName.value = response.data.name;
+      imageSrc.value = response.data.imgPath;
+      console.log(memberName.value);
+    })
+    .catch((error) => {});
+}
+
+let prevScrollPos = window.pageYOffset;
+window.onscroll = function () {
+  let currentScrollPos = window.pageYOffset;
+  if (currentScrollPos === 0 || prevScrollPos > currentScrollPos) {
+    document.querySelector(".navbar").style.top = "0";
+  } else {
+    document.querySelector(".navbar").style.top = "-70px";
+  }
+  prevScrollPos = currentScrollPos;
+};
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @mixin reset-styles {
   padding: 0;
   margin: 0;
@@ -99,176 +143,163 @@ $bg-gray: #f5f5f5;
   @include reset-styles;
 }
 
-body {
-  min-height: 100vh;
-  padding-bottom: 348px;
-  position: relative;
-  width: 100vw;
-  overflow-x: hidden;
-}
-
 .p-relative {
   position: relative;
-}
-
-header {
-  background-color: #f5f5f5;
-  height: $header-height;
-
-  & > div {
-    display: flex;
-    height: 100%;
-
-    & > ul {
-      display: flex;
-      align-items: center;
-      height: 100%;
-
-      & > li {
-        list-style: none;
-        font-size: 14px;
-        height: 100%;
-
-        & > a {
-          @extend .text-link;
-          display: inline-block;
-          height: 100%;
-          line-height: $header-height;
-        }
-
-        &:not(:first-child)::before {
-          content: "|";
-          padding: 0 15px;
-          font-size: 14px;
-        }
-      }
-    }
-  }
 }
 
 .nav-height {
   height: $nav-height;
 }
 
-nav {
+.navbar {
   @extend .nav-height;
-  background-color: #fff;
+  width: 100vw;
+  background-color: #000;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 40px;
+  position: fixed;
+  top: 0;
+  transition: top 0.3s;
+  z-index: 500;
 
-  & > .container {
-    position: relative;
+  & > .left,
+  & > .right {
+    @extend .nav-height;
+  }
 
-    & > .left,
-    & > .center,
-    & > .right {
+  & > .left {
+    @extend .nav-height;
+
+    & > .logo-wrapper {
       @extend .nav-height;
-      position: absolute;
-    }
-
-    & > .left {
-      @extend .nav-height;
-      position: absolute;
-
-      & > .logo-wrapper {
-        @extend .nav-height;
-        width: 100px;
-        display: flex;
-        align-items: center;
-        overflow: hidden;
-
-        &:hover {
-          h1 {
-            color: #777;
-          }
-
-          .logo {
-            opacity: 0.7;
-          }
-        }
-
+      width: 100px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      cursor: pointer;
+      &:hover {
         .logo {
-          width: 100%;
-          object-fit: cover;
+          filter: brightness(1.3);
         }
+      }
 
-        & > h1 {
-          line-height: $nav-height;
-          font-weight: bold;
-          font-size: 40px;
-          margin-top: 10px;
+      .logo {
+        width: 100%;
+        object-fit: cover;
+      }
+
+      & > h1 {
+        display: flex;
+        line-height: $nav-height;
+        font-weight: bold;
+        font-size: 40px;
+        margin-top: 10px;
+      }
+    }
+  }
+  .right {
+    display: flex;
+    align-items: center;
+    .user-box {
+      .user {
+        margin: 0 15px;
+        position: relative;
+        width: 100%;
+        display: flex;
+        height: 100%;
+        align-items: center;
+
+        .personal-img-wrapper {
+          display: block;
+          width: 40px;
+          border-radius: 50px;
+          overflow: hidden;
+        }
+        .drop-list {
+          position: absolute;
+          top: 100%;
+          border: 1px solid;
+          right: 0;
+          background-color: #fff;
+          width: 200px;
+          height: 120px;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          h3 {
+            font-size: 25px;
+          }
+          a {
+            margin-top: 15px;
+            font-size: 20px;
+            background: #333;
+            color: #fff;
+            border-radius: 50px;
+            padding: 5px 15px;
+            &:hover {
+              background: #555;
+            }
+          }
+        }
+        &:hover .drop-list {
+          display: flex;
         }
       }
     }
-
-    & > .center {
-      left: 50%;
-      transform: translate(-50%);
-
-      & > ul {
-        display: flex;
-        height: 100%;
-
-        & > .transetion {
-          & > li {
-            height: 100%;
-            cursor: pointer;
-            overflow-y: hidden;
-            font-size: 22px;
-            position: relative;
-            width: 100px;
-            display: flex;
-            justify-content: center;
-
-            & > .nav-list-item {
-              height: 200%;
-              position: absolute;
-              top: 0;
-              transition: 0.3s;
-
-              & > div {
-                display: flex;
-                height: 50%;
-                align-items: center;
-                justify-content: center;
-              }
-            }
-
-            &:hover {
-              border-bottom: 3px solid black;
-
-              & > .nav-list-item {
-                top: -100%;
-              }
-            }
-          }
+    .normal {
+      margin-left: 5px;
+      display: flex;
+      align-items: center;
+      padding: 10px 7px;
+      border-radius: 10px;
+      background: #000;
+      &:hover {
+        background: rgba($color: #fff, $alpha: 0.4);
+      }
+      & > div {
+        font-size: 17px;
+        color: #fff;
+        i {
+          font-size: 18px;
+          color: #fff;
         }
+      }
+    }
+    & > ul {
+      display: flex;
+      height: 100%;
 
-        & > li {
-          height: 100%;
-          cursor: pointer;
-          overflow-y: hidden;
-          font-size: 22px;
+      & > li {
+        width: 80px;
+        height: 100%;
+        cursor: pointer;
+        .transetion {
           position: relative;
-          width: 100px;
+          overflow-y: hidden;
+          width: 100%;
+          height: 100%;
           display: flex;
           justify-content: center;
-
+          align-items: center;
           & > .nav-list-item {
             height: 200%;
             position: absolute;
             top: 0;
             transition: 0.3s;
-
             & > div {
               display: flex;
               height: 50%;
               align-items: center;
               justify-content: center;
+              color: #fff;
+              font-size: 16px;
+              display: flex;
             }
           }
 
           &:hover {
-            border-bottom: 3px solid black;
-
             & > .nav-list-item {
               top: -100%;
             }
@@ -276,74 +307,9 @@ nav {
         }
       }
     }
-
-    .right {
-      right: 0;
-      display: flex;
-      align-items: center;
-
-      .nav-icon {
-        font-size: 18px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50px;
-        width: 38px;
-        height: 38px;
-        cursor: pointer;
-      }
-
-      .search-wrapper {
-        position: relative;
-
-        .search-bar {
-          background-color: $bg-gray;
-          padding: 10px 10px 10px 50px;
-          border-radius: 50px;
-          border: none;
-          width: 180px;
-          height: 45px;
-          font-size: 18px;
-
-          &:hover {
-            background-color: #dfdfdf;
-          }
-
-          &:focus {
-            outline: none;
-          }
-        }
-
-        .bi-search {
-          @extend .nav-icon;
-          position: absolute;
-          left: 4px;
-          top: 4px;
-
-          &:hover {
-            background-color: #dfdfdf;
-          }
-        }
-      }
-
-      .bi-heart {
-        @extend .nav-icon;
-        margin-left: 10px;
-
-        &:hover {
-          background-color: #dfdfdf;
-        }
-      }
-
-      .bi-bag {
-        @extend .nav-icon;
-        margin-left: 10px;
-
-        &:hover {
-          background-color: #dfdfdf;
-        }
-      }
-    }
   }
+}
+#place {
+  @extend .nav-height;
 }
 </style>

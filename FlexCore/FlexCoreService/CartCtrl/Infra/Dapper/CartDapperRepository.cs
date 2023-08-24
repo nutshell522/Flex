@@ -54,21 +54,9 @@ INNER JOIN ProductSubCategories as psc ON psc.ProductSubCategoryId = p.fk_Produc
 INNER JOIN ProductCategories as pc ON pc.ProductCategoryId = psc.fk_ProductCategoryId
 INNER JOIN SalesCategories as ssc ON ssc.SalesCategoryId = pc.fk_SalesCategoryId
 LEFT JOIN ProjectTagItems as pti ON pti.fk_ProductId = p.ProductId
-LEFT JOIN(
-    SELECT
-        pi.fk_ProductId,
-        pi.ProductImgId,
-        pi.ImgPath
-    FROM ProductImgs AS pi
-    WHERE pi.ProductImgId = (
-        SELECT TOP 1 pi2.ProductImgId
-        FROM ProductImgs AS pi2
-        WHERE pi2.fk_ProductId = pi.fk_ProductId
-        ORDER BY pi2.ProductImgId
-    )
-) AS pir ON pir.fk_ProductId = p.ProductId
+LEFT JOIN ProductImgs AS pir ON pir.fk_ProductId = p.ProductId
 LEFT JOIN Discounts as d ON d.fk_ProjectTagId = pti.fk_ProjectTagId
-WHERE p.Status = 0 AND p.LogOut = 0 AND c.fk_MemberID = @MemberId
+WHERE p.Status = 0 AND p.LogOut = 0 AND c.fk_MemberID = @MemberId AND pir.fk_ColorId = pg.fk_ColorId
 AND (
     (d.StartDate <= GETDATE() AND (d.EndDate > GETDATE() OR d.EndDate IS NULL) AND d.status = 1)
     OR d.DiscountId IS NULL
@@ -136,21 +124,9 @@ INNER JOIN ProductSubCategories as psc ON psc.ProductSubCategoryId = p.fk_Produc
 INNER JOIN ProductCategories as pc ON pc.ProductCategoryId = psc.fk_ProductCategoryId
 INNER JOIN SalesCategories as ssc ON ssc.SalesCategoryId = pc.fk_SalesCategoryId
 LEFT JOIN ProjectTagItems as pti ON pti.fk_ProductId = p.ProductId
-LEFT JOIN(
-    SELECT
-        pi.fk_ProductId,
-        pi.ProductImgId,
-        pi.ImgPath
-    FROM ProductImgs AS pi
-    WHERE pi.ProductImgId = (
-        SELECT TOP 1 pi2.ProductImgId
-        FROM ProductImgs AS pi2
-        WHERE pi2.fk_ProductId = pi.fk_ProductId
-        ORDER BY pi2.ProductImgId
-    )
-) AS pir ON pir.fk_ProductId = p.ProductId
+LEFT JOIN ProductImgs AS pir ON pir.fk_ProductId = p.ProductId
 LEFT JOIN Discounts as d ON d.fk_ProjectTagId = pti.fk_ProjectTagId
-WHERE ci.CartItemId = @CartItemId
+WHERE ci.CartItemId = @CartItemId AND pir.fk_ColorId = pg.fk_ColorId
 AND (
     (d.StartDate <= GETDATE() AND (d.EndDate > GETDATE() OR d.EndDate IS NULL) AND d.status = 1)
     OR d.DiscountId IS NULL

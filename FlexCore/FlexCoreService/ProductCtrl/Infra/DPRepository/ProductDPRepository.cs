@@ -159,20 +159,25 @@ having p.Status=0 and p.LogOut=0 ";
         }
 
 
+        public IEnumerable<ProductCardDto> SearchProductByKeyword(string? keyword)
+        {
+            string sql = @"select p.ProductId, p.ProductName, p.UnitPrice,p.SalesPrice,s.SalesCategoryId,
+pc.ProductCategoryName,ps.ProductSubCategoryName,s.SalesCategoryName,
+MIN(pi.ImgPath) AS FirstImgPath 
+from Products as p
+join ProductImgs as pi on p.ProductId = pi.fk_ProductId
+join ProductSubCategories as ps on ps.ProductSubCategoryId=p.fk_ProductSubCategoryId
+join ProductCategories as pc on pc.ProductCategoryId=ps.fk_ProductCategoryId
+join SalesCategories as s on s.SalesCategoryId=pc.fk_SalesCategoryId
+where p.Status=0 and p.LogOut=0 and ( p.ProductId like @keyword or p.ProductName like @keyword )
+group by p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, p.Status,
+p.LogOut,s.SalesCategoryId,pc.ProductCategoryName,ps.ProductSubCategoryName,s.SalesCategoryName 
+order by ps.ProductSubCategoryName";
 
-        //        public IEnumerable<ProductCardDto> SearchProducts()
-        //        {
-        //            string sql = @"select p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, MIN(pi.ImgPath) AS FirstImgPath 
-        //from Products as p
-        //join ProductImgs as pi on p.ProductId = pi.fk_ProductId
-        //group by p.ProductId, p.ProductName, p.UnitPrice, p.SalesPrice, p.Status, p.LogOut
-        //having p.Status=0 and p.LogOut=0
-        //order by p.ProductId";
-
-        //            using IDbConnection dbConnection = new SqlConnection(_connStr);
-        //            var result = dbConnection.Query<ProductCardDto>(sql);
-        //            return result;
-        //        }
+            using IDbConnection dbConnection = new SqlConnection(_connStr);
+            var result = dbConnection.Query<ProductCardDto>(sql, new { keyword ="%"+ keyword+"%" });
+            return result;
+        }
 
     }
 }

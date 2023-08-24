@@ -5,7 +5,9 @@ namespace FlexCoreService.CustomeShoes.Interface
 {
 	public interface IShoesCategoryRepository
 	{
-		IEnumerable<ShoesCategoryDto> GetAllCategory();
+		public IEnumerable<ShoesCategoryDto> GetAllCategory();
+
+		public IEnumerable<ShoesCategoryCardDto> SearchShoesCategory(int shoescategoryId);
 
     }
 }

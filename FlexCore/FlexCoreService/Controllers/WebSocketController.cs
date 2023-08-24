@@ -54,13 +54,13 @@ namespace FlexCoreService.Controllers
             var res = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             string? UserName = null;
 
-            while (!res.CloseStatus.HasValue)
-            {
-                UserName = "匿名";
-                var cmd = Encoding.UTF8.GetString(buffer, 0, res.Count);
-                JObject data = JObject.Parse(cmd);
-                string? Name = Convert.ToString(data["userName"]);
-                string? Message = $"{Convert.ToString(data["message"])} \n at {DateTime.Now.ToString("HH:mm:ss")}";
+			while (!res.CloseStatus.HasValue)
+			{
+				UserName = "匿名";
+				var cmd = Encoding.UTF8.GetString(buffer, 0, res.Count);
+				JObject data = JObject.Parse(cmd);
+				string? Name = Convert.ToString(data["userName"]);
+				string? Message = $"{Convert.ToString(data["message"])}\nat {DateTime.Now.ToString("HH:mm:ss")}";
 
                 if (!string.IsNullOrEmpty(Name))
                 {
