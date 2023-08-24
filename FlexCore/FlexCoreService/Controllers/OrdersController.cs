@@ -20,14 +20,13 @@ namespace FlexCoreService.Controllers
 	public class OrdersController : ControllerBase
 	{
 		private readonly AppDbContext _context;
-		static ConcurrentDictionary<int, WebSocket> WebSockets = new ConcurrentDictionary<int, WebSocket>();
 		public OrdersController(AppDbContext context)
 		{
 			_context = context;
 		}
 
 		[HttpGet("GetOrders")]
-		public async Task<ActionResult<IEnumerable<OrdersIndexVM>>> GetOrders(string? keyword, int? typeId, DateTime? begintime, DateTime? endtime, int? ostatusId)
+		public async Task<ActionResult<IEnumerable<OrdersIndexVM>>> GetOrders(string? keyword, int? typeId, DateTime? begintime, DateTime? endtime, int? ostatusId, int? memberId)
 		{
 			var db = _context;
 			if (_context.orders == null)
@@ -48,6 +47,11 @@ namespace FlexCoreService.Controllers
 			var query = typeId.HasValue
 			? _context.orders.Where(o => o.fk_typeId == typeId)
 			: _context.orders;
+			if (memberId.HasValue)
+			{
+				query = query.Where(o => o.fk_member_Id == memberId
+				);
+			}
 			if (ostatusId.HasValue)
 			{
 				query = query.Where(o => o.order_status_Id == ostatusId
@@ -91,6 +95,10 @@ namespace FlexCoreService.Controllers
 				close_time = p.close_time,
 				total_price = p.total_price,
 				fk_typeId = p.fk_typeId,
+				biller = p.biller,
+				biller_adress = p.bill_address,
+				biller_cellphone = p.bill_cellphone,
+				orderCode = p.orderCode,
 				orderItems = (List<OrderItemsVM>)GetOrderItemsIndex(p.Id)
 			});
 			return Ok(result);
