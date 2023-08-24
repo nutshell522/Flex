@@ -40,10 +40,7 @@
         </a>
         <div v-else class="user">
           <a href="/user" class="personal-img-wrapper">
-            <img
-              v-if="imageSrc && imageSrc.value"
-              :src="`${baseAddress}Public/Img/${imageSrc.value.imgPath}`"
-            />
+            <img v-if="imageSrc && imageSrc.value" :src="`${baseAddress}Public/Img/${imageSrc.value.imgPath}`" />
             <img v-else :src="`../../../../public/imgs/member.jpg`" alt="" />
           </a>
           <div class="drop-list">
@@ -94,13 +91,12 @@ if (memberId != 0) {
     .then((response) => {
       memberName.value = response.data.name;
       imageSrc.value = response.data.imgPath;
-      console.log(memberName.value);
     })
-    .catch((error) => {});
+    .catch((error) => { });
 }
 
 let prevScrollPos = window.pageYOffset;
-window.onscroll = function () {
+window.addEventListener('scroll', function () {
   let currentScrollPos = window.pageYOffset;
   if (currentScrollPos === 0 || prevScrollPos > currentScrollPos) {
     document.querySelector(".navbar").style.top = "0";
@@ -108,7 +104,7 @@ window.onscroll = function () {
     document.querySelector(".navbar").style.top = "-70px";
   }
   prevScrollPos = currentScrollPos;
-};
+})
 </script>
 
 <style scoped lang="scss">
@@ -154,7 +150,7 @@ $bg-gray: #f5f5f5;
 .navbar {
   @extend .nav-height;
   width: 100vw;
-  background-color: #000;
+  background-color: #111;
   display: flex;
   justify-content: space-between;
   padding: 0 40px;
@@ -163,21 +159,22 @@ $bg-gray: #f5f5f5;
   transition: top 0.3s;
   z-index: 500;
 
-  & > .left,
-  & > .right {
+  &>.left,
+  &>.right {
     @extend .nav-height;
   }
 
-  & > .left {
+  &>.left {
     @extend .nav-height;
 
-    & > .logo-wrapper {
+    &>.logo-wrapper {
       @extend .nav-height;
       width: 100px;
       display: flex;
       align-items: center;
       overflow: hidden;
       cursor: pointer;
+
       &:hover {
         .logo {
           filter: brightness(1.3);
@@ -189,7 +186,7 @@ $bg-gray: #f5f5f5;
         object-fit: cover;
       }
 
-      & > h1 {
+      &>h1 {
         display: flex;
         line-height: $nav-height;
         font-weight: bold;
@@ -198,9 +195,11 @@ $bg-gray: #f5f5f5;
       }
     }
   }
+
   .right {
     display: flex;
     align-items: center;
+
     .user-box {
       .user {
         margin: 0 15px;
@@ -216,6 +215,7 @@ $bg-gray: #f5f5f5;
           border-radius: 50px;
           overflow: hidden;
         }
+
         .drop-list {
           position: absolute;
           top: 100%;
@@ -228,9 +228,11 @@ $bg-gray: #f5f5f5;
           align-items: center;
           justify-content: center;
           flex-direction: column;
+
           h3 {
             font-size: 25px;
           }
+
           a {
             margin-top: 15px;
             font-size: 20px;
@@ -238,43 +240,51 @@ $bg-gray: #f5f5f5;
             color: #fff;
             border-radius: 50px;
             padding: 5px 15px;
+
             &:hover {
               background: #555;
             }
           }
         }
+
         &:hover .drop-list {
           display: flex;
         }
       }
     }
+
     .normal {
       margin-left: 5px;
       display: flex;
       align-items: center;
       padding: 10px 7px;
       border-radius: 10px;
-      background: #000;
+      font-weight: bold;
+
       &:hover {
         background: rgba($color: #fff, $alpha: 0.4);
       }
-      & > div {
+
+      &>div {
         font-size: 17px;
         color: #fff;
+
         i {
           font-size: 18px;
           color: #fff;
         }
       }
     }
-    & > ul {
+
+    &>ul {
       display: flex;
       height: 100%;
 
-      & > li {
+      &>li {
         width: 80px;
         height: 100%;
         cursor: pointer;
+
         .transetion {
           position: relative;
           overflow-y: hidden;
@@ -283,12 +293,14 @@ $bg-gray: #f5f5f5;
           display: flex;
           justify-content: center;
           align-items: center;
-          & > .nav-list-item {
+
+          &>.nav-list-item {
             height: 200%;
             position: absolute;
             top: 0;
             transition: 0.3s;
-            & > div {
+
+            &>div {
               display: flex;
               height: 50%;
               align-items: center;
@@ -300,7 +312,7 @@ $bg-gray: #f5f5f5;
           }
 
           &:hover {
-            & > .nav-list-item {
+            &>.nav-list-item {
               top: -100%;
             }
           }
@@ -309,6 +321,7 @@ $bg-gray: #f5f5f5;
     }
   }
 }
+
 #place {
   @extend .nav-height;
 }

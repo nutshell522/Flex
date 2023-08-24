@@ -18,13 +18,7 @@
     <div class="container main-area mb-3">
       <a href="javascript:;" class="home-row">
         <div class="video-container">
-          <video
-            src="../../../public/videos/Pexels-Cottonbro-5275266.mp4"
-            muted
-            autoplay
-            loop
-            controls="false"
-          ></video>
+          <video src="../../../public/videos/Pexels-Cottonbro-5275266.mp4" muted autoplay loop controls="false"></video>
         </div>
         <div class="home-card">
           <div class="home-card-title">
@@ -55,31 +49,17 @@
         <div class="home-row-title">
           <h3>熱門推薦</h3>
           <div class="btn-wrapper">
-            <button
-              class="me-3 vueCarouselBtn"
-              @click="showPrevHotSalesProduct"
-            >
+            <button class="me-3 vueCarouselBtn" @click="showPrevHotSalesProduct">
               <i class="bi bi-chevron-left vueCarouselIcon"></i>
             </button>
-            <button
-              class="me-5 vueCarouselBtn"
-              @click="showNextHotSalesProduct"
-            >
+            <button class="me-5 vueCarouselBtn" @click="showNextHotSalesProduct">
               <i class="bi bi-chevron-right vueCarouselIcon"></i>
             </button>
           </div>
         </div>
         <div class="home-product-list">
-          <Carousel
-            :items-to-show="4"
-            :wrap-around="true"
-            ref="hotSalesCarousel"
-          >
-            <Slide
-              v-for="card in hotSalesProduct"
-              :key="card.productId"
-              class="card text-center"
-            >
+          <Carousel :items-to-show="4" :wrap-around="true" ref="hotSalesCarousel">
+            <Slide v-for="card in hotSalesProduct" :key="card.productId" class="card text-center">
               <ProductCard :card="card"></ProductCard>
             </Slide>
           </Carousel>
@@ -98,16 +78,8 @@
           </div>
         </div>
         <div class="home-product-list">
-          <Carousel
-            :items-to-show="4"
-            :wrap-around="true"
-            ref="newProductsCarousel"
-          >
-            <Slide
-              v-for="card in newProducts"
-              :key="card.productId"
-              class="card text-center"
-            >
+          <Carousel :items-to-show="4" :wrap-around="true" ref="newProductsCarousel">
+            <Slide v-for="card in newProducts" :key="card.productId" class="card text-center">
               <ProductCard :card="card"></ProductCard>
             </Slide>
           </Carousel>
@@ -304,7 +276,7 @@ main {
           display: flex;
           align-items: center;
 
-          & > *:not(:first-child) {
+          &>*:not(:first-child) {
             margin-left: 10px;
           }
 
@@ -386,6 +358,7 @@ main {
   border-radius: 50%;
   background-color: #dbdbdb;
 }
+
 .vueCarouselBtn:hover {
   background-color: #ababab;
 }
