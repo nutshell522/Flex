@@ -444,7 +444,7 @@
       <div id="showcon" class="showcon">
         <div>
           <div v-for="message in messages" :key="message.id">
-            <ul :class="{ 'align-left': message.userName === 'min', 'align-right': message.userName !== 'min' }">
+            <ul :class="{ 'align-left': message.userName === 'GM', 'align-right': message.userName !== 'GM' }">
               <li>{{
                 message.userName }} ：{{ message.message }}</li>
             </ul>
@@ -541,6 +541,7 @@ const messageText = ref("");
 const storedUser = localStorage.getItem('loggedInUser');
 const userObject = JSON.parse(storedUser);
 const membersId = userObject ? userObject.memberId : null;
+let currentUserName = "GM";
 //------get使用者ID--------
 const loadGetOrders = async () => {
   const begintimeValue = begintime.value;
@@ -828,10 +829,20 @@ const closecomment = async () => {
 const connect = () => {
   socket = new WebSocket(wsUrl + `/ws?membersId=${membersId}`);
   socket.onmessage = (e) => processMessage(e.data);
+  socket.onopen = () => sendInitialMessage();
 };
 const processMessage = (data) => {
   const content = JSON.parse(data);
   messages.value.push(content);
+};
+const sendInitialMessage = () => {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    const data = {
+      userName: currentUserName,
+      message: "請開始你的發問",
+    };
+    socket.send(JSON.stringify(data));
+  }
 };
 const sendMessage = () => {
   if (socket && socket.readyState === WebSocket.OPEN) {
