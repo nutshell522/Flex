@@ -16,6 +16,7 @@ namespace EFModels.Models
             OneToOneReservations = new HashSet<OneToOneReservation>();
             PointHistories = new HashSet<PointHistory>();
             PointTradeIns = new HashSet<PointTradeIn>();
+            ProductComments = new HashSet<ProductComment>();
             ReservationReviews = new HashSet<ReservationReview>();
             ShoppingCarts = new HashSet<ShoppingCart>();
             orders = new HashSet<order>();
@@ -49,6 +50,7 @@ namespace EFModels.Models
         public virtual ICollection<OneToOneReservation> OneToOneReservations { get; set; }
         public virtual ICollection<PointHistory> PointHistories { get; set; }
         public virtual ICollection<PointTradeIn> PointTradeIns { get; set; }
+        public virtual ICollection<ProductComment> ProductComments { get; set; }
         public virtual ICollection<ReservationReview> ReservationReviews { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; }
         public virtual ICollection<order> orders { get; set; }

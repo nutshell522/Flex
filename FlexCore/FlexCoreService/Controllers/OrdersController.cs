@@ -71,6 +71,8 @@ namespace FlexCoreService.Controllers
 			);
 
 			}
+			query = query.OrderByDescending(o => o.ordertime);
+
 			var result = query.Select(p => new OrdersIndexVM
 			{
 				Id = p.Id,

@@ -141,7 +141,6 @@
                           <td id="orderItemDetail" style="padding-left: 30px; width: 800px">
                             <h6>運費</h6>
                             <div>{{ item.freight }}</div>
-                            <h6>運費折扣</h6>
                             <h6>已使用優惠券</h6>
                             <div>{{ item.coupon_name }}</div>
                             <h6>優惠券折扣</h6>
@@ -381,9 +380,13 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
+              <div class="form-group" v-if="item.pay_method_Id === 1">
                 <label class="form-label">退款帳號:</label>
                 <input type="text" class="form-control" v-model="returnaccount" maxlength="16" />
+              </div>
+              <div class="form-group" v-else>
+                <label class="form-label">退款帳號</label>
+                <label class="form-label">此商品為信用卡付款</label>
               </div>
               <div class="form-group">
                 <label class="form-label">退貨原因:</label>
@@ -825,11 +828,18 @@ const closecomment = async () => {
 //       alert(error);
 //     });
 // };
-
+let isConnected = false;
 const connect = () => {
-  socket = new WebSocket(wsUrl + `/ws?membersId=${membersId}`);
-  socket.onmessage = (e) => processMessage(e.data);
-  socket.onopen = () => sendInitialMessage();
+  if (!socket || socket.readyState !== WebSocket.OPEN) {
+    socket = new WebSocket(wsUrl + `/ws?membersId=${membersId}`);
+    socket.onmessage = (e) => processMessage(e.data);
+    socket.onopen = () => {
+      if (!isConnected) {
+        sendInitialMessage();
+        isConnected = true;
+      }
+    };
+  }
 };
 const processMessage = (data) => {
   const content = JSON.parse(data);
@@ -839,7 +849,7 @@ const sendInitialMessage = () => {
   if (socket && socket.readyState === WebSocket.OPEN) {
     const data = {
       userName: currentUserName,
-      message: "請開始你的發問",
+      message: "您好，很高興為您服務",
     };
     socket.send(JSON.stringify(data));
   }
@@ -935,7 +945,7 @@ onMounted(() => {
 }
 
 .table>thead>tr>th {
-  background-color: maroon;
+  background-color: rgb(224, 149, 149);
   color: white;
   text-align: center;
 }
@@ -945,7 +955,7 @@ onMounted(() => {
 }
 
 .tables>thead>tr>th {
-  background-color: maroon;
+  background-color: rgba(161, 112, 112, 0.466);
   color: white;
   text-align: center;
 }
@@ -994,10 +1004,12 @@ onMounted(() => {
   border: skyblue solid 2px;
   border-radius: 10%;
 }
+
 #cateorder>button:hover {
   background-color: rgb(41, 180, 60);
   color: #ededef;
 }
+
 #searchorderout {
   width: 50%;
   margin: 0 500px 30px;
@@ -1220,4 +1232,5 @@ _::-moz-range-track {
   border-right: gray solid 2px;
   border-radius: 5px;
   padding-top: 10px;
-}</style>
+}
+</style>
