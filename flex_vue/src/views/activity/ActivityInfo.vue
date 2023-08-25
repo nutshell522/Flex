@@ -24,7 +24,7 @@
         data-aos-duration="800"
       >
         <div class="title mb-5 me-5 text-end">
-          <p class="date">{{ activities.activityDate }}</p>
+          <p class="date">{{ formatDate(activities.activityDate) }}</p>
         </div>
         <div class="price">
           <h2 class="text-center fw-bold">
@@ -209,10 +209,12 @@ const getActivityBookingTime = async(id)=>{
   axios.get(`https://localhost:7183/api/Activity/GetActivityBookingTime?id=${id}`)
       .then(res=>{
         console.log(res.data);
-        startTime= res.data;     
-        showDate = formatDateTime(startTime.activityBookStartTime);   
+        const actTime= res.data; 
+        console.log(actTime.activityBookEndTime);    
+        showDate = formatDateTime(actTime.activityBookEndTime);   
         console.log(showDate); //2023/5/7 0:0:0
         endDate.value = new Date(showDate);
+        // console.log(endDate.value);
       })
       .catch(err=>{
         console.log(err);
@@ -221,10 +223,10 @@ const getActivityBookingTime = async(id)=>{
 // console.log(endDate);
 //  getActivityBookingTime(activityId)
 // console.log(startTime);
-
-
-
-
+const formatDate=(dateString)=>{
+                const date = new Date(dateString);
+                return date.toLocaleDateString(); // 格式化為本地化的日期字串
+   }
 </script>
 
 <style>

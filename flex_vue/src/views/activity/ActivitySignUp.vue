@@ -72,19 +72,19 @@
       </div>
       <div class="modal-body  n">
         <form id="payForm" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">
-            <input type="text" name="MerchantID" :value="payInfo.MerchantID ">
-            <input type="text" name="MerchantTradeNo" :value="payInfo.MerchantTradeNo">
-            <input type="text" name="MerchantTradeDate" :value="payInfo.MerchantTradeDate">
-            <input type="text" name="PaymentType" :value="payInfo.PaymentType">
-            <input type="text" name="TotalAmount" :value="payInfo.TotalAmount">
-            <input type="text" name="TradeDesc" :value="payInfo.TradeDesc">
-            <input type="text" name="ItemName" :value="payInfo.ItemName">
-            <input type="text" name="ReturnURL" :value="payInfo.ReturnURL">
-            <input type="text" name="ChoosePayment" :value="payInfo.ChoosePayment">
-            <input type="text" name="EncryptType" :value="payInfo.EncryptType">
-            <input type="text" name="ClientBackURL" :value="payInfo.ClientBackURL">
-            <input type="text" name="OrderResultURL" :value="payInfo.OrderResultURL">
-            <input type="text" name="CheckMacValue" :value="payInfo.CheckMacValue">
+            <input type="hidden" name="MerchantID" :value="payInfo.MerchantID ">
+            <input type="hidden" name="MerchantTradeNo" :value="payInfo.MerchantTradeNo">
+            <input type="hidden" name="MerchantTradeDate" :value="payInfo.MerchantTradeDate">
+            <input type="hidden" name="PaymentType" :value="payInfo.PaymentType">
+            <input type="hidden" name="TotalAmount" :value="payInfo.TotalAmount">
+            <input type="hidden" name="TradeDesc" :value="payInfo.TradeDesc">
+            <input type="hidden" name="ItemName" :value="payInfo.ItemName">
+            <input type="hidden" name="ReturnURL" :value="payInfo.ReturnURL">
+            <input type="hidden" name="ChoosePayment" :value="payInfo.ChoosePayment">
+            <input type="hidden" name="EncryptType" :value="payInfo.EncryptType">
+            <input type="hidden" name="ClientBackURL" :value="payInfo.ClientBackURL">
+            <input type="hidden" name="OrderResultURL" :value="payInfo.OrderResultURL">
+            <input type="hidden" name="CheckMacValue" :value="payInfo.CheckMacValue">
 
             <div class="mb-3 d-flex gap-3">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
