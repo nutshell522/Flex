@@ -12,7 +12,7 @@ namespace FlexCoreService.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> uploadImage (IFormFile file)
         {
-            string savingPlace = @"C:\Flex\Flex\FlexCore\FlexCoreService\wwwroot\Public\Img";
+            string savingPlace = @"C:\FLEX0825\Flex\FlexCore\FlexCoreService\wwwroot\Public\Img";
             string imagePath = Path.Combine(savingPlace, file.FileName);
             string baseAddress = @"https://localhost:7183/Public/Img/";
 

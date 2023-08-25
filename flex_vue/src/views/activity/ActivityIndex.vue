@@ -28,9 +28,10 @@
 
     <!-- 湯圓區 -->
     <div class="row cardbody">
-        <div v-for="(activity, index) in info" :key="index" class="card mb-3 col-4 cards" style="width: 18rem;">
-        
-            <img :src='imgBaseUrl+"/Public/Img/"+activity.imgPath' class="card-img-top" alt="...">
+        <div v-for="(activity, index) in info" :key="index" class="card col-4 cards" >
+        <div class="indexImg">
+            <img :src='imgBaseUrl+"/Public/Img/Activity/"+activity.imgPath' class="card-img-top" alt="...">
+        </div>
             <div class="card-body">
                 <h5 class="card-title">{{ activity.activityName }}</h5>
                 <!-- 使用計算屬性將日期格式化為所需形式 -->
@@ -129,38 +130,68 @@
       
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
-<style>
-        .cards {
-            margin-right: 70px;
-            margin-bottom: 70px;
+<style scoped>
 
-        }
+.indexImg{
+    min-height: 195px;
+    max-height: 195px;
+    width: 300px;
+    overflow: hidden;
+}
 
-        .cardbody {
-            margin: 100px
-        }
+.card img {
+  transition: transform 1s;
+  min-height: 195px;
+  max-height: 195px;
+  width: 300px;
+}
+
+.card img:hover {
+  transform: scale(1.2);
+}
+
+.card {
+  overflow: hidden;
+  margin-bottom: 35px;
+  margin-right: 35px;
+  padding: 0;
+  border: none;
+  height: 350px;
+  width: 300px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 水平偏移，垂直偏移，模糊度，颜色 */
+}
+
+.cards {
+    margin-right: 70px;
+    margin-bottom: 70px;
+
+}
+
+.cardbody {
+    margin: 100px
+}
      
 
-        .selectedBlock {
-           
-            width: 100%; /* 调整为适当的宽度 */
-        }
+.selectedBlock {
+    
+    width: 100%; /* 调整为适当的宽度 */
+}
 
-        .search-input{
-            height: 43px;
-        }
+.search-input{
+    height: 43px;
+}
 
-        .search-container {
-            text-align: center; /* 水平居中 */
-            margin-top: 50px; /* 调整上边距 */
-            display: flex;
-            position: relative;
-        }
-            
-        .row2{
-            position: absolute;
-            display: flex;
-            /* align-items: center; */
-            margin-left: 10%;
-        }
+.search-container {
+    text-align: center; /* 水平居中 */
+    margin-top: 50px; /* 调整上边距 */
+    display: flex;
+    position: relative;
+}
+    
+.row2{
+    position: absolute;
+    display: flex;
+    /* align-items: center; */
+    margin-left: 10%;
+}
 </style>

@@ -10,7 +10,7 @@
       >
         <div class="featured-img">
           <img
-            :src="imgBaseUrl + '/Public/Img/' + activities.imgPath"
+            :src="imgBaseUrl + '/Public/Img/Activity' + activities.imgPath"
             alt="Featured 1"
             class="featured-big"
           />
