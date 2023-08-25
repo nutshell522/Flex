@@ -78,11 +78,19 @@ onMounted(() => {
 <style scoped lang="scss">
 footer {
     background-color: #111111;
-    padding: 0;
+
     padding-top: 40px;
     width: 100%;
     position: relative;
     z-index: 200;
+
+    @media screen and (min-width: 992px) {
+        padding: 0;
+    }
+
+    @media screen and (max-width: 991px) {
+        padding: 0 25px;
+    }
 
     .container {
 

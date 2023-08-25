@@ -23,11 +23,12 @@ const instance_vueRecaptchaV2 = reactive({
   recaptchaExpired: () => {
     // 驗證過期後進行的動作
     // After recaptcha is expired, the action you can do.
-    console.log('驗證過期啦QAQ');
+    console.log('reCAPTCHA驗證過期啦');
   },
   recaptchaFailed: () => {
     // 驗證失敗進行的動作
     // After recaptcha is failed, the action you can do.
+    console.log('reCAPTCHA驗證失敗啦');
   },
 });
 </script>

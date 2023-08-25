@@ -1,14 +1,19 @@
 <template>
   <header class="header d-flex">
     <div class="me-auto"></div>
-    <ul>
+    <ul class="navUserIcon">
       <li><a href="javascript:;">說明</a></li>
       <li class="" v-if="!loginSuccess">
         <a href="/login">登入</a>
       </li>
-      <li class="p-relative userIcon" v-if="loginSuccess">
-        <a href="" @mouseenter="showList" @click.prevent><i class="bi bi-person-circle"></i></a>
-        <userList v-if="isListVisible" @mouseleave="hideList"></userList>
+      <li class="userPhoto" v-else="loginSuccess">
+        <!-- <a href="" @mouseenter="showList" @click.prevent
+            ><i class="bi bi-person-circle"></i
+          ></a> -->
+        <a href="" @mouseenter="showList" @click.prevent>
+          <userPhoto class="userPhoto"></userPhoto>
+        </a>
+        <userList class="userList" v-if="isListVisible" @mouseleave="hideList"></userList>
       </li>
     </ul>
   </header>
@@ -113,22 +118,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits } from "vue";
-import userList from "../home/userList.vue";
-import Cookies from "js-cookie";
-import axios from "axios";
-import { storeToRefs } from "pinia"; //把解構又同時具備響應式功能
-import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
-import { useRoute, useRouter } from "vue-router";
+import { ref, onMounted, defineEmits } from 'vue';
+import userList from '../home/userList.vue';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
+import { useRoute, useRouter } from 'vue-router';
+import userPhoto from '@/components/user/userPhoto.vue';
+
 const router = useRouter();
-const webBaseAddress = "https://localhost:8080/";
+const webBaseAddress = 'https://localhost:8080/';
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const getApiStore = useGetApiDataStore();
 const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
 const { memberInfo } = storeToRefs(getApiStore);
 const { setLoginSuccess } = getApiStore; //function透過store取資料
 const { getData } = getApiStore;
-const searchKeyword = ref("");
+const searchKeyword = ref('');
 
 //關鍵字搜尋
 const searchKeywordHandler = () => {
@@ -137,7 +144,7 @@ const searchKeywordHandler = () => {
     router.push(`/search/${inputKeyword}`);
   }
 };
-const loggedInUser = localStorage.getItem("loggedInUser");
+const loggedInUser = localStorage.getItem('loggedInUser');
 const imgBaseUrl = ref(baseAddress);
 let memberId = 0;
 if (loggedInUser) {
@@ -156,7 +163,7 @@ const loadCartAnditemCount = async () => {
     await axios
       .post(url, memberId, {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       })
       .then((response) => {
@@ -170,10 +177,10 @@ const loadCartAnditemCount = async () => {
   }
 };
 loadCartAnditemCount();
-const emit = defineEmits("UpdateCart");
+const emit = defineEmits('UpdateCart');
 const sendFunctionToParent = async () => {
   // 定義父元件傳到子元件事件
-  emit("UpdateCart", loadCartAnditemCount);
+  emit('UpdateCart', loadCartAnditemCount);
 };
 
 const url = `${baseAddress}api/Users/Login`;
@@ -234,6 +241,15 @@ $bg-gray: #f5f5f5;
 
 .p-relative {
   position: relative;
+}
+
+.userPhoto {
+  position: relative;
+  margin-top: 2px;
+}
+
+.userList {
+  margin-top: 17px;
 }
 
 header {
