@@ -3,7 +3,7 @@
     <div class="row main bigRow">
       <div class="col-md-8">左
         <div class="speaker-img">
-          <img :src='imgBaseUrl + "/Public/Img/" + speaker.speakerImg' alt="Featured 1" class="speakerImg">
+          <img :src='imgBaseUrl + "/Public/Img/Speaker/" + speaker.speakerImg' alt="Featured 1" class="speakerImg">
         </div>
 
         <div class="infoBlock">
@@ -205,7 +205,7 @@
         >
           <a :href="'/speakerInfo/' + single.fk_ReservationSpeakerId">
             <img
-              :src="imgBaseUrl + '/Public/Img/' + single.speakerImg"
+              :src="imgBaseUrl + '/Public/Img/Speaker/' + single.speakerImg"
               alt=""
             />
           </a>
