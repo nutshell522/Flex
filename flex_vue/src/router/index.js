@@ -309,10 +309,6 @@ const routes = [
     meta: { title: `${webTitle}合作洽詢` },
     children: [
       {
-        path: ":shoescategoryName",
-        component: () => import("../views/CustomeShoes/CustomeShoesAll.vue"),
-      },
-      {
         //http://loaclhost/Login
         path: "/login",
         component: Login,

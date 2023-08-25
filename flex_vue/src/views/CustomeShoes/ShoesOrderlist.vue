@@ -118,18 +118,30 @@ const totalPrice = computed(() => {
   return shoesOrderDetail.qty * shoesOrderDetail.shoesUnitPrice;
 });
 
-const checkoutSuccess = () => {
-  // 顯示提示訊息
-  alert("恭喜結帳成功，3秒後跳轉回商品頁面");
 
-  // 模擬延遲後再導向
-  setTimeout(() => {
-    // 導向商品頁面（將 'product-page-path' 替換為實際的路徑）
-    // 例如，如果商品頁面名稱是 'ProductPage.vue'，並且位於 'views' 資料夾中
-    // 可以使用：router.push('/product-page-path');
+//結帳完返回商品頁
+const isCheckoutInProgress = ref(false);
+
+const checkoutSuccess = async () => {
+  if (isCheckoutInProgress.value) return;
+
+  isCheckoutInProgress.value = true;
+
+  try {
+    // ... 您的結帳邏輯 ...
+    alert("恭喜結帳成功，3秒後跳轉回商品頁面");
+    // 模擬延遲
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    // 返回商品頁面
     router.push('/CustomeShoes');
-  }, 3000); // 5000 毫秒 = 5 秒
+  } catch (error) {
+    console.log(error)
+  } finally {
+    isCheckoutInProgress.value = false;
+  }
 };
+
 
 let getData = async () => {
   try {
