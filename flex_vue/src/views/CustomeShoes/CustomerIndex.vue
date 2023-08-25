@@ -45,7 +45,7 @@ onMounted(() => {
     let currentScrollPos = window.pageYOffset;
     if (currentScrollPos === 0) {
       textHide.style.opacity = 0;
-    } else if (currentScrollPos > 150) {
+    } else {
       textHide.style.opacity = 1;
     }
   })
@@ -53,7 +53,7 @@ onMounted(() => {
 </script>
   
 <style scoped lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
 
 #bg {
   background: rgba($color: #111, $alpha: 1);
@@ -76,7 +76,14 @@ onMounted(() => {
 video {
   z-index: -30;
   position: sticky;
-  top: 0;
+
+  @media screen and (min-width: 992px) {
+    top: 0;
+  }
+
+  @media screen and (max-width: 991px) {
+    top: 13%;
+  }
 }
 
 #banner {
@@ -120,14 +127,14 @@ video {
 #banner2 {
   background-color: #111;
   position: absolute;
-  height: 350vh;
-  top: 470vh;
+  height: 380vh;
+  top: 440vh;
   width: 100vw;
   z-index: 0;
 
   #Customize-Order-Page {
     width: 100vw;
-    height: 150vh;
+    height: 120vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -136,14 +143,14 @@ video {
     .order-title {
       font-size: 5vw;
       color: #fff;
-      margin-bottom: 35px;
+      margin-bottom: 3vw;
     }
 
     .btn-change-page {
-      padding: 10px 30px;
+      padding: 1.3vmin 5vmin;
       border-radius: 50px;
       background-color: #fff;
-      font-size: 30px;
+      font-size: 3.8vmin;
       cursor: pointer;
 
       &:hover {
