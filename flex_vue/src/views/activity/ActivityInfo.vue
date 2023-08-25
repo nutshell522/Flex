@@ -24,7 +24,7 @@
         data-aos-duration="800"
       >
         <div class="title mb-5 me-5 text-end">
-          <p class="date">{{ activities.activityDate }}</p>
+          <p class="date">{{ formatDate(activities.activityDate) }}</p>
         </div>
         <div class="price">
           <h2 class="text-center fw-bold">
@@ -223,7 +223,10 @@ const getActivityBookingTime = async(id)=>{
 // console.log(endDate);
 //  getActivityBookingTime(activityId)
 // console.log(startTime);
-
+const formatDate=(dateString)=>{
+                const date = new Date(dateString);
+                return date.toLocaleDateString(); // 格式化為本地化的日期字串
+   }
 </script>
 
 <style>

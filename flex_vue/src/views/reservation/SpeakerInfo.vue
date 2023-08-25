@@ -441,18 +441,6 @@ onMounted(() => {
           fk_ReservationSpeakerId: speakerId,
           fk_BranchId: speaker.value.branchId,
         };
-        // alert(reqBody.ReservationStartTimeTest);
-      // axios
-      //   .post("https://localhost:7183/api/Reservation/AddReservation",addReservationBody )
-      //   .then((res) => {
-          
-      //     // 再叫一次
-      //     console.log(res.data);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
-    
   }
 
   prevButton.addEventListener("click", () => {
