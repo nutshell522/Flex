@@ -160,84 +160,6 @@ namespace FlexCoreService.Controllers
         }
 
 
-        //[HttpPost("addPayInfo")]
-        //public string AddPayInfo(AddPayInfoDTO info)
-        //{
-        //   // 用AddPayInfoDTO接一個綠界回傳的JSON物件
-
-        //    info.RtnMsg = "已付款";
-        //    _repo.UpdatePayInfo(info);
-        //    return ("成功啦啦啦啦啦啦 收工下班!!!");
-
-        //}
-
-
-
-        //[HttpPost("addPayInfo")]
-        //public string AddPayInfo(IFormCollection collection)
-        //{
-        //    var data = new Dictionary<string, string>();
-        //    foreach (string key in collection.Keys)
-        //    {
-        //        data.Add(key, collection[key]);
-        //    }
-
-        //    string temp = collection["MerchantTradeNo"]; //寫在LINQ(下一行)會出錯，
-        //    var ecpayOrder = _db.EcpayOrders.Where(m => m.MerchantTradeNo == temp).FirstOrDefault();
-        //    if (ecpayOrder != null)
-        //    {
-        //        ecpayOrder.RtnCode = int.Parse(collection["RtnCode"]);
-        //        if (collection["RtnMsg"] == "Succeeded") ecpayOrder.RtnMsg = "八月十七已付款";
-        //        ecpayOrder.PaymentDate = Convert.ToDateTime(collection["PaymentDate"]);
-        //        ecpayOrder.SimulatePaid = int.Parse(collection["SimulatePaid"]);
-        //        _db.SaveChanges();
-        //    }
-        //    return ("成功");
-        //}
-
-        //[HttpPost("addPayInfo/{id}")]
-        //public string addPayInfo([FromForm] IFormCollection col)
-        //{
-        //    var data = new Dictionary<string, string>();
-        //    foreach (string key in col.Keys)
-        //    {
-        //        data.Add(key, col[key]);
-        //    }
-        //    var Orders = _context.EcpayOrders.ToList().Where(m => m.MerchantTradeNo == col["MerchantTradeNo"]).FirstOrDefault();
-        //    Orders.RtnCode = int.Parse(col["RtnCode"]);
-        //    if (col["RtnMsg"] == "Succeeded")
-        //    {
-        //        Orders.RtnMsg = "已付款";
-        //        Orders.PaymentDate = Convert.ToDateTime(col["PaymentDate"]);
-        //        Orders.SimulatePaid = int.Parse(col["SimulatePaid"]);
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    return ("成功");
-        //}
-
-        //[HttpPost("addPayInfo/{id}")]
-        //public string addPayInfo()
-        //{
-        //    var data = new Dictionary<string, string>();
-        //    foreach (string key in col.Keys)
-        //    {
-        //        data.Add(key, col[key]);
-        //    }
-        //    //var Orders = _context.EcpayOrders.ToList().Where(m => m.MerchantTradeNo == col["MerchantTradeNo"]).FirstOrDefault();
-        //    Orders.RtnCode = int.Parse(col["RtnCode"]);
-        //    if (col["RtnMsg"] == "Succeeded")
-        //    {
-        //        Orders.RtnMsg = "已付款";
-        //        Orders.PaymentDate = Convert.ToDateTime(col["PaymentDate"]);
-        //        Orders.SimulatePaid = int.Parse(col["SimulatePaid"]);
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    return ("成功");
-        //}
-
-
-
-
         private string GetCheckMacValue(Dictionary<string, string> order)
 
         {
@@ -265,5 +187,35 @@ namespace FlexCoreService.Controllers
             }
             return result.ToString();
         }
+
+
+        [HttpPost("addReservationOrderInfo")]
+        public async Task<string> ReservationAddOrder([FromBody]ReservationAddOrderDTO dto)
+        {
+            var memberInfo = await _actRepo.GetMembreInfoAsync(dto.memberId);
+            var order = new ReservationToOrdersDTO
+            {
+                orderCode = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 16),
+                ordertime = DateTime.Now,
+                fk_member_Id = dto.memberId,
+                cellphone = memberInfo.Mobile,
+                receiver = dto.speakerName,
+                recipient_address = dto.branchAddress,
+                close_time = dto.startTime
+            };
+
+
+            var orderId = _repo.UpdateReservationOrderInfo(order);
+
+            var orderItem = new ReservationToOrderItemDTO
+            {
+                order_Id = orderId
+            };
+
+            _repo.UpdateReservationOrderItemInfo(orderItem);
+            return ("新增預約資料成功");
+        }
+
+       
     }
 }

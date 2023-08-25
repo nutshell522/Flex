@@ -10,5 +10,7 @@ namespace FlexCoreService.ActivityCtrl.Interface
 
         int UpdateOrderInfo(ActivityToOrdersDTO order);
         void UpdateOrderItemInfo(ActivityToOrderItemDTO orderItem);
+        int UpdateReservationOrderInfo(ReservationToOrdersDTO order);
+        void UpdateReservationOrderItemInfo(ReservationToOrderItemDTO orderItem);
     }
 }

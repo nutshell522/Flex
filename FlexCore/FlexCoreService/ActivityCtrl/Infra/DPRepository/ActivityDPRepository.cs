@@ -46,6 +46,7 @@ WHERE ActivityId = @id
     ActivityCategoryName,
     Activities.ActivityDate,
     ActivityPlace,
+    ActivityBookEndTime,
     MIN(ActivityImg.ImgPath) AS ImgPath
 FROM
     Activities
@@ -54,7 +55,7 @@ JOIN
 JOIN
      ActivityCategories ON ActivityCategories.ActivityCategoryId = Activities.fk_ActivityCategoryId
 GROUP BY
-    Activities.ActivityId, Activities.ActivityName, ActivityCategories.ActivityCategoryName, ActivityPlace, Activities.ActivityDate";
+    Activities.ActivityId, Activities.ActivityName, ActivityCategories.ActivityCategoryName, ActivityPlace, ActivityBookEndTime, Activities.ActivityDate";
 
 
             using(var conn =new SqlConnection(_connStr))
