@@ -90,9 +90,8 @@
                           item.order_status_Id !== 9 &&
                           item.order_status_Id !== 8 &&
                           item.close !== true
-                          " @click="setreturnIdValue(item.id)" class="btn btn-primary" :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null
-    " :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null
-    ">
+                          " @click="setreturnIdValue(item.id);" class="btn btn-primary" :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null
+    " :data-bs-target="item.order_status_Id === 6 && item.pay_method_Id === 1 ? '#exampleModal' : '#exampleModal1'">
                           申請退貨
                         </button>
                         <button v-if="item.order_status_Id == 9" type="button" class="btn btn-secondary"
@@ -107,7 +106,7 @@
                     <td class="sceTr">數量：{{ orderItem.quantity }}</td>
                     <td class="sceTr">價格：{{ orderItem.per_price }}</td>
                     <td class="sceTr">規格：{{ orderItem.items_description }}</td>
-                    <td><button v-if="item.order_status_Id == 6 && orderItem.comment !== true &&
+                    <td><button v-if="item.order_status_Id == 6 && orderItem.comment === true &&
                       item.close == true" class="btn btn-primary" :data-bs-toggle="'modal'
     " :data-bs-target="'#exampleModal2'
     " @click="prepareCommentData(item.fk_member_Id, orderItem.productcommit, orderItem.id)">留下評論</button></td>
@@ -371,44 +370,72 @@
       </table>
     </div>
 
-    <template v-for="item in GetOrders" :key="item.id">
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">退款帳號:</label>
+              <input type="text" class="form-control" v-model="returnaccount" maxlength="16" />
             </div>
-            <div class="modal-body">
-              <div class="form-group" v-if="item.pay_method_Id === 1">
-                <label class="form-label">退款帳號:</label>
-                <input type="text" class="form-control" v-model="returnaccount" maxlength="16" />
-              </div>
-              <div class="form-group" v-else>
-                <label class="form-label">退款帳號</label>
-                <label class="form-label">此商品為信用卡付款</label>
-              </div>
-              <div class="form-group">
-                <label class="form-label">退貨原因:</label>
-                <select class="form-control" v-model="returnreason">
-                  <option v-for="reason in reReason" :key="reason.id" :value="reason.id">
-                    {{ reason.退貨理由 }}
-                  </option>
-                </select>
-              </div>
+            <div class="form-group">
+              <label class="form-label">退貨原因:</label>
+              <select class="form-control" v-model="returnreason">
+                <option v-for="reason in reReason" :key="reason.id" :value="reason.id">
+                  {{ reason.退貨理由 }}
+                </option>
+              </select>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
-                關閉
-              </button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
-                確定
-              </button>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
+              關閉
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
+              確定
+            </button>
           </div>
         </div>
       </div>
-    </template>
+    </div>
+
+    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">退款帳號:</label>
+              <label class="form-label">此商品為信用卡付款或第三方支付</label>
+            </div>
+            <div class="form-group">
+              <label class="form-label">退貨原因:</label>
+              <select class="form-control" v-model="returnreason">
+                <option v-for="reason in reReason" :key="reason.id" :value="reason.id">
+                  {{ reason.退貨理由 }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
+              關閉
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
+              確定
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <template v-for="item in GetOrders" :key="item.id">
       <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
@@ -691,12 +718,10 @@ const CancelReturnAndCloseOrders = async () => {
 };
 const Returndetail = async () => {
   let showError = false;
-
-  if (!returnaccount.value || isNaN(returnaccount.value) || returnaccount.value.length < 10) {
-    alert("請輸入有效的退款帳號（數字）");
+  if (returnaccount.value !== "" && !/^\d+$/.test(returnaccount.value)) {
+    alert("退貨原因必須是數字");
     showError = true;
   }
-
   if (!returnreason.value) {
     alert("請選擇退貨原因");
     showError = true;
@@ -704,6 +729,7 @@ const Returndetail = async () => {
 
   if (showError) {
     await CancelReturnAndCloseOrders();
+    return;
   }
   const requestData = {
     退貨轉帳帳號: returnaccount.value,
@@ -1232,5 +1258,11 @@ _::-moz-range-track {
   border-right: gray solid 2px;
   border-radius: 5px;
   padding-top: 10px;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>
