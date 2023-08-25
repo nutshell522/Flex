@@ -6,7 +6,7 @@
 
 		public string? ShoesName { get; set; }
 
-		public int ShoesCategoryId { get; set; }
+		public int? ShoesCategoryId { get; set; }
 
         public string? ShoesCategoryName { get; set; }
 

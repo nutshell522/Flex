@@ -1,7 +1,7 @@
 <template>
-  <div>
     <ShoesnavBar></ShoesnavBar>
-    <div class="container-body">
+  <div class="page-container1">
+    <div class="container-body mt-3">
       <div class="row">
         <div class="dscene col-6">
           <div class="sketchfab-embed-wrapper">
@@ -34,39 +34,32 @@
                 target="_blank"
                 rel="nofollow"
                 style="font-weight: bold; color: #1caad9"
-              >
-                shoes FILA 1
-              </a>
-              by
+              ></a>
               <a
                 href="https://sketchfab.com/thunk3d.scanner?utm_medium=embed&utm_campaign=share-popup&utm_content=b55a3d57f34847fc92f32d28d53684b4"
                 target="_blank"
                 rel="nofollow"
                 style="font-weight: bold; color: #1caad9"
-              >
-                thunk3d.scanner
-              </a>
-              on
+              ></a>
               <a
                 href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=b55a3d57f34847fc92f32d28d53684b4"
                 target="_blank"
                 rel="nofollow"
                 style="font-weight: bold; color: #1caad9"
-                >Sketchfab</a
-              >
+                ></a>
             </p>
           </div>
         </div>
         <div class="part col-6 ps-5">
           <div class="row" style="min-height: 129px">
-            <div class="col-7 detailTitle" :title="shoesChoose.shoesName">
+            <div class="col-7 detailTitle1" :title="shoesChoose.shoesName">
               {{ shoesChoose.shoesName }}
             </div>
             <div class="col-5">
               <div class="detailSalesPriceBox">
                 <div class="NTbox">NT$</div>
                 <div
-                  class="detailSalesPrice"
+                  class="detailSalesPrice1"
                   :title="shoesChoose.shoesUnitPrice"
                 >
                   {{ shoesChoose.shoesUnitPrice }}
@@ -88,9 +81,9 @@
                       {{ size.sizeName }}
                     </option>
                   </select>
-                  <label class="ms-2">請先選擇尺寸</label>
+                  <label class="ms-3">選擇尺寸</label>
                 </div>
-                  <div class="row d-flex me-3 col-8">
+                  <div class="row d-flex me-3 mt-1 mb-1  col-8">
                       <span
                         class="col-3"
                         style="
@@ -311,6 +304,7 @@
                     <input type="checkbox" v-model="agreeToCreateOrder" />
                     我同意建立訂單
                   </label>
+                  <span v-if="selectedSize.sizeId === undefined" style="color: red;" class="ms-2">請先選擇尺寸</span>
                 </div>
                 <router-link v-if="showCheckoutButton" :to="'/CustomeShoes' + '/detail/'+ 'Customization/' + 'order/' + ShoesOrderId">
                   <div class="col-6 mt-5 ms-6">
@@ -621,5 +615,22 @@ onMounted(() => {
 
 <style>
 /* ... (樣式代碼) */
+.page-container1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* 确保容器至少占满整个视口高度 */
+}
+
+.detailSalesPrice1 {
+  color: red;
+  font-size: 60px;
+  font-weight: 500;
+}
+
+.detailTitle1
+{
+  font-size: 30px;
+}
 
 </style>
