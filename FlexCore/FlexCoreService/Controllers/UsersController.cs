@@ -470,7 +470,11 @@ namespace FlexCoreService.Controllers
             {
                 return NotFound("找不到對應的會員資料");
             }
-            else if (member.EncryptedPassword == logindto.EncryptedPassword)
+
+            // 取出用戶密碼
+            string hashedPwdFromDb = member.EncryptedPassword;
+
+            if (Cryptography.VerifyHash(logindto.EncryptedPassword, hashedPwdFromDb))
             {
                 return Ok("驗證通過");
             }
@@ -478,8 +482,8 @@ namespace FlexCoreService.Controllers
             {
                 return BadRequest("密碼不正確");
             }
-
         }
+
 
         /// <summary>
         /// 收藏喜愛商品

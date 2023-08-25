@@ -495,12 +495,12 @@ function handleGoogleLoginUserData(googleLoginUserData) {
 
             Login2(googleLoginUserData);
             //alert('為什麼要延遲啦');
-            //todo修改;
+
             Swal.fire({
               icon: 'success',
               title: 'Flex歡迎您~~',
             });
-
+            //todo畫面不會跳轉
             window.location.href = '/';
           })
           .catch((err) => {

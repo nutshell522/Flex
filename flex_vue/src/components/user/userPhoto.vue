@@ -1,7 +1,7 @@
 <template>
-  <div class="user" v-if="userPhoto">
+  <div v-if="userPhoto" class="userBox">
     <img :src="imageSrc + imgPath" class="userPhoto" />
-    <div class="">Hi~Hi~ {{ userName }}</div>
+    <div class="userName">Hi~Hi~ {{ userName }}</div>
   </div>
 </template>
 
@@ -21,21 +21,23 @@ let userName = null;
 if (userObject) {
   userPhoto.value = true;
   userName = ref(userObject.username ? userObject.username : null);
-  console.log(userName.value);
 }
 </script>
 
 <style scoped>
-.user {
-  border-radius: 50%;
-  position: fixed;
-  top: 25%;
-  right: 1%;
-  font-size: 20px;
-}
 .userPhoto {
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
+}
+.userBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.userName {
+  position: absolute;
+  left: 60px;
+  width: 150px;
 }
 </style>
