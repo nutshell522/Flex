@@ -129,7 +129,6 @@ import { onMounted, ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
-//import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
 const shoesDetail = ref({});

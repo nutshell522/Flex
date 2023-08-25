@@ -1,4 +1,4 @@
-﻿/****** Object:  Table [dbo].[Activities]    Script Date: 2023/8/21 下午 03:55:41 ******/
+﻿/****** Object:  Table [dbo].[Activities]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23,7 +23,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ActivityCategories]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ActivityCategories]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -37,7 +37,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ActivityImg]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ActivityImg]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -52,7 +52,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ActivityStatuses]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ActivityStatuses]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -66,7 +66,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AlternateAddresses]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[AlternateAddresses]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -82,7 +82,7 @@ CREATE TABLE [dbo].[AlternateAddresses](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[BlackLists]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[BlackLists]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -97,7 +97,7 @@ CREATE TABLE [dbo].[BlackLists](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Branches]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Branches]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -112,7 +112,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CartItems]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[CartItems]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -129,7 +129,7 @@ CREATE TABLE [dbo].[CartItems](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ColorCategories]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ColorCategories]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -143,7 +143,7 @@ CREATE TABLE [dbo].[ColorCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CouponCategories]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[CouponCategories]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -157,7 +157,7 @@ CREATE TABLE [dbo].[CouponCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Coupons]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Coupons]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -186,7 +186,7 @@ CREATE TABLE [dbo].[Coupons](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CouponSendings]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[CouponSendings]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -206,7 +206,7 @@ CREATE TABLE [dbo].[CouponSendings](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Customized_materials]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Customized_materials]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -220,7 +220,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CustomizedOrders]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[CustomizedOrders]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -244,7 +244,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CustomizedShoesPo]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[CustomizedShoesPo]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -268,7 +268,7 @@ CREATE TABLE [dbo].[CustomizedShoesPo](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Departments]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Departments]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -282,7 +282,7 @@ CREATE TABLE [dbo].[Departments](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Discounts]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Discounts]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -306,7 +306,7 @@ CREATE TABLE [dbo].[Discounts](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[EcpayOrders]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[EcpayOrders]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -332,7 +332,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Favorites]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Favorites]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -347,7 +347,7 @@ CREATE TABLE [dbo].[Favorites](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[JobTitles]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[JobTitles]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -362,7 +362,7 @@ CREATE TABLE [dbo].[JobTitles](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[logistics_companies]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[logistics_companies]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -378,13 +378,13 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MemberImg]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[MemberImg]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[MemberImg](
-	[Id] [int] NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[fk_memberId] [int] NOT NULL,
 	[ImgPath] [nvarchar](254) NOT NULL,
  CONSTRAINT [PK_MemberImg] PRIMARY KEY CLUSTERED 
@@ -393,7 +393,7 @@ CREATE TABLE [dbo].[MemberImg](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MemberPoints]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[MemberPoints]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -408,7 +408,7 @@ CREATE TABLE [dbo].[MemberPoints](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Members]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Members]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -436,7 +436,7 @@ CREATE TABLE [dbo].[Members](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MembershipLevelPrivileges]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[MembershipLevelPrivileges]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -451,7 +451,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MembershipLevels]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[MembershipLevels]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -468,7 +468,7 @@ CREATE TABLE [dbo].[MembershipLevels](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[OneToOneReservations]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[OneToOneReservations]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -488,7 +488,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[order_statuses]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[order_statuses]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -502,7 +502,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[orderItems]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[orderItems]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -526,7 +526,7 @@ CREATE TABLE [dbo].[orderItems](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[orders]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[orders]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -563,7 +563,7 @@ CREATE TABLE [dbo].[orders](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[pay_methods]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[pay_methods]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -577,7 +577,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[pay_statuses]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[pay_statuses]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -591,7 +591,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PointHistories]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[PointHistories]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -611,7 +611,7 @@ CREATE TABLE [dbo].[PointHistories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PointManage]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[PointManage]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -629,7 +629,7 @@ CREATE TABLE [dbo].[PointManage](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PointTradeIn]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[PointTradeIn]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -649,7 +649,7 @@ CREATE TABLE [dbo].[PointTradeIn](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Privileges]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Privileges]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -664,7 +664,7 @@ CREATE TABLE [dbo].[Privileges](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductCategories]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ProductCategories]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -680,7 +680,7 @@ CREATE TABLE [dbo].[ProductCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductComment]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ProductComment]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -695,7 +695,7 @@ CREATE TABLE [dbo].[ProductComment](
 	[CreateTime] [datetime] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductGroups]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ProductGroups]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -712,7 +712,7 @@ CREATE TABLE [dbo].[ProductGroups](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductImgs]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ProductImgs]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -728,7 +728,7 @@ CREATE TABLE [dbo].[ProductImgs](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Products]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Products]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -755,7 +755,7 @@ CREATE TABLE [dbo].[Products](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductSubCategories]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ProductSubCategories]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -771,7 +771,7 @@ CREATE TABLE [dbo].[ProductSubCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProjectTagItems]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ProjectTagItems]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -786,7 +786,7 @@ CREATE TABLE [dbo].[ProjectTagItems](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProjectTags]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ProjectTags]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -803,7 +803,7 @@ CREATE TABLE [dbo].[ProjectTags](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReservationImg]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ReservationImg]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -817,7 +817,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReservationReviews]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ReservationReviews]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -835,7 +835,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReservationStatuses]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ReservationStatuses]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -849,7 +849,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReturnResons]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ReturnResons]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -863,7 +863,7 @@ CREATE TABLE [dbo].[ReturnResons](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Returns]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Returns]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -881,7 +881,7 @@ CREATE TABLE [dbo].[Returns](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SalesCategories]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[SalesCategories]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -895,7 +895,7 @@ CREATE TABLE [dbo].[SalesCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesCategories]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ShoesCategories]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -909,7 +909,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesChooses]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ShoesChooses]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -923,7 +923,7 @@ CREATE TABLE [dbo].[ShoesChooses](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesColorCategories]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ShoesColorCategories]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -938,13 +938,13 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesGroups]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ShoesGroups]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ShoesGroups](
-	[ShoesGroupId] [int] IDENTITY(1,1) NOT NULL,
+	[ShoesGroupId] [int] NOT NULL,
 	[fk_ShoesMainId] [int] NOT NULL,
 	[fk_OptionId] [int] NOT NULL,
 	[fk_MaterialId] [int] NOT NULL,
@@ -956,7 +956,7 @@ CREATE TABLE [dbo].[ShoesGroups](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesOrders]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ShoesOrders]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -966,13 +966,13 @@ CREATE TABLE [dbo].[ShoesOrders](
 	[Qty] [int] NOT NULL,
 	[fk_ShoesSizeId] [int] NOT NULL,
 	[Remark] [nvarchar](300) NULL,
-PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK__ShoesOrd__D62D11F5D1F564A0] PRIMARY KEY CLUSTERED 
 (
 	[ShoesOrderId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesPictures]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ShoesPictures]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -987,7 +987,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoesSizes]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ShoesSizes]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1001,7 +1001,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ShoppingCarts]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[ShoppingCarts]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1017,7 +1017,7 @@ CREATE TABLE [dbo].[ShoppingCarts](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SizeCategories]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[SizeCategories]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1031,7 +1031,7 @@ CREATE TABLE [dbo].[SizeCategories](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SpeakerFields]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[SpeakerFields]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1045,7 +1045,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Speakers]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Speakers]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1065,7 +1065,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[StaffPermissions]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[StaffPermissions]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1079,7 +1079,7 @@ CREATE TABLE [dbo].[StaffPermissions](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Staffs]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Staffs]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1105,7 +1105,7 @@ CREATE TABLE [dbo].[Staffs](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Suppliers]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Suppliers]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1126,7 +1126,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Type]    Script Date: 2023/8/21 下午 03:55:41 ******/
+/****** Object:  Table [dbo].[Type]    Script Date: 2023/8/23 上午 10:35:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1152,13 +1152,13 @@ SET IDENTITY_INSERT [dbo].[ReturnResons] OFF
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Activity__732635ECC3234AE3]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__Activity__732635ECC3234AE3]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[ActivityStatuses] ADD UNIQUE NONCLUSTERED 
 (
 	[ActivityStatusDescription] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Alternat__3B54230C0458ABB6]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__Alternat__3B54230C0458ABB6]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[AlternateAddresses] ADD  CONSTRAINT [UQ__Alternat__3B54230C0458ABB6] UNIQUE NONCLUSTERED 
 (
 	[fk_MemberId] ASC
@@ -1166,7 +1166,7 @@ ALTER TABLE [dbo].[AlternateAddresses] ADD  CONSTRAINT [UQ__Alternat__3B54230C04
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Branches__3903DB039F33E464]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__Branches__3903DB039F33E464]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[Branches] ADD UNIQUE NONCLUSTERED 
 (
 	[BranchName] ASC
@@ -1174,7 +1174,7 @@ ALTER TABLE [dbo].[Branches] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Branches__F50DE17ADA6CEAE5]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__Branches__F50DE17ADA6CEAE5]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[Branches] ADD UNIQUE NONCLUSTERED 
 (
 	[BranchAddress] ASC
@@ -1182,13 +1182,13 @@ ALTER TABLE [dbo].[Branches] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__JobTitle__252BE89C516695E0]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__JobTitle__252BE89C516695E0]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[JobTitles] ADD  CONSTRAINT [UQ__JobTitle__252BE89C516695E0] UNIQUE NONCLUSTERED 
 (
 	[TitleName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__MemberPo__3B54230C8C81DA21]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__MemberPo__3B54230C8C81DA21]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[MemberPoints] ADD  CONSTRAINT [UQ__MemberPo__3B54230C8C81DA21] UNIQUE NONCLUSTERED 
 (
 	[fk_MemberId] ASC
@@ -1196,7 +1196,7 @@ ALTER TABLE [dbo].[MemberPoints] ADD  CONSTRAINT [UQ__MemberPo__3B54230C8C81DA21
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Members__6FAE0782E1A56EB7]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__Members__6FAE0782E1A56EB7]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__6FAE0782E1A56EB7] UNIQUE NONCLUSTERED 
 (
 	[Mobile] ASC
@@ -1204,7 +1204,7 @@ ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__6FAE0782E1A56EB7] UNIQ
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Members__A9D1053442354E1D]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__Members__A9D1053442354E1D]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__A9D1053442354E1D] UNIQUE NONCLUSTERED 
 (
 	[Email] ASC
@@ -1212,7 +1212,7 @@ ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__A9D1053442354E1D] UNIQ
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Members__B0C3AC46ED2152FF]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__Members__B0C3AC46ED2152FF]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__B0C3AC46ED2152FF] UNIQUE NONCLUSTERED 
 (
 	[Account] ASC
@@ -1220,7 +1220,7 @@ ALTER TABLE [dbo].[Members] ADD  CONSTRAINT [UQ__Members__B0C3AC46ED2152FF] UNIQ
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Reservat__ADF40EA69A43DA4D]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__Reservat__ADF40EA69A43DA4D]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[ReservationStatuses] ADD UNIQUE NONCLUSTERED 
 (
 	[ReservationStatusDescription] ASC
@@ -1228,13 +1228,13 @@ ALTER TABLE [dbo].[ReservationStatuses] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__StaffPer__9EF3BE7B6829F02D]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__StaffPer__9EF3BE7B6829F02D]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[StaffPermissions] ADD  CONSTRAINT [UQ__StaffPer__9EF3BE7B6829F02D] UNIQUE NONCLUSTERED 
 (
 	[LevelName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Supplier__AE8E9B41AC4E0B89]    Script Date: 2023/8/21 下午 03:55:42 ******/
+/****** Object:  Index [UQ__Supplier__AE8E9B41AC4E0B89]    Script Date: 2023/8/23 上午 10:35:45 ******/
 ALTER TABLE [dbo].[Suppliers] ADD UNIQUE NONCLUSTERED 
 (
 	[SupplierCompanyNumber] ASC
@@ -1642,8 +1642,10 @@ REFERENCES [dbo].[ShoesOrders] ([ShoesOrderId])
 GO
 ALTER TABLE [dbo].[ShoesGroups] CHECK CONSTRAINT [FK_ShoesGroups_ShoesOrders]
 GO
-ALTER TABLE [dbo].[ShoesOrders]  WITH CHECK ADD FOREIGN KEY([fk_ShoesSizeId])
+ALTER TABLE [dbo].[ShoesOrders]  WITH CHECK ADD  CONSTRAINT [FK__ShoesOrde__Remar__12FDD1B2] FOREIGN KEY([fk_ShoesSizeId])
 REFERENCES [dbo].[ShoesSizes] ([SizeId])
+GO
+ALTER TABLE [dbo].[ShoesOrders] CHECK CONSTRAINT [FK__ShoesOrde__Remar__12FDD1B2]
 GO
 ALTER TABLE [dbo].[ShoesPictures]  WITH CHECK ADD  CONSTRAINT [FK__ShoesPict__fk_Sh__70A8B9AE] FOREIGN KEY([fk_ShoesPictureProduct_Id])
 REFERENCES [dbo].[CustomizedShoesPo] ([ShoesProductId])
@@ -1679,8 +1681,6 @@ REFERENCES [dbo].[JobTitles] ([TitleId])
 GO
 ALTER TABLE [dbo].[Staffs] CHECK CONSTRAINT [FK__Staffs__fk_Title__76619304]
 GO
-
-
 
 
 --建倫***************************************************************--
@@ -5029,6 +5029,23 @@ GO
 SET IDENTITY_INSERT [dbo].[Favorites] OFF
 GO
 
+--------------------------------------------------------------------------------
+--照片
+GO
+SET IDENTITY_INSERT [dbo].[MemberImg] ON 
+GO
+INSERT [dbo].[MemberImg] ([Id], [ImgPath], [fk_memberId]) VALUES (1, N'Tony.jpg', 1)
+GO
+INSERT [dbo].[MemberImg] ([Id], [ImgPath], [fk_memberId]) VALUES (2, N'Eve.jpg', 2)
+GO
+INSERT [dbo].[MemberImg] ([Id], [ImgPath], [fk_memberId]) VALUES (3, N'Cindy.jpeg', 3)
+GO
+INSERT [dbo].[MemberImg] ([Id], [ImgPath], [fk_memberId]) VALUES (4, N'Tina.jpg', 4)
+GO
+INSERT [dbo].[MemberImg] ([Id], [ImgPath], [fk_memberId]) VALUES (5, N'Tina.jpg', 54)
+GO
+SET IDENTITY_INSERT [dbo].[MemberImg] OFF
+GO
 
 
 --婉馨******************************************************************************--

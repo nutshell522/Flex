@@ -7,13 +7,12 @@ namespace FlexCoreService.CustomeShoes.Exts
 {
 	public static class ShoesCategoryExts
 	{
-		public static ShoesCategoryVM ToVM(this ShoesCategoryDto dto)
-		{
-			return new ShoesCategoryVM
-			{
-				ShoesCategoryId = dto.ShoesCategoryId,
-				ShoesCategoryName = dto.ShoesCategoryName
-			};
-		}
-	}
+        public static ShoesCategoryVM ToCategoryVM(this IEnumerable<ShoesCategoryDto> dto)
+        {
+            return new ShoesCategoryVM
+            {        
+                ShoesCategories = dto.ToList(),
+            };
+        }
+    }
 }

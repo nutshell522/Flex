@@ -1,4 +1,27 @@
 import axios from "axios";
+export class Discount {
+  discountId: number = 0;
+  discountName: string = '';
+  discountDescription: string = '';
+  projectTagId: number = 0;
+  startDate: Date = new Date();
+  endDate: Date | null = null;
+}
+export class SalesCategory {
+  id: number = 0;
+  salesCategoryName: string = '';
+  salesCategoryStr: string = '';
+}
+export class OnSaleProduct {
+  imgPath: string = '';
+  productDescription: string = '';
+  productId: string = '';
+  productName: string = '';
+  salesPrice: number = 0;
+  unitPrice: number | null = null;
+  salesCategoryId: number = 0;
+  salesCategoryStr: string = '';
+}
 export class Coupon {
   id: number = 0;
   couponCategoryId: number = 0;

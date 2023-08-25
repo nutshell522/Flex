@@ -36,14 +36,24 @@ const maxPrice = ref(productStore.maxPrice);
 
 const minPriceHandler = (event) => {
   minPrice.value = event.target.value.replace(/\D/g, "");
+  if (minPrice.value > 2000) {
+    minPrice.value = 2000;
+  }
 };
 
 const maxPriceHandler = (event) => {
   maxPrice.value = event.target.value.replace(/\D/g, "");
+  if (maxPrice.value > 9999) {
+    maxPrice.value = 9999;
+  }
 };
 
 const searchPriceHandler = () => {
-  productStore.setPriceInfo(minPrice.value, maxPrice.value);
+  if (minPrice.value > maxPrice.value) {
+    alert("請確認金額填寫是否正確");
+  } else {
+    productStore.setPriceInfo(minPrice.value, maxPrice.value);
+  }
 };
 
 // const emit = defineEmits(["searchPriceInput"]);

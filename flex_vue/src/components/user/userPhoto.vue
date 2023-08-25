@@ -8,7 +8,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑
+const imageSrc = ref('./../../../public/imgs/');
 const userPhoto = ref(false);
 
 const loggedInUser = localStorage.getItem('loggedInUser');

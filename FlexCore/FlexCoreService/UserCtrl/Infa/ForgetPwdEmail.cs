@@ -1,10 +1,10 @@
 ﻿using System.Net.Mail;
-using System.Net;
 using System.Net.Mime;
+using System.Net;
 
 namespace FlexCoreService.UserCtrl.Infa
 {
-    public class SendEmail
+    public class ForgetPwdEmail
     {
         public void Sendemail(string email)
         {
@@ -14,15 +14,18 @@ namespace FlexCoreService.UserCtrl.Infa
             MailMessage mms = new MailMessage();
             mms.From = new MailAddress(senderemail);
             mms.To.Add(email);
-            mms.Subject = "flex 註冊驗證信";
-            
+            mms.Subject = "flex 重新設定密碼驗證信";
+
 
             // 使用 AlternateView 添加 HTML 內容，包含圖片
             string htmlBody = @"
         <html>
             <body>
-                <h1>感謝您註冊成為 flex 的會員!</h1>                
-                <h3>請點擊「啟用帳戶」連結來啟用您的帳戶:<a href='https://localhost:8080/login'> 啟用帳戶</a></h3>
+                <h1>以下為 flex 提供的預設密碼</h1>
+                <h3>預設密碼:</h3>               
+                <h3>d52hlew</h3>
+
+                <h3>請使用「預設密碼」登入您的帳戶以後至 會員中心>個人資料>變更密碼 進行密碼修改:<a href='https://localhost:8080/login'> 馬上登入重新設定密碼 </a></h3>
                 <br>
                 <img src='cid:logo'>
             </body>
@@ -54,5 +57,6 @@ namespace FlexCoreService.UserCtrl.Infa
             }
 
         }
+
     }
 }
