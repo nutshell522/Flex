@@ -19,6 +19,8 @@ using FlexCoreService.ProductCtrl.Models.Dtos;
 using FlexCoreService.UserCtrl.Interface;
 using FlexCoreService.UserCtrl.Service;
 using FlexCoreService.UserCtrl.Infa;
+using Bogus;
+using Bogus.DataSets;
 
 
 namespace FlexCoreService.Controllers
@@ -105,18 +107,18 @@ namespace FlexCoreService.Controllers
         /// <summary>
         /// 登入中
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="logindto"></param>
         /// <returns></returns>
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto value)
+        public async Task<IActionResult> Login([FromBody] LoginDto logindto)
         {
             var userData = (from m in _db.Members
-                            where m.Account == value.Account
+                            where m.Account == logindto.Account
                             select m).SingleOrDefault();
 
             var userPassword = string.Empty;
 
-            if (userData == null && value.EncryptedPassword == null)
+            if (userData == null && logindto.EncryptedPassword == null)
             {
                 return Ok(null);
             }
@@ -135,7 +137,7 @@ namespace FlexCoreService.Controllers
                 //驗證密碼
                 userPassword = userData.EncryptedPassword;
 
-                if (value.EncryptedPassword != null)
+                if (logindto.EncryptedPassword != null)
                 {
                     
                         var claims = new List<Claim>
@@ -176,16 +178,6 @@ namespace FlexCoreService.Controllers
         }
 
         /// <summary>
-        /// 測試登入狀態
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public bool IsLogin()
-        {
-            return User.Identity.IsAuthenticated;
-        }
-
-        /// <summary>
         /// 未登入
         /// </summary>
         /// <returns></returns>
@@ -217,7 +209,7 @@ namespace FlexCoreService.Controllers
                     Name = regdto.Name,
                     Email = regdto.Email,
                     Mobile = "0921554545",//todo自動給或留空
-                    fk_LevelId = 1//一般會員                
+                    fk_LevelId = 1                
                 };
                 _db.Members.Add(member);
 
@@ -234,7 +226,7 @@ namespace FlexCoreService.Controllers
                     Birthday = regdto.Birthday,
                     Mobile = regdto.Mobile,
                     CommonAddress = regdto.CommonAddress,
-                    fk_LevelId = 1//一般會員                
+                    fk_LevelId = 1             
                 };
                 //發送驗證信
                 SendEmail sendEmail = new SendEmail();
@@ -520,16 +512,6 @@ namespace FlexCoreService.Controllers
         [HttpGet("GetFavorites")]
         public async Task<ActionResult<IEnumerable<ProductCardDto>>> GetFavorites(int memberId)
         {
-            //List<string> favoriteProductIds = await _db.Favorites.Where(f=>f.fk_memberId == memberId).Select(f=>f.fk_productId).ToListAsync();
-
-            //if (favoriteProductIds.Count == 0)
-            //{
-            //    return Ok("尚未收藏商品喔!");
-            //}
-            //else
-            //{
-            //    return Ok(favoriteProductIds);
-            //}
             var service = new FavoriteService(_repo);
             var pro = service.GetFavorites(memberId);
 
@@ -541,13 +523,17 @@ namespace FlexCoreService.Controllers
         [HttpGet("IsFavorite")]
         public async Task<ActionResult<bool>> GetIsFavorite(int memberId,string productId)
         {
-
             var service = new FavoriteService(_repo);
             var isFavorite = service.GetIsFavorite(memberId, productId);
 
             return Ok(isFavorite);
         }
 
+        /// <summary>
+        /// 刪除喜愛商品
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpDelete("DeleteFavorite")]
         public async Task<ActionResult<string>>DeleteFavoriteProduct(FavoritesDto dto)
         {
@@ -565,6 +551,44 @@ namespace FlexCoreService.Controllers
             return Ok("取消收藏失敗");
         }
 
+        /// <summary>
+        /// 測試登入狀態
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public bool IsLogin()
+        {
+            return User.Identity.IsAuthenticated;
+        }
+
+        [HttpGet("GetTestUserRegData")]
+        public async Task<ActionResult<RegisterDto>> GetTestUserRegData()
+        {
+            // 建立一個假資料產生器
+            var faker = new Faker();
+
+            string username = faker.Internet.UserName();
+            string password = faker.Internet.Password();
+            string fullName = faker.Name.FullName();
+            string email = faker.Internet.Email();
+            DateTime birthday = faker.Date.Past(18, DateTime.Now.AddYears(-30)).Date;
+            string phoneNumber = faker.Phone.PhoneNumber("09########");
+            string address = faker.Address.FullAddress();
+
+            RegisterDto testUserRegData = new RegisterDto
+            {
+                Account = username,
+                EncryptedPassword = password,
+                Name=fullName,
+                Email=email,
+                Birthday=birthday,
+                Mobile=phoneNumber,
+                fk_LevelId=1,
+                CommonAddress=address
+            };
+
+            return testUserRegData;
+        }
         private bool MemberExists(int id)
         {
             return (_db.Members?.Any(e => e.MemberId == id)).GetValueOrDefault();

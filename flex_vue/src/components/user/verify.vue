@@ -90,7 +90,8 @@ function openEye() {
 .eye {
   position: absolute;
   right: 10px;
-  top: 15%;
+  top: 12%;
+  font-size: 20px;
 }
 .pwdInput {
   margin: auto;
