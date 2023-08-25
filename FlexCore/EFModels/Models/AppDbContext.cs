@@ -396,7 +396,7 @@ namespace EFModels.Models
             modelBuilder.Entity<Customized_material>(entity =>
             {
                 entity.HasKey(e => e.Shoesmaterial_Id)
-                    .HasName("PK__Customiz__06EFE12D6E6862E6");
+                    .HasName("PK__Customiz__06EFE12D28134B04");
 
                 entity.Property(e => e.material_Name)
                     .IsRequired()
@@ -548,6 +548,8 @@ namespace EFModels.Models
             modelBuilder.Entity<MemberImg>(entity =>
             {
                 entity.ToTable("MemberImg");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.ImgPath)
                     .IsRequired()
@@ -789,8 +791,6 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ProductComment>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("ProductComment");
 
                 entity.Property(e => e.CreateTime)
@@ -801,16 +801,14 @@ namespace EFModels.Models
                     .IsRequired()
                     .HasMaxLength(1000);
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
                 entity.HasOne(d => d.fk_Member)
-                    .WithMany()
+                    .WithMany(p => p.ProductComments)
                     .HasForeignKey(d => d.fk_MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductComment_Members");
 
                 entity.HasOne(d => d.fk_ProductGroup)
-                    .WithMany()
+                    .WithMany(p => p.ProductComments)
                     .HasForeignKey(d => d.fk_ProductGroupId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductComment_ProductGroups");
@@ -961,6 +959,10 @@ namespace EFModels.Models
             {
                 entity.Property(e => e.退貨日期).HasColumnType("datetime");
 
+                entity.Property(e => e.退貨轉帳帳號)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.fk訂單Navigation)
                     .WithMany(p => p.Returns)
                     .HasForeignKey(d => d.fk訂單)
@@ -1061,7 +1063,7 @@ namespace EFModels.Models
                     .WithMany(p => p.ShoesOrders)
                     .HasForeignKey(d => d.fk_ShoesSizeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ShoesOrde__Remar__12FDD1B2");
+                    .HasConstraintName("FK__ShoesOrde__fk_Sh__078C1F06");
             });
 
             modelBuilder.Entity<ShoesPicture>(entity =>
@@ -1215,7 +1217,7 @@ namespace EFModels.Models
 
             modelBuilder.Entity<Supplier>(entity =>
             {
-                entity.HasIndex(e => e.SupplierCompanyNumber, "UQ__Supplier__AE8E9B4122B9D43C")
+                entity.HasIndex(e => e.SupplierCompanyNumber, "UQ__Supplier__AE8E9B41E2C63B84")
                     .IsUnique();
 
                 entity.Property(e => e.SupplierCompanyAddress).HasMaxLength(250);

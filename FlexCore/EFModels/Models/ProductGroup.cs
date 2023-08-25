@@ -10,6 +10,7 @@ namespace EFModels.Models
         public ProductGroup()
         {
             CartItems = new HashSet<CartItem>();
+            ProductComments = new HashSet<ProductComment>();
         }
 
         public int ProductGroupId { get; set; }
@@ -22,5 +23,6 @@ namespace EFModels.Models
         public virtual Product fk_Product { get; set; }
         public virtual SizeCategory fk_Size { get; set; }
         public virtual ICollection<CartItem> CartItems { get; set; }
+        public virtual ICollection<ProductComment> ProductComments { get; set; }
     }
 }
