@@ -109,7 +109,6 @@
           v-model="mobile"
         />
       </div>
-      showUserData
     </div>
     <div class="col-md-6 birthday">
       <div class="input-group">
@@ -250,7 +249,7 @@ function fileChange(event) {
   };
   reader.readAsDataURL(selectedFile);
 
-  const response = axios
+  axios
     .post(
       edituri,
       { image: selectedFile },

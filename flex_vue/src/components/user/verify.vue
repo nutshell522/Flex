@@ -21,7 +21,7 @@
           <i class="bi" :class="eye ? 'bi-eye' : 'bi-eye-slash'"></i>
         </div>
       </div>
-      <button type="button" class="btn btn-info" @click="send">送出</button>
+      <button type="button" class="btn btn-info" @click="sendBtn">送出</button>
     </div>
     <div class="col-md-6">
       <div>
@@ -46,11 +46,10 @@ const close = () => {
   verifyArea.value = false;
 };
 
-const baseAddress = 'https://localhost:7183/api';
-const verifyUri = `${baseAddress}/Users/Verify`;
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const verifyUri = `${baseAddress}api/Users/Verify`;
 
-function send() {
-  //alert('send');
+function sendBtn() {
   if (!password.value) {
     errors.value = [];
     errors.value.push('請確實填寫');
@@ -61,7 +60,6 @@ function send() {
       Account: userAcc,
       EncryptedPassword: password.value,
     };
-    console.log(userInfo);
 
     axios
       .post(verifyUri, userInfo)
@@ -92,7 +90,8 @@ function openEye() {
 .eye {
   position: absolute;
   right: 10px;
-  top: 15%;
+  top: 12%;
+  font-size: 20px;
 }
 .pwdInput {
   margin: auto;

@@ -7,7 +7,7 @@
       </button>
     </div>
     <div class="loginText">
-      <h4>Flex Your Journey. Join us!</h4>
+      <h4 @click="testData">Flex Your Journey. Join us!</h4>
     </div>
     <div class="from-group" v-if="errors.length">
       <ul class="mb-3 errorsText">
@@ -28,7 +28,8 @@
         id="account"
         v-model="account"
         class="form-control"
-        placeholder="手機號碼/帳號/Email"
+        placeholder="帳號/Email"
+        maxlength="10"
       />
     </div>
     <div class="from-group mb-3 pwdInput" v-if="validated">
@@ -238,8 +239,6 @@ const uri = `${baseAddress}api/Users/Login`;
 var loginData = {};
 
 function ValidatedIdentity() {
-  localStorage.setItem('userAcc', account.value);
-
   if (account.value === '') {
     errors.value = [];
     loading.value = false;
@@ -266,7 +265,7 @@ function ValidatedIdentity() {
           logAndRegBtn.value = false;
 
           errors.value = [];
-          errors.value.push('請先註冊帳號');
+          errors.value.push('此註冊帳號尚未註冊');
           validated.value = true;
           unValidated.value = true; //信箱
           nameInput.value = true;
@@ -303,6 +302,7 @@ function Login() {
   axios
     .post(uri, loginData)
     .then((res) => {
+      localStorage.setItem('userAcc', account.value);
       const jsonData = res.data;
       const userPassword = jsonData.find(
         (claim) => claim.Type === 'UserPassword'
@@ -376,46 +376,6 @@ async function Login2(googleLoginUserData) {
     return 'userNotFound'; // 登录失败时返回
   }
 }
-
-// async function Login2(googleLoginUserData) {
-//   const userDatas = {
-//     account: googleLoginUserData.email,
-//     EncryptedPassword: googleLoginUserData.email,
-//   };
-
-//   try {
-//     const res = await axios.post(uri, userDatas);
-
-//     const jsonData = res.data;
-//     const userPassword = jsonData.find(
-//       (claim) => claim.Type === 'UserPassword'
-//     );
-
-//     const userEmail = jsonData.find((claim) => claim.Type === 'UserPassword');
-//     const userName = jsonData.find((claim) => claim.Type === 'FullName');
-//     const userId = jsonData.find((claim) => claim.Type === 'MemberId');
-//     const userPhoto = jsonData.find((claim) => claim.Type === 'MemberImg');
-
-//     // 一般登入者資料包成物件
-//     const memberInfo = {
-//       userEmail: userEmail.Value,
-//       username: userName.Value,
-//       memberId: userId.Value,
-//       memberPhoto: userPhoto.Value,
-//     };
-
-//     if (memberInfo) {
-//       setMemberUsername(memberInfo);
-//     }
-//     handleSuccessfulLogin(memberInfo);
-//     localStorage.setItem('userAcc', userEmail.Value);
-
-//     return 'loginSuccess';
-//   } catch (err) {
-//     console.log('取得google登入這資訊失敗', err);
-//     return 'userNotFound';
-//   }
-// }
 
 // 將用戶信息轉成字串儲存到本地存儲中
 function handleSuccessfulLogin(memberInfo) {
@@ -495,12 +455,12 @@ function handleGoogleLoginUserData(googleLoginUserData) {
 
             Login2(googleLoginUserData);
             //alert('為什麼要延遲啦');
-            //todo修改;
+
             Swal.fire({
               icon: 'success',
               title: 'Flex歡迎您~~',
             });
-
+            //todo畫面不會跳轉
             window.location.href = '/';
           })
           .catch((err) => {
@@ -542,6 +502,47 @@ function openEye1() {
 function openEye2() {
   eye2.value = !eye2.value;
 }
+
+function testData() {
+  var testDataUri = `${baseAddress}api/Users/GetTestUserRegData`;
+  axios
+    .get(testDataUri)
+    .then((res) => {
+      const testUserRegData = {
+        account: res.data.account,
+        password: res.data.encryptedPassword,
+        name: res.data.name,
+        email: res.data.email,
+        birthday: res.data.birthday,
+        mobile: res.data.mobile,
+        address: res.data.commonAddress,
+      };
+      if (account.value == '') {
+        account.value = testUserRegData.account;
+      }
+      if (password.value == '') {
+        password.value = testUserRegData.password;
+      }
+      if (name.value == '') {
+        name.value = testUserRegData.name;
+      }
+      if (email.value == '') {
+        email.value = testUserRegData.email;
+      }
+      if (birthday.value == '') {
+        birthday.value = testUserRegData.birthday;
+      }
+      if (mobile.value == '') {
+        mobile.value = testUserRegData.mobile;
+      }
+      if (address.value == '') {
+        address.value = testUserRegData.address;
+      }
+    })
+    .catch((err) => {
+      console.log('測試資料取得失敗', err);
+    });
+}
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap');
@@ -551,7 +552,8 @@ function openEye2() {
 .eye {
   position: absolute;
   right: 10px;
-  top: 50%;
+  top: 48%;
+  font-size: 20px;
 }
 .loginBox {
   width: 23%;
