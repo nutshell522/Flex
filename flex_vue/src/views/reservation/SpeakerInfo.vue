@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row main bigRow">
-      <div class="col-md-8">左
+      <div class="col-md-8">
         <div class="speaker-img">
           <img :src='imgBaseUrl + "/Public/Img/Speaker/" + speaker.speakerImg' alt="Featured 1" class="speakerImg">
         </div>
@@ -134,7 +134,7 @@
       </div>
 
       <div class="col-md-4">
-        右 <div class="text-end">
+         <div class="text-end">
           <a href="https://localhost:8080" class="btn button" @click="getActivityId" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             <!-- icon -->
             <span class="icon">
@@ -197,7 +197,6 @@
 
 
         <h2>人氣講師</h2>
-        <h2>最多人預約</h2>
         <div
           class="image-container"
           v-for="(single, index) in TopThreeSpeaker"
@@ -643,6 +642,8 @@ const formatDateTime = (dateString) => {
 </script>
 
 <style>
+
+
 .infoBlock{
   margin-top: 30px;
 }
