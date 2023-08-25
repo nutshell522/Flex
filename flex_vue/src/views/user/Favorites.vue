@@ -5,9 +5,8 @@
     class="container likeProductCard"
     v-for="(product, index) in likeProducts"
     :key="index"
-    v-if="cardAll"
   >
-    <div class="card mb-3 likeCard">
+    <div class="card mb-3 likeCard" v-if="product.isShow">
       <div class="row g-0">
         <div class="col-md-4">
           <!--商品完整路徑 <img
@@ -17,12 +16,18 @@
         </div>
         <div class="col-md-8">
           <div class="card-body">
-            <h5 class="card-title">{{ product.productName }}</h5>
+            <h5 class="card-title">
+              {{ product.productName }}
+            </h5>
             <p class="card-text">{{ product.unitPrice }}</p>
             <p class="card-text">{{ product.salesPrice }}</p>
             <div class="allBtn">
               <div class="likeBtn">
-                <button class="" style="font-size: 20px" @click="removeLike">
+                <button
+                  class=""
+                  style="font-size: 20px"
+                  @click="removeFavoriteProduct(product.productId, index)"
+                >
                   <i class="bi bi-heart-fill" style="color: red"></i>
                   <label for="" v-if="likeProName">{{
                     product.productName
@@ -43,32 +48,34 @@
 </template>
 
 <script setup>
-import navBar from '@/components/home/navBar.vue';
-import userBar from '@/components/user/userBar.vue';
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import navBar from "@/components/home/navBar.vue";
+import userBar from "@/components/user/userBar.vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 //const likeProductNames = ref([]);
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const likeProducts = ref([]);
 const likeProName = ref(false);
-const cardAll = ref(true);
-
-onMounted(() => {
-  // 判斷使用者id從 localstorage 撈出來
-  // const savedLikeProduct = localStorage.getItem('likeProduct');
-  // if (savedLikeProduct) {
-  //   likeProductNames.value = JSON.parse(savedLikeProduct);
-  // }
-
+const storedUser = localStorage.getItem("loggedInUser");
+const userObject = JSON.parse(storedUser);
+const Toast = Swal.mixin({
+  toast: true,
+  position: "bottom-end",
+  showConfirmButton: false,
+  timer: 3000,
+  onOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
+});
+const getFavoritesProducts = async () => {
   //檢查本地儲存是否有登錄信息
-  const storedUser = localStorage.getItem('loggedInUser');
-  const userObject = JSON.parse(storedUser);
   if (storedUser) {
     //呼叫api把喜愛商品Id取出來
-    const baseAddress = 'https://localhost:7183/api';
-    const getLikeProductUri = `${baseAddress}/Users/GetFavorites?memberId=${userObject.memberId}`;
-    https: axios
+    const getLikeProductUri = `${baseAddress}api/Users/GetFavorites?memberId=${userObject.memberId}`;
+    await axios
       .get(getLikeProductUri)
       .then((res) => {
         likeProducts.value = res.data;
@@ -78,14 +85,31 @@ onMounted(() => {
         err;
       });
   }
-});
+};
 
-function removeLike() {
-  if ((likeProName.value = true)) {
-    console.log('likeProducts', likeProducts);
-    cardAll.value = false; //77現在會全部關掉
-  }
-}
+const removeFavoriteProduct = (productId, index) => {
+  const data = { MemberId: userObject.memberId, ProductId: productId };
+
+  axios
+    .delete(`${baseAddress}api/Users/DeleteFavorite`, { data: data })
+    .then((response) => {
+      Toast.fire({
+        icon: "success",
+        title: response.data,
+      });
+    })
+    .catch((error) => {
+      Toast.fire({
+        icon: "success",
+        title: response.data,
+      });
+    });
+  likeProducts.value[index].isShow = false;
+};
+
+onMounted(() => {
+  getFavoritesProducts();
+});
 </script>
 
 <style scoped>

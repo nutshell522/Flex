@@ -114,6 +114,12 @@ const routes = [
     component: Login,
   },
   {
+    //http://localhost/Search
+    path: "/search/:keyWord",
+    component: () => import("../views/product/ProductKeywordSearch.vue"),
+    meta: { title: `${webTitle}商品搜尋` },
+  },
+  {
     //http://loaclhost/Men
     path: "/men",
     component: () => import("../views/product/ProductMenLayout.vue"),
@@ -339,20 +345,20 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = to.meta.title;
   }
-  next();
-});
-
-router.beforeEach((to, from, next) => {
   const loggedInUser = localStorage.getItem("loggedInUser");
-
+  const beforePath = localStorage.getItem("originalRoute");
   //檢查是否需要驗證，如果需要，則檢查是否已登入
   if (to.meta.require && !loggedInUser) {
     console.log("nologin");
     next({ path: "/login" });
   } else if (to.path == "/login" && loggedInUser) {
     console.log("already logged in");
-
-    next({ path: "/" }); // 或其他您希望導向的頁面
+    if (beforePath) {
+      localStorage.removeItem("originalRoute");
+      next({ path: beforePath }); // 或其他您希望導向的頁面
+    } else {
+      next({ path: "/" }); // 或其他您希望導向的頁面
+    }
   } else {
     //console.log('login');
     next();

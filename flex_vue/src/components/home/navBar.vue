@@ -60,7 +60,13 @@
       </div>
       <div class="right">
         <div class="search-wrapper d-flex">
-          <input type="search" class="search-bar" placeholder="搜尋" />
+          <input
+            type="search"
+            class="search-bar"
+            placeholder="搜尋"
+            v-model="searchKeyword"
+            @mouseenter="searchKeywordHandler"
+          />
           <i class="bi bi-search"></i>
         </div>
         <div class="icon">
@@ -116,22 +122,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits } from 'vue';
-import userList from '../home/userList.vue';
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
-import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
-
-const webBaseAddress = 'https://localhost:8080/';
+import { ref, onMounted, defineEmits } from "vue";
+import userList from "../home/userList.vue";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { storeToRefs } from "pinia"; //把解構又同時具備響應式功能
+import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
+import { useRoute, useRouter } from "vue-router";
+const router = useRouter();
+const webBaseAddress = "https://localhost:8080/";
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const getApiStore = useGetApiDataStore();
 const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
 const { memberInfo } = storeToRefs(getApiStore);
 const { setLoginSuccess } = getApiStore; //function透過store取資料
 const { getData } = getApiStore;
+const searchKeyword = ref("");
 
-const loggedInUser = localStorage.getItem('loggedInUser');
+//關鍵字搜尋
+const searchKeywordHandler = () => {
+  const inputKeyword = searchKeyword.value.trim();
+  if (inputKeyword) {
+    router.push(`/search/${inputKeyword}`);
+  }
+};
+const loggedInUser = localStorage.getItem("loggedInUser");
 const imgBaseUrl = ref(baseAddress);
 let memberId = 0;
 if (loggedInUser) {
@@ -150,7 +165,7 @@ const loadCartAnditemCount = async () => {
     await axios
       .post(url, memberId, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
@@ -164,10 +179,10 @@ const loadCartAnditemCount = async () => {
   }
 };
 loadCartAnditemCount();
-const emit = defineEmits('UpdateCart');
+const emit = defineEmits("UpdateCart");
 const sendFunctionToParent = async () => {
   // 定義父元件傳到子元件事件
-  emit('UpdateCart', loadCartAnditemCount);
+  emit("UpdateCart", loadCartAnditemCount);
 };
 
 const url = `${baseAddress}api/Users/Login`;
@@ -260,7 +275,7 @@ header {
         }
 
         &:not(:first-child)::before {
-          content: '|';
+          content: "|";
           padding: 0 15px;
           font-size: 14px;
         }

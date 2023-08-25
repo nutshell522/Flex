@@ -14,9 +14,9 @@ namespace FlexCoreService.ProductCtrl.Service
             _db = new AppDbContext();
         }
 
-        public IEnumerable<ProductCardDto> SearchProductByKeyword(string? keyword) 
+        public IEnumerable<ProductCardDto> SearchProductByKeyword(string? keyword,int? salesId) 
         {
-            var products = _repo.SearchProductByKeyword(keyword);
+            var products = _repo.SearchProductByKeyword(keyword, salesId);
             return products;
         }
 

@@ -29,7 +29,7 @@ namespace FlexCoreService.Controllers
         }
 
         [HttpGet("SearchProductByKeyword")]
-        public async Task<ActionResult<IEnumerable<ProductCardVM>>> SearchProductByKeyword(string? keyword)
+        public async Task<ActionResult<IEnumerable<ProductCardVM>>> SearchProductByKeyword(string? keyword,int? salesId)
         {
             var result=new List<ProductCardVM>();
 
@@ -37,9 +37,12 @@ namespace FlexCoreService.Controllers
             {
                 return Ok(result);
             }
-
+            if (salesId == 0)
+            {
+                salesId = null;
+            }
             var service = new ProductService(_repo);
-            result = service.SearchProductByKeyword(keyword).Select(p=>p.ToCardVM()).ToList();
+            result = service.SearchProductByKeyword(keyword, salesId).Select(p=>p.ToCardVM()).ToList();
             return Ok(result);
 
         }

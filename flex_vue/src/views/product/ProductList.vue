@@ -38,7 +38,7 @@ const page = ref(1);
 const productStore = useProductRoute();
 
 //創建本機共用屬性
-const localStorageKey = "";
+const localStorageKey = "originalPath";
 
 //設置路徑
 if (route.path.includes("/men")) {
