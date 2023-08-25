@@ -517,7 +517,27 @@ function testData() {
         mobile: res.data.mobile,
         address: res.data.commonAddress,
       };
-      console.log(testUserRegData);
+      if (account.value == '') {
+        account.value = testUserRegData.account;
+      }
+      if (password.value == '') {
+        password.value = testUserRegData.password;
+      }
+      if (name.value == '') {
+        name.value = testUserRegData.name;
+      }
+      if (email.value == '') {
+        email.value = testUserRegData.email;
+      }
+      if (birthday.value == '') {
+        birthday.value = testUserRegData.birthday;
+      }
+      if (mobile.value == '') {
+        mobile.value = testUserRegData.mobile;
+      }
+      if (address.value == '') {
+        address.value = testUserRegData.address;
+      }
     })
     .catch((err) => {
       console.log('測試資料取得失敗', err);
