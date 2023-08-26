@@ -1,20 +1,20 @@
 <template>
   <div v-if="userPhoto" class="userBox">
-    <img :src="imageSrc + imgPath" class="userPhoto" />
+    <img :src="imageSrc + 'Public/UserImgs/' + imgPath" class="userPhoto" />
     <div class="userName">Hi~Hi~ {{ userName }}</div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
-const imageSrc = ref('./../../../public/imgs/');
+const imageSrc = import.meta.env.VITE_API_BASEADDRESS;
 const userPhoto = ref(false);
 
-const loggedInUser = localStorage.getItem('loggedInUser');
+const loggedInUser = localStorage.getItem("loggedInUser");
 const userObject = JSON.parse(loggedInUser);
 const imgPath = ref(
-  userObject && userObject.memberPhoto ? userObject.memberPhoto : ''
+  userObject && userObject.memberPhoto ? userObject.memberPhoto : ""
 );
 
 let userName = null;
