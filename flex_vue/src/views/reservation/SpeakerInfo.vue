@@ -1,4 +1,4 @@
-<template>
+<template>ingBlock
   <div class="container">
     <div class="row main bigRow">
       <div class="col-md-8">
@@ -12,7 +12,7 @@
           <p>講師描述：{{ speaker.speakerDescription }}</p>
           <p>駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})</p>
         </div>
-
+      <div class="bookingBlock">
         <!-- 預約系統 -->
         <p>預約時間表</p>
         <div id="datePicker">
@@ -25,7 +25,7 @@
           </button>
         </div>
         <div id="schedule"></div>
-
+      </div>
         <!-- 評論 -->
 
         <div id="reviewWhole">
@@ -122,15 +122,6 @@
   </div>
 
 
-
-
-
-
-
-
-
-
-
       </div>
 
       <div class="col-md-4">
@@ -210,13 +201,6 @@
           </a>
         </div>
 
-        <!-- <div class="image-container">
-          <img src="https://image1.gamme.com.tw/news2/2016/63/83/qZqYnqaYmJ_dqaY.jpg" alt="">
-        </div>
-
-        <div class="image-container">
-          <img src="https://img2.woyaogexing.com/2020/05/21/6bf45fa053594b24bf763725cba6b9e0!400x400.webp" alt="">
-        </div> -->
       </div>
     </div>
   </div>
@@ -642,25 +626,27 @@ const formatDateTime = (dateString) => {
 </script>
 
 <style>
-
-
+.bookingBlock{
+  margin-top: 10%;
+}
 .infoBlock{
-  margin-top: 30px;
+  margin-top: 15%;
 }
-.speaker-img{
+
+.speaker-img {
+  height: 550px; /* Set the desired height for the speaker-img div */
+  width: 100%; /* Set the width to 100% to make it responsive */
   position: relative;
-  height: 100%;
-  
+  overflow: hidden; /* Ensure that images don't overflow */
+  top: 3%;
 }
-.speakerImg{
-  
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    -o-object-fit: contain;
-    object-fit: contain;
+
+.speakerImg {
+  width: 100%; /* Set the image width to 100% to fit within the div */
+  height: 100%; /* Set the image height to 100% to cover the div */
+  object-fit: cover; /* Control how the image is displayed within the div */
 }
+
 
 .main {
   font-family: Arial, sans-serif;
@@ -670,7 +656,7 @@ const formatDateTime = (dateString) => {
 #schedule {
   display: flex;
   justify-content: center;
-  margin-top: 300px;
+  /* margin-top: 5%; */
 }
 
 .schedule-table {
