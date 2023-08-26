@@ -31,11 +31,13 @@ namespace FlexCoreService.Controllers
         private readonly AppDbContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IFavoriteDPRepository _repo;
-        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor, IFavoriteDPRepository repo)
+        private readonly IWebHostEnvironment _environment;
+        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor, IFavoriteDPRepository repo, IWebHostEnvironment environment)
         {
             _db = db;
             _repo = repo;
             _httpContextAccessor = httpContextAccessor;
+            _environment = environment;
         }
 
         /// <summary>
@@ -216,7 +218,7 @@ namespace FlexCoreService.Controllers
                     EncryptedPassword = regdto.Email,
                     Name = regdto.Name,
                     Email = regdto.Email,
-                    Mobile = "0921554545",//todo自動給或留空
+                    Mobile = "0921111545",//todo自動給或留空
                     fk_LevelId = 1//一般會員                
                 };
                 _db.Members.Add(member);
@@ -257,7 +259,7 @@ namespace FlexCoreService.Controllers
         public async Task<ActionResult<string>> EditUserPhoto(int id, IFormFile image)
         {
             Member member = await _db.Members.FindAsync(id); //FindAsync 根據主键查找對應的紀錄
-
+            var UserImgPath = Path.Combine(_environment.WebRootPath, "Public", "UserImgs");
             if (member == null)
             {
                 return NotFound("找不到對應的會員資料");
@@ -276,8 +278,8 @@ namespace FlexCoreService.Controllers
                 if (existingImg != null)
                 {
                     // 如果已經有照片記錄，更新它
-                    string targetDirectory = @"D:\FlexFrontend\FlexFrontendNew\flex_vue\public\imgs";
-                    string imagePath = Path.Combine(targetDirectory, image.FileName);
+                    //string targetDirectory = @"D:\FlexFrontend\FlexFrontendNew\flex_vue\public\imgs";
+                    string imagePath = Path.Combine(UserImgPath, image.FileName);
 
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
@@ -292,8 +294,8 @@ namespace FlexCoreService.Controllers
                     MemberImg img = new MemberImg();
                     img.fk_memberId = id;
 
-                    string targetDirectory = @"~\flex_vue\public\imgs";
-                    string imagePath = Path.Combine(targetDirectory, image.FileName);
+                    //string targetDirectory = @"~\flex_vue\public\imgs";
+                    string imagePath = Path.Combine(UserImgPath, image.FileName);
 
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {

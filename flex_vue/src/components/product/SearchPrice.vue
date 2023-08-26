@@ -29,6 +29,7 @@
 <script setup>
 import { ref } from "vue";
 import { useProductRoute } from "@/stores/useProductRoute.js";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 const productStore = useProductRoute();
 const minPrice = ref(productStore.minPrice);
@@ -49,8 +50,18 @@ const maxPriceHandler = (event) => {
 };
 
 const searchPriceHandler = () => {
-  if (minPrice.value > maxPrice.value) {
-    alert("請確認金額填寫是否正確");
+  if (
+    maxPrice.value > 0 &&
+    minPrice.value > 0 &&
+    parseInt(minPrice.value) > parseInt(maxPrice.value)
+  ) {
+    Swal.fire({
+      title: "提示",
+      icon: "warning",
+      text: "最高金額不得小於最低金額",
+      confirmButtonText: "確認",
+    });
+    //alert(maxPrice.value);
   } else {
     productStore.setPriceInfo(minPrice.value, maxPrice.value);
   }

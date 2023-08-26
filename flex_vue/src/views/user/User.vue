@@ -194,7 +194,7 @@
     </div>
     <div class="col-md-6 userImg">
       <div>
-        <img :src="imageSrc + imgPath" id="profileImage" />
+        <img :src="imageSrc + 'Public/UserImgs/' + imgPath" id="profileImage" />
         <input
           id="photo-input"
           ref="photo"
@@ -214,24 +214,24 @@
 </template>
 
 <script setup>
-import verify from '@/components/user/verify.vue';
-import navBar from '@/components/home/navBar.vue';
-import userBar from '@/components/user/userBar.vue';
+import verify from "@/components/user/verify.vue";
+import navBar from "@/components/home/navBar.vue";
+import userBar from "@/components/user/userBar.vue";
 // import twzipcode from './twzipcode.vue';
-import datepicker from '@/components/user/datepicker.vue';
-import { ref, watch, provide } from 'vue';
-import axios from 'axios';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
+import datepicker from "@/components/user/datepicker.vue";
+import { ref, watch, provide } from "vue";
+import axios from "axios";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 const errors = ref([]);
 const eye1 = ref(false);
 const eye2 = ref(false);
 
 const photo = ref(null);
-const imageSrc = ref('./../../../public/imgs/'); // 預設圖片路徑
+const imageSrc = import.meta.env.VITE_API_BASEADDRESS; // 預設圖片路徑
 
 //檢查是否有登入
-const storedUser = localStorage.getItem('loggedInUser');
+const storedUser = localStorage.getItem("loggedInUser");
 const userObject = JSON.parse(storedUser);
 
 function openEye1() {
@@ -246,7 +246,7 @@ function fileChange(event) {
   const selectedFile = event.target.files[0]; //獲取所選圖片
   var reader = new FileReader();
   reader.onload = (e) => {
-    document.querySelector('#profileImage').src = e.target.result;
+    document.querySelector("#profileImage").src = e.target.result;
   };
   reader.readAsDataURL(selectedFile);
 
@@ -256,7 +256,7 @@ function fileChange(event) {
       { image: selectedFile },
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       }
     )
@@ -271,16 +271,16 @@ const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const edituri = `${baseAddress}api/Users/EditUserPhoto?id=${userObject.memberId}`;
 
 const userProfile = ref([]);
-const editPwd = ref('');
-const checkPwd = ref('');
+const editPwd = ref("");
+const checkPwd = ref("");
 const editPwdShow = ref(false);
 
-const id = ref('');
-const email = ref('');
-const mobile = ref('');
-const birthday = ref('');
+const id = ref("");
+const email = ref("");
+const mobile = ref("");
+const birthday = ref("");
 const gender = ref(false);
-const commonAddress = ref('');
+const commonAddress = ref("");
 const alternateAddress1 = ref(null);
 const alternateAddress2 = ref(null);
 const isSubscribeNews = ref(true);
@@ -289,10 +289,10 @@ const addressBtn = ref(false);
 const addAddressInput1 = ref(false);
 const addAddressInput2 = ref(false);
 
-const imgPath = ref('');
+const imgPath = ref("");
 const verifyArea = ref(true);
 
-provide('verifyArea', verifyArea);
+provide("verifyArea", verifyArea);
 const showUserData = ref(false);
 
 //取得會員資料
@@ -330,7 +330,7 @@ axios
     if (res.data.imgPath != null) {
       imgPath.value = res.data.imgPath;
     } else {
-      imgPath.value = 'member.jpg';
+      imgPath.value = "member.jpg";
     }
   })
   .catch((err) => {
@@ -351,11 +351,11 @@ watch(verifyArea, (newValue) => {
 function addBtn() {
   if (commonAddress.value && addAddressInput1.value == false) {
     addAddressInput1.value = true;
-    console.log('增加備用地址1');
+    console.log("增加備用地址1");
   }
   if (commonAddress.value && alternateAddress1.value) {
     addAddressInput2.value = true;
-    console.log('有三個地址，-按鈕');
+    console.log("有三個地址，-按鈕");
     addressBtn.value = true;
   }
   if (commonAddress.value && !alternateAddress1.value) {
@@ -366,16 +366,16 @@ function addBtn() {
 function minusBtn() {
   if (!alternateAddress2.value) {
     addAddressInput2.value = false;
-    console.log('常用跟備用1，+按鈕');
+    console.log("常用跟備用1，+按鈕");
     addressBtn.value = false;
   }
   if (!alternateAddress1.value) {
     addressBtn.value = false;
-    console.log('常用地址，-按鈕');
+    console.log("常用地址，-按鈕");
   }
   if (!alternateAddress1.value && !alternateAddress2.value) {
     addAddressInput1.value = false;
-    console.log('常用地址，+按鈕');
+    console.log("常用地址，+按鈕");
     addressBtn.value = false;
   }
 }
@@ -388,9 +388,9 @@ function updatePwd() {
   var uri = `${baseAddress}api/Users/UpdatePwd?id=${id.value}`;
   var editUserProfile = {};
 
-  if (editPwd.value == '' || checkPwd.value == '') {
+  if (editPwd.value == "" || checkPwd.value == "") {
     errors.value = [];
-    errors.value.push('請確實填寫');
+    errors.value.push("請確實填寫");
   } else if (editPwd.value == checkPwd.value) {
     errors.value = [];
     editUserProfile.EncryptedPassword = checkPwd.value;
@@ -403,12 +403,12 @@ function updatePwd() {
         console.log(err);
       });
     Swal.fire({
-      icon: 'success',
-      title: '密碼更新成功',
+      icon: "success",
+      title: "密碼更新成功",
     });
   } else {
     errors.value = [];
-    errors.value.push('修改密碼或確認密碼填寫錯誤');
+    errors.value.push("修改密碼或確認密碼填寫錯誤");
   }
 }
 
@@ -438,8 +438,8 @@ function saveBtn() {
     });
 
   Swal.fire({
-    icon: 'success',
-    title: '個人資料更新成功',
+    icon: "success",
+    title: "個人資料更新成功",
   });
 }
 </script>
