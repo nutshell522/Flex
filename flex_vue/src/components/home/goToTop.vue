@@ -32,6 +32,6 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   font-size: 30px;
-  z-index: 100;
+  z-index: 200;
 }
 </style>

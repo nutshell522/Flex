@@ -23,7 +23,7 @@
                 <div class="me-push">
                     <h3 class="footer-btn">俱樂部<i class="bi bi-plus d-lg-none"></i><i class="bi bi-dash d-lg-none"></i></h3>
                     <ul>
-                        <li><a href="javascript:;">活動與課程</a></li>
+                        <li><a href="/flexClub">活動與課程</a></li>
                     </ul>
                 </div>
                 <div class="social-network-wrapper">
@@ -78,18 +78,17 @@ onMounted(() => {
 <style scoped lang="scss">
 footer {
     background-color: #111111;
-
-    padding-top: 40px;
     width: 100%;
     position: relative;
     z-index: 200;
 
     @media screen and (min-width: 992px) {
         padding: 0;
+        padding-top: 40px;
     }
 
     @media screen and (max-width: 991px) {
-        padding: 0 25px;
+        padding: 40px 25px 0;
     }
 
     .container {
@@ -183,7 +182,7 @@ footer {
                     }
                 }
 
-                ul {
+                .footer-btn+ul {
                     height: 0;
                     overflow: hidden;
                     transition: 0.3s

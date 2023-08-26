@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 const getApiStore = useGetApiDataStore();
 const { setLoginSuccess } = getApiStore; //function透過store取資料
 const { getData } = getApiStore;
@@ -76,7 +76,6 @@ import { storeToRefs } from "pinia";
 import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
 import axios from "axios";
 const { handleLogout } = getApiStore; //function透過store取資料
-import { onMounted } from "vue";
 
 //登出
 function logout() {

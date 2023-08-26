@@ -41,6 +41,12 @@ const routes = [
     meta: { title: `${webTitle}特惠專區` },
   },
   {
+    //http://loaclhost/flexClub
+    path: "/flexClub",
+    component: () => import("@/views/activity/FlexClub.vue"),
+    meta: { title: `${webTitle}運動俱樂部` },
+  },
+  {
     //http://loaclhost/User
     path: "/user",
     component: User,
