@@ -18,23 +18,20 @@
       placeholder="請輸入4位驗證碼"
       v-model="checkNum"
     /> -->
-    <div class="nextBtn">
+    <!-- <div class="nextBtn">
       <button type="submit" class="btn btn-info" @click="nextBtn">
         下一步
       </button>
-    </div>
+    </div> -->
     <div class="checkText">
       <label for="">沒收到驗證信 ?</label>
     </div>
   </div>
-  <!-- 重新設定登入密碼 -->
-  <resetPwd v-if="reset"></resetPwd>
 </template>
 
 <script setup>
 import router from '@/router/index.js';
 import { ref, onMounted, defineProps } from 'vue';
-import resetPwd from '@/components/user/resetPwd.vue';
 
 const props = defineProps(['email']);
 //const email = ref(props);
@@ -42,8 +39,6 @@ const userAcc = ref(null);
 onMounted(() => {
   //localStorage抓登入使用者
   userAcc.value = localStorage.getItem('userAcc');
-  //console.log('userAcc.value ', userAcc.value);
-
   //把帳號傳到後端
   //把信箱傳入
   //把信箱顯示
@@ -55,6 +50,7 @@ const reset = ref(false);
 const forgetArea = ref(true);
 
 function nextBtn() {
+  reset.value = true;
   window.location.reload();
 }
 </script>
@@ -62,7 +58,7 @@ function nextBtn() {
 <style scoped>
 .area {
   border: 1px solid;
-  max-width: 20%;
+  max-width: 23%;
   padding: 30px;
   margin-top: 200px;
 }

@@ -6,7 +6,7 @@ using FlexCoreService.CustomeShoes.Models.VMs;
 using FlexCoreService.CustomeShoes.Service;
 using FlexCoreService.ProductCtrl.Models.VM;
 using FlexCoreService.ProductCtrl.Service;
-using FlexCoreService.UserCtrl.Dtos;
+using FlexCoreService.UserCtrl.Models.Dtos;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

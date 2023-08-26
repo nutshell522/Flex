@@ -1,13 +1,14 @@
 <template>
   <div class="container area">
+    <div class="title">
+      <h4>重新設定密碼</h4>
+    </div>
     <div class="from-group">
       <ul class="mb-3 errorsText">
         <span v-for="error in errors" class="text-danger">{{ error }}</span>
       </ul>
     </div>
-    <div class="text">
-      <label for="resetPwd">重新設定登入密碼</label>
-    </div>
+    <label for="resetPwd">新設密碼</label>
     <input
       type="text"
       class="form-control mb-3"
@@ -15,6 +16,16 @@
       id="resetPwd"
       placeholder="輸入6-10碼英數字"
       v-model="resetPwd"
+      maxlength="10"
+    />
+    <label for="confirmPwd">確認密碼</label>
+    <input
+      type="text"
+      class="form-control mb-3"
+      name="confirmPwd"
+      id="confirmPwd"
+      placeholder="輸入6-10碼英數字"
+      v-model="confirmPwd"
       maxlength="10"
     />
     <div class="finish">
@@ -27,33 +38,34 @@
 
 <script setup>
 import router from '@/router/index.js';
-import { ref, onMounted, defineProps } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const errors = ref([]);
 const resetPwd = ref('');
-const userAcc = ref(null);
-userAcc.value = localStorage.getItem('userAcc');
+const confirmPwd = ref('');
+const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
+const uri = `${baseAddress}api/Users/ResetPassword?memberId=${route.query.memberId}&confirmCode=${route.query.confirmCode}`;
 
-const baseAddress = 'https://localhost:7183/api';
-const uri = `${baseAddress}/Users/ResetPwd`;
 function finish() {
   //欄位驗證
-  if (resetPwd.value == '') {
-    //alert('finish');
+  if (resetPwd.value == '' || confirmPwd.value == '') {
     errors.value = [];
     errors.value.push('請確實填寫');
   } else {
     //欄位驗證通過
     errors.value = [];
-    const resetUserData = {};
-    resetUserData.account = userAcc.value;
-    resetUserData.encryptedPassword = resetPwd.value;
+    const resetPassword = {
+      password: resetPwd.value,
+      confirmPassword: confirmPwd.value,
+    };
     axios
-      .put(uri, resetUserData)
+      .post(uri, resetPassword)
       .then((res) => {
-        console.log(res.data);
-        window.location.reload();
+        console.log('重新設定密碼成功', res);
+        window.location.href = '/login';
       })
       .catch((err) => {
         console.log(err);
@@ -63,6 +75,10 @@ function finish() {
 </script>
 
 <style scoped>
+.title {
+  display: flex;
+  justify-content: center;
+}
 .area {
   border: 1px solid;
   max-width: 20%;
