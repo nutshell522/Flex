@@ -102,5 +102,49 @@ VALUES
                 });
             }
         }
+
+
+        public int UpdateReservationOrderInfo(ReservationToOrdersDTO order)
+        {
+            string sql = @"
+INSERT INTO Orders (ordertime, fk_member_Id, total_quantity, logistics_company_Id, order_status_Id, pay_method_Id, pay_status_Id, coupon_name, coupon_discount, freight, cellphone, receipt, receiver, recipient_address, order_description, total_price, [close], close_time, fk_typeId, orderCode, biller, bill_address, bill_cellphone, agreement)
+VALUES
+    (@orderTime, @fk_member_Id, 1, null, 1, 1, 2, null, null, null, @cellphone, null, @receiver, @recipient_address, null, 0, null, @close_time, 3, @orderCode, null, null, null, 'true');
+SELECT CAST(SCOPE_IDENTITY() AS INT);
+";
+            using (var conn = new SqlConnection(_connStr))
+            {
+                conn.Open();
+
+                int insertedId = conn.Query<int>(sql, new
+                {
+                    orderTime = order.ordertime,
+                    fk_member_Id = order.fk_member_Id,
+                    cellphone = order.cellphone,
+                    receiver = order.receiver,
+                    recipient_address = order.recipient_address,
+                    close_time = order.close_time,
+                    orderCode = order.orderCode
+                }).Single();
+
+                return insertedId;
+            }
+        }
+
+        public void UpdateReservationOrderItemInfo(ReservationToOrderItemDTO orderItem)
+        {
+            string sql = @"
+INSERT INTO Flex.dbo.orderItems (order_Id, product_name, per_price, quantity, discount_name, subtotal, discount_subtotal, Items_description, fk_typeId, productcommit, comment)
+VALUES
+    (@order_Id,'預約服務', 0, 1, null, 0, 0, null, 3, null, null)
+";
+            using (var conn = new SqlConnection(_connStr))
+            {
+                conn.Execute(sql, new
+                {
+                    order_Id = orderItem.order_Id
+                });
+            }
+        }
     }
 }

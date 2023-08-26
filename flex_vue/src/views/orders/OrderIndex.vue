@@ -90,9 +90,8 @@
                           item.order_status_Id !== 9 &&
                           item.order_status_Id !== 8 &&
                           item.close !== true
-                          " @click="setreturnIdValue(item.id)" class="btn btn-primary" :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null
-    " :data-bs-target="item.order_status_Id === 6 ? '#exampleModal' : null
-    ">
+                          " @click="setreturnIdValue(item.id);" class="btn btn-primary" :data-bs-toggle="item.order_status_Id === 6 ? 'modal' : null
+    " :data-bs-target="item.order_status_Id === 6 && item.pay_method_Id === 1 ? '#exampleModal' : '#exampleModal1'">
                           申請退貨
                         </button>
                         <button v-if="item.order_status_Id == 9" type="button" class="btn btn-secondary"
@@ -107,7 +106,7 @@
                     <td class="sceTr">數量：{{ orderItem.quantity }}</td>
                     <td class="sceTr">價格：{{ orderItem.per_price }}</td>
                     <td class="sceTr">規格：{{ orderItem.items_description }}</td>
-                    <td><button v-if="item.order_status_Id == 6 && orderItem.comment !== true &&
+                    <td><button v-if="item.order_status_Id == 6 && orderItem.comment === true &&
                       item.close == true" class="btn btn-primary" :data-bs-toggle="'modal'
     " :data-bs-target="'#exampleModal2'
     " @click="prepareCommentData(item.fk_member_Id, orderItem.productcommit, orderItem.id)">留下評論</button></td>
@@ -141,7 +140,6 @@
                           <td id="orderItemDetail" style="padding-left: 30px; width: 800px">
                             <h6>運費</h6>
                             <div>{{ item.freight }}</div>
-                            <h6>運費折扣</h6>
                             <h6>已使用優惠券</h6>
                             <div>{{ item.coupon_name }}</div>
                             <h6>優惠券折扣</h6>
@@ -372,40 +370,72 @@
       </table>
     </div>
 
-    <template v-for="item in GetOrders" :key="item.id">
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">退款帳號:</label>
+              <input type="text" class="form-control" v-model="returnaccount" maxlength="16" />
             </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label class="form-label">退款帳號:</label>
-                <input type="text" class="form-control" v-model="returnaccount" maxlength="16" />
-              </div>
-              <div class="form-group">
-                <label class="form-label">退貨原因:</label>
-                <select class="form-control" v-model="returnreason">
-                  <option v-for="reason in reReason" :key="reason.id" :value="reason.id">
-                    {{ reason.退貨理由 }}
-                  </option>
-                </select>
-              </div>
+            <div class="form-group">
+              <label class="form-label">退貨原因:</label>
+              <select class="form-control" v-model="returnreason">
+                <option v-for="reason in reReason" :key="reason.id" :value="reason.id">
+                  {{ reason.退貨理由 }}
+                </option>
+              </select>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
-                關閉
-              </button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
-                確定
-              </button>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
+              關閉
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
+              確定
+            </button>
           </div>
         </div>
       </div>
-    </template>
+    </div>
+
+    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">退款帳號:</label>
+              <label class="form-label">此商品為信用卡付款或第三方支付</label>
+            </div>
+            <div class="form-group">
+              <label class="form-label">退貨原因:</label>
+              <select class="form-control" v-model="returnreason">
+                <option v-for="reason in reReason" :key="reason.id" :value="reason.id">
+                  {{ reason.退貨理由 }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
+              關閉
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
+              確定
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <template v-for="item in GetOrders" :key="item.id">
       <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
@@ -688,12 +718,10 @@ const CancelReturnAndCloseOrders = async () => {
 };
 const Returndetail = async () => {
   let showError = false;
-
-  if (!returnaccount.value || isNaN(returnaccount.value) || returnaccount.value.length < 10) {
-    alert("請輸入有效的退款帳號（數字）");
+  if (returnaccount.value !== "" && !/^\d+$/.test(returnaccount.value)) {
+    alert("退貨原因必須是數字");
     showError = true;
   }
-
   if (!returnreason.value) {
     alert("請選擇退貨原因");
     showError = true;
@@ -701,6 +729,7 @@ const Returndetail = async () => {
 
   if (showError) {
     await CancelReturnAndCloseOrders();
+    return;
   }
   const requestData = {
     退貨轉帳帳號: returnaccount.value,
@@ -825,11 +854,18 @@ const closecomment = async () => {
 //       alert(error);
 //     });
 // };
-
+let isConnected = false;
 const connect = () => {
-  socket = new WebSocket(wsUrl + `/ws?membersId=${membersId}`);
-  socket.onmessage = (e) => processMessage(e.data);
-  socket.onopen = () => sendInitialMessage();
+  if (!socket || socket.readyState !== WebSocket.OPEN) {
+    socket = new WebSocket(wsUrl + `/ws?membersId=${membersId}`);
+    socket.onmessage = (e) => processMessage(e.data);
+    socket.onopen = () => {
+      if (!isConnected) {
+        sendInitialMessage();
+        isConnected = true;
+      }
+    };
+  }
 };
 const processMessage = (data) => {
   const content = JSON.parse(data);
@@ -839,7 +875,7 @@ const sendInitialMessage = () => {
   if (socket && socket.readyState === WebSocket.OPEN) {
     const data = {
       userName: currentUserName,
-      message: "請開始你的發問",
+      message: "您好，很高興為您服務",
     };
     socket.send(JSON.stringify(data));
   }
@@ -935,7 +971,7 @@ onMounted(() => {
 }
 
 .table>thead>tr>th {
-  background-color: maroon;
+  background-color: rgb(224, 149, 149);
   color: white;
   text-align: center;
 }
@@ -945,7 +981,7 @@ onMounted(() => {
 }
 
 .tables>thead>tr>th {
-  background-color: maroon;
+  background-color: rgba(161, 112, 112, 0.466);
   color: white;
   text-align: center;
 }
@@ -994,10 +1030,12 @@ onMounted(() => {
   border: skyblue solid 2px;
   border-radius: 10%;
 }
+
 #cateorder>button:hover {
   background-color: rgb(41, 180, 60);
   color: #ededef;
 }
+
 #searchorderout {
   width: 50%;
   margin: 0 500px 30px;
@@ -1220,4 +1258,11 @@ _::-moz-range-track {
   border-right: gray solid 2px;
   border-radius: 5px;
   padding-top: 10px;
-}</style>
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>

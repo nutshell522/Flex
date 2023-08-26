@@ -1,41 +1,43 @@
 <template>
-  <div class="user" v-if="userPhoto">
-    <img :src="imageSrc + imgPath" class="userPhoto" />
-    <div class="">Hi~Hi~ {{ userName }}</div>
+  <div v-if="userPhoto" class="userBox">
+    <img :src="imageSrc + 'Public/UserImgs/' + imgPath" class="userPhoto" />
+    <div class="userName">Hi~Hi~ {{ userName }}</div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
-const imageSrc = ref('./../../../public/imgs/');
+const imageSrc = import.meta.env.VITE_API_BASEADDRESS;
 const userPhoto = ref(false);
 
-const loggedInUser = localStorage.getItem('loggedInUser');
+const loggedInUser = localStorage.getItem("loggedInUser");
 const userObject = JSON.parse(loggedInUser);
 const imgPath = ref(
-  userObject && userObject.memberPhoto ? userObject.memberPhoto : ''
+  userObject && userObject.memberPhoto ? userObject.memberPhoto : ""
 );
 
 let userName = null;
 if (userObject) {
   userPhoto.value = true;
   userName = ref(userObject.username ? userObject.username : null);
-  console.log(userName.value);
 }
 </script>
 
 <style scoped>
-.user {
-  border-radius: 50%;
-  position: fixed;
-  top: 25%;
-  right: 1%;
-  font-size: 20px;
-}
 .userPhoto {
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
+}
+.userBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.userName {
+  position: absolute;
+  left: 60px;
+  width: 150px;
 }
 </style>

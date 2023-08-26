@@ -12,5 +12,6 @@
         public string ActivityCategoryName { get; set; }
 
         public string ActivityPlace { get; set; }
+        public string ActivityBookEndTime { get; set; }
     }
 }

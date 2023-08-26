@@ -71,6 +71,8 @@ namespace FlexCoreService.Controllers
 			);
 
 			}
+			query = query.OrderByDescending(o => o.ordertime);
+
 			var result = query.Select(p => new OrdersIndexVM
 			{
 				Id = p.Id,
@@ -333,7 +335,7 @@ namespace FlexCoreService.Controllers
 			{
 				退貨日期 = DateTime.Now,
 				fk訂單 = orderid,
-				//退貨轉帳帳號 = reDTO.退貨轉帳帳號,
+				退貨轉帳帳號 = reDTO.退貨轉帳帳號,
 				退款狀態 = false,
 				退貨理由 = reDTO.退貨理由,
 			};
@@ -408,8 +410,22 @@ namespace FlexCoreService.Controllers
 
 			return "評論成功";
 		}
+		[HttpPut("fincomment")]
+		public async Task<string> fincomment(int orderid)
+		{
+			var db = _context;
+			if (_context.orders == null)
+			{
+				return null;
+			}
 
+			orderItem emp = await _context.orderItems.FindAsync(orderid);
+			emp.comment = true;
+			_context.Entry(emp).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
+			return "返回訂單";
 
+		}
 
 
 		//public async Task Connect()
