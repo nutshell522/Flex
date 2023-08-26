@@ -1,67 +1,122 @@
 <template>
-  <input v-model="postTitle" placeholder="請輸入標題" class="inputTitle" />
-  <QuillEditor
-    theme="snow"
-    :modules="modules"
-    :toolbar="toolbarOptions"
-    class="quill-editor"
-    contentType="html"
-    v-model:content="editorContent"
-    ref="quill"
-    @ready="quill"
-  />
-  <button @click="showArticle">確定</button>
-  <br />
-  <br />
+  <div class="topPImg">
+  </div>
 
-  <el-container>
-    <!-- 側邊攔 -->
-    <el-aside width="300px">
-      <h2>話題分類</h2>
-      <ul>
-        <li><a href="#">路跑</a></li>
-        <li><a href="#">自行車</a></li>
-        <li><a href="#">健行</a></li>
-      </ul>
-    </el-aside>
+  
 
-    <!-- 主要内容区域 -->
-    <el-main>
-      <h1>貼文</h1>
-      <div class="forum-posts">
-        <!-- 使用 v-for 渲染貼文列表 -->
-        <div v-for="post in forumPosts" :key="post.id" class="post">
-          <h3>{{ post.title }}</h3>
-          <div v-html="post.content"></div>
-        </div>
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-3">
+      <!-- 側邊攔 -->
+      
+        <h2>話題分類</h2>
+        <ul>
+          <li><a href="#" @click.prevent="loadCategory('路跑')">路跑</a></li>
+          <li><a href="#" @click.prevent="loadCategory('自行車')">自行車</a></li>
+          <li><a href="#" @click.prevent="loadCategory('健行')">健行</a></li>
+          <li><a href="#" @click.prevent="loadCategory('健行')">登山</a></li>
+          <li><a href="#" @click.prevent="loadCategory('健行')">瑜珈</a></li>
+          <li><a href="#" @click.prevent="loadCategory('健行')">其他</a></li>
+        </ul>
+  
       </div>
-    </el-main>
-  </el-container>
+
+      <!-- 右侧主要内容 -->
+      <div class="col-md-9">
+        
+
+        <div class="row">
+          <div class="col-md-10">
+            <h1>貼文</h1>
+          </div>
+          <div class="col-md-2 mt-2">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              新增文章
+            </button>
+        </div>
+        </div>
+        <div class="forum-posts">
+          <!-- 使用 v-for 渲染貼文列表 -->
+          <div v-for="post in forumPosts" :key="post.id" class="post">
+            <h3 @click="toggleExpand(post)">{{ post.title }}</h3>
+            <p>分類：{{ post.category }}</p>         
+            <!-- <div v-html="post.content"></div> -->
+            <div v-if="post.isExpanded" v-html="post.content"></div>
+            <p class="timeInfo">{{post.author}}發佈於{{ post.publishTime }}</p>
+            
+          </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">新增文章</h5>
+                <button @click="clearEditor" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <div>
+                      <input v-model="postTitle" placeholder="請輸入標題" class="inputTitle" />
+                    
+                      <div class="category-select mb-3">
+                        <div class="d-flex align-items-baseline"> <!-- 使用 align-items-baseline  -->
+                          <p class="mb-0">請選擇分類：</p> <!-- 使用 mb-0 消除底部的間距 -->
+                          <div>
+                            <label v-for="(category, index) in categories" :key="index"  style="margin-right: 15px;">
+                              <input
+                                type="radio"
+                                v-model="selectedCategory"
+                                :value="category"
+                                required
+                              />
+                              {{ category }}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                    
+                        <QuillEditor
+                          theme="snow"
+                          :modules="modules"
+                          :toolbar="toolbarOptions"
+                          class="quill-editor"
+                          contentType="html"
+                          v-model:content="editorContent"
+                          ref="quill"
+                          @ready="quill"
+                          style="height: 300px"
+                        />
+                    
+                        
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button @click="clearEditor" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button class="btn btn-primary" @click="showArticle" data-bs-dismiss="modal">發佈</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>  
+  </div>
 </template>
   
   <script setup>
 import { ref, nextTick } from "vue";
+import axios from "axios";
 
 const postTitle = ref("");
 const quill = ref(null);
+const categories = ["路跑", "健行", "登山", "自行車","瑜珈", "其他"];
+const selectedCategory = ref("");
 
-const forumPosts = ref([
-  {
-    id: 1,
-    title: "標題一",
-    content: "貼文一的內容。",
-  },
-  {
-    id: 2,
-    title: "標題二",
-    content: "貼文二的內容。",
-  },
-  {
-    id: 3,
-    title: "標題三",
-    content: "貼文三的內容。",
-  },
-]);
+const forumPosts = ref([]);
 
 const clearEditor = () => {
   editorContent.value = "";
@@ -69,23 +124,86 @@ const clearEditor = () => {
   quill.value.setHTML("");
 };
 
+const toggleExpand = (post) => {
+  post.isExpanded = !post.isExpanded;
+};
+
+//新增一偏新貼文
 const showArticle = () => {
+  const localTime = new Date();
+
+// 獲得台灣時間的偏移量（用分鐘為單位，負數表示東區時區，正數表示西區時區）
+const taipeiTimezoneOffset = localTime.getTimezoneOffset();
+
+// 以分鐘為單位算時差，透過負負得正取得正確偏移量
+const timeDifferenceMinutes = -taipeiTimezoneOffset;
+
+// 在前台時間加上時差，將時間從台北時區轉為 UTC 時間，讓後台接正確時間
+const utcTimestamp = new Date(localTime.getTime() + (timeDifferenceMinutes * 60 * 1000));
+
+// 将 UTC 時間轉為 ISO 8601 格式的字串
   const newPost = {
-    id: forumPosts.length + 1,
+    // id: "",
     title: postTitle.value,
     content: editorContent.value,
+    category: selectedCategory.value,
+    publishTime: utcTimestamp.toISOString(),
+    author:"訪客"
   };
+  // console.log(newPost);
+  axios.post("https://localhost:7183/api/Community/AddPost", newPost, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+      .then(res=>{
+        console.log(res.data);
+        newPost.id=res.data;
+      })
+      .catch(err=>{
+        console.log(err);
+      })
   forumPosts.value.push(newPost);
+  console.log(newPost);
   nextTick(() => {
     clearEditor();
   });
+
 };
 
+
+axios.get("https://localhost:7183/api/Community/GetAllPost")
+    .then(res=>{
+      forumPosts.value = res.data.map(post => ({ ...post, isExpanded: false }));
+    })
+    .catch(err=>{
+      console.log(err);
+    })
+
+
+  //按下分類按鈕
+  const loadCategory=(searchCategory)=>{
+    const categoryItem = {
+      Category:searchCategory
+    }
+    console.log(C)
+    axios.post("https://localhost:7183/api/Community/CategorySearch", )
+        .then(res=>{
+          console.log(res.data);
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+  }
+
+    
 //quill-vue
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import axios from "axios";
+
 import ImageUploader from "quill-image-uploader";
+import { constants } from "fs";
+import { log } from "util";
 // import ElementPlus from "element-plus";
 // import "element-plus/dist/index.css";
 
@@ -143,15 +261,21 @@ const modules = {
 </script>
   
 <style scoped>
-.forum-posts ol li {
-  list-style: decimal;
-  margin: 0 20px;
+
+
+.topPImg {
+  background: url('../../../../public/imgs/Top.jpg') no-repeat center center;
+  background-size: cover;
+  background-color: #6c757d;
+  padding: 8rem 0;
+  position: relative;
+  height: 500px;
+}
+.timeInfo {
+  text-align: right;
 }
 
-.forum-posts ul li {
-  list-style: disc;
-  margin: 0 20px;
-}
+
 
 .forum-posts {
   padding: 20px;
@@ -160,24 +284,20 @@ const modules = {
 }
 
 .post {
-  padding: 10px;
   margin-bottom: 20px;
+  padding: 20px; /* 添加内边距以增加间距 */
   background-color: #fff;
   border: 1px solid #ddd;
 }
 
 .post h3 {
   font-size: 20px;
+  margin-bottom: 10px; /* 帖子标题之间的底部间距 */
 }
 
 .post p {
   font-size: 16px;
   color: #333;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
 }
 
 ul li {
@@ -198,6 +318,7 @@ a:hover {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
 }
 </style>
-  

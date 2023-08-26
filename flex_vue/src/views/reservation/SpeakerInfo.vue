@@ -1,4 +1,4 @@
-<template>ingBlock
+<template>
   <div class="container">
     <div class="row main bigRow">
       <div class="col-md-8">
