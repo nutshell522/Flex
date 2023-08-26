@@ -1,8 +1,14 @@
 <template>
   <ShoesnavBar></ShoesnavBar>
-  <div class="container-body">
+<div class="container mt-4">
+  <div class="container-body d-flex">
     <div class="row">
-      <div class="col-6">
+      <div class="col-3 detailbox">
+        <div class="nav-category">
+          <ShoesCategoryBar style="position: relative"></ShoesCategoryBar>
+        </div>
+      </div>
+      <div class="col-5 pe-3 detailbox">
         <div class="detailImgbox">
           <img
             class="detailImg"
@@ -11,7 +17,7 @@
           />
         </div>
       </div>
-      <div class="col-6 ps-5">
+      <div class="col-4 detailbox">
         <div class="row" style="min-height: 129px">
           <div class="col-7 detailTitle" :title="shoesDetail.shoesName">
             {{ shoesDetail.shoesName }}
@@ -27,33 +33,84 @@
         </div>
         <hr />
         <div class="row color-list">
-          <div>
-            <span class="colorBoxSetting" :title="shoesDetail.colorName">
-              {{ shoesDetail.colorName }}
-            </span>
-          </div>
-          <div class="mt-3 mb-3 col-12">
+            <div class="d-flex align-items-center">
+                <div>
+                  <span class="colorBoxSetting" :title="shoesDetail.colorName">
+                    {{ shoesDetail.colorName }}
+                  </span>
+                </div>
+                <div class="text-center">
+                  <button
+                    type="button"
+                    class="form-control btn sizeTableBtn"
+                    style="font-size: 20px"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                  >
+                    尺寸表
+                  </button>
+                </div>
+              </div>
+            <div
+              class="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      尺寸表
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body modal-dialog modal-dialog-scrollable">
+                    <img src="/public/imgs/成人鞋子尺寸表.jpg" />
+                    <p>※ 本尺寸表會因商品素材不同，可能與實際尺寸略有誤差。</p>
+                    <p>※ 尺寸表為商品平放測量，以公分(cm)為單位。</p>
+                    <img src="/public/imgs/鞋子說明表.jpg" />
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      關閉
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div class="mt-3 mb-3">
             <div class="d-flex row">
-              <router-link
+                <div class="col-6 ms-6">
+                  <router-link
                   :to="'/CustomeShoes' + '/detail/'+ 'Customization/' + shoesProductId"
                   :disabled="isButtonDisabled"             
                 >
-                <div class="col-6 mt-5 ms-6">
                   <button
                     type="submit"
                     class="btn btn-primary comenextBtn"
                   >
                     進入客製化頁面
                   </button>
+                </router-link>
                 </div>
-              </router-link>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row mt-5">
+  <div class="row">
     <div class="col-12">
       <ul
         class="nav nav-tabs d-flex"
@@ -120,12 +177,14 @@
       </div>
     </div>
   </div>
+</div>
   <homeFooter></homeFooter>
 </template>
 
 <script setup>
 import axios from "axios";
 import { onMounted, ref, computed } from "vue";
+import ShoesCategoryBar from "@/components/customeShoes/ShoesCategoryBar.vue";
 import { useRoute } from "vue-router";
 import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
@@ -175,15 +234,22 @@ onMounted(() => {
 </script>
 
 <style>
+
 .detailImgbox {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2px;
 }
+
+.detailImgbox img {
+  max-width: 100%;
+  height: auto;
+}
+
 .detailImg {
-  width: 490px;
-  height: 520px;
+  width: 400px;
+  height: 430px;
 }
 .color-list {
   height: 60px;
@@ -192,7 +258,13 @@ onMounted(() => {
   justify-content: center;
 }
 
+.detailbox{
+  height:350px;
+
+}
+
 .detailImgboxs {
+  margin-top: 20px; /* 调整此值以适应需求 */
   width: 50%;
   height: 0;
   padding-bottom: 100%;
@@ -231,7 +303,7 @@ onMounted(() => {
 }
 
 .detailTitle {
-  font-size: 15px;
+  font-size: 20px;
   color: #706e6c;
 }
 
@@ -250,7 +322,7 @@ onMounted(() => {
 .detailSalesPrice {
   color: red;
   font-size: 60px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .NTbox {
@@ -266,19 +338,28 @@ onMounted(() => {
   background-color: gainsboro;
 }
 
-.increaseAndDecrease:hover {
-  background-color: #804040;
-  border: 1px solid black;
-}
-
-.increaseAndDecrease:hover i {
-  color: aliceblue;
-}
 
 .commentDiv {
   align-items: center;
   justify-content: center;
   border: 1px solid rgb(185, 184, 184);
   border-radius: 10px;
+}
+
+/* 调整左侧栏宽度和间距 */
+.col-3 {
+  width: 25%;
+  padding-right: 15px;
+}
+
+/* 调整右侧栏宽度和间距 */
+.col-9 {
+  width: 75%;
+  padding-left: 15px;
+}
+
+/* 确保左侧栏高度和右侧栏一致 */
+.container-body {
+  align-items: flex-start; /* 顶部对齐 */
 }
 </style>

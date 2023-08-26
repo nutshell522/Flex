@@ -3,7 +3,8 @@
         <div class="container">
             <div class="footer-container">
                 <div>
-                    <h3>關於flex</h3>
+                    <h3 class="footer-btn">關於flex<i class="bi bi-plus d-lg-none"></i><i class="bi bi-dash d-lg-none"></i>
+                    </h3>
                     <ul>
                         <li><a href="javascript:;">最新消息</a></li>
                         <li><a href="javascript:;">人才招募</a></li>
@@ -11,15 +12,16 @@
                     </ul>
                 </div>
                 <div>
-                    <h3>售後與工作室服務</h3>
+                    <h3 class="footer-btn">售後與工作室服務<i class="bi bi-plus d-lg-none"></i><i class="bi bi-dash d-lg-none"></i>
+                    </h3>
                     <ul>
                         <li><a href="javascript:;">售後服務說明</a></li>
                         <li><a href="javascript:;">客服服務</a></li>
                         <li><a href="/CustomerIndex">客製化服務</a></li>
                     </ul>
                 </div>
-                <div class="me-auto">
-                    <h3>俱樂部</h3>
+                <div class="me-push">
+                    <h3 class="footer-btn">俱樂部<i class="bi bi-plus d-lg-none"></i><i class="bi bi-dash d-lg-none"></i></h3>
                     <ul>
                         <li><a href="javascript:;">活動與課程</a></li>
                     </ul>
@@ -55,30 +57,66 @@
 </template>
     
 <script setup lang='ts'>
-
+import { onMounted } from "vue";
+onMounted(() => {
+    const btns = document.querySelectorAll('.footer-btn');
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (btn.classList.contains('active')) {
+                btn.classList.remove('active');
+                return;
+            }
+            btns.forEach(item => {
+                item.classList.remove('active');
+            })
+            btn.classList.add('active');
+        })
+    })
+})
 </script>
     
 <style scoped lang="scss">
 footer {
     background-color: #111111;
-    padding: 0;
+
     padding-top: 40px;
     width: 100%;
+    position: relative;
     z-index: 200;
+
+    @media screen and (min-width: 992px) {
+        padding: 0;
+    }
+
+    @media screen and (max-width: 991px) {
+        padding: 0 25px;
+    }
 
     .container {
 
         .footer-h3 {
             color: #fff;
             font-size: 25px;
+
+            @media screen and (max-width: 991px) {
+                margin-top: 15px;
+            }
         }
 
         .footer-container {
             display: flex;
 
             div {
-                &:not(:last-child) {
-                    margin-right: 100px;
+                @media screen and (min-width: 992px) {
+                    &:not(:last-child) {
+                        margin-right: 100px;
+                    }
+                }
+
+                &.me-push {
+                    @media screen and (min-width: 992px) {
+                        margin-right: auto;
+                    }
                 }
 
                 h3 {
@@ -105,17 +143,71 @@ footer {
                 }
             }
 
+            @media screen and (max-width: 991px) {
+                .footer-btn {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    height: 50px;
+                    justify-content: space-between;
+                    cursor: pointer;
+                    border-bottom: 2px #999 solid;
+
+                    &.active {
+                        .bi-plus {
+                            display: none;
+                        }
+
+                        .bi-dash {
+                            display: block;
+                        }
+
+                        &+ul {
+                            height: 130px;
+                        }
+                    }
+
+                    &:not(.active) {
+                        .bi-plus {
+                            display: block;
+                        }
+
+                        .bi-dash {
+                            display: none;
+
+                        }
+                    }
+
+                    i {
+                        color: #fff
+                    }
+                }
+
+                ul {
+                    height: 0;
+                    overflow: hidden;
+                    transition: 0.3s
+                }
+            }
+
             .social-network-wrapper {
                 h3 {
                     @extend .footer-h3;
-                    text-align: center;
 
+                    @media screen and (min-width: 992px) {
+                        text-align: center;
+                    }
                 }
 
                 ul {
                     display: flex;
-                    justify-content: center;
                     width: 100%;
+
+                    @media screen and (min-width: 992px) {
+                        justify-content: center;
+                    }
+
+
 
                     li {
                         &:not(:first-child) {
@@ -141,7 +233,12 @@ footer {
                     }
                 }
             }
+
+            @media screen and (max-width: 991px) {
+                flex-direction: column;
+            }
         }
+
 
         .footer-footer {
             display: flex;
@@ -150,19 +247,31 @@ footer {
 
             div {
                 color: #7e7e7e;
-                margin-right: 30px;
             }
 
             ul {
                 display: flex;
 
                 li {
-                    &:not(:first-child) {
+                    @media screen and (min-width: 992px) {
                         margin-left: 20px;
                     }
 
                     a {
                         color: #7e7e7e;
+                    }
+                }
+            }
+
+            @media screen and (max-width: 991px) {
+                flex-direction: column;
+
+                ul {
+                    flex-direction: column;
+                    padding: 0;
+
+                    li {
+                        margin-top: 10px;
                     }
                 }
             }

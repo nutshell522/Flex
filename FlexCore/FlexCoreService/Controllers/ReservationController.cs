@@ -73,7 +73,7 @@ namespace FlexCoreService.Controllers
             AddReservationDTO dto = new AddReservationDTO();
             dto.fk_BookerId = vm.fk_BookerId;
             dto.ReservationStartTime = vm.ReservationStartTime;
-            dto.ReservationEndTime = vm.ReservationStartTime.AddHours(2);
+            dto.ReservationEndTime = vm.ReservationStartTime.HasValue? vm.ReservationStartTime.Value.AddHours(2):null;
             dto.fk_ReservationSpeakerId = vm.fk_ReservationSpeakerId;
             dto.fk_BranchId = vm.fk_BranchId;
             dto.fk_ReservationStatusId = 0;

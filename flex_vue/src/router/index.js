@@ -11,6 +11,7 @@ import ActivityIndex from "../views/activity/ActivityIndex.vue";
 import ReservationIndex from "../views/reservation/ReservationIndex.vue";
 import SpeakerInfo from "../views/reservation/SpeakerInfo.vue";
 import PaymentSuccess from "../views/activity/PaymentSuccess.vue";
+import Community from "../views/activity/Community.vue";
 const webTitle = "FLEX - ";
 
 // 路由設定
@@ -85,6 +86,12 @@ const routes = [
     component: ActivitySignUp,
     name: "activitySignUp",
     meta: { title: `${webTitle}活動報名`, require: true },
+  },
+  {
+    //http://loaclhost/Community
+    path: "/community",
+    component: Community,
+    meta: { title: `${webTitle}活動心得` },
   },
   {
     // http://loaclhost/paymentSuccess
@@ -308,10 +315,6 @@ const routes = [
     component: () => import("../views/CustomeShoes/Contact.vue"),
     meta: { title: `${webTitle}合作洽詢` },
     children: [
-      {
-        path: ":shoescategoryName",
-        component: () => import("../views/CustomeShoes/CustomeShoesAll.vue"),
-      },
       {
         //http://loaclhost/Login
         path: "/login",
