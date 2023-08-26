@@ -1,26 +1,21 @@
-﻿using EFModels.Models;
-using FlexCoreService.UserCtrl.Dtos;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using System.Xml.Linq;
-using Newtonsoft.Json;
-using System.Text;
-using System.Net.Mail;
-using System.Net;
-using System.Security.Principal;
-using Newtonsoft.Json.Linq;
+﻿using Bogus;
+using EFModels.Models;
 using FlexCoreService.ProductCtrl.Models.Dtos;
-using FlexCoreService.UserCtrl.Interface;
-using FlexCoreService.UserCtrl.Service;
 using FlexCoreService.UserCtrl.Infa;
-using Bogus;
-using Bogus.DataSets;
+using FlexCoreService.UserCtrl.Interface;
+using FlexCoreService.UserCtrl.Models.Dtos;
+using FlexCoreService.UserCtrl.Models.VM;
+using FlexCoreService.UserCtrl.Service;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Diagnostics.Metrics;
+using System.Security.Claims;
+
 
 
 namespace FlexCoreService.Controllers
@@ -33,19 +28,17 @@ namespace FlexCoreService.Controllers
         private readonly AppDbContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IFavoriteDPRepository _repo;
-        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor, IFavoriteDPRepository repo)
+        private readonly IUrlHelperFactory _urlHelperFactory;
+
+        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor, IFavoriteDPRepository repo, IUrlHelperFactory urlHelperFactory)
         {
             _db = db;
             _repo = repo;
             _httpContextAccessor = httpContextAccessor;
+            _urlHelperFactory = urlHelperFactory;
         }
 
-        /// <summary>
-        /// 取得會員信箱
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        [HttpGet("account/{account}")]
+
         public async Task<ActionResult<string>> GetUserEmail(string account)
         {
             //檢查帳號是否存在
@@ -410,43 +403,53 @@ namespace FlexCoreService.Controllers
             return Ok("更新密碼成功");
         }
 
-        /// <summary>
-        /// 重新設定密碼
-        /// </summary>
-        /// <param name="logindto"></param>
-        /// <returns></returns>
-        [HttpPut("ResetPwd")]
-        public async Task<ActionResult<string>> ResetPwd(LoginDto logindto)
-        {
-            var member = (from m in _db.Members
-                          where m.Account == logindto.Account
-                          select m).SingleOrDefault();
 
+        [HttpPost("ForgetPassword")]
+        public async Task<ActionResult> ForgetPassword(ForgetPasswordVM vm)
+        {
+                      
+            Member member = await _db.Members.FirstOrDefaultAsync(x => x.Account == vm.Account);
 
             if (member == null)
             {
-                return NotFound("找不到對應的會員資料");
+                return NotFound();
+            }
+            string userEmail = member.Email;
+
+            var urlHelper = _urlHelperFactory.GetUrlHelper(ControllerContext);
+
+
+            var urlTemplate = urlHelper.Action("ResetPassword", "Users", new
+            {
+                memberId = vm.Account,
+                confirmCode = member.Email
+            }, HttpContext.Request.Scheme);
+
+
+            Result result = ProcessResetPassword(vm.Account, member.Email, urlTemplate);
+
+            if (result.IsFail)
+            {
+                ModelState.AddModelError(string.Empty, result.ErrorMessage);
+                return BadRequest("重新設定密碼申請失敗");
             }
 
-            member.EncryptedPassword = logindto.EncryptedPassword;
+            return Ok(userEmail);
+        }
 
-            try
+        [HttpPost("ResetPassword")]
+        public async Task<ActionResult> ResetPassword(ResetPasswordVM vm, int memberId, string confirmCode)
+        {
+            //if (ModelState.IsValid == false) return View(vm);
+            Result result = ProcessChangePassword(memberId, confirmCode, vm.Password);
+
+            if (result.IsFail)
             {
-                //雜湊密碼
-                await _db.SaveChangesAsync();
+                ModelState.AddModelError(string.Empty, result.ErrorMessage);
+                return BadRequest("重新設定密碼失敗");
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MemberExists(member.Account))
-                {
-                    return "重設密碼失敗!";
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return Ok("重設密碼成功");
+
+            return Ok("重新設定密碼成功");
         }
 
         /// <summary>
@@ -483,7 +486,6 @@ namespace FlexCoreService.Controllers
         /// <param name="favoritesdto"></param>
         /// <returns></returns>
         [HttpPost("SaveFavorites")]
-
         public async Task<ActionResult<string>> SaveFavoritesProduct(FavoritesDto favoritesdto)
         {
 
@@ -561,6 +563,10 @@ namespace FlexCoreService.Controllers
             return User.Identity.IsAuthenticated;
         }
 
+        /// <summary>
+        /// 註冊測試資料
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("GetTestUserRegData")]
         public async Task<ActionResult<RegisterDto>> GetTestUserRegData()
         {
@@ -598,5 +604,53 @@ namespace FlexCoreService.Controllers
             return (_db.Members?.Any(e => e.Account == account)).GetValueOrDefault();
         }
 
+        private Result ProcessResetPassword(string account, string email, string urlTemplate)
+        {
+            
+            // 檢查account,email正確性
+            var memberInDb = _db.Members.FirstOrDefault(m => m.Account == account);
+
+            if (memberInDb == null) return Result.Fail("帳號或 Email 錯誤");
+
+            if (string.Compare(email, memberInDb.Email, StringComparison.CurrentCultureIgnoreCase) != 0) return Result.Fail("帳號或 Email 錯誤");
+
+            // 檢查 IsConfirmed必需是true, 因為只有已啟用的帳號才能重設密碼
+            if (memberInDb.IsConfirmed == false) return Result.Fail("您還沒有啟用本帳號, 請先完成才能重設密碼");
+
+            // 更新記錄, 填入 confirmCode
+            var confirmCode = Guid.NewGuid().ToString("N");
+            memberInDb.ConfirmCode = confirmCode;
+            _db.SaveChanges();
+
+            // 發email
+            //var url = string.Format(urlTemplate, memberInDb.MemberId, confirmCode);
+            //var url = $"https://localhost:7183/api/Users/ResetPassword?memberId={memberInDb.MemberId}&confirmCode={confirmCode}";
+            var url = "https://localhost:8080/ResetPassword";
+            string resetUrl = $"{url}?memberId={memberInDb.MemberId}&confirmCode={confirmCode}";
+
+            new EmailHelper().SendForgetPasswordEmail(resetUrl, memberInDb.Name, email);
+
+            return Result.Success();
+        }
+
+        private Result ProcessChangePassword(int memberId, string confirmCode, string newPassword)
+        {
+
+            // 驗證 memberId, confirmCode是否正確
+            var memberInDb = _db.Members.FirstOrDefault(m => m.MemberId == memberId && m.ConfirmCode == confirmCode);
+            if (memberInDb == null) return Result.Fail("找不到對應的會員記錄");
+
+            // 更新密碼,並將 confirmCode清空
+            var salt = HashUtility.GetSalt();
+            var encryptedPassword = HashUtility.ToSHA256(newPassword, salt);
+
+            memberInDb.EncryptedPassword = encryptedPassword;
+            memberInDb.ConfirmCode = "Confirmed";
+
+            _db.SaveChanges();
+
+            return Result.Success();
+        }
+        
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace FlexCoreService.UserCtrl.Dtos
+﻿namespace FlexCoreService.UserCtrl.Models.Dtos
 {
     public class LoginDto
     {

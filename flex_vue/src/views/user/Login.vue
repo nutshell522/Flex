@@ -475,16 +475,14 @@ function handleGoogleLoginUserData(googleLoginUserData) {
 
 const loginBox = ref(true);
 const forgetPwdSetPwd = ref(false);
-userAcc.value = localStorage.getItem('userAcc');
 
 function forgetPwdClick() {
   loginBox.value = false;
-  forgetPwdSetPwd.value = true;
-  if (userAcc.value) {
-    const forgetUri = `${baseAddress}api/Users/account/` + userAcc.value;
-    //  取得信箱
+  if (account.value) {
+    const forgetUri = `${baseAddress}api/Users/ForgetPassword`;
+    const ForgetPasswordVM = { Account: account.value };
     axios
-      .get(forgetUri)
+      .post(forgetUri, ForgetPasswordVM)
       .then((res) => {
         email.value = res.data;
       })
@@ -492,6 +490,7 @@ function forgetPwdClick() {
         console.error('Error:', err);
       });
   }
+  forgetPwdSetPwd.value = true;
 }
 // 眼睛
 const eye1 = ref(false);
