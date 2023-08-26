@@ -2,9 +2,17 @@
   <navBar @UpdateCart="getUpdateFunc"></navBar>
   <main>
     <div class="container">
-      <div class="row gx-4">
+      <div class="row gx-5">
         <!-- 購物車左側 -->
         <div class="left col-12 col-lg-8">
+          <div class="hint">
+            <div>
+              <div class="hint-title">免費寄送</div>
+              <div class="hint-body">適用於 NT$2,000 以上的訂單。</div>
+            </div>
+            <button class="btn-close"></button>
+          </div>
+          <h3 class="mt-3">購物車</h3>
           <ul class="cart">
             <li v-for="cartItem in cartItems" :key="cartItem.cartItemId" class="cart-item">
               <a class="pd-img-wrapper"
@@ -12,38 +20,53 @@
                 <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath" :title="cartItem.product.productName" />
               </a>
               <div class="item-info-wrapper me-auto">
-                <a href="javascript:;" class="fw-bold">{{ cartItem.product.productName }}-{{
-                  cartItem.product.salesCategoryNameStr
-                }}-{{ cartItem.product.color }}</a>
-                <div>
-                  尺寸
-                  <a href="javascript:;"><span>{{ cartItem.product.size }}</span><i class="bi bi-chevron-down"></i></a>
+                <div class="item-name">
+
+                  <a href="javascript:;" class="fw-bold">{{ cartItem.product.productName }}-{{
+                    cartItem.product.salesCategoryNameStr
+                  }}-{{ cartItem.product.color }}</a>
+                  <ul class="d-flex px-0">
+                    <li class="me-2 discount-tag" v-for="matchDiscount in cartItem.product.matchDiscounts"
+                      :key="matchDiscount.discountId">
+                      <a href="javascript:;">{{ matchDiscount.discountName }}</a>
+                    </li>
+                  </ul>
                 </div>
-                <ul class="d-flex px-0">
-                  <li class="me-2" v-for="matchDiscount in cartItem.product.matchDiscounts"
-                    :key="matchDiscount.discountId">
-                    <a href="javascript:;">{{ matchDiscount.discountName }}</a>
-                  </li>
-                </ul>
-              </div>
-              <i @click="deleteCartItem(cartItem)" class="bi bi-trash3"></i>
-              <div>
+
                 <div class="d-flex">
-                  <button @click="decrementCartItem(cartItem)">
-                    <i class="bi bi-dash-lg"></i>
-                  </button>
-                  <div>{{ cartItem.qty }}</div>
-                  <button @click="incrementCartItem(cartItem)">
-                    <i class="bi bi-plus-lg"></i>
-                  </button>
+
+                  <div class="size">
+                    尺寸
+                    <a class="size-select" href="javascript:;"><span>{{ cartItem.product.size }}</span><i
+                        class="bi bi-chevron-down"></i></a>
+                  </div>
+                  <div class="qty-box">
+                    <button @click="decrementCartItem(cartItem)">
+                      <i class="bi bi-dash-lg"></i>
+                    </button>
+                    <div class="qty">{{ cartItem.qty }}</div>
+                    <button @click="incrementCartItem(cartItem)">
+                      <i class="bi bi-plus-lg"></i>
+                    </button>
+                  </div>
                 </div>
+
+                <i @click="deleteCartItem(cartItem)" class="bi bi-trash3"></i>
               </div>
-              <div class="px-4">
-                <div v-if="cartItem.unitSubTotal !== null">
-                  {{ cartItem.unitSubTotal }}
+
+              <div>
+
+              </div>
+              <div class="amont-box">
+                <div>
+
+                  <div class="origin-total" v-if="cartItem.unitSubTotal !== null">
+                    {{ cartItem.unitSubTotal }}
+                  </div>
                 </div>
-                <div>{{ cartItem.subTotal }}</div>
+                <div class="total">{{ cartItem.subTotal }}</div>
               </div>
+              <div></div>
             </li>
           </ul>
         </div>
@@ -165,6 +188,11 @@ const discountCount = computed(() => {
 
 onMounted(() => {
   loadCartItems();
+  const hintCloseBtn = document.querySelector('.btn-close');
+  hintCloseBtn?.addEventListener('click', () => {
+    const hint = document.querySelector('.hint');
+    hint?.classList.add('hide');
+  })
 });
 
 // 定義callback函數類型
@@ -205,9 +233,53 @@ main {
 
   .row {
     &>.left {
+      .hint {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #F5F5F5;
+        padding: 10px 20px;
+
+        &.hide {
+          height: 0;
+          display: none;
+        }
+
+        .hint-title {
+          font-weight: bold;
+        }
+      }
+
       &>.cart {
+        padding: 0;
+
         &>.cart-item {
           display: flex;
+          padding: 30px 0;
+          border-bottom: #ccc 1px solid;
+
+          .amont-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-bottom: 20px;
+            text-align: right;
+
+            &>div {
+              height: 25px;
+            }
+
+            .origin-total {
+              text-decoration: line-through;
+              color: #999;
+              font-style: italic;
+            }
+
+            .total {
+              font-weight: bold;
+              font-size: 20px;
+            }
+          }
 
           .pd-img-wrapper {
             width: 150px;
@@ -217,10 +289,95 @@ main {
             align-items: center;
             justify-content: center;
 
+
             &>img {
               width: 100%;
               height: auto;
               object-fit: cover;
+            }
+          }
+
+          .item-info-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0 25px;
+            width: 55%;
+
+
+            .item-name {
+              &>a {
+                font-size: 18px;
+              }
+
+              .discount-tag {
+                background-color: green;
+                padding: 0 3px;
+                border-radius: 5px;
+                font-size: 13px;
+
+                a {
+                  color: #F5F5F5;
+                }
+              }
+            }
+
+            .size {
+              margin-right: 28px;
+              display: flex;
+              font-weight: bold;
+              color: #777;
+
+              .size-select {
+                display: flex;
+                width: 70px;
+                justify-content: end;
+                border: #aaa 1px solid;
+                margin-left: 15px;
+
+                &>span,
+                &>i {
+                  color: #777;
+                  font-weight: bold;
+                }
+
+                &>i {
+                  margin: 0 3px;
+                }
+              }
+            }
+
+            .qty-box {
+              display: flex;
+
+              .qty {
+                width: 30px;
+                text-align: center;
+                border-bottom: 1px solid #999;
+                border-top: 1px solid #999;
+              }
+
+              >button {
+                border: 1px solid #999;
+                padding: 0 3px;
+
+                &:hover {
+                  background-color: #ddd;
+                }
+
+                &:first-child {
+                  border-radius: 5px 0 0 5px;
+                }
+
+                &:last-child {
+                  border-radius: 0 5px 5px 0;
+                }
+              }
+            }
+
+            .bi-trash3 {
+              font-size: 24px;
+              width: 0;
             }
           }
         }
