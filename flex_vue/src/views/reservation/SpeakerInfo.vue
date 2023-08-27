@@ -1,4 +1,5 @@
 <template>
+ <NavBar></NavBar>
   <div class="container">
     <div class="row main bigRow">
       <div class="col-md-8">
@@ -124,14 +125,14 @@
 
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-4 mt-5">
          <div class="text-end">
-          <a href="https://localhost:8080" class="btn button" @click="getActivityId" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+          <a href="#" class="btn button" @click="getActivityId" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="height: 110px">
             <!-- icon -->
             <span class="icon">
               <img
                 width="100"
-                height="100"
+                height="90"
                 src="https://img.icons8.com/stickers/100/exercise.png"
                 alt="exercise"
               />
@@ -187,7 +188,7 @@
 
 
 
-        <h2>人氣講師</h2>
+        <h2 class="mt-5">人氣講師</h2>
         <div
           class="image-container"
           v-for="(single, index) in TopThreeSpeaker"
@@ -204,9 +205,12 @@
       </div>
     </div>
   </div>
+  <HomeFooter></HomeFooter>
 </template>
 
 <script setup>
+import NavBar from "@/components/activity/ActivityNav.vue";
+import HomeFooter from "@/components/home/footer.vue";
 import { onMounted, reactive, ref } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
@@ -653,31 +657,10 @@ const formatDateTime = (dateString) => {
   text-align: center;
 }
 
-#schedule {
-  display: flex;
-  justify-content: center;
-  /* margin-top: 5%; */
-}
 
-.schedule-table {
-  border-collapse: collapse;
-  margin: 20px auto;
-}
-
-#schedule .schedule-table th,
-#schedule .schedule-table td {
-  border: 1px solid #111;
-  padding: 10px;
-  cursor: pointer;
-}
-
-#schedule .schedule-table td.selected {
-  background-color: green;
-  color: white;
-}
 
 .unable {
-  background-color: rosybrown;
+  background-color: rgb(243, 83, 83);
   pointer-events: none;
 }
 
@@ -761,11 +744,22 @@ const formatDateTime = (dateString) => {
 /* 前三名講師列 */
 /* 定義外框樣式 */
 .image-container {
-  border: 1px solid rgb(16, 36, 117); /* 外框顏色和寬度 */
-  width: 300px; /* 圖片寬度 */
-  height: 200px; /* 圖片高度 */
-  display: inline-block; /* 使圖片並排顯示 */
-  margin: 25px; /* 外邊距 */
+  width: 300px;
+  height: 200px;
+  display: inline-block;
+  margin: 25px;
+  perspective: 1000px;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translateY(0);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 10px;
+  /* 将 box-shadow 颜色设置为 rgba(0, 0, 0, 0.2)，透明度可以自行调整 */
+  box-shadow: 7px 7px 0 rgba(6, 3, 3, 0.2);
 }
 
 /* 使圖片填充外框 */
@@ -779,7 +773,52 @@ const formatDateTime = (dateString) => {
   display: inline-block;
   margin-right: 10px;
   /* 調整圖標和文字之間的間距 */
-  font-size: 20px;
+  font-size: 15px;
   /* 調整圖標大小 */
+}
+
+
+/* 日曆表樣式 */
+
+#schedule {
+  width: 73%; /* 設定日曆表的寬度 */
+  max-width: 800px; /* 設定最大寬度以防止過度放大 */
+  margin: 0 auto; /* 水平置中 */
+}
+
+.schedule-table {
+  border-collapse: collapse;
+  margin: 20px auto;
+  width: 100%;
+  max-width: none; /* 移除最大寬度限制 */
+}
+
+#schedule .schedule-table {
+  border-collapse: collapse;
+  margin: 20px auto;
+  /* border-radius: 50px; 圓角效果 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 陰影效果 */
+  background-color: #fff; /* 背景顏色 */
+}
+
+
+#schedule .schedule-table th,
+#schedule .schedule-table td {
+  border: 4px solid #fa8d69;
+  padding: 10px;
+  cursor: pointer;
+  width: 80px; /* 設定單元格寬度 */
+  height: 30px; /* 設定單元格高度 */
+}
+
+#schedule .schedule-table td.selected {
+  background-color: rgb(130, 184, 246);
+  color: white;
+}
+
+/* 滑鼠懸停時的效果 */
+#schedule .schedule-table td:hover {
+  background-color: rgb(255, 238, 6); /* 滑鼠懸停時的背景顏色 */
+  color: #111; /* 文字顏色 */
 }
 </style>

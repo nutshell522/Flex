@@ -1,4 +1,5 @@
 <template>
+    <NavBar></NavBar>
 <!-- 搜尋區 -->
 <div class="search-container">
     <div class="row row2 ">
@@ -42,19 +43,20 @@
         </div>
     </div>
 
-   
-
+    <HomeFooter></HomeFooter>
 </template>
     
 <script setup >
     import axios from 'axios';
     import {ref, reactive, onMounted} from 'vue';
     import { useRoute } from 'vue-router';
-    import { library } from '@fortawesome/fontawesome-svg-core'
-    import { fas } from '@fortawesome/free-solid-svg-icons'
-    import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+    import { library } from '@fortawesome/fontawesome-svg-core';
+    import { fas } from '@fortawesome/free-solid-svg-icons';
+    import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+    import VueMultiselect from 'vue-multiselect';
+    import NavBar from "@/components/activity/ActivityNav.vue";
+    import HomeFooter from "@/components/home/footer.vue";
 
-    import VueMultiselect from 'vue-multiselect'
     const selected = ref(null);
     const options = ['路跑', '鐵人三項', '自行車', '健行', '登山', '瑜珈'];  
     const searchArea = ref("");

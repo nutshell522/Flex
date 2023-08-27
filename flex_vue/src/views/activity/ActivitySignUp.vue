@@ -1,4 +1,5 @@
 <template>
+    <NavBar></NavBar>
         <div >
             <div class="mb-3">
                 <label for="form-label">會員編號</label>
@@ -96,10 +97,12 @@
     </div>
   </div>
 </div>
-     
+<HomeFooter></HomeFooter>
 </template>
     
 <script setup>
+import NavBar from "@/components/activity/ActivityNav.vue";
+import HomeFooter from "@/components/home/footer.vue";
 import axios from 'axios';
 import{ref, reactive, onMounted} from 'vue';
 import { useRoute, useRouter } from "vue-router";

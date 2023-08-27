@@ -58,6 +58,7 @@ From Articles
 SELECT *
 From Articles
 Where Category = @category
+Order By PublishTime Desc
 ";
             using (var conn = new SqlConnection(_connStr))
             {
