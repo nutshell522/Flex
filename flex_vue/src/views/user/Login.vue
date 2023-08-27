@@ -372,10 +372,10 @@ async function Login2(googleLoginUserData) {
     }
     handleSuccessfulLogin(memberInfo);
 
-    return 'loginSuccess'; // 登录成功时直接返回
+    return 'loginSuccess'; // 登入成功返回
   } catch (err) {
     console.log('取得google登入這資訊失敗', err);
-    return 'userNotFound'; // 登录失败时返回
+    return 'userNotFound'; // 登入失敗返回
   }
 }
 
@@ -415,14 +415,7 @@ function registerBtn() {
       .post(regUri, registerData)
       .then((res) => {
         registerData.value = res.data;
-        //console.log(registerData.value);
 
-        //todo驗證信驗證
-        //loginBox.value = false;
-        //registercheck.value = true;
-
-        //todo顯示註冊成功畫面--註冊成功
-        //todo註冊很常死亡
         Swal.fire({
           icon: 'success',
           title: '註冊成功',
@@ -463,6 +456,11 @@ function handleGoogleLoginUserData(googleLoginUserData) {
 
             Login2(googleLoginUserData);
             //alert('為什麼要延遲啦');
+
+            localStorage.setItem(
+              'loggedInUser',
+              JSON.stringify(googleLoginUserData)
+            );
 
             Swal.fire({
               icon: 'success',

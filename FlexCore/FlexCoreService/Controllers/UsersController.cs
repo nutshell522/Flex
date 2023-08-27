@@ -31,13 +31,16 @@ namespace FlexCoreService.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IFavoriteDPRepository _repo;
         private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IWebHostEnvironment _environment;
 
-        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor, IFavoriteDPRepository repo, IUrlHelperFactory urlHelperFactory)
+        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor, IFavoriteDPRepository repo, IUrlHelperFactory urlHelperFactory, IWebHostEnvironment environment)
         {
             _db = db;
             _repo = repo;
             _httpContextAccessor = httpContextAccessor;
             _urlHelperFactory = urlHelperFactory;
+            _environment = environment;
+
         }
 
         /// <summary>
@@ -225,10 +228,11 @@ namespace FlexCoreService.Controllers
                 Member member = new Member
                 {
                     Account = regdto.Email,
-                    EncryptedPassword = regdto.Email,
+                    EncryptedPassword = HashUtility.ToSHA256(regdto.Email, salt) ,
                     Name = regdto.Name,
                     Email = regdto.Email,
-                    Mobile = "0921554545",//todo自動給或留空
+                    Mobile = Guid.NewGuid().ToString("N").Substring(0, 10),//todo自動給或留空
+                    ConfirmCode = "Confirmed",
                     fk_LevelId = 1
                 };
                 _db.Members.Add(member);
@@ -276,7 +280,7 @@ namespace FlexCoreService.Controllers
         public async Task<ActionResult<string>> EditUserPhoto(int id, IFormFile image)
         {
             Member member = await _db.Members.FindAsync(id); //FindAsync 根據主键查找對應的紀錄
-
+            var UserImgPath = Path.Combine(_environment.WebRootPath, "Public", "UserImgs");
             if (member == null)
             {
                 return NotFound("找不到對應的會員資料");
@@ -294,9 +298,8 @@ namespace FlexCoreService.Controllers
 
                 if (existingImg != null)
                 {
-                    // 如果已經有照片記錄，更新它
-                    string targetDirectory = @"D:\FlexFrontend\FlexFrontendNew\flex_vue\public\imgs";
-                    string imagePath = Path.Combine(targetDirectory, image.FileName);
+                    // 如果已經有照片記錄，更新它                    
+                    string imagePath = Path.Combine(UserImgPath, image.FileName);
 
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
@@ -311,8 +314,7 @@ namespace FlexCoreService.Controllers
                     MemberImg img = new MemberImg();
                     img.fk_memberId = id;
 
-                    string targetDirectory = @"~\flex_vue\public\imgs";
-                    string imagePath = Path.Combine(targetDirectory, image.FileName);
+                    string imagePath = Path.Combine(UserImgPath, image.FileName);
 
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
@@ -329,10 +331,16 @@ namespace FlexCoreService.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"發生錯誤: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, $"發生錯誤: {ex.InnerException.Message}");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, $"發生錯誤: {ex.Message}");
+                }
             }
         }
-
 
         /// <summary>
         /// 編輯會員資料
@@ -421,7 +429,7 @@ namespace FlexCoreService.Controllers
 
             var salt = HashUtility.GetSalt();
             member.EncryptedPassword = HashUtility.ToSHA256(prodto.EncryptedPassword, salt);
-            
+
             try
             {
                 await _db.SaveChangesAsync();
