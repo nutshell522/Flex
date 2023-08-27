@@ -1,9 +1,7 @@
 <template>
+     <NavBar></NavBar>
   <div class="topPImg">
   </div>
-
-
-
   <div class="container">
 
     <div class="row">
@@ -15,9 +13,9 @@
           <li><a href="#" @click.prevent="loadCategory('路跑')">路跑</a></li>
           <li><a href="#" @click.prevent="loadCategory('自行車')">自行車</a></li>
           <li><a href="#" @click.prevent="loadCategory('健行')">健行</a></li>
-          <li><a href="#" @click.prevent="loadCategory('健行')">登山</a></li>
-          <li><a href="#" @click.prevent="loadCategory('健行')">瑜珈</a></li>
-          <li><a href="#" @click.prevent="loadCategory('健行')">其他</a></li>
+          <li><a href="#" @click.prevent="loadCategory('登山')">登山</a></li>
+          <li><a href="#" @click.prevent="loadCategory('瑜珈')">瑜珈</a></li>
+          <li><a href="#" @click.prevent="loadCategory('其他')">其他</a></li>
         </ul>
 
       </div>
@@ -28,7 +26,7 @@
 
         <div class="row">
           <div class="col-md-10">
-            <h1>貼文</h1>
+           <a href="#"  @click.prevent="getAllPost"><h1>文章列表</h1></a> 
           </div>
           <div class="col-md-2 mt-2">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -43,7 +41,7 @@
             <p>分類：{{ post.category }}</p>
             <!-- <div v-html="post.content"></div> -->
             <div v-if="post.isExpanded" v-html="post.content"></div>
-            <p class="timeInfo">{{ post.author }}發佈於{{ post.publishTime }}</p>
+            <p class="timeInfo">{{ post.author }}發佈於{{ formatDate(post.publishTime) }}</p>
 
           </div>
         </div>
@@ -75,7 +73,7 @@
 
 
                   <QuillEditor theme="snow" :modules="modules" :toolbar="toolbarOptions" class="quill-editor"
-                    contentType="html" v-model:content="editorContent" ref="quill" @ready="quill" style="height: 300px" />
+                    contentType="html" v-model:content="editorContent" ref="quill" @ready="quill" style="height: 500px" />
 
 
                 </div>
@@ -92,18 +90,30 @@
       </div>
     </div>
   </div>
+  <HomeFooter></HomeFooter>
 </template>
   
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref, nextTick, onMounted } from "vue";
 import axios from "axios";
-
+import NavBar from "@/components/activity/ActivityNav.vue";
+import HomeFooter from "@/components/home/footer.vue";
+import {useRoute, useRouter} from "vue-router";
+const route = useRoute();
+const categoryFromUrl = route.params.category;
+console.log(categoryFromUrl);
 const postTitle = ref("");
 const quill = ref(null);
 const categories = ["路跑", "健行", "登山", "自行車", "瑜珈", "其他"];
 const selectedCategory = ref("");
 
 const forumPosts = ref([]);
+
+
+const memberData = localStorage.getItem('loggedInUser');
+const member = JSON.parse(memberData);
+const memberAccount = member ? member.username : '訪客';
+console.log(memberAccount);
 
 const clearEditor = () => {
   editorContent.value = "";
@@ -135,7 +145,7 @@ const showArticle = () => {
     content: editorContent.value,
     category: selectedCategory.value,
     publishTime: utcTimestamp.toISOString(),
-    author: "訪客"
+    author: memberAccount
   };
   // console.log(newPost);
   axios.post("https://localhost:7183/api/Community/AddPost", newPost, {
@@ -150,15 +160,15 @@ const showArticle = () => {
     .catch(err => {
       console.log(err);
     })
-  forumPosts.value.push(newPost);
+  forumPosts.value.unshift(newPost);
   console.log(newPost);
   nextTick(() => {
     clearEditor();
   });
 
 };
-
-
+const getAllPost = ()=>{
+//得到全部的文章
 axios.get("https://localhost:7183/api/Community/GetAllPost")
   .then(res => {
     forumPosts.value = res.data.map(post => ({ ...post, isExpanded: false }));
@@ -167,16 +177,20 @@ axios.get("https://localhost:7183/api/Community/GetAllPost")
     console.log(err);
   })
 
+}
+
+
 
 //按下分類按鈕
 const loadCategory = (searchCategory) => {
   const categoryItem = {
     Category: searchCategory
   }
-  console.log(C)
-  axios.post("https://localhost:7183/api/Community/CategorySearch",)
+  console.log(categoryItem);
+  axios.post("https://localhost:7183/api/Community/CategorySearch",categoryItem)
     .then(res => {
-      console.log(res.data);
+      // console.log(res.data);
+      forumPosts.value = res.data.map(post => ({ ...post, isExpanded: false }));
     })
     .catch(err => {
       console.log(err);
@@ -184,15 +198,22 @@ const loadCategory = (searchCategory) => {
 }
 
 
+onMounted(() => {
+  // getAllPost();
+  loadCategory(categoryFromUrl);
+})
+
+//格式化日期
+const formatDate=(dateString)=>{
+  const date = new Date(dateString);
+  return date.toLocaleDateString(); // 格式化為本地化的日期字串
+   }
+
 //quill-vue
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-
 import ImageUploader from "quill-image-uploader";
-// import { constants } from "fs";
-// import { log } from "util";
-// import ElementPlus from "element-plus";
-// import "element-plus/dist/index.css";
+
 
 const toolbarOptions = [
   [{ header: [1, 2, 3, 4, 5, false] }], // custom button values
