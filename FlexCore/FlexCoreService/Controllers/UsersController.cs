@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Bogus.DataSets;
 using EFModels.Models;
 using FlexCoreService.ProductCtrl.Models.Dtos;
 using FlexCoreService.UserCtrl.Infa;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Diagnostics.Metrics;
+using System.Reflection;
 using System.Security.Claims;
 
 
@@ -38,13 +40,13 @@ namespace FlexCoreService.Controllers
             _urlHelperFactory = urlHelperFactory;
         }
 
-		/// <summary>
-		/// 取得會員信箱
-		/// </summary>
-		/// <param name="account"></param>
-		/// <returns></returns>
-		[HttpGet("account/{account}")]
-		public async Task<ActionResult<string>> GetUserEmail(string account)
+        /// <summary>
+        /// 取得會員信箱
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        [HttpGet("account/{account}")]
+        public async Task<ActionResult<string>> GetUserEmail(string account)
         {
             //檢查帳號是否存在
             Member member = await _db.Members.FirstOrDefaultAsync(x => x.Account == account);
@@ -95,11 +97,25 @@ namespace FlexCoreService.Controllers
                 AlternateAddress1 = m.AlternateAddress.AlternateAddress1,
                 AlternateAddress2 = m.AlternateAddress.AlternateAddress2,
                 IsSubscribeNews = m.IsSubscribeNews,
-                ImgPath=m.MemberImgs.FirstOrDefault(p=>p.fk_memberId== memberId).ImgPath,
+                ImgPath = m.MemberImgs.FirstOrDefault(p => p.fk_memberId == memberId).ImgPath,
             }).First();
 
 
             return proDto;
+        }
+
+        /// <summary>
+        /// 啟用帳號
+        /// </summary>
+        /// <param name="memberName"></param>
+        /// <param name="confirmCode"></param>
+        /// <returns></returns>
+        [HttpGet("ActivationAccount")]
+        public async Task<IActionResult> ActivationAccount(string memberAcc, string confirmCode)
+        {
+            ProcessActivationAccount(memberAcc, confirmCode);
+
+            return Ok("帳戶成功啟用");
         }
 
         /// <summary>
@@ -114,31 +130,31 @@ namespace FlexCoreService.Controllers
                             where m.Account == logindto.Account
                             select m).SingleOrDefault();
 
-            var userPassword = string.Empty;
-
-            if (userData == null && logindto.EncryptedPassword == null)
-            {
-                return Ok(null);
-            }
-
             if (userData == null)
             {
-                //欄位或帳號驗證失敗
-                return StatusCode(401);
+                return BadRequest("找不到會員紀錄");
             }
-            else
+
+            bool result = userData.ConfirmCode == "Confirmed";
+
+            if (result == false)
             {
+                return Ok("notEnabled");
+            }
+
+            if (logindto.EncryptedPassword != null && result)
+            {
+                var salt = HashUtility.GetSalt();
+                var userEnterPwd = HashUtility.ToSHA256(logindto.EncryptedPassword, salt);
+                var userPwdInDb = userData.EncryptedPassword;
+
                 var memberImg = _db.MemberImgs
-                     .Where(img => img.fk_memberId == userData.MemberId)
-                     .FirstOrDefault();
+                 .Where(img => img.fk_memberId == userData.MemberId)
+                 .FirstOrDefault();
 
-                //驗證密碼
-                userPassword = userData.EncryptedPassword;
-
-                if (logindto.EncryptedPassword != null)
+                if (userEnterPwd == userPwdInDb)
                 {
-                    
-                        var claims = new List<Claim>
+                    var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, userData.Account),
                 new Claim("UserPassword", userData.EncryptedPassword),
@@ -147,22 +163,25 @@ namespace FlexCoreService.Controllers
                 new Claim("MemberImg", userData.MemberImgs.FirstOrDefault()?.ImgPath ?? "member.jpg")
             };
 
-                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                        var authProperties = new AuthenticationProperties
-                        {
-                            IsPersistent = true,
-                            ExpiresUtc = DateTime.UtcNow.AddDays(7),
-                        };
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddDays(7),
+                    };
 
-                        // 控制登入狀態
-                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    // 控制登入狀態
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                        return Ok(JsonConvert.SerializeObject(claims));
-                    
+                    return Ok(JsonConvert.SerializeObject(claims));
                 }
-                return Ok(userData.Account);
+                else
+                {
+                    return BadRequest("會員登入失敗");
+                }
             }
+            return Ok(userData.Account);
         }
 
         /// <summary>
@@ -193,6 +212,9 @@ namespace FlexCoreService.Controllers
         [HttpPost("Register")]
         public async Task<RegisterDto> Register([FromBody] RegisterDto regdto)
         {
+            var salt = HashUtility.GetSalt();
+            var userEnterPwd = HashUtility.ToSHA256(regdto.EncryptedPassword, salt);
+
             //google註冊
             if (regdto.ImgPath != null)
             {
@@ -207,7 +229,7 @@ namespace FlexCoreService.Controllers
                     Name = regdto.Name,
                     Email = regdto.Email,
                     Mobile = "0921554545",//todo自動給或留空
-                    fk_LevelId = 1                
+                    fk_LevelId = 1
                 };
                 _db.Members.Add(member);
 
@@ -218,21 +240,28 @@ namespace FlexCoreService.Controllers
                 Member member = new Member
                 {
                     Account = regdto.Account,
-                    EncryptedPassword = Cryptography.Hash(regdto.EncryptedPassword, out string salt),
+                    EncryptedPassword = userEnterPwd,
                     Name = regdto.Name,
                     Email = regdto.Email,
                     Birthday = regdto.Birthday,
                     Mobile = regdto.Mobile,
                     CommonAddress = regdto.CommonAddress,
-                    fk_LevelId = 1             
+                    fk_LevelId = 1
                 };
+                // 填入 confirmCode
+                var confirmCode = Guid.NewGuid().ToString("N");
+                member.ConfirmCode = confirmCode;
+                _db.SaveChanges();
+
+                string url = "https://localhost:8080/ActivationAcc";
+                string resetUrl = $"{url}?memberAcc={regdto.Account}&confirmCode={confirmCode}";
+
                 //發送驗證信
-                SendEmail sendEmail = new SendEmail();
-                sendEmail.Sendemail(regdto.Email);
+                new EmailHelper().SendConfirmRegisterEmail(resetUrl, member.Name, member.Email);
 
                 _db.Members.Add(member);
-            }            
-            
+            }
+
             await _db.SaveChangesAsync();
             return regdto;
         }
@@ -376,7 +405,7 @@ namespace FlexCoreService.Controllers
         }
 
         /// <summary>
-        /// 更新密碼
+        /// 變更密碼
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
@@ -389,7 +418,10 @@ namespace FlexCoreService.Controllers
             {
                 return NotFound("找不到對應的會員資料");
             }
-            member.EncryptedPassword = prodto.EncryptedPassword;
+
+            var salt = HashUtility.GetSalt();
+            member.EncryptedPassword = HashUtility.ToSHA256(prodto.EncryptedPassword, salt);
+            
             try
             {
                 await _db.SaveChangesAsync();
@@ -408,11 +440,15 @@ namespace FlexCoreService.Controllers
             return Ok("更新密碼成功");
         }
 
-
+        /// <summary>
+        /// 忘記密碼
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
         [HttpPost("ForgetPassword")]
         public async Task<ActionResult> ForgetPassword(ForgetPasswordVM vm)
         {
-                      
+
             Member member = await _db.Members.FirstOrDefaultAsync(x => x.Account == vm.Account);
 
             if (member == null)
@@ -442,6 +478,13 @@ namespace FlexCoreService.Controllers
             return Ok(userEmail);
         }
 
+        /// <summary>
+        /// 忘記之重設密碼
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <param name="memberId"></param>
+        /// <param name="confirmCode"></param>
+        /// <returns></returns>
         [HttpPost("ResetPassword")]
         public async Task<ActionResult> ResetPassword(ResetPasswordVM vm, int memberId, string confirmCode)
         {
@@ -472,9 +515,12 @@ namespace FlexCoreService.Controllers
             }
 
             // 取出用戶密碼
-            string hashedPwdFromDb = member.EncryptedPassword;
 
-            if (Cryptography.VerifyHash(logindto.EncryptedPassword, hashedPwdFromDb))
+            var salt = HashUtility.GetSalt();
+            var userEnterPwd = HashUtility.ToSHA256(logindto.EncryptedPassword, salt);
+            var userPwdInDb = member.EncryptedPassword;
+
+            if (userEnterPwd == userPwdInDb)
             {
                 return Ok("驗證通過");
             }
@@ -483,7 +529,6 @@ namespace FlexCoreService.Controllers
                 return BadRequest("密碼不正確");
             }
         }
-
 
         /// <summary>
         /// 收藏喜愛商品
@@ -504,11 +549,12 @@ namespace FlexCoreService.Controllers
             if (result.IsSuccess)
             {
                 return Ok("喜愛商品收藏成功");
-            }else
+            }
+            else
             {
                 return Ok("喜愛商品收藏失敗");
             }
-            
+
         }
 
         /// <summary>
@@ -528,7 +574,7 @@ namespace FlexCoreService.Controllers
 
 
         [HttpGet("IsFavorite")]
-        public async Task<ActionResult<bool>> GetIsFavorite(int memberId,string productId)
+        public async Task<ActionResult<bool>> GetIsFavorite(int memberId, string productId)
         {
             var service = new FavoriteService(_repo);
             var isFavorite = service.GetIsFavorite(memberId, productId);
@@ -542,15 +588,15 @@ namespace FlexCoreService.Controllers
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpDelete("DeleteFavorite")]
-        public async Task<ActionResult<string>>DeleteFavoriteProduct(FavoritesDto dto)
+        public async Task<ActionResult<string>> DeleteFavoriteProduct(FavoritesDto dto)
         {
             var checkIsFavorite = await _db.Favorites.FirstOrDefaultAsync(p => p.fk_memberId == dto.MemberId && p.fk_productId == dto.ProductId);
-            if (checkIsFavorite==null)
+            if (checkIsFavorite == null)
             {
                 return Ok("查無收藏紀錄");
             }
-            var service=new FavoriteService(_repo);
-            var result = service.DeleteFavoriteProduct(dto.MemberId,dto.ProductId);
+            var service = new FavoriteService(_repo);
+            var result = service.DeleteFavoriteProduct(dto.MemberId, dto.ProductId);
             if (result.IsSuccess)
             {
                 return Ok("已成功取消收藏");
@@ -590,12 +636,12 @@ namespace FlexCoreService.Controllers
             {
                 Account = username,
                 EncryptedPassword = password,
-                Name=fullName,
-                Email=email,
-                Birthday=birthday,
-                Mobile=phoneNumber,
-                fk_LevelId=1,
-                CommonAddress=address
+                Name = fullName,
+                Email = email,
+                Birthday = birthday,
+                Mobile = phoneNumber,
+                fk_LevelId = 1,
+                CommonAddress = address
             };
 
             return testUserRegData;
@@ -611,7 +657,7 @@ namespace FlexCoreService.Controllers
 
         private Result ProcessResetPassword(string account, string email, string urlTemplate)
         {
-            
+
             // 檢查account,email正確性
             var memberInDb = _db.Members.FirstOrDefault(m => m.Account == account);
 
@@ -627,9 +673,7 @@ namespace FlexCoreService.Controllers
             memberInDb.ConfirmCode = confirmCode;
             _db.SaveChanges();
 
-            // 發email
-            //var url = string.Format(urlTemplate, memberInDb.MemberId, confirmCode);
-            //var url = $"https://localhost:7183/api/Users/ResetPassword?memberId={memberInDb.MemberId}&confirmCode={confirmCode}";
+
             var url = "https://localhost:8080/ResetPassword";
             string resetUrl = $"{url}?memberId={memberInDb.MemberId}&confirmCode={confirmCode}";
 
@@ -656,6 +700,18 @@ namespace FlexCoreService.Controllers
 
             return Result.Success();
         }
-        
+
+        private Result ProcessActivationAccount(string memberAcc, string confirmCode)
+        {
+            var memberInDb = _db.Members.FirstOrDefault(m => m.Account == memberAcc && m.ConfirmCode == confirmCode);
+            if (memberInDb == null) return Result.Fail("找不到對應的會員記錄");
+
+            memberInDb.ConfirmCode = "Confirmed";
+
+            _db.SaveChanges();
+
+            return Result.Success();
+        }
+
     }
 }

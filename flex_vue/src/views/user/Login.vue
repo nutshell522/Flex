@@ -252,34 +252,34 @@ function ValidatedIdentity() {
       .post(uri, loginData)
       .then((res) => {
         //已註冊
-        if (res.data == account.value) {
+        if (res.data == 'notEnabled') {
+          errors.value = [];
+          errors.value.push('帳戶尚未啟用請至信箱收取驗證信');
+        } else {
           validated.value = true;
           accInput.value = false;
           registered.value = false;
           forgetPwd.value = true;
           arrow.value = true;
-        } else {
-          //未註冊
-          arrow.value = true;
-          validated.value = false;
-          logAndRegBtn.value = false;
-
-          errors.value = [];
-          errors.value.push('此註冊帳號尚未註冊');
-          validated.value = true;
-          unValidated.value = true; //信箱
-          nameInput.value = true;
-          birInput.value = true;
-          mobInput.value = true;
-          addressInput.value = true;
-          unRegistered.value = true;
-
-          //todo驗證帳號是否唯一
         }
       })
       .catch((err) => {
-        loading.value = false;
-        alert('API請求失敗：' + err.message);
+        //未註冊
+        arrow.value = true;
+        validated.value = false;
+        logAndRegBtn.value = false;
+
+        errors.value = [];
+        errors.value.push('此註冊帳號尚未註冊');
+        validated.value = true;
+        unValidated.value = true; //信箱
+        nameInput.value = true;
+        birInput.value = true;
+        mobInput.value = true;
+        addressInput.value = true;
+        unRegistered.value = true;
+
+        //todo驗證帳號是否唯一
       });
   }
 }
@@ -290,7 +290,6 @@ function prePage() {
 
 //登入
 function Login() {
-  //todo是否與資料庫的密碼相符
   loginData.EncryptedPassword = password.value;
   //未填寫密碼
   if (password.value === '') {
@@ -329,6 +328,9 @@ function Login() {
         }
         handleSuccessfulLogin(memberInfo);
         window.location.reload();
+      } else {
+        errors.value = [];
+        errors.value.push(res.data);
       }
     })
     .catch((err) => {
@@ -427,7 +429,13 @@ function registerBtn() {
           text: `請至 ${registerData.Email} 啟用此帳號`,
           //todo 按下ok才跳頁
         });
-        //window.location.reload();
+        account.value = '';
+        password.value = '';
+        name.value = '';
+        email.value = '';
+        birthday.value = '';
+        mobile.value = '';
+        address.value = '';
       })
       .catch((err) => {
         console.log('註冊失敗', err);
