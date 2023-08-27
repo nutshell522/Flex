@@ -26,8 +26,9 @@ namespace FlexCoreService.CartCtrl.Interface
 		void UpdateProductGroupQty(CartItemDto dto, int qty);
 		int CreateOrder(CartContext cartContext, string orderCode);
 		void CreateOrderItem(CartItemDto dto,int newId,int TotalDiscount);
-		IEnumerable<CouponSendingDto> GetPresentCoupon();
-        void SendNewCouponAfterCheckout(CouponSendingDto dto,int memberId);
-
-    }
+		IEnumerable<CouponSendingDto> GetCoupons(int? couponCatrgoryId = null);
+        void SendCoupon(CouponSendingDto dto,int memberId);
+		IEnumerable<ProductSizeDto> GetAllSize(string productId,string color);
+		void UpdateCartItemsForCheckOut(string cartitemIds, int memberId ,bool status);
+	}
 }

@@ -11,15 +11,24 @@
                     slideShadows: true,
                 }" :pagination="false" :modules="modules" class="mySwiper">
                 <swiper-slide>
-                    <img src="https://swiperjs.com/demos/images/nature-1.jpg" /></swiper-slide><swiper-slide>
-                    <img src="https://swiperjs.com/demos/images/nature-2.jpg" /></swiper-slide><swiper-slide>
-                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" /></swiper-slide><swiper-slide>
-                    <img src="https://swiperjs.com/demos/images/nature-4.jpg" /></swiper-slide><swiper-slide>
-                    <img src="https://swiperjs.com/demos/images/nature-5.jpg" /></swiper-slide><swiper-slide>
-                    <img src="https://swiperjs.com/demos/images/nature-6.jpg" /></swiper-slide><swiper-slide>
-                    <img src="https://swiperjs.com/demos/images/nature-7.jpg" /></swiper-slide><swiper-slide>
-                    <img src="https://swiperjs.com/demos/images/nature-8.jpg" /></swiper-slide><swiper-slide>
-                    <img src="https://swiperjs.com/demos/images/nature-9.jpg" /></swiper-slide>
+                    <img src="../../../public/imgs/首頁照片/mountaineering001.jpg" /></swiper-slide>
+                <swiper-slide>
+                    <img src="../../../public/imgs/首頁照片/01_瑜珈活動-1500.jpg" /></swiper-slide>
+                <swiper-slide>
+                    <img src="../../../public/imgs/首頁照片/169208368722393_P18799216.jpg" /></swiper-slide>
+                <swiper-slide>
+                    <img src="../../../public/imgs/首頁照片/2022OPENRUN_11K起跑畫面-2.jpg" /></swiper-slide>
+                <swiper-slide>
+                    <img src="../../../public/imgs/首頁照片/6a104de1da30462325abdab.jpg" /></swiper-slide>
+                <swiper-slide>
+                    <img src="../../../public/imgs/首頁照片/7.jpg" /></swiper-slide><swiper-slide>
+                    <img src="../../../public/imgs/首頁照片/ck1529328134.jpg" /></swiper-slide>
+                <swiper-slide>
+                    <img src="../../../public/imgs/首頁照片/一日雙塔二.jpg" /></swiper-slide>
+                <swiper-slide>
+                    <img src="../../../public/imgs/首頁照片/pexels-photo-2402777.jpg" /></swiper-slide>
+                <swiper-slide>
+                    <img src="../../../public/imgs/首頁照片/d6de7911-ba86-4078-895f-2807c678bb4d.jpg" /></swiper-slide>
             </swiper>
             <div class="text-box">精彩瞬間</div>
             <div class="pad pad-left pad-top"></div>
@@ -68,7 +77,7 @@ main {
         .swiper-slide {
             background-position: center;
             background-size: cover;
-            width: 50%;
+            width: 80%;
             filter: blur(6px);
             background-color: azure;
 
@@ -80,7 +89,10 @@ main {
         .swiper-slide img {
             display: block;
             width: 100%;
+            height: 40vw;
+            object-fit: cover;
             background-color: azure;
+            filter: brightness(0.6);
         }
 
         .text-box {
@@ -90,7 +102,7 @@ main {
             height: $height;
             text-align: center;
             position: absolute;
-            color: #ddd;
+            color: #f5f5f5;
             top: calc((100% - $height) / 2);
             left: calc((100% - $width) / 2);
             z-index: 4000;

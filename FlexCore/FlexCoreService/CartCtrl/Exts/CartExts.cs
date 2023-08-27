@@ -1,4 +1,5 @@
-﻿using FlexCoreService.CartCtrl.Models.vm;
+﻿using FlexCoreService.CartCtrl.Models.Dtos;
+using FlexCoreService.CartCtrl.Models.vm;
 
 namespace FlexCoreService.CartCtrl.Exts
 {
@@ -87,6 +88,29 @@ namespace FlexCoreService.CartCtrl.Exts
 				DiscountType = vm.DiscountType,
 				DiscountValue = vm.DiscountValue,
 				DiscountId = vm.DiscountId,
+			};
+		}
+		public static ProductSizeDto ToDto(this ProductSizeVM vm)
+		{
+			return new ProductSizeDto
+			{
+				Size = vm.Size,
+				ProductSaleId = vm.ProductSaleId,
+				Qty = vm.Qty,
+				ProductId = vm.ProductId,
+				Color = vm.Color,
+				
+			};
+		}
+		public static ProductSizeVM ToViewModel(this ProductSizeDto dto)
+		{
+			return new ProductSizeVM
+			{
+				Size = dto.Size,
+				ProductSaleId = dto.ProductSaleId,
+				Qty = dto.Qty,
+				ProductId = dto.ProductId,
+				Color = dto.Color,
 			};
 		}
 	}

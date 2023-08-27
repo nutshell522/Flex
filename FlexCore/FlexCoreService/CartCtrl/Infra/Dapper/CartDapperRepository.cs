@@ -17,15 +17,13 @@ namespace FlexCoreService.CartCtrl.Infra.Dapper
 {
     public class CartDapperRepository : ICartRepository
     {
-        private IConfiguration _configuration;
-        private string _connStr;
-        public CartDapperRepository(IConfiguration configuration)
-        {
-            _configuration = configuration;
-            _connStr = _configuration.GetConnectionString("AppDbContext");
-        }
+		private string _connStr;
+		public CartDapperRepository(IConfiguration configuration)
+		{
+			_connStr = configuration.GetConnectionString("AppDbContext");
+		}
 
-        public IEnumerable<CartItemDto> GetCartItems(int memberId)
+		public IEnumerable<CartItemDto> GetCartItems(int memberId)
         {
             using (IDbConnection dbConnection = new SqlConnection(_connStr))
             {
@@ -372,7 +370,7 @@ WHERE SendingId = @SendingId
                 connection.Open();
 
                 string sql = @"
-SELECT CASE WHEN EXISTS (SELECT 1 FROM ProductGroups WHERE ProductGroupId = @ProductGroupId AND Qty > @Qty) THEN 1 ELSE 0 END";
+SELECT CASE WHEN EXISTS (SELECT 1 FROM ProductGroups WHERE ProductGroupId = @ProductGroupId AND Qty >= @Qty) THEN 1 ELSE 0 END";
                 bool result = connection.QuerySingle<bool>(sql, new { ProductGroupId = dto.ProductId, dto.Qty });
 
                 return result;
@@ -474,16 +472,6 @@ values(
             }
         }
 
-        public void SendNewCouponAfterCheckout(CouponSendingDto dto, int memberId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<CouponSendingDto> GetPresentCoupon()
-        {
-            throw new NotImplementedException();
-        }
-
         public int GetOriginProductQty(CartItemDto dto)
         {
             using (var connection = new SqlConnection(_connStr))
@@ -499,5 +487,99 @@ WHERE ProductGroupId = @ProductGroupId
                 return qty;
             }
         }
-    }
+
+		public IEnumerable<CouponSendingDto> GetCoupons(int? couponCatrgoryId = null)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+
+				#region sql
+				string sql = @"
+SELECT 
+    CouponId, EndType, EndDays, EndDate, RequirementType, 
+Requirement 
+FROM Coupons
+WHERE status = 1 AND StartDate<=GETDATE() AND (EndDate IS NULL OR EndDate > GETDATE())
+";
+
+				if (couponCatrgoryId.HasValue)
+				{
+					sql += " AND fk_CouponCategoryId = @CategoryId";
+				}
+				#endregion
+
+				var result = connection.Query<CouponSendingDto>(sql, new { CategoryId = couponCatrgoryId });
+
+				return result;
+			}
+		}
+
+		public void SendCoupon(CouponSendingDto dto, int memberId)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+				string sql = @"
+insert into CouponSendings(
+fk_CouponId,fk_MemberId,SentDate,StartDate,EndDate,
+RedemptionStatus,RedeemedDate)
+values(
+@CouponId,@MemberId, CAST(GETDATE() AS DATE), CAST(GETDATE() AS DATE),@EndDate,
+0,null)
+";
+				var parameters = new
+				{
+					CouponId = dto.CouponId,
+					MemberId = memberId,
+					EndDate = dto.EndDate,
+				};
+				connection.Execute(sql, parameters);
+			}
+		}
+
+		public IEnumerable<ProductSizeDto> GetAllSize(string productId, string color)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+
+				string sql = @"
+select 
+p.ProductId as ProductSaleId, pg.ProductGroupId as ProductId, sc.SizeName as Size, pg.Qty, cc.ColorName as Color
+from Products as p 
+inner join ProductGroups as pg on pg.fk_ProductId = p.ProductId
+inner join SizeCategories as sc on sc.SizeId = pg.fk_SizeId
+inner join ColorCategories as cc on cc.ColorId = pg.fk_ColorId
+WHERE p.ProductId = @ProductId
+";
+
+
+				var result = connection.Query<ProductSizeDto>(sql, new { ProductId = productId });
+
+				return result;
+			}
+		}
+
+		public void UpdateCartItemsForCheckOut(string cartitemIds, int memberId, bool status)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
+				string sql = @"
+UPDATE ShoppingCarts SET
+CartItemsId = @CartItemsId,
+Status = @Status
+WHERE fk_MemberID = @MemberId
+";
+				var parameters = new
+				{
+					CartItemsId=cartitemIds,
+					MemberId = memberId,
+					Status = status
+				};
+				connection.Execute(sql, parameters);
+			}
+		}
+	}
 }

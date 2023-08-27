@@ -1,5 +1,8 @@
 ﻿using Bogus;
 using EFModels.Models;
+using FlexCoreService.CartCtrl.Infra.Dapper;
+using FlexCoreService.CartCtrl.Interface;
+using FlexCoreService.CartCtrl.Service;
 using FlexCoreService.ProductCtrl.Models.Dtos;
 using FlexCoreService.UserCtrl.Infa;
 using FlexCoreService.UserCtrl.Interface;
@@ -29,14 +32,16 @@ namespace FlexCoreService.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IFavoriteDPRepository _repo;
         private readonly IUrlHelperFactory _urlHelperFactory;
+		private CartService _cartService;
 
-        public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor, IFavoriteDPRepository repo, IUrlHelperFactory urlHelperFactory)
+		public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor, IFavoriteDPRepository repo, IUrlHelperFactory urlHelperFactory, CartService cartService)
         {
             _db = db;
             _repo = repo;
             _httpContextAccessor = httpContextAccessor;
             _urlHelperFactory = urlHelperFactory;
-        }
+			_cartService = cartService;
+		}
 
 		/// <summary>
 		/// 取得會員信箱

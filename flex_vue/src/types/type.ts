@@ -1,4 +1,14 @@
 import axios from "axios";
+export class SizeVM {
+  productSaleId: string = "";
+  productId: number = 0;
+  size: string = "";
+  color: string = "";
+}
+export class GetSizeVM {
+  productSaleId: string = "";
+  color: string = "";
+}
 export class Discount {
   discountId: number = 0;
   discountName: string = '';

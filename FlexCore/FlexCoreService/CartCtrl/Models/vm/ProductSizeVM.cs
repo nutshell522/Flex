@@ -1,0 +1,11 @@
+﻿namespace FlexCoreService.CartCtrl.Models.vm
+{
+	public class ProductSizeVM
+	{
+		public string? ProductSaleId { get; set; }
+		public int? ProductId { get; set; }
+		public string? Size { get; set; }
+		public int? Qty { get; set; }
+		public string? Color { get; set; }
+	}
+}

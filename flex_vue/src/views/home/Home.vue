@@ -18,7 +18,7 @@
     <div class="container main-area mb-3">
       <a href="javascript:;" class="home-row">
         <div class="video-container">
-          <video src="../../../public/videos/Pexels-Cottonbro-5275266.mp4" muted autoplay loop controls="false"></video>
+          <video src="../../../public/videos/運動影片.mp4" muted autoplay loop controls="false"></video>
         </div>
         <div class="home-card">
           <div class="home-card-title">
@@ -207,13 +207,14 @@ main {
       .video-container {
         display: block;
         width: 100%;
-        max-height: 500px;
+        max-height: 700px;
         position: relative;
         overflow: hidden;
 
         video {
           width: 100%;
           object-fit: cover;
+          object-position: center bottom;
 
           &::-webkit-media-controls-panel {
             display: none !important;

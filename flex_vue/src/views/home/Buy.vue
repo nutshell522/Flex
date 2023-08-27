@@ -1,10 +1,13 @@
 <template>
+  <div class="loading-block" :class="{ 'd-none': !loading }">
+    <div class="loading"></div>
+  </div>
   <header class="header">
     <a href="/" class="img-wrapper">
       <img src="@/../public/LOGO/FlexLogoDark.png" alt="">
     </a>
     <div class="buy-header-right">
-      <div>客服專線:0800-000-000</div>
+      <div class="d-none d-lg-block">客服專線:0800-000-000</div>
       <a href="/cart" class="icon"><i class="bi bi-bag"></i></a>
     </div>
   </header>
@@ -191,68 +194,81 @@
             </div>
           </div>
         </div>
-        <div class="buy-summary col-12 col-lg-5">
+        <div class="buy-summary col-12 col-lg-5" :class="{ active: summaryActive }">
           <div class="mb-5">
-            <h2 class="mb-3">訂單摘要</h2>
-            <div class="d-flex buy-summary-item">
-              <div class="me-auto">小計</div>
-              <div v-if="cart">
-                {{ formatter.format(cart.originalTotalAmount) }}
+            <div class="buy-summary-btn" @click="summaryActiveToggle">
+              <h2>訂單摘要</h2>
+              <div class="d-block d-lg-none">
+                {{ formatter.format(cart ? cart.totalPrice : 0) }}({{ cart ? cart.cartItems.length : 0 }}項商品)<i
+                  class="bi bi-chevron-down fw-bold"></i>
               </div>
             </div>
-            <div class="d-flex buy-summary-item">
-              <div>商品折扣</div>
-              <div class="hint me-auto">?<span>此折扣尚未包含優惠券</span></div>
-              <div v-if="cart" class="text-danger">
-                {{
-                  formatter.format(
-                    cart.originalTotalAmount - cart.totalPrice - cart.couponValue
-                  )
-                }}
+            <div class="buy-summary-all-info">
+              <div class="w-100">
+                <div class="d-flex buy-summary-item">
+                  <div class="me-auto">小計</div>
+                  <div v-if="cart">
+                    {{ formatter.format(cart.originalTotalAmount) }}
+                  </div>
+                </div>
+                <div class="d-flex buy-summary-item">
+                  <div>商品折扣</div>
+                  <div class="hint me-auto">?<span>此折扣尚未包含優惠券</span></div>
+                  <div v-if="cart" class="text-danger">
+                    {{
+                      formatter.format(
+                        cart.originalTotalAmount - cart.totalPrice + cart.deliveryFee - (cart.coupon &&
+                          cart.coupon.discountType !== 2 ?
+                          cart.couponValue : 0))
+                    }}
+                  </div>
+                </div>
+                <div class="d-flex buy-summary-item">
+                  <div class="me-auto">運費</div>
+                  <div v-if="cart">{{ formatter.format(cart.deliveryFee) }}</div>
+                </div>
+                <hr />
+                <div class="d-flex buy-summary-item">
+                  <div class="me-auto">總計</div>
+                  <div v-if="cart">{{ formatter.format(cart.totalPrice) }}</div>
+                </div>
+              </div>
+
+              <div class="order-item-area">
+                <h2 class="mb-4">訂單詳情</h2>
+                <ul>
+                  <li v-if="cart" v-for="item in cart.cartItems" :key="item.cartItemId" class="d-flex mb-4">
+                    <div class="item-img-wrapper me-2">
+                      <img :src="imgBaseUrl + 'Public/Img/' + item.product.imgPath" alt="" />
+                    </div>
+                    <div class="item-info">
+                      <div class="text-black fw-bold title">
+                        {{ item.product.productName }}
+                      </div>
+                      <div v-if="item.product.matchDiscounts.length != 0" class="d-flex text-black">
+                        適用折扣:
+                        <ul class="d-flex">
+                          <li class="me-1 text-black" v-for="matchDiscount in item.product.matchDiscounts"
+                            :key="matchDiscount.discountId">
+                            {{ matchDiscount.discountName }}
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="text-secondary">
+                        規格:{{ item.product.color }} 尺寸:{{ item.product.size }}
+                      </div>
+                      <div class="text-secondary">數量: {{ item.qty }}</div>
+                      <div class="text-secondary">
+                        {{ formatter.format(item.subTotal) }}
+                      </div>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
-            <div class="d-flex buy-summary-item">
-              <div class="me-auto">運費</div>
-              <div v-if="cart">{{ formatter.format(cart.deliveryFee) }}</div>
-            </div>
-            <hr />
-            <div class="d-flex buy-summary-item">
-              <div class="me-auto">總計</div>
-              <div v-if="cart">{{ formatter.format(cart.totalPrice) }}</div>
-            </div>
-          </div>
-          <div class="order-item-area">
-            <h2 class="mb-4">訂單詳情</h2>
-            <ul>
-              <li v-if="cart" v-for="item in cart.cartItems" :key="item.cartItemId" class="d-flex mb-4">
-                <div class="item-img-wrapper me-2">
-                  <img :src="imgBaseUrl + 'Public/Img/' + item.product.imgPath" alt="" />
-                </div>
-                <div class="item-info">
-                  <div class="text-black fw-bold title">
-                    {{ item.product.productName }}
-                  </div>
-                  <div v-if="item.product.matchDiscounts.length != 0" class="d-flex text-black">
-                    適用折扣:
-                    <ul class="d-flex">
-                      <li class="me-1 text-black" v-for="matchDiscount in item.product.matchDiscounts"
-                        :key="matchDiscount.discountId">
-                        {{ matchDiscount.discountName }}
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="text-secondary">
-                    規格:{{ item.product.color }} 尺寸:{{ item.product.size }}
-                  </div>
-                  <div class="text-secondary">數量: {{ item.qty }}</div>
-                  <div class="text-secondary">
-                    {{ formatter.format(item.subTotal) }}
-                  </div>
-                </div>
-              </li>
-            </ul>
           </div>
         </div>
+        <div class="buy-summary-shadow" @click="closeSummaryActive"></div>
       </div>
     </div>
     <div @click.self="hideCouponAreaEventHandler" id="coupon-area-bg" :class="{ active: isActive }">
@@ -270,7 +286,7 @@
                 cart &&
                 coupon.discountType == 2 &&
                 cart.deliveryFee == 0 &&
-                (!cart.coupon?.discountType || cart.coupon.discountType != 2),
+                (!cart.coupon?.discountType || cart.coupon.discountType != 2)
             },
           ]" :data-id="coupon.sendingId" @click="selectCouponEventHandler">
             <div class="coupon-body">
@@ -297,8 +313,7 @@
                   <div v-if="cart &&
                     coupon.discountType == 2 &&
                     cart.deliveryFee == 0 &&
-                    (!cart.coupon?.discountType ||
-                      cart.coupon.discountType != 2)
+                    (!cart.coupon?.discountType || cart.coupon.discountType != 2)
                     " class="danger-info text-danger">
                     無法使用 已達免運標準
                   </div>
@@ -321,7 +336,7 @@
         </ul>
         <div class="d-flex px-5">
           <div class="me-auto"></div>
-          <button class="btn btn-secondary mt-4 me-3">不使用優惠券</button>
+          <button class="btn btn-secondary mt-4 me-3" @click="couponCXLEventHandler">不使用優惠券</button>
           <button @click="couponComfirmEventHandler" id="coupon-comfirm-btn" class="btn btn-primary mt-4" disabled>
             確定
           </button>
@@ -362,6 +377,7 @@ const addresses = ref({
   alternateAddress1: "",
   alternateAddress2: "",
 });
+const loading = ref<boolean>(true);
 const isActive = ref(false);
 const step1Disabled = ref<boolean>(false);
 const termsChecked = ref<boolean>(false);
@@ -377,7 +393,14 @@ const checkoutDisabled = ref<boolean>(
   cart.value.checkoutData.paymentInfo.cvv == "" ||
   !termsChecked.value
 );
+const summaryActive = ref<boolean>(false);
 
+const summaryActiveToggle = () => {
+  summaryActive.value = !summaryActive.value
+}
+const closeSummaryActive = () => {
+  summaryActive.value = false;
+}
 // 載入購物車
 const loadCartItems = async () => {
   let url: string = `${baseAddress}api/Cart`;
@@ -438,6 +461,7 @@ const loadMember = async (): Promise<void> => {
       addresses.value.commonAddress = response.data.commonAddress;
       addresses.value.alternateAddress1 = response.data.alternateAddress1;
       addresses.value.alternateAddress2 = response.data.alternateAddress2;
+      loading.value = false;
     })
     .catch((error) => {
       alert(error);
@@ -573,6 +597,13 @@ const selectCouponEventHandler = (event: MouseEvent) => {
   (event.currentTarget as HTMLElement).classList.add("selected");
   couponBtn.disabled = document.querySelectorAll(".selected").length != 1;
 };
+const couponCXLEventHandler = () => {
+  const couponItems = document.querySelectorAll(".coupon-item");
+  couponItems.forEach(item => {
+    item.classList.remove('selected');
+  });
+  couponComfirmEventHandler();
+}
 
 const couponComfirmEventHandler = () => {
   const dataId = document
@@ -608,6 +639,8 @@ const couponComfirmEventHandler = () => {
         cart.value.deliveryFee = response.data.deliveryFee;
         cart.value.totalPrice = response.data.totalPrice;
         cart.value.cartItems = response.data.cartItems;
+        console.log(response.data.coupon);
+
       }
       hideCouponAreaEventHandler();
     })
@@ -896,6 +929,43 @@ onUpdated(() => {
 </script>
     
 <style scoped lang="scss">
+.loading-block {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba($color: #fff, $alpha: 0.5);
+  padding: 25vh 0 40vh;
+
+  .loading {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border: 3.5px solid #000;
+    border-top-color: rgba(0, 0, 0, 0.2);
+    border-right-color: rgba(0, 0, 0, 0.2);
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    border-radius: 100%;
+
+    animation: circle infinite 0.75s linear;
+  }
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .header {
   width: 100vw;
   height: 80px;
@@ -904,6 +974,8 @@ onUpdated(() => {
   align-items: center;
   justify-content: space-between;
   padding: 0 60px;
+  position: relative;
+  z-index: 50;
 
   .img-wrapper {
     display: block;
@@ -1167,8 +1239,78 @@ main {
         }
       }
 
+      @media screen and (max-width: 991px) {
+        .buy-summary-shadow {
+          position: fixed;
+          width: 100vw;
+          height: 100vh;
+          top: 0;
+          left: 0;
+          background-color: rgba($color: #000000, $alpha: 0.5);
+
+          opacity: 0;
+          visibility: hidden;
+
+        }
+
+      }
+
       // 購物摘要
       .buy-summary {
+        @media screen and (max-width: 991px) {
+          position: absolute;
+          top: 80px;
+          left: 0;
+          background-color: #fff;
+          width: 100vw;
+          z-index: 50;
+
+          .buy-summary-all-info {
+            display: flex;
+            flex-direction: column-reverse;
+            max-height: 0;
+            overflow: hidden;
+          }
+
+          &.active {
+            +.buy-summary-shadow {
+              transition: .3s;
+              visibility: visible;
+              opacity: 1;
+            }
+
+            .buy-summary-all-info {
+              max-height: 100%;
+            }
+          }
+        }
+
+        .buy-summary-btn {
+          display: flex;
+          align-items: end;
+          margin-bottom: 30px;
+
+          h2 {
+            margin: 0;
+            margin-right: auto;
+          }
+
+          >div {
+            display: flex;
+            align-items: end;
+            font-size: 18px;
+            font-weight: bold;
+          }
+
+          @media screen and (max-width: 991px) {
+            cursor: pointer;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            padding-top: 15px;
+            padding-bottom: 15px;
+          }
+        }
+
         .buy-summary-item {
           margin-bottom: 8px;
           align-items: center;
