@@ -109,7 +109,7 @@ const routes = [
   },
   {
     //http://loaclhost/Community
-    path: '/community',
+    path: '/community/:category',
     component: Community,
     meta: { title: `${webTitle}活動心得` },
   },
