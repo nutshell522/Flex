@@ -6,6 +6,7 @@ import Favorites from '../views/user/Favorites.vue';
 import Coupon from '../views/user/Coupon.vue';
 import Login from '../views/user/Login.vue';
 import ResetPassword from '../views/user/ResetPassword.vue';
+import ActivationAcc from '../views/user/ActivationAcc.vue';
 import ActivityInfo from '../views/activity/ActivityInfo.vue';
 import ActivitySignUp from '../views/activity/ActivitySignUp.vue';
 import ActivityIndex from '../views/activity/ActivityIndex.vue';
@@ -43,8 +44,8 @@ const routes = [
   },
   {
     //http://loaclhost/flexClub
-    path: "/flexClub",
-    component: () => import("@/views/activity/FlexClub.vue"),
+    path: '/flexClub',
+    component: () => import('@/views/activity/FlexClub.vue'),
     meta: { title: `${webTitle}運動俱樂部` },
   },
   {
@@ -75,6 +76,12 @@ const routes = [
     path: '/ResetPassword',
     component: ResetPassword,
     meta: { title: `${webTitle}重設密碼` },
+  },
+  {
+    //http://loaclhost/ActivationAcc
+    path: '/ActivationAcc',
+    component: ActivationAcc,
+    meta: { title: `${webTitle}啟用帳戶` },
   },
   {
     //http://loaclhost/orders

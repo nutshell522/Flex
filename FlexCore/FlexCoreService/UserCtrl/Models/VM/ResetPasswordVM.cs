@@ -10,7 +10,5 @@ namespace FlexCoreService.UserCtrl.Models.VM
         [Display(Name = "確認密碼")]
         [Compare(nameof(Password))]
         public string? ConfirmPassword { get; set; }
-
-
     }
 }

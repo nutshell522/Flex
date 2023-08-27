@@ -252,34 +252,34 @@ function ValidatedIdentity() {
       .post(uri, loginData)
       .then((res) => {
         //已註冊
-        if (res.data == account.value) {
+        if (res.data == 'notEnabled') {
+          errors.value = [];
+          errors.value.push('帳戶尚未啟用請至信箱收取驗證信');
+        } else {
           validated.value = true;
           accInput.value = false;
           registered.value = false;
           forgetPwd.value = true;
           arrow.value = true;
-        } else {
-          //未註冊
-          arrow.value = true;
-          validated.value = false;
-          logAndRegBtn.value = false;
-
-          errors.value = [];
-          errors.value.push('此註冊帳號尚未註冊');
-          validated.value = true;
-          unValidated.value = true; //信箱
-          nameInput.value = true;
-          birInput.value = true;
-          mobInput.value = true;
-          addressInput.value = true;
-          unRegistered.value = true;
-
-          //todo驗證帳號是否唯一
         }
       })
       .catch((err) => {
-        loading.value = false;
-        alert('API請求失敗：' + err.message);
+        //未註冊
+        arrow.value = true;
+        validated.value = false;
+        logAndRegBtn.value = false;
+
+        errors.value = [];
+        errors.value.push('此註冊帳號尚未註冊');
+        validated.value = true;
+        unValidated.value = true; //信箱
+        nameInput.value = true;
+        birInput.value = true;
+        mobInput.value = true;
+        addressInput.value = true;
+        unRegistered.value = true;
+
+        //todo驗證帳號是否唯一
       });
   }
 }
@@ -290,7 +290,6 @@ function prePage() {
 
 //登入
 function Login() {
-  //todo是否與資料庫的密碼相符
   loginData.EncryptedPassword = password.value;
   //未填寫密碼
   if (password.value === '') {
@@ -329,6 +328,9 @@ function Login() {
         }
         handleSuccessfulLogin(memberInfo);
         window.location.reload();
+      } else {
+        errors.value = [];
+        errors.value.push(res.data);
       }
     })
     .catch((err) => {
@@ -370,10 +372,10 @@ async function Login2(googleLoginUserData) {
     }
     handleSuccessfulLogin(memberInfo);
 
-    return 'loginSuccess'; // 登录成功时直接返回
+    return 'loginSuccess'; // 登入成功返回
   } catch (err) {
     console.log('取得google登入這資訊失敗', err);
-    return 'userNotFound'; // 登录失败时返回
+    return 'userNotFound'; // 登入失敗返回
   }
 }
 
@@ -413,21 +415,20 @@ function registerBtn() {
       .post(regUri, registerData)
       .then((res) => {
         registerData.value = res.data;
-        //console.log(registerData.value);
 
-        //todo驗證信驗證
-        //loginBox.value = false;
-        //registercheck.value = true;
-
-        //todo顯示註冊成功畫面--註冊成功
-        //todo註冊很常死亡
         Swal.fire({
           icon: 'success',
           title: '註冊成功',
           text: `請至 ${registerData.Email} 啟用此帳號`,
           //todo 按下ok才跳頁
         });
-        //window.location.reload();
+        account.value = '';
+        password.value = '';
+        name.value = '';
+        email.value = '';
+        birthday.value = '';
+        mobile.value = '';
+        address.value = '';
       })
       .catch((err) => {
         console.log('註冊失敗', err);
@@ -455,6 +456,11 @@ function handleGoogleLoginUserData(googleLoginUserData) {
 
             Login2(googleLoginUserData);
             //alert('為什麼要延遲啦');
+
+            localStorage.setItem(
+              'loggedInUser',
+              JSON.stringify(googleLoginUserData)
+            );
 
             Swal.fire({
               icon: 'success',
