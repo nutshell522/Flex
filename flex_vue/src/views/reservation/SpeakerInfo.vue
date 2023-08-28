@@ -1,32 +1,38 @@
 <template>
- <NavBar></NavBar>
+  <NavBar></NavBar>
   <div class="container">
     <div class="row main bigRow">
       <div class="col-md-8">
         <div class="speaker-img">
-          <img :src='imgBaseUrl + "/Public/Img/Speaker/" + speaker.speakerImg' alt="Featured 1" class="speakerImg">
+          <img
+            :src="imgBaseUrl + '/Public/Img/Speaker/' + speaker.speakerImg"
+            alt="Featured 1"
+            class="speakerImg"
+          />
         </div>
 
         <div class="infoBlock">
           <p>講師姓名：{{ speaker.speakerName }}</p>
           <p>擅長領域：{{ speaker.fieldName }}</p>
           <p>講師描述：{{ speaker.speakerDescription }}</p>
-          <p>駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})</p>
+          <p>
+            駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})
+          </p>
         </div>
-      <div class="bookingBlock">
-        <!-- 預約系統 -->
-        <p>預約時間表</p>
-        <div id="datePicker">
-          <button id="prevButton">
-            <font-awesome-icon icon="fa-solid fa-angles-left" beat-fade />
-          </button>
-          <span id="currentDate"></span>
-          <button id="nextButton">
-            <font-awesome-icon icon="fa-solid fa-angles-right" beat-fade />
-          </button>
+        <div class="bookingBlock">
+          <!-- 預約系統 -->
+          <p>預約時間表</p>
+          <div id="datePicker">
+            <button id="prevButton">
+              <font-awesome-icon icon="fa-solid fa-angles-left" beat-fade />
+            </button>
+            <span id="currentDate"></span>
+            <button id="nextButton">
+              <font-awesome-icon icon="fa-solid fa-angles-right" beat-fade />
+            </button>
+          </div>
+          <div id="schedule"></div>
         </div>
-        <div id="schedule"></div>
-      </div>
         <!-- 評論 -->
 
         <div id="reviewWhole">
@@ -84,50 +90,78 @@
             </div>
           </div>
 
-         
+          <!-- Button trigger modal -->
+          <button
+            type="button"
+            class="btn btn-primary reviewButton"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            新增心得
+          </button>
 
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary reviewButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  新增心得
-</button>
-
-<!-- 新增評論的Modal -->
-<div class="modal fade modal-dialog modal-dialog-centered" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog ">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">留下您的心得...</h1>
-      </div>
-        <!-- 用submit.prevent防止刷新整個頁面 -->
-      <form @submit.prevent="addComment">
-   
-        <div class="modal-body">
-          <!-- 新增評論的表單 -->
-          <div class="comment-form">              
-              <p>{{userAccount}}</p>
-              <textarea v-model="newComment.content" placeholder="課程心得" required></textarea>
-              <star-rating @update:rating="setRating"></star-rating>              
+          <!-- 新增評論的Modal -->
+          <div
+            class="modal fade modal-dialog modal-dialog-centered"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">
+                    留下您的心得...
+                  </h1>
+                </div>
+                <!-- 用submit.prevent防止刷新整個頁面 -->
+                <form @submit.prevent="addComment">
+                  <div class="modal-body">
+                    <!-- 新增評論的表單 -->
+                    <div class="comment-form">
+                      <p>{{ userAccount }}</p>
+                      <textarea
+                        v-model="newComment.content"
+                        placeholder="課程心得"
+                        required
+                      ></textarea>
+                      <star-rating @update:rating="setRating"></star-rating>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary reviewButton"
+                      data-bs-dismiss="modal"
+                    >
+                      取消
+                    </button>
+                    <button
+                      type="submit"
+                      data-bs-dismiss="modal"
+                      class="btn btn-primary reviewButton"
+                    >
+                      送出
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary reviewButton" data-bs-dismiss="modal">取消</button>
-          <button type="submit" data-bs-dismiss="modal" class="btn btn-primary reviewButton">送出</button>
-        </div>
-    </form>
-    </div>
-  </div>
-</div>
-
-    
-  </div>
-
-
       </div>
 
       <div class="col-md-4 mt-5">
-         <div class="text-end">
-          <a href="#" class="btn button" @click="getActivityId" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="height: 110px">
+        <div class="text-end">
+          <a
+            href="#"
+            class="btn button"
+            @click="getActivityId"
+            data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop"
+            style="height: 110px"
+          >
             <!-- icon -->
             <span class="icon">
               <img
@@ -142,51 +176,77 @@
           </a>
         </div>
 
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="staticBackdrop"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                  {{ userName }} 您好
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                您預約的是{{ speaker.speakerName }}講師的諮詢服務
+                <br />
+                時間： {{ date }} 的 {{ time }}點
+                <br />
+                地點：{{ speaker.branchName }}
+                <br />
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{userName}} 您好</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        您預約的是{{ speaker.speakerName }}講師的諮詢服務
-        <br>
-        時間： {{date}} 的 {{time}}點 
-        <br>
-        地點：{{ speaker.branchName  }}
-        <br>
+                預約注意事項和同意聲明
+                <br />
 
-        預約注意事項和同意聲明
-        <br>
+                我們非常歡迎您使用預約講師的服務。請在預約之前仔細閱讀以下注意事項和同意聲明：
+                <br />
 
-我們非常歡迎您使用預約講師的服務。請在預約之前仔細閱讀以下注意事項和同意聲明：
-<br>
+                尊重時間：
+                預約的時間是有限的資源，請確保您在預約的時間點出現。不要濫用此服務，以確保其他使用者也有機會受益。<br />
 
-尊重時間： 預約的時間是有限的資源，請確保您在預約的時間點出現。不要濫用此服務，以確保其他使用者也有機會受益。<br>
+                取消預約：
+                如果您無法在預約的時間點出現，請提前來電取消預約，以便其他人可以使用這個時間段。我們建議您提前至少24小時取消預約。<br />
 
-取消預約： 如果您無法在預約的時間點出現，請提前來電取消預約，以便其他人可以使用這個時間段。我們建議您提前至少24小時取消預約。<br>
+                黑名單：
+                如果您濫用預約服務，我們可能會將您列入黑名單，限制您未來的預約權限。<br />
 
-黑名單： 如果您濫用預約服務，我們可能會將您列入黑名單，限制您未來的預約權限。<br>
+                尊重他人：
+                請在預約過程中尊重講師的時間和專業。不要發表冒犯性、不當或不尊重的言論。<br />
 
-尊重他人： 請在預約過程中尊重講師的時間和專業。不要發表冒犯性、不當或不尊重的言論。<br>
-
-我明白並同意遵守上述注意事項。我明白如果我不遵守這些規定，我的預約權限可能會受到限制。
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary" @click="addReservationOrderInfo" data-bs-dismiss="modal">確認</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
+                我明白並同意遵守上述注意事項。我明白如果我不遵守這些規定，我的預約權限可能會受到限制。
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  取消
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  @click="addReservationOrderInfo"
+                  data-bs-dismiss="modal"
+                >
+                  確認
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h2 class="mt-5">人氣講師</h2>
         <div
@@ -201,7 +261,6 @@
             />
           </a>
         </div>
-
       </div>
     </div>
   </div>
@@ -235,10 +294,10 @@ const setRating = (newRating) => {
   rating.value = newRating;
 };
 const TopThreeSpeaker = ref([]);
-const date = ref('');
-const time = ref('');
-const fullDateTime = ref('');
-const userName = JSON.parse(localStorage.getItem('loggedInUser')).username;
+const date = ref("");
+const time = ref("");
+const fullDateTime = ref("");
+const userName = JSON.parse(localStorage.getItem("loggedInUser")).username;
 const addReservationOrderInfo = ref(null);
 
 onMounted(() => {
@@ -247,7 +306,6 @@ onMounted(() => {
   const nextButton = document.querySelector("#nextButton");
   const currentDateDisplay = document.querySelector("#currentDate");
   const schedule = document.querySelector("#schedule");
-  
 
   let newDateResult;
   let newTimeResult;
@@ -290,7 +348,6 @@ onMounted(() => {
   const hasTime = formatTime(testTime);
   console.log(hasTime);
 
-  
   //呼叫後端，從資料庫得到這位講師已經被預約的時間
   const loadReservationHistory = async (id) => {
     axios
@@ -384,7 +441,7 @@ onMounted(() => {
         cell.classList.add("schedule-cell");
         const day = new Date(currentDate); //取得今天日期時間
         day.setDate(currentDate.getDate() + i);
-        
+
         //使用 data- 屬性來在元素上儲存自定義的資料
         cell.dataset.date = day.toLocaleDateString();
         cell.dataset.time = timeSlot.substring(0, 2); //取出開始時間點
@@ -413,7 +470,7 @@ onMounted(() => {
   let selectedCell = null;
   function handleCellClick() {
     const clickedCell = this;
-    if(selectedCell){
+    if (selectedCell) {
       selectedCell.classList.remove("selected");
       selectedCell.addEventListener("click", handleCellClick);
     }
@@ -424,37 +481,38 @@ onMounted(() => {
 
     clickedCell.classList.add("selected");
     clickedCell.removeEventListener("click", handleCellClick);
-      const time2 = parseInt(time.value.substring(0, 2));
-      const parts = date.value.split("/");
-      const year = parseInt(parts[0]);
-      const month = parseInt(parts[1]) - 1;
-      const day = parseInt(parts[2]);
-      // 取得台北標準時間的時區偏移量（分鐘）
-      const dt = new Date(year, month, day, time2); 
-      const taipeiTimezoneOffset = dt.getTimezoneOffset();
+    const time2 = parseInt(time.value.substring(0, 2));
+    const parts = date.value.split("/");
+    const year = parseInt(parts[0]);
+    const month = parseInt(parts[1]) - 1;
+    const day = parseInt(parts[2]);
+    // 取得台北標準時間的時區偏移量（分鐘）
+    const dt = new Date(year, month, day, time2);
+    const taipeiTimezoneOffset = dt.getTimezoneOffset();
 
-      // 計算時差（以分鐘為單位）
-      const timeDifferenceMinutes = -taipeiTimezoneOffset;
+    // 計算時差（以分鐘為單位）
+    const timeDifferenceMinutes = -taipeiTimezoneOffset;
 
-      // 在前台時間上添加時差
-      const utcTimestamp = new Date(dt.getTime() + (timeDifferenceMinutes * 60 * 1000));
+    // 在前台時間上添加時差
+    const utcTimestamp = new Date(
+      dt.getTime() + timeDifferenceMinutes * 60 * 1000
+    );
 
-      // 將前台時間轉換為ISO 8601格式的字符串
-      const utcTimeString = utcTimestamp.toISOString();
+    // 將前台時間轉換為ISO 8601格式的字符串
+    const utcTimeString = utcTimestamp.toISOString();
 
-      fullDateTime.value = new Date(utcTimeString)
-      
-      // alert(fullDateTime.value);
-      addReservationBody = {
-          fk_BookerId:fk_memberId,
-          ReservationStartTime: fullDateTime.value,
-          fk_ReservationSpeakerId: speakerId,
-          fk_BranchId: speaker.value.branchId,
-        };
+    fullDateTime.value = new Date(utcTimeString);
+
+    // alert(fullDateTime.value);
+    addReservationBody = {
+      fk_BookerId: fk_memberId,
+      ReservationStartTime: fullDateTime.value,
+      fk_ReservationSpeakerId: speakerId,
+      fk_BranchId: speaker.value.branchId,
+    };
   }
 
   prevButton.addEventListener("click", () => {
-    
     currentDate.setDate(currentDate.getDate() - 7);
     updateCalendar();
   });
@@ -469,63 +527,71 @@ onMounted(() => {
     createSchedule();
   }
 
-
-  addReservationOrderInfo.value=()=>{
+  addReservationOrderInfo.value = () => {
     loadReservationHistory(speakerId);
     updateCalendar();
     axios
-        .post("https://localhost:7183/api/Reservation/AddReservation",addReservationBody )
-        .then((res) => {
-          loadReservationHistory(speakerId);
-          updateCalendar();
-          // 再叫一次
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    // alert('呼叫我啦呼叫我啦~');
- 
-    const reqBody = {
-        memberId:fk_memberId,
-        speakerName:speaker.value.speakerName,
-        branchAddress:speaker.value.branchName,
-        startTime:fullDateTime.value
-      };
-      console.log(speaker);
-   
-      //新增預約資訊到order和orderItem資料表
-      axios.post("https://localhost:7183/api/Payment/addReservationOrderInfo", reqBody, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }).then(res=>{
+      .post(
+        "https://localhost:7183/api/Reservation/AddReservation",
+        addReservationBody
+      )
+      .then((res) => {
+        loadReservationHistory(speakerId);
+        updateCalendar();
+        // 再叫一次
         console.log(res.data);
       })
-        .catch(err=>{
+      .catch((err) => {
+        console.log(err);
+      });
+    // alert('呼叫我啦呼叫我啦~');
 
-          console.log(err);
-        })
+    const reqBody = {
+      memberId: fk_memberId,
+      speakerName: speaker.value.speakerName,
+      branchAddress: speaker.value.branchName,
+      startTime: fullDateTime.value,
+    };
+    console.log(speaker);
 
-  }
-
+    //新增預約資訊到order和orderItem資料表
+    axios
+      .post(
+        "https://localhost:7183/api/Payment/addReservationOrderInfo",
+        reqBody,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   //得到前三名講師
   function topThreeSpeaker() {
-    axios.get("https://localhost:7183/api/Reservation/GetTopThreeSpeaker")
-      .then(res => {
+    axios
+      .get("https://localhost:7183/api/Reservation/GetTopThreeSpeaker")
+      .then((res) => {
         console.log(res.data);
-        TopThreeSpeaker.value=res.data;
+        TopThreeSpeaker.value = res.data;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
   topThreeSpeaker();
+
+  //課程心得都要填寫才會出現確認按鈕
+  if (newComment.content && rating.value) {
+    console.log("心得都有填");
+  }
 });
-
-
-
 
 //心得script
 //從後端得到該講者的全部心得評論紀錄
@@ -612,28 +678,26 @@ const canEdit = (comment) => {
 };
 
 const formatDateTime = (dateString) => {
-    const date = new Date(dateString);
-    
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
+  const date = new Date(dateString);
 
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
 
-    // 組裝成我要的格式
-    const formattedDateTime = `${year}/${month}/${day} ${hours}:${minutes}`;
-    return formattedDateTime;
-}
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
 
-
+  // 組裝成我要的格式
+  const formattedDateTime = `${year}/${month}/${day} ${hours}:${minutes}`;
+  return formattedDateTime;
+};
 </script>
 
 <style>
-.bookingBlock{
+.bookingBlock {
   margin-top: 10%;
 }
-.infoBlock{
+.infoBlock {
   margin-top: 15%;
 }
 
@@ -651,13 +715,10 @@ const formatDateTime = (dateString) => {
   object-fit: cover; /* Control how the image is displayed within the div */
 }
 
-
 .main {
   font-family: Arial, sans-serif;
   text-align: center;
 }
-
-
 
 .unable {
   background-color: rgb(243, 83, 83);
@@ -777,7 +838,6 @@ const formatDateTime = (dateString) => {
   /* 調整圖標大小 */
 }
 
-
 /* 日曆表樣式 */
 
 #schedule {
@@ -800,7 +860,6 @@ const formatDateTime = (dateString) => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 陰影效果 */
   background-color: #fff; /* 背景顏色 */
 }
-
 
 #schedule .schedule-table th,
 #schedule .schedule-table td {
