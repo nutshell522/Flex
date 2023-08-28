@@ -47,7 +47,7 @@
           <i class="bi" :class="eye2 ? 'bi-eye' : 'bi-eye-slash'"></i>
         </div>
       </div>
-      <div class="btn btn-info" v-if="editPwdShow" @click="updatePwd">
+      <div class="btn" v-if="editPwdShow" @click="updatePwd">
         <button class="UpdatePwd">更新密碼</button>
       </div>
     </div>
@@ -485,13 +485,13 @@ function saveBtn() {
 .eye1 {
   position: absolute;
   right: 75%;
-  top: 9.5%;
+  top: 10%;
   font-size: 20px;
 }
 .eye2 {
   position: absolute;
   right: 75%;
-  top: 17.5%;
+  top: 17.8%;
   font-size: 20px;
 }
 

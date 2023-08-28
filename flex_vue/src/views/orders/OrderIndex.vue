@@ -106,7 +106,7 @@
                     <td class="sceTr">數量：{{ orderItem.quantity }}</td>
                     <td class="sceTr">價格：{{ orderItem.per_price }}</td>
                     <td class="sceTr">規格：{{ orderItem.items_description }}</td>
-                    <td><button v-if="item.order_status_Id == 6 && orderItem.comment === true &&
+                    <td><button v-if="item.order_status_Id == 6 && orderItem.comment !== true &&
                       item.close == true" class="btn btn-primary" :data-bs-toggle="'modal'
     " :data-bs-target="'#exampleModal2'
     " @click="prepareCommentData(item.fk_member_Id, orderItem.productcommit, orderItem.id)">留下評論</button></td>
@@ -131,9 +131,9 @@
                             <hr>
                             <h6>發票收件資訊</h6>
 
-                            <div>地址：{{ item.biller_address }}</div>
+                            <div>地址：{{ item.biller_adress }}</div>
 
-                            <div>姓名:{{ item.billerr }}</div>
+                            <div>姓名:{{ item.biller }}</div>
 
                             <div>電話:{{ item.biller_cellphone }}</div>
                           </td>
@@ -813,6 +813,7 @@ const comment = async () => {
       commentData
     )
     .then((response) => {
+      alert(response.data);
       closecomment();
       loadGetOrders();
       commentstar.value = "1";
@@ -832,7 +833,6 @@ const closecomment = async () => {
     .put(`https://localhost:7183/api/Orders/fincomment?orderid=${commentId.value}`)
     .then((response) => {
       //console.log(response.data);
-      alert(response.data);
       loadGetOrders();
     })
     .catch((error) => {

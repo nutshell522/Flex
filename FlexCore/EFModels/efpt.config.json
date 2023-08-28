@@ -36,6 +36,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Articles]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[BlackLists]",
          "ObjectType": 0
       },
@@ -276,7 +280,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "desktop-paksetb.Flex.dbo",
+   "UiHint": "lun.Flex.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
