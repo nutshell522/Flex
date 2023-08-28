@@ -15,8 +15,7 @@
         <p class="payment-amount">{{ tradeAmt }}</p>
     </div>
 
-    <img
-        src="https://cdn.hk01.com/di/media/images/dw/20210118/427914059518578688461039.jpeg/4EYbwJjzvRjT_jNs0sj5UhccbNTwg5brmVXzx5lV88c?v=w1920">
+  
     <a href="https://localhost:8080/activityIndex" class="custom-button">返回活動頁面</a>
 </template>
     
