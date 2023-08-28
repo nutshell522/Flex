@@ -34,7 +34,6 @@ import router from '@/router/index.js';
 import { ref, onMounted, defineProps } from 'vue';
 
 const props = defineProps(['email']);
-//const email = ref(props);
 const userAcc = ref(null);
 onMounted(() => {
   //localStorage抓登入使用者

@@ -5,9 +5,12 @@
   <div>
     <userBar></userBar>
   </div>
-  <div class="container userDatas" v-if="showUserData">
+  <div class="container userDatas">
     <div class="col-md-6 editPwdIcon" @click="editPwdBtn">
       <button class="">變更密碼<i class="bi bi-pencil-square"></i></button>
+    </div>
+    <div class="col-md-6 editPwdIcon">
+      <verify class="verify" v-if="verifyArea"></verify>
     </div>
     <div class="col-md-6 editPwdAll" v-if="editPwdShow">
       <div class="from-group" v-if="errors.length">
@@ -209,7 +212,6 @@
       </div>
     </div>
   </div>
-  <verify class="verify" v-if="verifyArea"></verify>
 </template>
 
 <script setup>
@@ -260,7 +262,8 @@ function fileChange(event) {
       }
     )
     .then((res) => {
-      console.log(res);
+      console.log(res.data);
+      localStorage.setItem('updateUserPhoto', res.data); // imgPath 是新照片的路径
     })
     .catch((err) => {
       console.log(err);
@@ -289,7 +292,7 @@ const addAddressInput1 = ref(false);
 const addAddressInput2 = ref(false);
 
 const imgPath = ref('');
-const verifyArea = ref(true);
+const verifyArea = ref(false);
 
 provide('verifyArea', verifyArea);
 const showUserData = ref(false);
@@ -341,8 +344,8 @@ if (isSubscribeNews.value == true) {
 }
 
 watch(verifyArea, (newValue) => {
-  if (!newValue) {
-    showUserData.value = true;
+  if (newValue) {
+    editPwdShow.value = false;
   }
 });
 
@@ -380,7 +383,8 @@ function minusBtn() {
 }
 
 function editPwdBtn() {
-  editPwdShow.value = !editPwdShow.value;
+  // editPwdShow.value = !editPwdShow.value;
+  verifyArea.value = !verifyArea.value;
 }
 
 function updatePwd() {
@@ -425,8 +429,6 @@ function saveBtn() {
     isSubscribeNews: isSubscribeNews.value,
   };
 
-  //todoChange檔案更新成功畫面
-
   axios
     .put(uri, editUserProfile)
     .then((res) => {
@@ -440,6 +442,7 @@ function saveBtn() {
     icon: 'success',
     title: '個人資料更新成功',
   });
+  window.location.reload();
 }
 </script>
 

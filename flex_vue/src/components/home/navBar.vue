@@ -13,14 +13,22 @@
         <a href="" @mouseenter="showList" @click.prevent>
           <userPhoto class="userPhoto"></userPhoto>
         </a>
-        <userList class="userList" v-if="isListVisible" @mouseleave="hideList"></userList>
+        <userList
+          class="userList"
+          v-if="isListVisible"
+          @mouseleave="hideList"
+        ></userList>
       </li>
     </ul>
   </header>
   <nav>
     <div class="left">
       <router-link to="/" class="logo-wrapper">
-        <img src="../../../../public/LOGO/FlexLogoDark.png" alt="" class="logo" />
+        <img
+          src="../../../../public/LOGO/FlexLogoDark.png"
+          alt=""
+          class="logo"
+        />
         <h1>FLEX</h1>
       </router-link>
     </div>
@@ -62,8 +70,13 @@
     </div>
     <div class="right">
       <div class="search-wrapper d-flex">
-        <input type="search" class="search-bar" placeholder="搜尋" v-model="searchKeyword"
-          @mouseenter="searchKeywordHandler" />
+        <input
+          type="search"
+          class="search-bar"
+          placeholder="搜尋"
+          v-model="searchKeyword"
+          @mouseenter="searchKeywordHandler"
+        />
         <i class="bi bi-search"></i>
       </div>
       <div class="icon">
@@ -76,21 +89,38 @@
           {{ cartItemCount }}
         </div>
         <div class="drap">
-          <div v-if="memberId == 0" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+          <div
+            v-if="memberId == 0"
+            class="w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+          >
             <div class="w-100 text-center fs-4">您尚未登入</div>
             <a class="btn btn-dark rounded-5 px-4 mt-4" href="/login">登入</a>
           </div>
-          <div v-else-if="cartItemCount && cartItemCount != 0" class="w-100 h-100 d-flex flex-column p-2">
+          <div
+            v-else-if="cartItemCount && cartItemCount != 0"
+            class="w-100 h-100 d-flex flex-column p-2"
+          >
             <ul class="p-0">
-              <li v-for="cartItem in cartItems" :key="cartItem.cartItemId" class="w-100">
-                <a :href="webBaseAddress +
-                  cartItem.product.categorySubStr +
-                  '/detail/' +
-                  cartItem.product.productSaleId
-                  " class="w-100 d-flex border-bottom pb-2 mb-2">
+              <li
+                v-for="cartItem in cartItems"
+                :key="cartItem.cartItemId"
+                class="w-100"
+              >
+                <a
+                  :href="
+                    webBaseAddress +
+                    cartItem.product.categorySubStr +
+                    '/detail/' +
+                    cartItem.product.productSaleId
+                  "
+                  class="w-100 d-flex border-bottom pb-2 mb-2"
+                >
                   <div class="cart-img-wrapper me-3">
-                    <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath
-                      " />
+                    <img
+                      :src="
+                        imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath
+                      "
+                    />
                   </div>
                   <div class="w-75">
                     <div class="fs-6">{{ cartItem.product.productName }}</div>
@@ -108,7 +138,10 @@
               </li>
             </ul>
           </div>
-          <div v-else class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+          <div
+            v-else
+            class="w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+          >
             <div class="w-100 text-center fs-4">購物車還沒有東西喔</div>
           </div>
         </div>
@@ -257,17 +290,17 @@ header {
   height: $header-height;
   padding: 0 50px 0 40px;
 
-  &>ul {
+  & > ul {
     display: flex;
     align-items: center;
     height: 100%;
 
-    &>li {
+    & > li {
       list-style: none;
       font-size: 14px;
       height: 100%;
 
-      &>a {
+      & > a {
         @extend .text-link;
         display: inline-block;
         height: 100%;
@@ -275,7 +308,7 @@ header {
       }
 
       &:not(:first-child)::before {
-        content: "|";
+        content: '|';
         padding: 0 15px;
         font-size: 14px;
       }
@@ -296,20 +329,19 @@ nav {
   background-color: #fff;
   position: relative;
 
-
-  &>.left,
-  &>.center,
-  &>.right {
+  & > .left,
+  & > .center,
+  & > .right {
     @extend .nav-height;
     position: absolute;
   }
 
-  &>.left {
+  & > .left {
     @extend .nav-height;
     position: absolute;
     left: 40px;
 
-    &>.logo-wrapper {
+    & > .logo-wrapper {
       @extend .nav-height;
       width: 100px;
       display: flex;
@@ -331,7 +363,7 @@ nav {
         object-fit: cover;
       }
 
-      &>h1 {
+      & > h1 {
         line-height: $nav-height;
         font-weight: bold;
         font-size: 40px;
@@ -340,16 +372,16 @@ nav {
     }
   }
 
-  &>.center {
+  & > .center {
     left: 50%;
     transform: translate(-50%);
 
-    &>ul {
+    & > ul {
       display: flex;
       height: 100%;
 
-      &>.transetion {
-        &>li {
+      & > .transetion {
+        & > li {
           height: 100%;
           cursor: pointer;
           overflow-y: hidden;
@@ -359,13 +391,13 @@ nav {
           display: flex;
           justify-content: center;
 
-          &>.nav-list-item {
+          & > .nav-list-item {
             height: 200%;
             position: absolute;
             top: 0;
             transition: 0.3s;
 
-            &>div {
+            & > div {
               display: flex;
               height: 50%;
               align-items: center;
@@ -376,14 +408,14 @@ nav {
           &:hover {
             border-bottom: 3px solid black;
 
-            &>.nav-list-item {
+            & > .nav-list-item {
               top: -100%;
             }
           }
         }
       }
 
-      &>li {
+      & > li {
         height: 100%;
         cursor: pointer;
         overflow-y: hidden;
@@ -393,13 +425,13 @@ nav {
         display: flex;
         justify-content: center;
 
-        &>.nav-list-item {
+        & > .nav-list-item {
           height: 200%;
           position: absolute;
           top: 0;
           transition: 0.3s;
 
-          &>div {
+          & > div {
             display: flex;
             height: 50%;
             align-items: center;
@@ -410,7 +442,7 @@ nav {
         &:hover {
           border-bottom: 3px solid black;
 
-          &>.nav-list-item {
+          & > .nav-list-item {
             top: -100%;
           }
         }
