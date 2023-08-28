@@ -83,12 +83,16 @@
                   <option value="creditCard">信用卡結帳</option>
                   <option value="cash">現金付款</option>
                 </select>
-                <button v-if="selectedPaymentMethod === 'creditCard'" type="submit" class="btn btn-primary comenextBtn mt-4">
-                    前往信用卡結帳頁面
-                </button>
-                <button v-else-if="selectedPaymentMethod === 'cash'" @click="checkoutSuccess" type="submit" class="btn btn-primary comenextBtn mt-4">
-                    結帳
-                </button>
+                  <form id="payForm" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">
+                    <button v-if="selectedPaymentMethod === 'creditCard'" type="button" class="btn btn-primary comenextBtn mt-4"
+                            @click="submitPayment">
+                      前往信用卡結帳頁面
+                    </button>
+                    <button v-else-if="selectedPaymentMethod === 'cash'" @click="checkoutSuccess" type="button"
+                            class="btn btn-primary comenextBtn mt-4">
+                      結帳
+                    </button>
+                  </form>
               </div>
             </div>
           </div>
@@ -101,14 +105,15 @@
 
 <script setup>
 import axios from "axios";
-import { onMounted, ref, computed } from "vue";
-import { useRoute } from "vue-router";
+import { onMounted, ref, computed,reactive } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
 import router from "@/router";
 
 const optionsAll = ref("");
 const shoesOrderDetail = ref({});
+const shoesDetail = ref({});
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
 
@@ -118,6 +123,40 @@ const totalPrice = computed(() => {
   return shoesOrderDetail.qty * shoesOrderDetail.shoesUnitPrice;
 });
 
+//抓取網頁登入資料
+const IdInfo = localStorage.getItem('loggedInUser');
+console.log(IdInfo);
+const IdData = JSON.parse(IdInfo);
+const memberId = IdData.memberId;
+
+console.log(memberId);
+
+//傳給後端資料
+const payInfo = reactive({
+    MerchantID:"",
+    MerchantTradeNo:"",
+    MerchantTradeDate:"",
+    PaymentType:"",
+    TotalAmount:"",
+    TradeDesc:"",
+    ItemName:"",
+    ReturnURL:"",
+    ChoosePayment:"",
+    EncryptType:"",
+    ClientBackURL:"",
+    CheckMacValue:"",
+    OrderResultURL:""
+})
+
+//傳給後端會員資料
+const member = reactive({
+    name:"",
+    gender:"",
+    commonAddress:"",
+    mobile:"",
+    email:"",
+    birthday:""
+})
 
 //結帳完返回商品頁
 const isCheckoutInProgress = ref(false);
@@ -142,15 +181,89 @@ const checkoutSuccess = async () => {
   }
 };
 
+//抓api資料
+let getshoesData = async (id) => {
+
+    await axios.get(
+       `${baseAddress}api/CustomeShoes/shoes/Detail/${id}`
+    )
+    .then(res=>{
+    console.log(res.data);
+    shoesDetail.value = res.data;
+    }).catch(error=>{console.log(error)})}
+  
+
+
+
+//從後端得到綠界需要的參數資訊
+axios.get(`https://localhost:7183/api/Payment/Shoes/${shoesDetail.shoesProductId}`)
+
+    .then(res=>{
+
+        console.log(res.data);
+        console.log(res);
+        
+        const payresult = res.data;
+        payInfo.MerchantID = payresult.MerchantID;
+        console.log("畫面的ID="+payInfo.MerchantID);
+        payInfo.MerchantTradeNo = payresult.MerchantTradeNo;
+        payInfo.MerchantTradeDate = payresult.MerchantTradeDate;
+        payInfo.PaymentType = payresult.PaymentType;
+        payInfo.TradeDesc = payresult.TradeDesc;
+        payInfo.ItemName = payresult.ItemName;
+        payInfo.ReturnURL = payresult.ReturnURL;
+        payInfo.ChoosePayment = payresult.ChoosePayment;
+        payInfo.EncryptType = payresult.EncryptType;
+        payInfo.ClientBackURL = payresult.ClientBackURL;
+        payInfo.CheckMacValue = payresult.CheckMacValue;
+        payInfo.OrderResultURL = payresult.OrderResultURL;
+        payInfo.TotalAmount = payresult.TotalAmount;
+    })
+    .catch(err=>{
+        console.log(err);
+    })
+  
+
+    //將會員資料傳到後台
+    const submitPayment = () => {
+              const formElement = document.querySelector("#payForm");
+          if (formElement) {
+            formElement.submit();
+          } else {
+            console.error("找不到表单元素。");
+          }
+        const formData = {
+            MemberID:memberId,
+            MerchantTradeNo:payInfo.MerchantTradeNo,
+            MerchantID:payInfo.MerchantID,
+            TotalAmount:payInfo.TotalAmount,
+            MerchantTradeDate:payInfo.MerchantTradeDate,
+            PaymentType:payInfo.PaymentType,
+            CheckMacValue:payInfo.CheckMacValue,
+            ItemName:payInfo.ItemName,
+            TradeDesc:payInfo.TradeDesc,
+            ActivityId:activityId
+        };
+        console.log(formData);
+        //把訂單資訊傳給後端進資料庫
+        axios.post("https://localhost:7183/api/Payment/addOrder", formData)
+            .then(res=>{
+                console.log(res.data);
+            })
+            .catch(err=>{
+                console.log(err);
+       })
+    };
 
 let getData = async () => {
   try {
     const response = await axios.get(
       `${baseAddress}api/CustomeShoes/shoes/Customization/Order/${route.params.ShoesOrderId}`
     );
-    console.log(response.data);
+    console.log(response.data.shoesProductId);
     shoesOrderDetail.value = response.data;
     optionsAll.value = shoesOrderDetail.value.shoesAllOptions[0]
+    getshoesData(response.data.shoesProductId);
   } catch (error) {
     alert(error);
   }
@@ -158,6 +271,7 @@ let getData = async () => {
 
 onMounted(() => {
   getData();
+  
 });
 
 </script>

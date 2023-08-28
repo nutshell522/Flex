@@ -460,7 +460,7 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="returncomment()">
                 關閉
               </button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="comment()">
+              <button type="button" class="btn btn-primary" @click="comment()">
                 確定
               </button>
             </div>
@@ -728,8 +728,8 @@ const Returndetail = async () => {
   }
 
   if (showError) {
-    await CancelReturnAndCloseOrders();
-    return;
+    CancelReturnAndCloseOrders();
+    return
   }
   const requestData = {
     退貨轉帳帳號: returnaccount.value,

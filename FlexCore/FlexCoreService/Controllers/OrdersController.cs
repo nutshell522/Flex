@@ -67,7 +67,7 @@ namespace FlexCoreService.Controllers
 			{
 
 				query = query.Where(o =>
-				o.ordertime >= begintime.Value && o.ordertime <= endtime.Value
+				o.ordertime >= begintime.Value && o.ordertime <= endtime.Value.AddDays(1)
 			);
 
 			}
