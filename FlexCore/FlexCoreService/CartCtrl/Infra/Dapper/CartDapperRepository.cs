@@ -551,7 +551,7 @@ from Products as p
 inner join ProductGroups as pg on pg.fk_ProductId = p.ProductId
 inner join SizeCategories as sc on sc.SizeId = pg.fk_SizeId
 inner join ColorCategories as cc on cc.ColorId = pg.fk_ColorId
-WHERE p.ProductId = @ProductId
+WHERE p.ProductId = @ProductId AND pg.Qty>0
 ";
 
 

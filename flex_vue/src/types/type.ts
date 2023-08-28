@@ -1,4 +1,73 @@
 import axios from "axios";
+export class CountdownTimer {
+  private targetTime: number | null;
+  private intervalId: NodeJS.Timeout | null;
+  private _countdownText: string;
+
+  constructor(targetTime: number | null) {
+    this.targetTime = targetTime;
+    this.intervalId = null;
+    this._countdownText = '';
+    if (this.targetTime == null) {
+      this._countdownText = '長期優惠';
+    }
+    else if (this.shouldStartCountdown()) {
+      this.startCountdown();
+    } else {
+      this.displayDeadline();
+    }
+  }
+  get countdownText(): string {
+    return this._countdownText;
+  }
+
+  private updateDisplay(remainingTime: number) {
+    const days = Math.floor(remainingTime / 86400);
+    const hours = Math.floor((remainingTime % 86400) / 3600);
+    const minutes = Math.floor((remainingTime % 3600) / 60);
+    const seconds = remainingTime % 60;
+    this._countdownText = `剩餘時間: ${hours} 小時 ${minutes} 分 ${seconds} 秒`;
+  }
+
+  private tick() {
+    const currentTime = Math.floor(Date.now() / 1000);
+    const remainingTime = Math.max(0, this.targetTime! - currentTime);
+
+    this.updateDisplay(remainingTime);
+
+    if (remainingTime === 0) {
+      this.stopCountdown();
+      this._countdownText = '已截止';
+    }
+  }
+
+  private shouldStartCountdown(): boolean {
+    const currentTime = Math.floor(Date.now() / 1000);
+    const timeDifference = this.targetTime! - currentTime;
+    return timeDifference <= 86400; // 86400 seconds = 1 day
+  }
+
+  private startCountdown() {
+    this.intervalId = setInterval(() => this.tick(), 1000);
+    this.tick();
+  }
+
+  public stopCountdown() {
+    if (this.intervalId !== null) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  }
+  private displayDeadline() {
+    const deadline = new Date(this.targetTime! * 1000);
+    const parsedDate = new Date(deadline);
+    const year = parsedDate.getFullYear();
+    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = parsedDate.getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    this._countdownText = `截止日期: ${formattedDate}`;
+  }
+}
 export class SizeVM {
   productSaleId: string = "";
   productId: number = 0;

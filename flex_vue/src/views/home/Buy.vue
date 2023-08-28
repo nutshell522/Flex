@@ -361,6 +361,7 @@ import {
 } from "vue";
 import HomeFooter from "@/components/home/footer.vue";
 import { CartItem, ShoppingCart, Member, Coupon } from "@/types/type";
+import Swal from 'sweetalert2';
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
 
@@ -649,6 +650,7 @@ const couponComfirmEventHandler = () => {
     });
 };
 
+
 const formatter = new Intl.NumberFormat("zh-TW", {
   style: "currency",
   currency: "TWD",
@@ -657,6 +659,7 @@ const formatter = new Intl.NumberFormat("zh-TW", {
 });
 
 const checkoutEventHandler = async () => {
+  loading.value = true
   const ids: number[] = [];
   cart.value?.cartItems.forEach((item) => {
     ids.push(item.cartItemId);
@@ -682,10 +685,27 @@ const checkoutEventHandler = async () => {
     .post(`${baseAddress}api/Cart/Checkout`, request)
     .then((response) => {
       if (response.data.isSuccess) {
-        alert("結帳成功");
-        window.location.href = "https://localhost:8080/";
+        setTimeout(() => {
+          loading.value = false
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '結帳成功',
+            showConfirmButton: false,
+            timer: 1500
+          })
+          setTimeout(() => {
+            window.location.href = "https://localhost:8080/";
+          }, 1500)
+        }, 2000)
       } else {
-        alert(response.data.errorMessage);
+        loading.value = false;
+        Swal.fire({
+          icon: 'error',
+          title: '結帳失敗',
+          text: `${response.data.errorMessage}`,
+          footer: '<a href="/cart">回購物車?</a>'
+        })
       }
     })
     .catch((error) => {

@@ -17,7 +17,7 @@
       </li>
     </ul>
   </header>
-  <nav>
+  <nav class="home-nav">
     <div class="left">
       <router-link to="/" class="logo-wrapper">
         <img src="../../../../public/LOGO/FlexLogoDark.png" alt="" class="logo" />
@@ -71,10 +71,11 @@
         <div class="count"></div>
       </div>
       <div class="icon">
-        <a href="/cart"><i class="bi bi-bag"></i></a>
-        <div v-if="cartItemCount && cartItemCount.value != 0" class="count">
-          {{ cartItemCount }}
-        </div>
+        <a href="/cart"><i class="bi bi-bag"></i>
+          <div v-if="cartItemCount && cartItemCount.value != 0" class="count">
+            {{ cartItemCount }}
+          </div>
+        </a>
         <div class="drap">
           <div v-if="memberId == 0" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
             <div class="w-100 text-center fs-4">您尚未登入</div>
@@ -291,10 +292,13 @@ header {
   height: $nav-height;
 }
 
-nav {
+.home-nav {
   @extend .nav-height;
   background-color: #fff;
-  position: relative;
+
+  position: sticky;
+  top: 0;
+  z-index: 2000;
 
 
   &>.left,
