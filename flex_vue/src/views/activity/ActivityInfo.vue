@@ -52,7 +52,11 @@
         </div>
         <!-- 手刀報名按鈕 -->
         <div class="text-end">
-          <a :href="'https://localhost:8080/activitySignUp/'+ route.params.id" class="btn button" @click="getActivityId">
+          <a
+            :href="'https://localhost:8080/activitySignUp/' + route.params.id"
+            class="btn button"
+            @click="getActivityId"
+          >
             <!-- icon -->
             <span class="icon">
               <img
@@ -93,7 +97,6 @@
     <div class>
       <h4>參考心得</h4>
       <a :href="postUrl" target="_blank" class="custom-link">來去看看</a>
-
     </div>
   </div>
   <HomeFooter></HomeFooter>
@@ -107,9 +110,9 @@ import { ref, reactive, onMounted } from "vue";
 import AOS from "aos";
 import { useRoute, useRouter } from "vue-router";
 import FlipDown from "vue-flip-down";
-import { useActivityRoute} from "@/stores/useActivityRoute.js";
+import { useActivityRoute } from "@/stores/useActivityRoute.js";
 let activityId;
-const postUrl = ref('');
+const postUrl = ref("");
 
 const bookingTime = ref([]);
 const activityStore = useActivityRoute();
@@ -121,31 +124,30 @@ const imgBaseUrl = ref(import.meta.env.VITE_API_BASEADDRESS);
 AOS.init();
 console.log(activityStore);
 
-
 const originalPath = route.path;
 
-localStorage.setItem('originalRoute', route.path);
-localStorage.setItem('activityId', route.params.id);
+localStorage.setItem("activityId", route.params.id);
+
+if (localStorage.getItem("loggedInUser")) {
+  console.log("登入中");
+} else {
+  localStorage.setItem("originalRoute", route.path);
+}
 
 onMounted(async () => {
   activityId = route.params.id;
- 
+
   await loadActivities(activityId);
   await getActivityBookingTime(activityId);
   await loadActivities(activityId);
-  
-
 });
 
+const getActivityId = () => {
+  activityStore.activityId = activityId;
+  activityStore.originalPath = originalPath;
 
-const getActivityId = () =>{
-  activityStore.activityId=activityId;
-  activityStore.originalPath =originalPath;
-  
   console.log(activityStore);
-}
-
-
+};
 
 const activities = reactive({
   activityName: "",
@@ -183,9 +185,7 @@ const formatDateTime = (dateString) => {
 // let testEndDate ;
 // testEndDate = new Date(testDate);
 let showDate;
-let endDate = ref(null); 
-
-
+let endDate = ref(null);
 
 //從後端抓活動資料
 const loadActivities = async (id) => {
@@ -206,7 +206,7 @@ const loadActivities = async (id) => {
       activities.activityOriginalPrice = datas.activityOriginalPrice;
       activities.activityCategoryName = datas.activityCategoryName;
       activities.imgPath = datas.imgPath;
-      postUrl.value = `https://localhost:8080/community/${activities.activityCategoryName}`
+      postUrl.value = `https://localhost:8080/community/${activities.activityCategoryName}`;
       console.log(postUrl.value);
     })
     .catch((err) => {
@@ -216,31 +216,29 @@ const loadActivities = async (id) => {
 // loadActivities(activityId);
 let startTime;
 //從後端獲得報名起訖時間
-const getActivityBookingTime = async(id)=>{
-  axios.get(`https://localhost:7183/api/Activity/GetActivityBookingTime?id=${id}`)
-      .then(res=>{
-        console.log(res.data);
-        const actTime= res.data; 
-        console.log(actTime.activityBookEndTime);    
-        showDate = formatDateTime(actTime.activityBookEndTime);   
-        console.log(showDate); //2023/5/7 0:0:0
-        endDate.value = new Date(showDate);
-        // console.log(endDate.value);
-      })
-      .catch(err=>{
-        console.log(err);
-      })
-}
+const getActivityBookingTime = async (id) => {
+  axios
+    .get(`https://localhost:7183/api/Activity/GetActivityBookingTime?id=${id}`)
+    .then((res) => {
+      console.log(res.data);
+      const actTime = res.data;
+      console.log(actTime.activityBookEndTime);
+      showDate = formatDateTime(actTime.activityBookEndTime);
+      console.log(showDate); //2023/5/7 0:0:0
+      endDate.value = new Date(showDate);
+      // console.log(endDate.value);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 // console.log(endDate);
 //  getActivityBookingTime(activityId)
 // console.log(startTime);
-const formatDate=(dateString)=>{
-                const date = new Date(dateString);
-                return date.toLocaleDateString(); // 格式化為本地化的日期字串
-   }
-
-
-
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(); // 格式化為本地化的日期字串
+};
 </script>
 
 <style>
@@ -256,8 +254,6 @@ const formatDate=(dateString)=>{
     text-decoration: underline; /* 显示底线 */
   }
 }
-
-
 
 .featured {
   /* padding: 80px 0; */
