@@ -126,6 +126,7 @@ namespace FlexCoreService.Controllers
 					discount_subtotal = o.discount_subtotal,
 					Items_description = o.Items_description,
 					productcommit = o.productcommit,
+					comment=o.comment,
 				})
 				.ToList();
 
@@ -420,7 +421,7 @@ namespace FlexCoreService.Controllers
 			}
 
 			orderItem emp = await _context.orderItems.FindAsync(orderid);
-			emp.comment = true;
+			emp.comment = true; 
 			_context.Entry(emp).State = EntityState.Modified;
 			await _context.SaveChangesAsync();
 			return "返回訂單";
