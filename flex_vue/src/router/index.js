@@ -312,7 +312,7 @@ const routes = [
     //http://loaclhost/CustomeShoes/detail/Customization/shoesProductId
     path: '/CustomeShoes/detail/Customization/:shoesProductId',
     component: () => import('../views/CustomeShoes/CustomerPage.vue'),
-    meta: {},
+    meta: { require: true },
     beforeEnter(to, from, next) {
       document.title = `${webTitle}商品客製化頁面${to.params.shoesProductId}`;
       next();
