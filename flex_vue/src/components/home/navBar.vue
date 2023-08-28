@@ -129,7 +129,8 @@
         </div>
       </div>
       <div class="icon">
-        <a href="/cart"><i class="bi bi-bag"></i>
+        <a href="/cart"
+          ><i class="bi bi-bag"></i>
           <div v-if="cartItemCount && cartItemCount.value != 0" class="count">
             {{ cartItemCount }}
           </div>
