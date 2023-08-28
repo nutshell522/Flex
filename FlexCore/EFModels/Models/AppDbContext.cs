@@ -158,7 +158,7 @@ namespace EFModels.Models
 
             modelBuilder.Entity<ActivityStatus>(entity =>
             {
-                entity.HasIndex(e => e.ActivityStatusDescription, "UQ__Activity__732635EC1E5E9450")
+                entity.HasIndex(e => e.ActivityStatusDescription, "UQ__Activity__732635EC40041F71")
                     .IsUnique();
 
                 entity.Property(e => e.ActivityStatusDescription).HasMaxLength(50);
@@ -204,10 +204,10 @@ namespace EFModels.Models
 
             modelBuilder.Entity<Branch>(entity =>
             {
-                entity.HasIndex(e => e.BranchName, "UQ__Branches__3903DB03AED90D7D")
+                entity.HasIndex(e => e.BranchName, "UQ__Branches__3903DB03C9B1D3EA")
                     .IsUnique();
 
-                entity.HasIndex(e => e.BranchAddress, "UQ__Branches__F50DE17A175C90C7")
+                entity.HasIndex(e => e.BranchAddress, "UQ__Branches__F50DE17A26F2B7FE")
                     .IsUnique();
 
                 entity.Property(e => e.BranchAddress)
@@ -312,7 +312,7 @@ namespace EFModels.Models
             modelBuilder.Entity<CustomizedOrder>(entity =>
             {
                 entity.HasKey(e => e.Customized_Id)
-                    .HasName("PK__Customiz__AFADABDD250CA2AA");
+                    .HasName("PK__Customiz__AFADABDD4CFFCC74");
 
                 entity.Property(e => e.Customized_number)
                     .IsRequired()
@@ -406,7 +406,7 @@ namespace EFModels.Models
             modelBuilder.Entity<Customized_material>(entity =>
             {
                 entity.HasKey(e => e.Shoesmaterial_Id)
-                    .HasName("PK__Customiz__06EFE12DA0BC0136");
+                    .HasName("PK__Customiz__06EFE12D2B32B15A");
 
                 entity.Property(e => e.material_Name)
                     .IsRequired()
@@ -442,7 +442,7 @@ namespace EFModels.Models
             modelBuilder.Entity<EcpayOrder>(entity =>
             {
                 entity.HasKey(e => e.MerchantTradeNo)
-                    .HasName("PK__EcpayOrd__D6311910BDFAF3D9");
+                    .HasName("PK__EcpayOrd__D631191071F6EE4E");
 
                 entity.Property(e => e.MerchantTradeNo).HasMaxLength(50);
 
@@ -609,7 +609,7 @@ namespace EFModels.Models
                         r => r.HasOne<MembershipLevel>().WithMany().HasForeignKey("fk_LevelId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Membershi__fk_Le__01D345B0"),
                         j =>
                         {
-                            j.HasKey("fk_LevelId", "fk_PrivilegeId").HasName("PK__Membersh__580C8EAA32442D85");
+                            j.HasKey("fk_LevelId", "fk_PrivilegeId").HasName("PK__Membersh__580C8EAAB97E0DA2");
 
                             j.ToTable("MembershipLevelPrivileges");
                         });
@@ -618,7 +618,7 @@ namespace EFModels.Models
             modelBuilder.Entity<OneToOneReservation>(entity =>
             {
                 entity.HasKey(e => e.ReservationId)
-                    .HasName("PK__OneToOne__B7EE5F24C31A2C67");
+                    .HasName("PK__OneToOne__B7EE5F24910850F6");
 
                 entity.Property(e => e.ReservationCreatedDate)
                     .HasColumnType("datetime")
@@ -951,9 +951,9 @@ namespace EFModels.Models
             modelBuilder.Entity<ReservationStatus>(entity =>
             {
                 entity.HasKey(e => e.ReservationId)
-                    .HasName("PK__Reservat__B7EE5F24DBAF071E");
+                    .HasName("PK__Reservat__B7EE5F24E417BBBA");
 
-                entity.HasIndex(e => e.ReservationStatusDescription, "UQ__Reservat__ADF40EA6BB9718A6")
+                entity.HasIndex(e => e.ReservationStatusDescription, "UQ__Reservat__ADF40EA611CCCB76")
                     .IsUnique();
 
                 entity.Property(e => e.ReservationId).ValueGeneratedNever();
@@ -1013,7 +1013,7 @@ namespace EFModels.Models
             modelBuilder.Entity<ShoesColorCategory>(entity =>
             {
                 entity.HasKey(e => e.ShoesColorId)
-                    .HasName("PK__ShoesCol__BB1469D460057AEE");
+                    .HasName("PK__ShoesCol__BB1469D4E29CA6C9");
 
                 entity.Property(e => e.ColorCode).HasMaxLength(100);
 
@@ -1075,7 +1075,7 @@ namespace EFModels.Models
             modelBuilder.Entity<ShoesPicture>(entity =>
             {
                 entity.HasKey(e => e.ShoesPicture_Id)
-                    .HasName("PK__ShoesPic__DF35EBA43BDD5EFD");
+                    .HasName("PK__ShoesPic__DF35EBA4D2578734");
 
                 entity.Property(e => e.ShoesPictureUrl).HasMaxLength(4000);
 
@@ -1088,7 +1088,7 @@ namespace EFModels.Models
             modelBuilder.Entity<ShoesSize>(entity =>
             {
                 entity.HasKey(e => e.SizeId)
-                    .HasName("PK__ShoesSiz__83BD097A5FD2C7D3");
+                    .HasName("PK__ShoesSiz__83BD097AF19D6A5D");
 
                 entity.Property(e => e.SizeName)
                     .IsRequired()
@@ -1150,7 +1150,7 @@ namespace EFModels.Models
             modelBuilder.Entity<SpeakerField>(entity =>
             {
                 entity.HasKey(e => e.FieldId)
-                    .HasName("PK__SpeakerF__C8B6FF07C2F18C61");
+                    .HasName("PK__SpeakerF__C8B6FF07978D45A5");
 
                 entity.Property(e => e.FieldName)
                     .IsRequired()
@@ -1223,7 +1223,7 @@ namespace EFModels.Models
 
             modelBuilder.Entity<Supplier>(entity =>
             {
-                entity.HasIndex(e => e.SupplierCompanyNumber, "UQ__Supplier__AE8E9B4117572E6F")
+                entity.HasIndex(e => e.SupplierCompanyNumber, "UQ__Supplier__AE8E9B41121119CD")
                     .IsUnique();
 
                 entity.Property(e => e.SupplierCompanyAddress).HasMaxLength(250);
