@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Cors;
 using FlexCoreService.ActivityCtrl.Infra.DPRepository;
 using FlexCoreService.ActivityCtrl.Models.Dtos;
 using NuGet.Protocol.Plugins;
+using FlexCoreService.CustomeShoes.Interface;
+using FlexCoreService.CustomeShoes.Infra.DPRepository;
 
 namespace FlexCoreService.Controllers
 {
@@ -18,6 +20,7 @@ namespace FlexCoreService.Controllers
         private AppDbContext _db;
         private PaymentDPRepository _repo;
         private ActivityDPRepository _actRepo;
+        private CustomeShoesDPRepository _csdRepo;
         private IConfiguration _configuration;
         public PaymentController(AppDbContext context, PaymentDPRepository repo, IConfiguration configuration, ActivityDPRepository actRepo)
         {
@@ -45,6 +48,37 @@ namespace FlexCoreService.Controllers
                 { "TotalAmount", activityInfo.ActivitySalePrice.ToString() }, //金額
                 { "TradeDesc", "Flex活動報名" },//交易描述
                 { "ItemName", activityInfo.ActivityName },//品名
+                { "ReturnURL",  $"https://localhost:7183/api/Payment/addPayInfo/{orderId}"}, //付款完成通知回傳網址
+                { "ChoosePayment", "ALL" }, //預設付款方式
+                { "EncryptType", "1" },//CheckMacValue加密類型，固定填1
+                { "ClientBackURL", "http://localhost:8080/" },//Client端返回商店的按鈕連結
+                { "OrderResultURL", $"https://localhost:7183/api/Payment/addPayInfo/{orderId}"} //client端回傳付款結果網址
+                  
+        };
+            order["CheckMacValue"] = GetCheckMacValue(order); //為 order 物件添加一個名為 "CheckMacValue" 【檢查碼】的屬性，並將其值設定為 GetCheckMacValue(order)
+
+            return order;
+
+        }
+
+        [HttpGet("Shoes/{id}")]
+        public Dictionary<string, string> ShoesMakePayment(int id)
+        {
+            var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
+
+            var website = $"https://localhost:7183";
+
+            var shoesInfo = _csdRepo.GetShoesDetail2(id);
+
+            var order = new Dictionary<string, string>
+            {
+                { "MerchantID", "3002607" }, //商店編號
+                { "MerchantTradeNo", orderId }, //訂單編號
+                { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") }, //交易時間
+                { "PaymentType", "aio" }, //交易類型，固定填aio
+                { "TotalAmount", shoesInfo.ShoesUnitPrice.ToString() }, //金額
+                { "TradeDesc", "Flex客製化商品結帳" },//交易描述
+                { "ItemName", shoesInfo.ShoesName },//品名
                 { "ReturnURL",  $"https://localhost:7183/api/Payment/addPayInfo/{orderId}"}, //付款完成通知回傳網址
                 { "ChoosePayment", "ALL" }, //預設付款方式
                 { "EncryptType", "1" },//CheckMacValue加密類型，固定填1
@@ -97,6 +131,7 @@ namespace FlexCoreService.Controllers
 
         }
 
+       
         [HttpPost("addPayInfo/{id}")]
         public async Task<IActionResult> AddPayInfo([FromForm] AddPayInfoDTO info)
         {
