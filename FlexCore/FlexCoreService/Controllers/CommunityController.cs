@@ -13,6 +13,7 @@ namespace FlexCoreService.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class CommunityController : ControllerBase
+
     {
         private ICommunityRepository _repo;
         private CommunityService _service;
