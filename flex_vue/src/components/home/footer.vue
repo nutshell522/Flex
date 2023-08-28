@@ -81,6 +81,7 @@ footer {
     width: 100%;
     position: relative;
     z-index: 200;
+    margin-top: 80px;
 
     @media screen and (min-width: 992px) {
         padding: 0;

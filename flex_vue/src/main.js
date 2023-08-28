@@ -12,8 +12,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import swal from 'sweetalert2';
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import ElementPlus from 'element-plus';
-import 'element-plus/dist/index.css';
+
 
 const pinia = createPinia();
 const CLIENT_ID =
@@ -27,5 +26,4 @@ createApp(App)
   .use(coupon)
   .use('VueDatePicker', VueDatePicker)
   .use(QuillEditor)
-  .use(ElementPlus)
   .mount('#app');

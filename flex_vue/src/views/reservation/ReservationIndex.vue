@@ -1,4 +1,5 @@
 <template>
+   <NavBar></NavBar>
   <div class="page-container">
   <!-- 輪播照片 -->
    <carousel :autoplay="3000" :wrap-around="true" >
@@ -37,10 +38,12 @@
 
 
 
-
+<HomeFooter></HomeFooter>
 </template>
 
 <script setup>
+import NavBar from "@/components/activity/ActivityNav.vue";
+import HomeFooter from "@/components/home/footer.vue";
 import axios from "axios";
 import { ref, reactive, onMounted } from "vue";
 import 'vue3-carousel/dist/carousel.css';

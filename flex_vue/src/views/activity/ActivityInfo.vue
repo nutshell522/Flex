@@ -1,4 +1,5 @@
 <template>
+  <NavBar></NavBar>
   <!-- 上半部 【照片、活動日期、活動價格、報名鈕、倒數時間】-->
   <div class="top">
     <section class="featured row">
@@ -89,10 +90,18 @@
       <h4>活動簡介</h4>
       <p>{{ activities.activityDescription }}</p>
     </div>
+    <div class>
+      <h4>參考心得</h4>
+      <a :href="postUrl" target="_blank" class="custom-link">來去看看</a>
+
+    </div>
   </div>
+  <HomeFooter></HomeFooter>
 </template>
 
 <script setup>
+import NavBar from "@/components/activity/ActivityNav.vue";
+import HomeFooter from "@/components/home/footer.vue";
 import axios from "axios";
 import { ref, reactive, onMounted } from "vue";
 import AOS from "aos";
@@ -100,7 +109,7 @@ import { useRoute, useRouter } from "vue-router";
 import FlipDown from "vue-flip-down";
 import { useActivityRoute} from "@/stores/useActivityRoute.js";
 let activityId;
-// let originalPath;
+const postUrl = ref('');
 
 const bookingTime = ref([]);
 const activityStore = useActivityRoute();
@@ -197,6 +206,8 @@ const loadActivities = async (id) => {
       activities.activityOriginalPrice = datas.activityOriginalPrice;
       activities.activityCategoryName = datas.activityCategoryName;
       activities.imgPath = datas.imgPath;
+      postUrl.value = `https://localhost:8080/community/${activities.activityCategoryName}`
+      console.log(postUrl.value);
     })
     .catch((err) => {
       console.log(err);
@@ -227,9 +238,27 @@ const formatDate=(dateString)=>{
                 const date = new Date(dateString);
                 return date.toLocaleDateString(); // 格式化為本地化的日期字串
    }
+
+
+
 </script>
 
 <style>
+/* 連結樣式 */
+.custom-link {
+  text-decoration: none; /* 移除默认下划线样式 */
+  color: inherit; /* 继承父元素的文字颜色 */
+  transition: color 0.3s, text-decoration 0.3s; /* 添加过渡效果，平滑地改变颜色和下划线 */
+
+  /* 鼠标移上时的样式 */
+  &:hover {
+    color: blue; /* 设置蓝色文字 */
+    text-decoration: underline; /* 显示底线 */
+  }
+}
+
+
+
 .featured {
   /* padding: 80px 0; */
   padding: 0 0;

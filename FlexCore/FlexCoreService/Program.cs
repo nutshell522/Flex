@@ -49,9 +49,12 @@ namespace FlexCoreService
             builder.Services.AddScoped<IActivityDPRepository, ActivityDPRepository>();
             builder.Services.AddScoped<ActivityDPRepository>();
             builder.Services.AddScoped<ICustomeShoesRepository, CustomeShoesDPRepository>();
-            builder.Services.AddScoped<ICartRepository, CartDapperRepository>();
+			builder.Services.AddScoped<ICartRepository, CartDapperRepository>();
+			builder.Services.AddScoped<CartService>();
+			builder.Services.AddScoped<CartController>();
 			builder.Services.AddScoped<ISaleRepository, SaleEFRepository>();
 			builder.Services.AddScoped<SaleService>();
+			builder.Services.AddScoped<UsersController>();
 			builder.Services.AddScoped<IShoesCategoryRepository, ShoesCategoryDPRepository>();
             builder.Services.AddScoped<ICustomerChooseRepository, ShoesChooseDPRepository>();
             builder.Services.AddScoped<IReservationDPRepository, ReservationDPRepositorycs>();
