@@ -10,11 +10,11 @@
     <div class="card-body">
       <div class="card-title">{{ card.productName }}</div>
       <span class="text-decoration-line-through" v-if="card.unitPrice != null">
-        NT:{{ card.unitPrice }}
+        NT${{ card.unitPrice.toLocaleString("en-US") }}
       </span>
       <span v-if="card.unitPrice != null"> 活動價 </span>
       <span v-bind:class="{ 'text-red': card.unitPrice != null }">
-        NT:{{ card.salesPrice }}
+        NT${{ card.salesPrice.toLocaleString("en-US") }}
       </span>
     </div>
   </router-link>

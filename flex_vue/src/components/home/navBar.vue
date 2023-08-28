@@ -13,14 +13,22 @@
         <a href="" @mouseenter="showList" @click.prevent>
           <userPhoto class="userPhoto"></userPhoto>
         </a>
-        <userList class="userList" v-if="isListVisible" @mouseleave="hideList"></userList>
+        <userList
+          class="userList"
+          v-if="isListVisible"
+          @mouseleave="hideList"
+        ></userList>
       </li>
     </ul>
   </header>
   <nav>
     <div class="left">
       <router-link to="/" class="logo-wrapper">
-        <img src="../../../../public/LOGO/FlexLogoDark.png" alt="" class="logo" />
+        <img
+          src="../../../../public/LOGO/FlexLogoDark.png"
+          alt=""
+          class="logo"
+        />
         <h1>FLEX</h1>
       </router-link>
     </div>
@@ -62,13 +70,63 @@
     </div>
     <div class="right">
       <div class="search-wrapper d-flex">
-        <input type="search" class="search-bar" placeholder="搜尋" v-model="searchKeyword"
-          @mouseenter="searchKeywordHandler" />
+        <input
+          type="search"
+          class="search-bar"
+          placeholder="搜尋"
+          v-model="searchKeyword"
+          @mouseenter="searchKeywordHandler"
+        />
         <i class="bi bi-search"></i>
       </div>
       <div class="icon">
-        <a href="javascript:;"><i class="bi bi-heart"></i></a>
-        <div class="count"></div>
+        <a href="#"><i class="bi bi-heart"></i></a>
+        <div v-if="favoritesItemCount != 0" class="countFavorites">
+          {{ favoritesItemCount }}
+        </div>
+        <div class="drap">
+          <div
+            v-if="favoritesItemCount && favoritesItemCount != 0"
+            class="w-100 h-100"
+          >
+            <ul class="p-2 w-100 h-100">
+              <li
+                v-for="card in cards"
+                :key="card.productId"
+                class="d-flex mb-2"
+                style="border-bottom: 1px solid gainsboro"
+              >
+                <a
+                  :href="
+                    webBaseAddress + card.path + '/Detail/' + card.productId
+                  "
+                  class="d-flex"
+                >
+                  <div style="width: 80px; height: 80px">
+                    <img
+                      :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath"
+                    />
+                  </div>
+                  <div>
+                    <div>
+                      {{ card.productName }}
+                    </div>
+                    <span
+                      class="text-decoration-line-through"
+                      v-if="card.unitPrice != null"
+                    >
+                      NT${{ card.unitPrice.toLocaleString("en-US") }}
+                    </span>
+                    <span v-if="card.unitPrice != null"> 活動價 </span>
+                    <span :class="{ 'text-red': card.unitPrice != null }">
+                      NT${{ card.salesPrice.toLocaleString("en-US") }}
+                    </span>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
       <div class="icon">
         <a href="/cart"><i class="bi bi-bag"></i></a>
@@ -76,21 +134,38 @@
           {{ cartItemCount }}
         </div>
         <div class="drap">
-          <div v-if="memberId == 0" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+          <div
+            v-if="memberId == 0"
+            class="w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+          >
             <div class="w-100 text-center fs-4">您尚未登入</div>
             <a class="btn btn-dark rounded-5 px-4 mt-4" href="/login">登入</a>
           </div>
-          <div v-else-if="cartItemCount && cartItemCount != 0" class="w-100 h-100 d-flex flex-column p-2">
+          <div
+            v-else-if="cartItemCount && cartItemCount != 0"
+            class="w-100 h-100 d-flex flex-column p-2"
+          >
             <ul class="p-0">
-              <li v-for="cartItem in cartItems" :key="cartItem.cartItemId" class="w-100">
-                <a :href="webBaseAddress +
-                  cartItem.product.categorySubStr +
-                  '/detail/' +
-                  cartItem.product.productSaleId
-                  " class="w-100 d-flex border-bottom pb-2 mb-2">
+              <li
+                v-for="cartItem in cartItems"
+                :key="cartItem.cartItemId"
+                class="w-100"
+              >
+                <a
+                  :href="
+                    webBaseAddress +
+                    cartItem.product.categorySubStr +
+                    '/detail/' +
+                    cartItem.product.productSaleId
+                  "
+                  class="w-100 d-flex border-bottom pb-2 mb-2"
+                >
                   <div class="cart-img-wrapper me-3">
-                    <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath
-                      " />
+                    <img
+                      :src="
+                        imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath
+                      "
+                    />
                   </div>
                   <div class="w-75">
                     <div class="fs-6">{{ cartItem.product.productName }}</div>
@@ -108,7 +183,10 @@
               </li>
             </ul>
           </div>
-          <div v-else class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+          <div
+            v-else
+            class="w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+          >
             <div class="w-100 text-center fs-4">購物車還沒有東西喔</div>
           </div>
         </div>
@@ -118,24 +196,26 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits } from 'vue';
-import userList from '../home/userList.vue';
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
-import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
-import { useRoute, useRouter } from 'vue-router';
-import userPhoto from '@/components/user/userPhoto.vue';
+import { ref, onMounted, defineEmits } from "vue";
+import userList from "../home/userList.vue";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { storeToRefs } from "pinia"; //把解構又同時具備響應式功能
+import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
+import { useRoute, useRouter } from "vue-router";
+import userPhoto from "@/components/user/userPhoto.vue";
 
 const router = useRouter();
-const webBaseAddress = 'https://localhost:8080/';
+const webBaseAddress = "https://localhost:8080/";
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const getApiStore = useGetApiDataStore();
 const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
 const { memberInfo } = storeToRefs(getApiStore);
 const { setLoginSuccess } = getApiStore; //function透過store取資料
 const { getData } = getApiStore;
-const searchKeyword = ref('');
+const searchKeyword = ref("");
+const favoritesItemCount = ref("");
+const cards = ref({});
 
 //關鍵字搜尋
 const searchKeywordHandler = () => {
@@ -144,7 +224,7 @@ const searchKeywordHandler = () => {
     router.push(`/search/${inputKeyword}`);
   }
 };
-const loggedInUser = localStorage.getItem('loggedInUser');
+const loggedInUser = localStorage.getItem("loggedInUser");
 const imgBaseUrl = ref(baseAddress);
 let memberId = 0;
 if (loggedInUser) {
@@ -163,7 +243,7 @@ const loadCartAnditemCount = async () => {
     await axios
       .post(url, memberId, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
@@ -177,11 +257,29 @@ const loadCartAnditemCount = async () => {
   }
 };
 loadCartAnditemCount();
-const emit = defineEmits('UpdateCart');
+const emit = defineEmits();
 const sendFunctionToParent = async () => {
   // 定義父元件傳到子元件事件
-  emit('UpdateCart', loadCartAnditemCount);
+  emit("UpdateCart", loadCartAnditemCount);
+  emit("updateFavoriteCount", loadFavoritesItemCount);
 };
+
+const loadFavoritesItemCount = async () => {
+  if (memberId == 0) {
+    favoritesItemCount.value = null;
+  } else {
+    await axios
+      .get(`${baseAddress}api/Users/GetFavorites?memberId=${memberId}`)
+      .then((response) => {
+        favoritesItemCount.value = response.data.length;
+        cards.value = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+};
+loadFavoritesItemCount();
 
 const url = `${baseAddress}api/Users/Login`;
 function getApi() {
@@ -257,17 +355,17 @@ header {
   height: $header-height;
   padding: 0 50px 0 40px;
 
-  &>ul {
+  & > ul {
     display: flex;
     align-items: center;
     height: 100%;
 
-    &>li {
+    & > li {
       list-style: none;
       font-size: 14px;
       height: 100%;
 
-      &>a {
+      & > a {
         @extend .text-link;
         display: inline-block;
         height: 100%;
@@ -296,20 +394,19 @@ nav {
   background-color: #fff;
   position: relative;
 
-
-  &>.left,
-  &>.center,
-  &>.right {
+  & > .left,
+  & > .center,
+  & > .right {
     @extend .nav-height;
     position: absolute;
   }
 
-  &>.left {
+  & > .left {
     @extend .nav-height;
     position: absolute;
     left: 40px;
 
-    &>.logo-wrapper {
+    & > .logo-wrapper {
       @extend .nav-height;
       width: 100px;
       display: flex;
@@ -331,7 +428,7 @@ nav {
         object-fit: cover;
       }
 
-      &>h1 {
+      & > h1 {
         line-height: $nav-height;
         font-weight: bold;
         font-size: 40px;
@@ -340,16 +437,16 @@ nav {
     }
   }
 
-  &>.center {
+  & > .center {
     left: 50%;
     transform: translate(-50%);
 
-    &>ul {
+    & > ul {
       display: flex;
       height: 100%;
 
-      &>.transetion {
-        &>li {
+      & > .transetion {
+        & > li {
           height: 100%;
           cursor: pointer;
           overflow-y: hidden;
@@ -359,13 +456,13 @@ nav {
           display: flex;
           justify-content: center;
 
-          &>.nav-list-item {
+          & > .nav-list-item {
             height: 200%;
             position: absolute;
             top: 0;
             transition: 0.3s;
 
-            &>div {
+            & > div {
               display: flex;
               height: 50%;
               align-items: center;
@@ -376,14 +473,14 @@ nav {
           &:hover {
             border-bottom: 3px solid black;
 
-            &>.nav-list-item {
+            & > .nav-list-item {
               top: -100%;
             }
           }
         }
       }
 
-      &>li {
+      & > li {
         height: 100%;
         cursor: pointer;
         overflow-y: hidden;
@@ -393,13 +490,13 @@ nav {
         display: flex;
         justify-content: center;
 
-        &>.nav-list-item {
+        & > .nav-list-item {
           height: 200%;
           position: absolute;
           top: 0;
           transition: 0.3s;
 
-          &>div {
+          & > div {
             display: flex;
             height: 50%;
             align-items: center;
@@ -410,7 +507,7 @@ nav {
         &:hover {
           border-bottom: 3px solid black;
 
-          &>.nav-list-item {
+          & > .nav-list-item {
             top: -100%;
           }
         }
@@ -483,6 +580,14 @@ nav {
         cursor: pointer;
         position: absolute;
         top: 31%;
+        left: 53%;
+        font-size: 12px;
+      }
+
+      .countFavorites {
+        cursor: pointer;
+        position: absolute;
+        top: 24%;
         left: 53%;
         font-size: 12px;
       }
