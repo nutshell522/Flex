@@ -12,6 +12,7 @@ body {
 
 .gray-scroll::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 .gray-scroll::-webkit-scrollbar-thumb {
@@ -26,6 +27,7 @@ body {
 /* Firefox */
 .gray-scroll::-moz-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 .gray-scroll::-moz-scrollbar-thumb {

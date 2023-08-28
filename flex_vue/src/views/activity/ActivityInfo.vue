@@ -24,16 +24,23 @@
         data-aos-delay="400"
         data-aos-duration="800"
       >
-        <div class="title mb-5 me-5 text-end">
+        <div class="title me-5 text-end d-flex align-items-center">
+          <img
+            src="../../../../public/imgs/calendar2.png"
+            width="65"
+            height="65"
+            class="me-4"
+          />
           <p class="date">{{ formatDate(activities.activityDate) }}</p>
         </div>
         <div class="price">
-          <h2 class="text-center fw-bold">
-            ${{ activities.activitySalePrice }}
-          </h2>
+          <img src="../../../public/imgs/money.png" width="70" class="me-4" />
           <h3 class="text-center fw-bold">
-            ${{ activities.activityOriginalPrice }}
+            ${{ activities.activitySalePrice }}
           </h3>
+          <p class="text-center fw-bold originalPrice">
+            ${{ activities.activityOriginalPrice }}
+          </p>
         </div>
 
         <div class="media-element d-flex justify-content-between"></div>
@@ -75,7 +82,9 @@
   </div>
   <!-- 下半部 【活動詳細資訊】 -->
   <div class="info">
-    <h1 class="slanted-text">{{ activities.activityName }}</h1>
+    <div data-aos="fade-right">
+      <h1 class="slanted-text">{{ activities.activityName }}</h1>
+    </div>
     <div class="mb-5">
       <h4>活動類別</h4>
       <p>{{ activities.activityCategoryName }}</p>
@@ -108,6 +117,7 @@ import HomeFooter from "@/components/home/footer.vue";
 import axios from "axios";
 import { ref, reactive, onMounted } from "vue";
 import AOS from "aos";
+import "aos/dist/aos.css";
 import { useRoute, useRouter } from "vue-router";
 import FlipDown from "vue-flip-down";
 import { useActivityRoute } from "@/stores/useActivityRoute.js";
@@ -244,15 +254,14 @@ const formatDate = (dateString) => {
 <style>
 /* 連結樣式 */
 .custom-link {
-  text-decoration: none; /* 移除默认下划线样式 */
-  color: inherit; /* 继承父元素的文字颜色 */
-  transition: color 0.3s, text-decoration 0.3s; /* 添加过渡效果，平滑地改变颜色和下划线 */
+  text-decoration: underline;
+  color: rgb(8, 8, 221);
+  transition: color 0.1s; /* 改變顏色的時間 */
+}
 
-  /* 鼠标移上时的样式 */
-  &:hover {
-    color: blue; /* 设置蓝色文字 */
-    text-decoration: underline; /* 显示底线 */
-  }
+/* 滑鼠移到連結上的樣式 */
+.custom-link:hover {
+  color: rgb(92, 41, 246);
 }
 
 .featured {
@@ -366,20 +375,20 @@ body {
   align-items: center;
 }
 
-.price h2,
 .price h3 {
-  font-size: 50px;
+  font-size: 60px;
   margin-right: 70px;
   /* 自定義間距值，根據需要調整 */
 }
 
-.price h3 {
-  text-decoration: line-through;
-  text-decoration-color: red;
-}
-
 .date {
   font-size: 50px;
+}
+
+.originalPrice {
+  font-size: 40px;
+  text-decoration: line-through;
+  text-decoration-color: red;
 }
 
 /* 按鈕 */
@@ -442,5 +451,16 @@ body {
 
 .countdown {
   font-size: 70px;
+}
+
+.vue-countdown-component.theme2 {
+  scale: 1.5;
+}
+
+.vue-countdown-component.theme2 .time-box,
+.vue-countdown-component.theme2 .time-box .base .base-b,
+.vue-countdown-component.theme2 .time-box .face,
+.vue-countdown-component.theme2 .time-box .back {
+  background-color: rgb(108, 108, 226);
 }
 </style>

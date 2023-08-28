@@ -141,6 +141,7 @@ import HomeFooter from "@/components/home/footer.vue";
 import axios from "axios";
 import { ref, onMounted, computed, onBeforeUnmount } from "vue";
 import { CartItem, ShoppingCartItem, SizeVM, GetSizeVM } from "@/types/type";
+import Swal from 'sweetalert2';
 // 用vite獲得環境變數
 const baseAddress: string = import.meta.env.VITE_API_BASEADDRESS;
 const webBaseAddress = 'https://localhost:8080/';
@@ -251,8 +252,15 @@ const loadTotal = async () => {
 };
 
 const deleteCartItem = async (cartItem: CartItem) => {
-  const result = confirm("是否刪除此商品？");
-  if (result) {
+  const result = await Swal.fire({
+    title: '是否刪除此商品？',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '確定',
+    cancelButtonText: '取消'
+  });
+
+  if (result.isConfirmed) {
     const request = {
       CartItem: cartItem,
       memberId: memberId,
@@ -330,7 +338,11 @@ const goToCheckoutPageEventHandler = async () => {
       }
       else {
         loading.value = false;
-        alert(response.data.errorMessage);
+        Swal.fire({
+          icon: 'error',
+          title: '失敗',
+          text: `${response.data.errorMessage}`
+        })
       }
     })
     .catch((err) => {

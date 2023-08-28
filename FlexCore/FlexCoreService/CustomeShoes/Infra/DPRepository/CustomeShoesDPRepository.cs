@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using FlexCoreService.ActivityCtrl.Models.Dtos;
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.CustomeShoes.Models.Dtos;
 using FlexCoreService.ProductCtrl.Models.Dtos;
@@ -31,6 +32,23 @@ c.ShoesProductId=" + @shoesproductId;
             using IDbConnection dbConnection = new SqlConnection(_connStr);
             var result = dbConnection.QueryFirstOrDefault<ShoesDetailDto>(sql, new { shoesproductId });
             return result;
+        }
+
+        public ShoesDetailDto GetShoesDetail2(int id)
+        {
+            string sql = @"select c.ShoesProductId, c.ShoesName, c.ShoesDescription, c.ShoesOrigin, c.ShoesUnitPrice, scc.ColorName, scc.ColorCode, sc.ShoesCategoryName, sp.ShoesPictureUrl as ShoesImgs
+from CustomizedShoesPo as c
+join ShoesCategories as sc on sc.ShoesCategoryId = c.fk_ShoesCategoryId
+join ShoesColorCategories as scc on scc.ShoesColorId = c.fk_ShoesColorId
+join ShoesPictures as sp on c.ShoesProductId = sp.fk_ShoesPictureProduct_Id
+where c.Status=0 and
+c.ShoesProductId= @id
+";
+
+            using (var conn = new SqlConnection(_connStr))
+            {
+                return conn.QueryFirstOrDefault<ShoesDetailDto>(sql, new { id });
+            }
         }
 
         public IEnumerable<ShoesImgsDto> GetShoesImgs(int shoesproductId)
