@@ -134,7 +134,7 @@
                     align-items: center;
                     justify-content: center;
                   "
-                  >數量:</span
+                  >數量</span
                 >
                 <button
                   @click="decrementProductQty()"
@@ -700,6 +700,9 @@ function collect() {
       axios
         .post(`${baseAddress}api/Users/SaveFavorites`, data)
         .then((response) => {
+          if (props.updateFavoritesCount) {
+            props.updateFavoritesCount();
+          }
           Toast.fire({
             icon: "success",
             title: response.data,
@@ -715,6 +718,9 @@ function collect() {
       axios
         .delete(`${baseAddress}api/Users/DeleteFavorite`, { data: data })
         .then((response) => {
+          if (props.updateFavoritesCount) {
+            props.updateFavoritesCount();
+          }
           Toast.fire({
             icon: "success",
             title: response.data,
@@ -765,6 +771,7 @@ const isFavorite = async () => {
 
 const props = defineProps({
   updateCartFunction: Function,
+  updateFavoritesCount: Function,
 });
 const joinCartItemEventHandler = async () => {
   const storedUser = localStorage.getItem("loggedInUser");

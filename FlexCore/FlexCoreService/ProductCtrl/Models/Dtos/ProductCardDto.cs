@@ -11,6 +11,15 @@
         public string? ProductCategoryName { get; set; }
         public string? ProductSubCategoryName { get; set; }
         public string? FirstImgPath { get; set; }
+        public string? Path
+        {
+            get
+            {
+                if (SalesCategoryId == 1) { return "men"; }
+                else if (SalesCategoryId == 2) { return "women"; }
+                else { return "kid"; }
+            }
+        }
         public bool IsShow
         {
             get { return true; }

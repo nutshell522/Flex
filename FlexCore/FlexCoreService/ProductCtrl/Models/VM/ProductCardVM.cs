@@ -16,7 +16,7 @@
             {
                 if (SalesCategoryId == 1) { return "/men"; }
                 else if (SalesCategoryId == 2) { return "/women"; }
-                else { return "kid"; }
+                else { return "/kid"; }
             }
         }
         public string? FirstImgPath { get; set; }
