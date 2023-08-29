@@ -1,6 +1,10 @@
 <template>
   <div class="list">
+    <div class="user-photo-container">
+      <h3>你好</h3>
+    </div>
     <ul class="userList-items">
+
       <li class="mb-2"><router-link to="/user">個人資料</router-link></li>
 
       <li class="mb-2"><a href="/orders">訂單查詢/申請退貨</a></li>
@@ -35,12 +39,13 @@ function logout() {
 <style scoped>
 .list {
   background-color: #fff;
-  z-index: 9999;
+  z-index: 5000;
   border: solid 2px;
   position: absolute;
   right: 0;
   top: 100%;
-  padding: 30px 40px;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 .userList-items {
@@ -51,18 +56,36 @@ function logout() {
   margin: 0;
 }
 
+.user-photo-container {
+  height: 45px;
+}
+
+.user-photo-container h3 {
+  margin-left: 10px;
+  font-size: 25px;
+  color: #444;
+}
+
 .userList-items li:not(:last-child) {
   border-bottom: 1px solid gray;
-  height: 23px;
+  /* height: 23px; */
 }
 
 .userList-items li a {
   white-space: nowrap;
+  display: block;
+  padding: 5px 0;
+}
+
+.userList-items li a:hover {
+
+  color: #777;
 }
 
 .logout {
-  width: 200px;
+  width: 180px;
   border: solid 1px;
+  padding: 5px 0;
 }
 
 .logout:hover {

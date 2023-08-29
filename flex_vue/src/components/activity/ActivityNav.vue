@@ -13,7 +13,7 @@
                     <a href="/user" class="personal-img-wrapper">
                         <img v-if="imageSrc && imageSrc.value"
                             :src="`${baseAddress}Public/Img/${imageSrc.value.imgPath}`" />
-                        <img v-else :src="`../../../../public/imgs/member.jpg`" alt="" />
+                        <img v-else :src="`@/../public/imgs/member.jpg`" alt="" />
                     </a>
                     <div class="drop-list">
                         <div class="d-lg-flex">

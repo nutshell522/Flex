@@ -100,6 +100,21 @@ const loadDiscounts = async (callback: (() => Promise<void>) | null) => {
             mainDiscount.value = response.data[0]
             discounts.value = response.data;
             if (callback) { callback() };
+            setTimeout(() => {
+                const discountBtns = document.querySelectorAll('.discount-btn');
+                const delayedLoop = (iterations: number, delay: number) => {
+                    let i = 0;
+                    const loop = () => {
+                        if (i < iterations) {
+                            discountBtns[i].classList.remove('hide');
+                            i++;
+                            setTimeout(loop, delay);
+                        }
+                    }
+                    loop();
+                }
+                delayedLoop(discountBtns.length, 100);
+            }, 500)
         })
         .catch(error => { alert(error) });
 }
@@ -166,21 +181,7 @@ onMounted(() => {
             countdownText.value = deadline.value.countdownText;
         }
     }, 1000);
-    setTimeout(() => {
-        const discountBtns = document.querySelectorAll('.discount-btn');
-        const delayedLoop = (iterations: number, delay: number) => {
-            let i = 0;
-            const loop = () => {
-                if (i < iterations) {
-                    discountBtns[i].classList.remove('hide');
-                    i++;
-                    setTimeout(loop, delay);
-                }
-            }
-            loop();
-        }
-        delayedLoop(discountBtns.length, 100);
-    }, 100)
+
 
 
 

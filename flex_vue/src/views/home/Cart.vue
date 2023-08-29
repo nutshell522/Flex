@@ -637,7 +637,7 @@ main {
           background-color: #fff;
           position: fixed;
           bottom: 0;
-          z-index: 7000;
+          z-index: 500;
 
           border-top: 1px #ccc solid;
           left: 0;
