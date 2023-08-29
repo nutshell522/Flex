@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 
 const imageSrc = import.meta.env.VITE_API_BASEADDRESS;
 const userPhoto = ref(false);
@@ -22,6 +22,18 @@ if (userObject) {
   userPhoto.value = true;
   userName = ref(userObject.username ? userObject.username : null);
 }
+
+onMounted(() => {
+  imgPath.value = localStorage.getItem('updateUserPhoto') || imgPath.value;
+});
+
+watch(
+  () => localStorage.getItem('updateUserPhoto'),
+  (newPath) => {
+    // 更新用户照片路徑
+    imgPath.value = newPath; // 使用 imgPath.value 来修改 ref 的值
+  }
+);
 </script>
 
 <style scoped>
