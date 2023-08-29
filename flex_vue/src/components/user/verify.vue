@@ -1,6 +1,6 @@
 <template>
   <div class="container verify" v-if="verifyArea">
-    <div class="col-md-6 pwdInput">
+    <div class="pwdInput">
       <div class="mb-1">
         <label for="verify">會員驗證</label>
       </div>
@@ -21,13 +21,13 @@
           <i class="bi" :class="eye ? 'bi-eye' : 'bi-eye-slash'"></i>
         </div>
       </div>
-      <button type="button" class="btn btn-info" @click="sendBtn">送出</button>
+      <button type="button" class="btn sendBtn" @click="sendBtn">送出</button>
     </div>
-    <div class="col-md-6">
+    <div class="verifyText">
       <div>
         <label for="">個人安全資料認證</label>
       </div>
-      <div class="mt-5">
+      <div class="mt-3">
         <label for="">為了保障您的資料安全， 必須再次填入密碼驗證。</label>
       </div>
     </div>
@@ -75,9 +75,6 @@ function sendBtn() {
       });
   }
 }
-function closeBtn() {
-  //alert('close');
-}
 function openEye() {
   eye.value = !eye.value;
 }
@@ -94,25 +91,30 @@ function openEye() {
   font-size: 20px;
 }
 .pwdInput {
-  margin: auto;
-  margin-right: 60px;
+  padding-right: 50px;
 }
 .input {
   margin-bottom: 30px;
 }
 .verify {
-  width: 50%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+
   border: solid 1px;
-  padding: 50px;
-  background-color: #fff;
+  padding: 30px;
 }
 .errorsText {
   display: flex;
   justify-content: center;
   padding: 0px;
   margin: 0px;
+}
+.sendBtn {
+  background-color: black;
+  color: white;
+  width: 100%;
+  border: 0;
+}
+.verifyText {
+  height: 30px;
 }
 </style>
