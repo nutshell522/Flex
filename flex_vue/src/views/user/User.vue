@@ -5,9 +5,12 @@
   <div>
     <userBar></userBar>
   </div>
-  <div class="container userDatas" v-if="showUserData">
+  <div class="container userDatas">
     <div class="col-md-6 editPwdIcon" @click="editPwdBtn">
       <button class="">變更密碼<i class="bi bi-pencil-square"></i></button>
+    </div>
+    <div class="col-md-6 editPwdIcon">
+      <verify class="verify" v-if="verifyArea"></verify>
     </div>
     <div class="col-md-6 editPwdAll" v-if="editPwdShow">
       <div class="from-group" v-if="errors.length">
@@ -15,7 +18,7 @@
           <span v-for="error in errors" class="text-danger">{{ error }}</span>
         </ul>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-9">
         <div class="input-group" v-if="editPwdShow">
           <label for="editPwdInput" class="text">修改密碼</label>
           <input
@@ -30,8 +33,6 @@
         <div class="eye1" @click="openEye1">
           <i class="bi" :class="eye1 ? 'bi-eye' : 'bi-eye-slash'"></i>
         </div>
-      </div>
-      <div class="col-md-6" v-if="editPwdShow">
         <div class="input-group">
           <label for="checkPwdInput" class="text">確認密碼</label>
           <input
@@ -191,7 +192,7 @@
         <button type="button" @click="saveBtn">更新資料</button>
       </div>
     </div>
-    <div class="col-md-6 userImg">
+    <div class="userImg">
       <div>
         <img :src="imageSrc + 'Public/UserImgs/' + imgPath" id="profileImage" />
         <input
@@ -202,14 +203,11 @@
           @change="fileChange($event)"
         />
       </div>
-      <div>
-        <label for="photo-input" class="btn btn-info changePhoto">
-          選擇圖片
-        </label>
+      <div class="aa">
+        <label for="photo-input" class="btn changePhoto"> 選擇圖片 </label>
       </div>
     </div>
   </div>
-  <verify class="verify" v-if="verifyArea"></verify>
 </template>
 
 <script setup>
@@ -260,7 +258,8 @@ function fileChange(event) {
       }
     )
     .then((res) => {
-      console.log(res);
+      console.log(res.data);
+      localStorage.setItem('updateUserPhoto', res.data); // imgPath 是新照片的路径
     })
     .catch((err) => {
       console.log(err);
@@ -289,7 +288,7 @@ const addAddressInput1 = ref(false);
 const addAddressInput2 = ref(false);
 
 const imgPath = ref('');
-const verifyArea = ref(true);
+const verifyArea = ref(false);
 
 provide('verifyArea', verifyArea);
 const showUserData = ref(false);
@@ -340,12 +339,6 @@ if (isSubscribeNews.value == true) {
   isSubscribeNews.value = false;
 }
 
-watch(verifyArea, (newValue) => {
-  if (!newValue) {
-    showUserData.value = true;
-  }
-});
-
 // todoFix地址增減怪怪的
 function addBtn() {
   if (commonAddress.value && addAddressInput1.value == false) {
@@ -380,8 +373,22 @@ function minusBtn() {
 }
 
 function editPwdBtn() {
-  editPwdShow.value = !editPwdShow.value;
+  verifyArea.value = true;
+  if (!verifyArea.value) {
+    editPwdShow.value = true;
+  } else {
+    editPwdShow.value = false;
+  }
 }
+
+// 監聽 verifyArea 變動
+watch(verifyArea, (newValue) => {
+  if (!newValue) {
+    editPwdShow.value = true;
+  } else {
+    editPwdShow.value = false;
+  }
+});
 
 function updatePwd() {
   var uri = `${baseAddress}api/Users/UpdatePwd?id=${id.value}`;
@@ -425,8 +432,6 @@ function saveBtn() {
     isSubscribeNews: isSubscribeNews.value,
   };
 
-  //todoChange檔案更新成功畫面
-
   axios
     .put(uri, editUserProfile)
     .then((res) => {
@@ -440,10 +445,15 @@ function saveBtn() {
     icon: 'success',
     title: '個人資料更新成功',
   });
+  window.location.reload();
 }
 </script>
 
 <style lang="scss" scoped>
+.aa {
+  display: flex;
+  justify-content: center;
+}
 .gender {
   display: flex;
   align-items: center;
@@ -484,14 +494,14 @@ function saveBtn() {
 }
 .eye1 {
   position: absolute;
-  right: 75%;
-  top: 10%;
+  right: 64%;
+  top: 11.5%;
   font-size: 20px;
 }
 .eye2 {
   position: absolute;
-  right: 75%;
-  top: 17.8%;
+  right: 64%;
+  top: 19%;
   font-size: 20px;
 }
 
@@ -500,7 +510,7 @@ function saveBtn() {
   background-color: #bb3e20;
   width: 8%;
   right: 51%;
-  top: 17%;
+  top: 18.3%;
   height: 40px;
   color: #fce0d9;
   border-radius: 10px;
@@ -528,26 +538,20 @@ function saveBtn() {
 // 77按鈕的儲存字歪歪的
 .saveBtn {
   width: 100px;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .changePhoto {
-  // position: absolute;
-  top: 300px;
-  left: 950px;
-}
-
-.updatePhoto {
-  // position: fixed;
-  top: -500px;
-  left: -500;
+  background-color: black;
+  color: white;
+  margin-top: 10px;
 }
 
 .userImg {
   position: absolute;
-  top: 80px;
-  left: 900px;
-  width: 50%;
+  top: 50px;
+  right: 15px;
+  width: 465px;
 }
 
 .radioBtn {
@@ -580,11 +584,5 @@ function saveBtn() {
 .photo {
   position: fixed;
   top: -500px;
-  left: -500;
-}
-
-.userImg {
-  display: flex;
-  width: 300px;
 }
 </style>

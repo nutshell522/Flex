@@ -291,6 +291,8 @@ namespace FlexCoreService.Controllers
                 return NotFound("找不到對應的會員資料");
             }
 
+            string updatePhoto = string.Empty;
+
             try
             {
                 if (image == null)
@@ -312,6 +314,7 @@ namespace FlexCoreService.Controllers
                     }
 
                     existingImg.ImgPath = image.FileName;
+                    updatePhoto = existingImg.ImgPath;
                 }
                 else
                 {
@@ -327,12 +330,13 @@ namespace FlexCoreService.Controllers
                     }
 
                     img.ImgPath = image.FileName;
+                    updatePhoto= img.ImgPath;
                     _db.MemberImgs.Add(img);
                 }
 
                 await _db.SaveChangesAsync();
 
-                return Ok("更新圖片成功");
+                return Ok(updatePhoto);
             }
             catch (Exception ex)
             {

@@ -10,9 +10,8 @@ import coupon from 'v-coupon';
 //import { VueDatePickerProps } from '@vuepic/vue-datepicker';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import swal from 'sweetalert2';
-import { QuillEditor } from "@vueup/vue-quill";
-import "@vueup/vue-quill/dist/vue-quill.snow.css";
-
+import { QuillEditor } from '@vueup/vue-quill';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 const pinia = createPinia();
 const CLIENT_ID =

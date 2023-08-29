@@ -92,7 +92,36 @@
       </div>
       <div class="icon d-none d-lg-block">
         <a href="javascript:;"><i class="bi bi-heart"></i></a>
-        <div class="count"></div>
+        <div v-if="favoritesItemCount != 0" class="countFavorites">
+          {{ favoritesItemCount }}
+        </div>
+        <div class="drap">
+          <div v-if="favoritesItemCount && favoritesItemCount != 0" class="w-100 h-100">
+            <ul class="p-2 w-100 h-100">
+              <li v-for="card in cards" :key="card.productId" class="d-flex mb-2"
+                style="border-bottom: 1px solid gainsboro">
+                <a :href="webBaseAddress + card.path + '/Detail/' + card.productId
+                  " class="d-flex">
+                  <div style="width: 80px; height: 80px">
+                    <img :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath" />
+                  </div>
+                  <div>
+                    <div>
+                      {{ card.productName }}
+                    </div>
+                    <span class="text-decoration-line-through" v-if="card.unitPrice != null">
+                      NT${{ card.unitPrice.toLocaleString("en-US") }}
+                    </span>
+                    <span v-if="card.unitPrice != null"> 活動價 </span>
+                    <span :class="{ 'text-red': card.unitPrice != null }">
+                      NT${{ card.salesPrice.toLocaleString("en-US") }}
+                    </span>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div class="icon">
@@ -158,7 +187,7 @@ import { useRoute, useRouter } from 'vue-router';
 import userPhoto from '@/components/user/userPhoto.vue';
 
 const router = useRouter();
-const webBaseAddress = 'https://localhost:8080/';
+const webBaseAddress = "https://localhost:8080/";
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const getApiStore = useGetApiDataStore();
 const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs取出來
@@ -168,6 +197,8 @@ const { getData } = getApiStore;
 const searchKeyword = ref('');
 const navCerterIsActive = ref(false);
 const searchActive = ref(false);
+const favoritesItemCount = ref("");
+const cards = ref({});
 const { handleLogout } = getApiStore; //function透過store取資料
 
 //登出
@@ -196,7 +227,7 @@ const searchKeywordHandler = () => {
     router.push(`/search/${inputKeyword}`);
   }
 };
-const loggedInUser = localStorage.getItem('loggedInUser');
+const loggedInUser = localStorage.getItem("loggedInUser");
 const imgBaseUrl = ref(baseAddress);
 const userObject = JSON.parse(loggedInUser);
 
@@ -221,7 +252,7 @@ const loadCartAnditemCount = async () => {
     await axios
       .post(url, memberId, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
@@ -235,11 +266,29 @@ const loadCartAnditemCount = async () => {
   }
 };
 loadCartAnditemCount();
-const emit = defineEmits('UpdateCart');
+const emit = defineEmits();
 const sendFunctionToParent = async () => {
   // 定義父元件傳到子元件事件
-  emit('UpdateCart', loadCartAnditemCount);
+  emit("UpdateCart", loadCartAnditemCount);
+  emit("updateFavoriteCount", loadFavoritesItemCount);
 };
+
+const loadFavoritesItemCount = async () => {
+  if (memberId == 0) {
+    favoritesItemCount.value = null;
+  } else {
+    await axios
+      .get(`${baseAddress}api/Users/GetFavorites?memberId=${memberId}`)
+      .then((response) => {
+        favoritesItemCount.value = response.data.length;
+        cards.value = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+};
+loadFavoritesItemCount();
 
 const url = `${baseAddress}api/Users/Login`;
 function getApi() {
@@ -380,7 +429,7 @@ header {
 
 
       &:not(:first-child)::before {
-        content: "|";
+        content: '|';
         font-size: 14px;
         position: absolute;
         left: 0;
@@ -721,6 +770,14 @@ header {
         cursor: pointer;
         position: absolute;
         top: 31%;
+        left: 53%;
+        font-size: 12px;
+      }
+
+      .countFavorites {
+        cursor: pointer;
+        position: absolute;
+        top: 24%;
         left: 53%;
         font-size: 12px;
       }
