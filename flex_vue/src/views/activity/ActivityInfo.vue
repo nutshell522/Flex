@@ -24,7 +24,19 @@
         data-aos-delay="400"
         data-aos-duration="800"
       >
-        <div class="title me-5 text-end d-flex align-items-center">
+        <div class="countdown">
+          <!-- 倒數計時器 -->
+          <h5 style="margin-left: 160px; margin-top: 20px">距離報名結束還有</h5>
+          <FlipDown
+            :endDate="endDate"
+            :theme="2"
+            :type="4"
+            :timeUnit="['天', '時', '分', '秒']"
+            @timeUp="func"
+            style="margin-top: 30px; margin-left: 170px"
+          />
+        </div>
+        <div class="title me-5 text-end d-flex align-items-center mt-5">
           <img
             src="../../../../public/imgs/calendar2.png"
             width="65"
@@ -43,20 +55,6 @@
           </p>
         </div>
 
-        <div class="media-element d-flex justify-content-between"></div>
-        <div class="countdown">
-          <!-- 倒數計時器 -->
-          <h5>
-            距離報名結束還有
-            <FlipDown
-              :endDate="endDate"
-              :theme="2"
-              :type="4"
-              :timeUnit="['天', '時', '分', '秒']"
-              @timeUp="func"
-            />
-          </h5>
-        </div>
         <!-- 手刀報名按鈕 -->
         <div class="text-end">
           <a
@@ -407,6 +405,7 @@ body {
   border-radius: 8px;
   /* 圓角半徑，可調整按鈕的外觀 */
   transition: 0.2s;
+  margin-right: 60px;
 }
 
 .button:hover {
@@ -454,13 +453,21 @@ body {
 }
 
 .vue-countdown-component.theme2 {
-  scale: 1.5;
+  scale: 2;
 }
 
 .vue-countdown-component.theme2 .time-box,
 .vue-countdown-component.theme2 .time-box .base .base-b,
 .vue-countdown-component.theme2 .time-box .face,
 .vue-countdown-component.theme2 .time-box .back {
-  background-color: rgb(108, 108, 226);
+  background-color: rgb(9, 9, 148);
+}
+
+.vue-countdown-component.theme2 .time-box .base,
+.vue-countdown-component.theme2 .time-box .base .base-b,
+.vue-countdown-component.theme2 .time-box .face,
+.vue-countdown-component.theme2 .time-box .back {
+  color: white;
+  font-size: 20px;
 }
 </style>
