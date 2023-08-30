@@ -1,9 +1,7 @@
 <template>
-     <NavBar></NavBar>
-  <div class="topPImg">
-  </div>
-  <div class="container">
-
+  <NavBar></NavBar>
+  <div class="topPImg"></div>
+  <div class="container mt-5">
     <div class="row">
       <div class="col-md-3">
         <!-- 側邊攔 -->
@@ -11,25 +9,29 @@
         <h2>話題分類</h2>
         <ul>
           <li><a href="#" @click.prevent="loadCategory('路跑')">路跑</a></li>
-          <li><a href="#" @click.prevent="loadCategory('自行車')">自行車</a></li>
+          <li>
+            <a href="#" @click.prevent="loadCategory('自行車')">自行車</a>
+          </li>
           <li><a href="#" @click.prevent="loadCategory('健行')">健行</a></li>
           <li><a href="#" @click.prevent="loadCategory('登山')">登山</a></li>
           <li><a href="#" @click.prevent="loadCategory('瑜珈')">瑜珈</a></li>
           <li><a href="#" @click.prevent="loadCategory('其他')">其他</a></li>
         </ul>
-
       </div>
 
       <!-- 右侧主要内容 -->
       <div class="col-md-9">
-
-
         <div class="row">
           <div class="col-md-10">
-           <a href="#"  @click.prevent="getAllPost"><h1>文章列表</h1></a> 
+            <a href="#" @click.prevent="getAllPost"><h2>文章列表</h2></a>
           </div>
           <div class="col-md-2 mt-2">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+            >
               新增文章
             </button>
           </div>
@@ -41,52 +43,96 @@
             <p>分類：{{ post.category }}</p>
             <!-- <div v-html="post.content"></div> -->
             <div v-if="post.isExpanded" v-html="post.content"></div>
-            <p class="timeInfo">{{ post.author }}發佈於{{ formatDate(post.publishTime) }}</p>
-
+            <p class="timeInfo">
+              {{ post.author }}發佈於{{ formatDate(post.publishTime) }}
+            </p>
           </div>
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-          aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div
+          class="modal fade"
+          id="staticBackdrop"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-xl">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">新增文章</h5>
-                <button @click="clearEditor" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button
+                  @click="clearEditor"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
               <div class="modal-body">
                 <div>
-                  <input v-model="postTitle" placeholder="請輸入標題" class="inputTitle" />
+                  <input
+                    v-model="postTitle"
+                    placeholder="請輸入標題"
+                    class="inputTitle"
+                  />
 
                   <div class="category-select mb-3">
-                    <div class="d-flex align-items-baseline"> <!-- 使用 align-items-baseline  -->
-                      <p class="mb-0">請選擇分類：</p> <!-- 使用 mb-0 消除底部的間距 -->
+                    <div class="d-flex align-items-baseline">
+                      <!-- 使用 align-items-baseline  -->
+                      <p class="mb-0">請選擇分類：</p>
+                      <!-- 使用 mb-0 消除底部的間距 -->
                       <div>
-                        <label v-for="(category, index) in categories" :key="index" style="margin-right: 15px;">
-                          <input type="radio" v-model="selectedCategory" :value="category" required />
+                        <label
+                          v-for="(category, index) in categories"
+                          :key="index"
+                          style="margin-right: 15px"
+                        >
+                          <input
+                            type="radio"
+                            v-model="selectedCategory"
+                            :value="category"
+                            required
+                          />
                           {{ category }}
                         </label>
                       </div>
                     </div>
                   </div>
 
-
-                  <QuillEditor theme="snow" :modules="modules" :toolbar="toolbarOptions" class="quill-editor"
-                    contentType="html" v-model:content="editorContent" ref="quill" @ready="quill" style="height: 500px" />
-
-
+                  <QuillEditor
+                    theme="snow"
+                    :modules="modules"
+                    :toolbar="toolbarOptions"
+                    class="quill-editor"
+                    contentType="html"
+                    v-model:content="editorContent"
+                    ref="quill"
+                    @ready="quill"
+                    style="height: 500px"
+                  />
                 </div>
               </div>
               <div class="modal-footer">
-                <button @click="clearEditor" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button class="btn btn-primary" @click="showArticle" data-bs-dismiss="modal">發佈</button>
+                <button
+                  @click="clearEditor"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  取消
+                </button>
+                <button
+                  class="btn btn-primary"
+                  @click="showArticle"
+                  data-bs-dismiss="modal"
+                >
+                  發佈
+                </button>
               </div>
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>
@@ -98,7 +144,7 @@ import { ref, nextTick, onMounted } from "vue";
 import axios from "axios";
 import NavBar from "@/components/activity/ActivityNav.vue";
 import HomeFooter from "@/components/home/footer.vue";
-import {useRoute, useRouter} from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const categoryFromUrl = route.params.category;
 console.log(categoryFromUrl);
@@ -109,10 +155,9 @@ const selectedCategory = ref("");
 
 const forumPosts = ref([]);
 
-
-const memberData = localStorage.getItem('loggedInUser');
+const memberData = localStorage.getItem("loggedInUser");
 const member = JSON.parse(memberData);
-const memberAccount = member ? member.username : '訪客';
+const memberAccount = member ? member.username : "訪客";
 console.log(memberAccount);
 
 const clearEditor = () => {
@@ -136,7 +181,9 @@ const showArticle = () => {
   const timeDifferenceMinutes = -taipeiTimezoneOffset;
 
   // 在前台時間加上時差，將時間從台北時區轉為 UTC 時間，讓後台接正確時間
-  const utcTimestamp = new Date(localTime.getTime() + (timeDifferenceMinutes * 60 * 1000));
+  const utcTimestamp = new Date(
+    localTime.getTime() + timeDifferenceMinutes * 60 * 1000
+  );
 
   // 将 UTC 時間轉為 ISO 8601 格式的字串
   const newPost = {
@@ -145,75 +192,78 @@ const showArticle = () => {
     content: editorContent.value,
     category: selectedCategory.value,
     publishTime: utcTimestamp.toISOString(),
-    author: memberAccount
+    author: memberAccount,
   };
   // console.log(newPost);
-  axios.post("https://localhost:7183/api/Community/AddPost", newPost, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then(res => {
+  axios
+    .post("https://localhost:7183/api/Community/AddPost", newPost, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((res) => {
       console.log(res.data);
       newPost.id = res.data;
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
-    })
+    });
   forumPosts.value.unshift(newPost);
   console.log(newPost);
   nextTick(() => {
     clearEditor();
   });
-
 };
-const getAllPost = ()=>{
-//得到全部的文章
-axios.get("https://localhost:7183/api/Community/GetAllPost")
-  .then(res => {
-    forumPosts.value = res.data.map(post => ({ ...post, isExpanded: false }));
-  })
-  .catch(err => {
-    console.log(err);
-  })
-
-}
-
-
+const getAllPost = () => {
+  //得到全部的文章
+  axios
+    .get("https://localhost:7183/api/Community/GetAllPost")
+    .then((res) => {
+      forumPosts.value = res.data.map((post) => ({
+        ...post,
+        isExpanded: false,
+      }));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 //按下分類按鈕
 const loadCategory = (searchCategory) => {
   const categoryItem = {
-    Category: searchCategory
-  }
+    Category: searchCategory,
+  };
   console.log(categoryItem);
-  axios.post("https://localhost:7183/api/Community/CategorySearch",categoryItem)
-    .then(res => {
+  axios
+    .post("https://localhost:7183/api/Community/CategorySearch", categoryItem)
+    .then((res) => {
       // console.log(res.data);
-      forumPosts.value = res.data.map(post => ({ ...post, isExpanded: false }));
+      forumPosts.value = res.data.map((post) => ({
+        ...post,
+        isExpanded: false,
+      }));
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
-    })
-}
-
+    });
+};
 
 onMounted(() => {
   // getAllPost();
   loadCategory(categoryFromUrl);
-})
+});
 
 //格式化日期
-const formatDate=(dateString)=>{
+const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString(); // 格式化為本地化的日期字串
-   }
+};
 
 //quill-vue
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import ImageUploader from "quill-image-uploader";
-
 
 const toolbarOptions = [
   [{ header: [1, 2, 3, 4, 5, false] }], // custom button values
@@ -269,8 +319,11 @@ const modules = {
 </script>
   
 <style scoped>
+ul a {
+  font-size: 20px;
+}
 .topPImg {
-  background: url('../../../../public/imgs/Top.jpg') no-repeat center center;
+  background: url("../../../../public/imgs/Top.jpg") no-repeat center center;
   background-size: cover;
   background-color: #6c757d;
   padding: 8rem 0;
@@ -281,8 +334,6 @@ const modules = {
 .timeInfo {
   text-align: right;
 }
-
-
 
 .forum-posts {
   padding: 20px;

@@ -222,7 +222,7 @@ namespace FlexCoreService.Controllers
         {
             var salt = HashUtility.GetSalt();
             var userEnterPwd = HashUtility.ToSHA256(regdto.EncryptedPassword, salt);
-
+            int memberId = 0;
             //google註冊
             if (regdto.ImgPath != null)
             {
@@ -241,6 +241,8 @@ namespace FlexCoreService.Controllers
                     fk_LevelId = 1
                 };
                 _db.Members.Add(member);
+                await _db.SaveChangesAsync();
+                memberId = member.MemberId;
 
             }
             else
@@ -269,9 +271,12 @@ namespace FlexCoreService.Controllers
                 new EmailHelper().SendConfirmRegisterEmail(resetUrl, member.Name, member.Email);
 
                 _db.Members.Add(member);
+                await _db.SaveChangesAsync();
+                memberId = member.MemberId;
             }
 
-            await _db.SaveChangesAsync();
+            _cartService.SendCoupons(2, memberId);
+            
             return regdto;
         }
 

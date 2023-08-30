@@ -50,14 +50,17 @@
         <h5 class="card-title">{{ activity.activityName }}</h5>
         <!-- 使用計算屬性將日期格式化為所需形式 -->
 
-        <p class="card-text">
+        <p class="card-text" style="position: absolute; bottom: 50px">
           <font-awesome-icon
             icon="calendar-days"
-            style="color: #ffd562"
+            style="color: #ffd562; margin-right: 5px"
             bounce
           />{{ formatDate(activity.activityDate) }}
         </p>
-        <a :href="'activityInfo/' + activity.activityId" class="btn btn-primary"
+        <a
+          :href="'activityInfo/' + activity.activityId"
+          style="position: absolute; bottom: 10px"
+          class="btn btn-primary"
           >前往報名</a
         >
       </div>
@@ -79,7 +82,7 @@ import NavBar from "@/components/activity/ActivityNav.vue";
 import HomeFooter from "@/components/home/footer.vue";
 
 const selected = ref(null);
-const options = ["路跑", "鐵人三項", "自行車", "健行", "登山", "瑜珈"];
+const options = ["路跑", "自行車", "健行", "登山", "瑜珈"];
 const searchArea = ref("");
 let requestData = ref({});
 

@@ -2,6 +2,7 @@
 {
     public class RegisterDto
     {
+        public int? MemberId{ get; set; }
         public string? Account { get; set; }
 
         public string? EncryptedPassword { get; set; }
