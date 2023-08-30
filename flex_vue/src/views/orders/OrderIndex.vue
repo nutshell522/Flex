@@ -1,7 +1,8 @@
 <template>
   <div style="height: 1200px;">
     <navBar></navBar>
-    <div id="searchorderout" class="container ">
+    <userBar></userBar>
+    <section id="searchorderout" class="container ">
       <div id="srarchdate" class="col-3">
         <label>訂單時間:</label>
         <input type="text" v-model="begintime" @searchInputbegintime="inputbegintime" class="form-control datePicker"
@@ -16,7 +17,7 @@
           placeholder="輸入商品/活動/課程名稱" />
         <button class="button" @click="keywordSearch">搜尋</button>
       </div>
-    </div>
+    </section>
     <div id="cate">
       <button @click="
         setTypeValue('1');
@@ -45,7 +46,7 @@
         課程
       </button>
     </div>
-    <div class="container" v-if="Type == 1">
+    <section class="container" v-if="Type == 1">
       <table class="table" style="width: 1300px">
         <thead>
           <tr>
@@ -66,7 +67,7 @@
               <td class="firstTr">{{ formatOrderTime(item.ordertime) }}</td>
               <td class="firstTr">{{ item.id }}</td>
               <td class="firstTr">{{ item.total_quantity }}</td>
-              <td class="firstTr">{{ item.total_price }}</td>
+              <td class="firstTr">{{ formatter.format(item.total_price) }}</td>
               <td class="firstTr">{{ item.pay_method }}</td>
               <td class="firstTr">{{ item.receipt }}</td>
               <td class="firstTr">{{ item.order_status }}</td>
@@ -104,7 +105,7 @@
                   <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
                     <td class="sceTr">商品名稱：{{ orderItem.product_name }}</td>
                     <td class="sceTr">數量：{{ orderItem.quantity }}</td>
-                    <td class="sceTr">價格：{{ orderItem.per_price }}</td>
+                    <td class="sceTr">價格：{{ formatter.format(orderItem.per_price) }}</td>
                     <td class="sceTr">規格：{{ orderItem.items_description }}</td>
                     <td><button v-if="item.order_status_Id == 6 && orderItem.comment !== true &&
                       item.close == true" class="btn btn-primary" :data-bs-toggle="'modal'
@@ -139,13 +140,13 @@
                           </td>
                           <td id="orderItemDetail" style="padding-left: 30px; width: 800px">
                             <h6>運費</h6>
-                            <div>{{ item.freight }}</div>
+                            <div>{{ formatter.format(item.freight) }}</div>
                             <h6>已使用優惠券</h6>
                             <div>{{ item.coupon_name }}</div>
                             <h6>優惠券折扣</h6>
-                            <div>{{ item.coupon_discount }}</div>
+                            <div>{{ formatter.format(item.coupon_discount) }}</div>
                             <h6>訂單金額</h6>
-                            <div>{{ item.total_price }}</div>
+                            <div>${{ formatter.format(item.total_price) }}</div>
                           </td>
                         </tr>
                       </table>
@@ -157,8 +158,8 @@
           </template>
         </tbody>
       </table>
-    </div>
-    <div class="container" v-if="Type == 4">
+    </section>
+    <section class="container" v-if="Type == 4">
       <table class="table" style="width: 1300px">
         <thead>
           <tr>
@@ -179,7 +180,7 @@
               <td class="firstTr">{{ formatOrderTime(item.ordertime) }}</td>
               <td class="firstTr">{{ item.id }}</td>
               <td class="firstTr">{{ item.total_quantity }}</td>
-              <td class="firstTr">{{ item.total_price }}</td>
+              <td class="firstTr">{{ formatter.format(item.total_price) }}</td>
               <td class="firstTr">{{ item.pay_method }}</td>
               <td class="firstTr">{{ item.receipt }}</td>
               <td class="firstTr">{{ item.order_status }}</td>
@@ -217,7 +218,7 @@
                   <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
                     <td>商品名稱：{{ orderItem.product_name }}</td>
                     <td>數量：{{ orderItem.quantity }}</td>
-                    <td>價格：{{ orderItem.per_price }}</td>
+                    <td>價格：{{ formatter.format(orderItem.per_price) }}</td>
                     <td>規格：{{ orderItem.items_description }}</td>
                   </tr>
                   <hr />
@@ -239,14 +240,14 @@
                           </td>
                           <td id="orderItemDetail" style="padding-left: 30px; width: 800px">
                             <h6>運費</h6>
-                            <div>{{ item.freight }}</div>
+                            <div>{{ formatter.format(item.freight) }}</div>
                             <h6>運費折扣</h6>
                             <h6>已使用優惠券</h6>
                             <div>{{ item.coupon_name }}</div>
                             <h6>優惠券折扣</h6>
-                            <div>{{ item.coupon_discount }}</div>
+                            <div>{{ formatter.format(item.coupon_discount) }}</div>
                             <h6>訂單金額</h6>
-                            <div>{{ item.total_price }}</div>
+                            <div>{{ formatter.format(item.total_price) }}</div>
                           </td>
                         </tr>
                       </table>
@@ -258,8 +259,8 @@
           </template>
         </tbody>
       </table>
-    </div>
-    <div class="container" v-if="Type == 2">
+    </section>
+    <section class="container" v-if="Type == 2">
       <table class="table" style="width: 100%">
         <div id="cateorder">
           <button @click="setostatusValue('1')">即將開始</button>
@@ -279,7 +280,7 @@
                 <div>活動時間:{{ formatOrderTime(item.close_time) }}</div>
                 <div>活動地點：{{ item.recipient_address }}</div>
                 <div>活動講師:{{ item.receiver }}</div>
-                <div>費用：{{ orderItem.per_price }}</div>
+                <div>費用：{{ formatter.format(orderItem.per_price) }}</div>
               </td>
               <!-- <td><button @click="toggleDetails(item.id)">收合/展開</button></td> -->
             </tr>
@@ -314,8 +315,8 @@
           </template>
         </tbody>
       </table>
-    </div>
-    <div class="container" v-if="Type == 3">
+    </section>
+    <section class="container" v-if="Type == 3">
       <table class="table" style="width: 100%">
         <div id="cateorder">
           <button @click="setostatusValue('1')">即將開始</button>
@@ -368,7 +369,7 @@
           </template>
         </tbody>
       </table>
-    </div>
+    </section>
 
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -475,8 +476,10 @@
         <div>
           <div v-for="message in messages" :key="message.id">
             <ul :class="{ 'align-left': message.userName === 'GM', 'align-right': message.userName !== 'GM' }">
-              <li>{{
-                message.userName }} ：{{ message.message }}</li>
+              <li>{{ message.message }}
+                <br>
+                <span class="message-timestamp">{{ message.timestamp }}</span>
+              </li>
             </ul>
           </div>
           <div class="p-2 chat">
@@ -485,7 +488,7 @@
       </div>
       <!-- <input v-model="userName" placeholder="使用者名稱"> -->
       <input id="msg" v-model="messageText" placeholder="訊息">
-      <button @click="sendMessage()">送出</button>
+      <button class="btn btn-success" @click="sendMessage()" :disabled="!messageText">送出</button>
     </div>
     <button class="chat2" @click="toggleContainer();"><i class="bi bi-chat-right-dots">客服</i></button>
     <!-- <div class="showcon" id="showcon">
@@ -538,6 +541,7 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import userBar from '@/components/user/userBar.vue';
 //------get使用者ID--------
 
 //------get使用者ID--------
@@ -840,6 +844,12 @@ const closecomment = async () => {
       alert(error);
     });
 };
+const formatter = new Intl.NumberFormat("zh-TW", {
+  style: "currency",
+  currency: "TWD",
+  minimumFractionDigits: 0, // 最少保留小數位數
+  maximumFractionDigits: 0, // 最多保留小數位數
+});
 // const ReturnReason = async () => {
 //   if (this.selectedReason === null) {
 //     alert('请选择退货原因');
@@ -870,6 +880,8 @@ const connect = () => {
 };
 const processMessage = (data) => {
   const content = JSON.parse(data);
+  const timestamp = new Date().toLocaleTimeString(); // Get current timestamp
+  content.timestamp = timestamp;
   messages.value.push(content);
 };
 const sendInitialMessage = () => {
@@ -877,6 +889,7 @@ const sendInitialMessage = () => {
     const data = {
       userName: currentUserName,
       message: "您好，很高興為您服務",
+      timestamp: new Date().toLocaleTimeString()
     };
     socket.send(JSON.stringify(data));
   }
@@ -885,7 +898,8 @@ const sendMessage = () => {
   if (socket && socket.readyState === WebSocket.OPEN) {
     const data = {
       userName: membersId,
-      message: messageText.value
+      message: messageText.value,
+      timestamp: new Date().toLocaleTimeString()
     };
     socket.send(JSON.stringify(data));
     messageText.value = "";
@@ -1002,7 +1016,7 @@ onMounted(() => {
 }
 
 #cate>button:hover {
-  background-color: rgb(66, 226, 213);
+  background-color: rgb(131, 202, 181);
   color: #ededef;
 }
 
@@ -1014,10 +1028,12 @@ onMounted(() => {
 }
 
 #cateorder {
-  background-color: antiquewhite;
+  background:linear-gradient( rgb(250, 238, 198) 80%, rgb(255, 255, 255));
+  
+  /* background-color: antiquewhite; */
   text-align: center;
   width: 40%;
-  border-radius: 15%;
+  border-radius: 10%;
 }
 
 #cateorder>button {
@@ -1030,7 +1046,7 @@ onMounted(() => {
 }
 
 #cateorder>button:hover {
-  background-color: rgb(41, 180, 60);
+  background-color: rgb(60, 161, 179);
   color: #ededef;
 }
 
@@ -1151,7 +1167,7 @@ _::-moz-range-track {
 }
 
 .chat {
-  width: 350px;
+  width: 400px;
   text-align: center;
   padding: 20px 0;
   max-width: 0 auto;
@@ -1178,7 +1194,7 @@ _::-moz-range-track {
 }
 
 .chat .showcon {
-  width: 330px;
+  width: 380px;
   height: 300px;
   padding: 10px;
   overflow: auto;
@@ -1195,7 +1211,7 @@ _::-moz-range-track {
 }
 
 .chat button {
-  width: 50px;
+  width: 60px;
   height: 40px;
   vertical-align: middle;
   border-radius: 5%;
@@ -1225,7 +1241,7 @@ _::-moz-range-track {
 
 .align-right>li {
   border-radius: 5px;
-  background-color: aquamarine;
+  background-color: rgb(178, 211, 200);
   padding: 5px;
   display: inline-block;
   /* 让气泡宽度根据内容自动调整 */
@@ -1250,7 +1266,7 @@ _::-moz-range-track {
   border: #f59b00 solid 2px;
 }
 
-.container {
+section.container {
   border-top: gray solid 2px;
   border-left: gray solid 2px;
   border-right: gray solid 2px;
@@ -1262,5 +1278,11 @@ input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.message-timestamp {
+  font-size: 10px;
+  color: gray;
+  margin-left: 10px;
 }
 </style>

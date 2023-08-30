@@ -60,7 +60,7 @@ namespace FlexCoreService.Controllers
 				var cmd = Encoding.UTF8.GetString(buffer, 0, res.Count);
 				JObject data = JObject.Parse(cmd);
 				string? Name = Convert.ToString(data["userName"]);
-				string? Message = $"{Convert.ToString(data["message"])}\nat {DateTime.Now.ToString("HH:mm:ss")}";
+				string? Message = $"{Convert.ToString(data["message"])}";
 
                 if (!string.IsNullOrEmpty(Name))
                 {
