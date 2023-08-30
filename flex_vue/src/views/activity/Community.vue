@@ -23,7 +23,7 @@
       <div class="col-md-9">
         <div class="row">
           <div class="col-md-10">
-            <a href="#" @click.prevent="getAllPost"><h1>文章列表</h1></a>
+            <a href="#" @click.prevent="getAllPost"><h2>文章列表</h2></a>
           </div>
           <div class="col-md-2 mt-2">
             <button
@@ -319,6 +319,9 @@ const modules = {
 </script>
   
 <style scoped>
+ul a {
+  font-size: 20px;
+}
 .topPImg {
   background: url("../../../../public/imgs/Top.jpg") no-repeat center center;
   background-size: cover;

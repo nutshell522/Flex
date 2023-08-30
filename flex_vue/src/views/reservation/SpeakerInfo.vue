@@ -249,19 +249,20 @@
               </div>
             </div>
           </div>
-
-          <h2 class="mt-5">人氣講師</h2>
-          <div
-            class="image-container"
-            v-for="(single, index) in TopThreeSpeaker"
-            :key="index"
-          >
-            <a :href="'/speakerInfo/' + single.fk_ReservationSpeakerId">
-              <img
-                :src="imgBaseUrl + '/Public/Img/Speaker/' + single.speakerImg"
-                alt=""
-              />
-            </a>
+          <div class="showTopThree">
+            <h2 class="mt-5">人氣講師</h2>
+            <div
+              class="image-container"
+              v-for="(single, index) in TopThreeSpeaker"
+              :key="index"
+            >
+              <a :href="'/speakerInfo/' + single.fk_ReservationSpeakerId">
+                <img
+                  :src="imgBaseUrl + '/Public/Img/Speaker/' + single.speakerImg"
+                  alt=""
+                />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -698,6 +699,10 @@ const formatDateTime = (dateString) => {
 </script>
 
 <style >
+.showTopThree {
+  margin-top: 150px;
+}
+
 .infoBlock p,
 .bookingBlock p,
 .bookingBlock span {
@@ -705,6 +710,10 @@ const formatDateTime = (dateString) => {
 }
 /* 按鈕 */
 .bookingButton {
+  position: absolute;
+  left: 1260px;
+  top: 150px;
+  height: 90px;
   display: inline-block;
   padding: 15px 30px;
   font-size: 18px;
@@ -775,17 +784,17 @@ const formatDateTime = (dateString) => {
 }
 
 .speaker-img {
-  height: 550px; /* Set the desired height for the speaker-img div */
-  width: 100%; /* Set the width to 100% to make it responsive */
+  height: 550px;
+  width: 100%;
   position: relative;
-  overflow: hidden; /* Ensure that images don't overflow */
+  overflow: hidden;
   top: 3%;
 }
 
 .speakerImg {
-  width: 100%; /* Set the image width to 100% to fit within the div */
-  height: 100%; /* Set the image height to 100% to cover the div */
-  object-fit: cover; /* Control how the image is displayed within the div */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .main {
