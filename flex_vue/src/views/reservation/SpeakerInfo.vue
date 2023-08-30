@@ -159,23 +159,22 @@
           <div class="text-end">
             <a
               href="#"
-              class="btn button"
+              class="btn bookingButton"
               @click="getActivityId"
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
-              style="height: 100px"
             >
               <!-- icon -->
               <span class="icon">
                 <img
-                  width="100"
-                  height="90"
-                  src="../../../public/imgs/jump2.png"
+                  width="70"
+                  height="50"
+                  src="../../../public/imgs/jump3.png"
                   alt="exercise"
                 />
               </span>
               <!-- 按鈕文字 -->
-              <span style="font-size: 50px"> 預約 </span>
+              <span style="font-size: 50px; color: rgb(1, 2, 60)"> 預 約 </span>
             </a>
           </div>
 
@@ -698,7 +697,76 @@ const formatDateTime = (dateString) => {
 };
 </script>
 
-<style>
+<style >
+.infoBlock p,
+.bookingBlock p,
+.bookingBlock span {
+  font-size: 20px;
+}
+/* 按鈕 */
+.bookingButton {
+  display: inline-block;
+  padding: 15px 30px;
+  font-size: 18px;
+  text-align: center;
+  border: none;
+  background-color: #3498db;
+  /* 按鈕背景顏色 */
+  color: #fff;
+  /* 按鈕文字顏色 */
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 8px;
+  /* 圓角半徑，可調整按鈕的外觀 */
+  transition: 0.2s;
+  margin-right: 60px;
+}
+
+.bookingButton:hover {
+  border: 0.1px solid #3498db;
+  /* 設定邊界樣式 */
+  background-color: #fff;
+  color: #3498db;
+}
+
+.bookingButton:hover .icon {
+  animation: bounce 0.7s infinite;
+  /* animation 動畫 */
+  /* infinite無限執行 */
+  /* bounce 彈跳，在animation:bounce的名字和 @keygrames bounce的名字要一模一樣 */
+  /* @keyframes就是動畫的部分 */
+}
+
+/* 在1秒內，從0%到50%到100%， 0%的時候Y軸在0，50%的時候Y軸在-30px，100%的時候Y軸又回到0%*/
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-60px);
+  }
+}
+
+.icon {
+  display: inline-block;
+  margin-right: 10px;
+  /* 調整圖標和文字之間的間距 */
+  font-size: 20px;
+  /* 調整圖標大小 */
+}
+
+.button span {
+  vertical-align: middle;
+  /* 垂直居中 */
+}
+
+.text-end {
+  display: flex;
+  align-items: center;
+}
+
 .bookingBlock {
   margin-top: 10%;
 }
@@ -841,6 +909,7 @@ const formatDateTime = (dateString) => {
   /* 調整圖標和文字之間的間距 */
   font-size: 15px;
   /* 調整圖標大小 */
+  margin-bottom: 20px;
 }
 
 /* 日曆表樣式 */

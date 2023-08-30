@@ -61,6 +61,7 @@
             :href="'https://localhost:8080/activitySignUp/' + route.params.id"
             class="btn button"
             @click="getActivityId"
+            height:70
           >
             <!-- icon -->
             <span class="icon">
@@ -83,21 +84,23 @@
     <div data-aos="fade-right">
       <h1 class="slanted-text">{{ activities.activityName }}</h1>
     </div>
-    <div class="mb-5">
+    <div class="mb-4">
       <h4>活動類別</h4>
       <p>{{ activities.activityCategoryName }}</p>
+    </div>
+    <div class="mb-4">
       <h4>活動主講人</h4>
       <p>{{ activities.speakerName }}</p>
     </div>
-    <div class="mb-5">
+    <div class="mb-4">
       <h4>活動年齡</h4>
       <p>{{ activities.activityAge }}歲</p>
     </div>
-    <div class="mb-5">
+    <div class="mb-4">
       <h4>活動地點</h4>
       <p>{{ activities.activityPlace }}</p>
     </div>
-    <div class>
+    <div class="intro">
       <h4>活動簡介</h4>
       <p>{{ activities.activityDescription }}</p>
     </div>
@@ -249,7 +252,15 @@ const formatDate = (dateString) => {
 };
 </script>
 
-<style>
+<style scoped>
+.info p,
+.info a {
+  font-size: 20px;
+}
+/* 活動簡介樣式 */
+.intro {
+  max-width: 1100px;
+}
 /* 連結樣式 */
 .custom-link {
   text-decoration: underline;
@@ -257,7 +268,7 @@ const formatDate = (dateString) => {
   transition: color 0.1s; /* 改變顏色的時間 */
 }
 
-/* 滑鼠移到連結上的樣式 */
+/* 滑鼠移到心得連結上的樣式 */
 .custom-link:hover {
   color: rgb(92, 41, 246);
 }
@@ -293,8 +304,8 @@ const formatDate = (dateString) => {
 .featured-img {
   position: relative;
   /* height: 530px; */
-  width: 100%;
-  height: 100%;
+  width: 1140px;
+  height: 675px;
   /* margin-top: 60px; */
   /* background-color: #ee1515; */
 }
