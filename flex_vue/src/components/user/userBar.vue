@@ -46,7 +46,7 @@
               <router-link to="">積分中心</router-link>
             </button>
           </li> -->
-          <li class="nav-item" role="presentation">
+          <!-- <li class="nav-item" role="presentation">
             <button
               class="nav-link"
               data-bs-toggle="tab"
@@ -55,7 +55,7 @@
             >
               <router-link to="/coupon">優惠券</router-link>
             </button>
-          </li>
+          </li> -->
           <!-- <li class="nav-item" role="presentation">
             <button
               class="nav-link"

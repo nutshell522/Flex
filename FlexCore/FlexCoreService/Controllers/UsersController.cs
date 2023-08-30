@@ -647,9 +647,9 @@ namespace FlexCoreService.Controllers
             var faker = new Faker();
 
             string username = faker.Internet.UserName();
-            string password = faker.Internet.Password();
+            string password = "ASDF741a";
             string fullName = faker.Name.FullName();
-            string email = faker.Internet.Email();//改成fuen28flex@gmail.com
+            string email = "fuen28flex@gmail.com";
             DateTime birthday = faker.Date.Past(18, DateTime.Now.AddYears(-30)).Date;
             string phoneNumber = faker.Phone.PhoneNumber("09########");
             string address = faker.Address.FullAddress();
