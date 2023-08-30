@@ -39,6 +39,7 @@ path.value = localStorage.getItem("originalPath");
   max-height: 250px;
   width: 220px;
   overflow: hidden;
+  border-radius: 5px;
 }
 
 .card img {
@@ -58,16 +59,8 @@ path.value = localStorage.getItem("originalPath");
   margin-right: 35px;
   padding: 0;
   border: none;
-  height: 350px;
+  height: 380px;
   width: 220px;
-}
-
-.nav-category {
-  width: 165px;
-}
-
-.container-body {
-  width: 1080px;
 }
 
 .text-red {

@@ -53,8 +53,18 @@ namespace FlexCoreService.ProductCtrl.Service
 
         public IEnumerable<ProductCardDto> GetHotSales(bool isNewProduct)
         {
-            var result = _repo.GetHotSales(isNewProduct);
-            return result;
+            if (isNewProduct)
+            {
+                var result = _repo.GetNewProducts();
+                return result;
+            }
+            else
+            {
+                var result = _repo.GetHotSales();
+                return result;
+            }
+            
+            
         }
     }
 }

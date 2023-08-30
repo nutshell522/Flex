@@ -80,11 +80,11 @@
         <i class="bi bi-search"></i>
       </div>
       <div class="icon">
-        <a href="#"><i class="bi bi-heart"></i></a>
+        <a href="/login"><i class="bi bi-heart"></i></a>
         <div v-if="favoritesItemCount != 0" class="countFavorites">
           {{ favoritesItemCount }}
         </div>
-        <div class="drap">
+        <div class="drap" v-if="loggedInUser">
           <div
             v-if="favoritesItemCount && favoritesItemCount != 0"
             class="w-100 h-100"
@@ -375,7 +375,7 @@ header {
       }
 
       &:not(:first-child)::before {
-        content: '|';
+        content: "|";
         padding: 0 15px;
         font-size: 14px;
       }

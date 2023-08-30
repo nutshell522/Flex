@@ -1,42 +1,53 @@
 <template>
   <navBar></navBar>
   <ul class="d-flex mt-4" style="align-items: center; justify-content: center">
-    <li
-      :class="{ searchCategory: true, searchCategoryActive: activeIndex == 0 }"
-      @click="searchCategoryClick(0)"
+    <a href="#">
+      <li
+        :class="{
+          searchCategory: true,
+          searchCategoryActive: activeIndex == 0,
+        }"
+        @click="searchCategoryClick(0)"
+      >
+        All
+      </li>
+    </a>
+    <a href="#">
+      <li
+        :class="{
+          searchCategory: true,
+          searchCategoryActive: activeIndex == 1,
+          margins3: true,
+        }"
+        @click="searchCategoryClick(1)"
+      >
+        Men
+      </li>
+    </a>
+    <a href="#">
+      <li
+        :class="{
+          searchCategory: true,
+          searchCategoryActive: activeIndex == 2,
+          margins3: true,
+        }"
+        @click="searchCategoryClick(2)"
+      >
+        Women
+      </li>
+    </a>
+    <a href="#"
+      ><li
+        :class="{
+          searchCategory: true,
+          searchCategoryActive: activeIndex == 3,
+          margins3: true,
+        }"
+        @click="searchCategoryClick(3)"
+      >
+        Kid
+      </li></a
     >
-      All
-    </li>
-    <li
-      :class="{
-        searchCategory: true,
-        searchCategoryActive: activeIndex == 1,
-        margins3: true,
-      }"
-      @click="searchCategoryClick(1)"
-    >
-      Men
-    </li>
-    <li
-      :class="{
-        searchCategory: true,
-        searchCategoryActive: activeIndex == 2,
-        margins3: true,
-      }"
-      @click="searchCategoryClick(2)"
-    >
-      Women
-    </li>
-    <li
-      :class="{
-        searchCategory: true,
-        searchCategoryActive: activeIndex == 3,
-        margins3: true,
-      }"
-      @click="searchCategoryClick(3)"
-    >
-      Kid
-    </li>
   </ul>
   <div class="container mt-4">
     <ul class="d-flex flex-wrap" style="margin-left: 130px">
