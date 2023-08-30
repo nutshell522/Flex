@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 const imageSrc = import.meta.env.VITE_API_BASEADDRESS;
 const userPhoto = ref(false);
@@ -14,9 +14,24 @@ const userObject = JSON.parse(loggedInUser);
 const imgPath = ref(
   userObject && userObject.memberPhoto ? userObject.memberPhoto : ''
 );
+const updateUserPhotoStorage = ref();
+
 if (userObject) {
   userPhoto.value = true;
 }
+onMounted(() => {
+  imgPath.value = localStorage.getItem('updateUserPhoto') || imgPath.value;
+});
+
+watch(
+  () => localStorage.getItem('updateUserPhoto'),
+  (newPath) => {
+    // 更新用户照片路徑
+    imgPath.value = newPath; // 使用 imgPath.value 来修改 ref 的值
+  }
+);
+
+
 
 // 照片預設50寬高，有傳入則用傳入的值
 const props = defineProps({
@@ -39,5 +54,11 @@ const computedStyles = computed(() => ({
 .userPhoto {
   border-radius: 50%;
   overflow: hidden;
+  object-fit: cover;
+}
+
+img {
+  width: 100%;
+  height: 100%;
 }
 </style>
