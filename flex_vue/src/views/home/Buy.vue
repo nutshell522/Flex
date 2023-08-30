@@ -1424,9 +1424,19 @@ main {
   #coupon-area {
     position: relative;
     background-color: rgba($color: #fff, $alpha: 1);
-    width: 700px;
-    left: calc((100% - 700px) / 2);
-    top: 10%;
+
+    @media screen and (max-width: 991px) {
+
+      top: 0;
+    }
+
+    @media screen and (min-width: 992px) {
+      top: 10%;
+      width: 50%;
+      left: calc((100% - 50%) / 2);
+    }
+
+
     overflow: hidden;
     transition: 0.3s;
     max-height: 0;
@@ -1466,7 +1476,7 @@ main {
 
     .coupon-list {
       width: 85%;
-      height: 70%;
+      height: 65%;
       margin: auto;
       border: 2px solid #ccc;
       overflow-x: hidden;
@@ -1493,9 +1503,9 @@ main {
 
             // border-color: #9bf;
             .coupon-discount {
-              background-color: #333;
-              color: #eee;
-              font-size: 20px;
+              background-color: #c25033;
+              color: #333;
+              font-size: 23px;
             }
           }
         }
@@ -1508,9 +1518,10 @@ main {
           display: flex;
           width: 98%;
           height: 90%;
-          border: 2px solid blue;
+          // border: 1px solid blue;
           border-radius: 10px;
           position: relative;
+          background-color: #2a456e;
 
           .coupon-top {
             position: absolute;
@@ -1529,13 +1540,13 @@ main {
             top: -8px;
             left: 102px;
             border-radius: 50px;
-            border: 2px solid blue;
+            // border: 2px solid blue;
           }
 
           .coupon-bottom {
             position: absolute;
             width: 100%;
-            height: 6px;
+            height: 7px;
             bottom: -8px;
             background-color: #fff;
             z-index: 100;
@@ -1550,11 +1561,11 @@ main {
             bottom: -8px;
             left: 102px;
             border-radius: 50px;
-            border: 2px solid blue;
+            // border: 2px solid blue;
           }
 
           .coupon-discount-box {
-            border-right: 1px dashed blue;
+            border-right: 2px dashed #fff;
             width: 110px;
             height: 100%;
             padding: 8px;
@@ -1565,7 +1576,9 @@ main {
               display: flex;
               align-items: center;
               justify-content: center;
-              border: 1px solid blue;
+              border-radius: 5px;
+              color: #fff;
+              transition: .3s;
             }
           }
 
@@ -1576,11 +1589,12 @@ main {
             padding-left: 20px;
 
             h3 {
+              color: #fff;
               font-size: 20px;
             }
 
             .description {
-              color: #eee;
+              color: #fff;
               background-color: #333;
               padding: 0 20px;
               border-radius: 50px;

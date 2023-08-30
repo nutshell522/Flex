@@ -41,8 +41,7 @@
         </a>
         <div v-else class="user">
           <a href="/user" class="personal-img-wrapper">
-            <img v-if="imageSrc && imageSrc.value" :src="`${baseAddress}Public/Img/${imageSrc.value.imgPath}`" />
-            <img v-else :src="`../../../../public/imgs/member.jpg`" alt="" />
+            <userPhoto class="userPhoto-component" :width="36" :height="36"></userPhoto>
           </a>
           <div class="drop-list">
             <div class="d-lg-flex">
@@ -75,6 +74,7 @@ const { getData } = getApiStore;
 import { storeToRefs } from "pinia";
 import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
 import axios from "axios";
+import userPhoto from '@/components/user/userPhoto.vue';
 const { handleLogout } = getApiStore; //function透過store取資料
 
 //登出
