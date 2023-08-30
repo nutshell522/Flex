@@ -124,12 +124,15 @@
                       <!-- 新增評論的表單 -->
                       <div class="comment-form">
                         <p>{{ userAccount }}</p>
+                        <star-rating
+                          @update:rating="setRating"
+                          style="margin-left: 50px; margin-bottom: 20px"
+                        ></star-rating>
                         <textarea
                           v-model="newComment.content"
-                          placeholder="課程心得"
+                          placeholder="留下您的課程心得"
                           required
                         ></textarea>
-                        <star-rating @update:rating="setRating"></star-rating>
                       </div>
                     </div>
                     <div class="modal-footer">
@@ -202,14 +205,26 @@
                   ></button>
                 </div>
                 <div class="modal-body">
-                  您預約的是{{ speaker.speakerName }}講師的諮詢服務
+                  您預約的是<span class="importantInfo">{{
+                    speaker.speakerName
+                  }}</span
+                  >講師的諮詢服務
                   <br />
-                  時間： {{ date }} 的 {{ time }}點
+                  時間： <span class="importantInfo"> {{ date }} </span> 的
+                  <span class="importantInfo">
+                    {{ time }}
+                  </span>
+                  點
                   <br />
-                  地點：{{ speaker.branchName }}
+                  地點：<span class="importantInfo">{{
+                    speaker.branchName
+                  }}</span>
+                  <br />
                   <br />
 
-                  預約注意事項和同意聲明
+                  <span style="text-decoration: underline"
+                    >預約注意事項和同意聲明</span
+                  >
                   <br />
 
                   我們非常歡迎您使用預約講師的服務。請在預約之前仔細閱讀以下注意事項和同意聲明：
@@ -222,7 +237,8 @@
                   如果您無法在預約的時間點出現，請提前來電取消預約，以便其他人可以使用這個時間段。我們建議您提前至少24小時取消預約。<br />
 
                   黑名單：
-                  如果您濫用預約服務，我們可能會將您列入黑名單，限制您未來的預約權限。<br />
+                  如果您濫用預約服務，我們可能會將您列入黑名單，限制您未來的預約權限。
+                  <br />
 
                   尊重他人：
                   請在預約過程中尊重講師的時間和專業。不要發表冒犯性、不當或不尊重的言論。<br />
@@ -699,6 +715,12 @@ const formatDateTime = (dateString) => {
 </script>
 
 <style >
+.importantInfo {
+  text-decoration: underline;
+  color: #3498db;
+  margin-left: 3px;
+  margin-right: 3px;
+}
 .showTopThree {
   margin-top: 150px;
 }
@@ -864,8 +886,8 @@ const formatDateTime = (dateString) => {
 }
 
 .reviewButton {
-  background-color: #007bff;
-  color: rgb(126, 32, 32);
+  background-color: rgb(7, 7, 114);
+  color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
@@ -874,13 +896,21 @@ const formatDateTime = (dateString) => {
 }
 
 .reviewButton:hover {
-  background-color: #0056b3;
+  background-color: rgb(82, 82, 255);
 }
 
 .comment-card textarea {
   width: 100%;
   padding: 5px;
   border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.comment-form textarea {
+  resize: none;
+  width: 370px;
+  height: 100px;
+  border: #ddd solid 1px;
   border-radius: 5px;
 }
 

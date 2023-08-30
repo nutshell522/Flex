@@ -5,8 +5,10 @@
       <h1>付款成功! 以下為您的訂單資訊</h1>
 
       <div class="mb-3">
-        <label class="form-label">訂單編號</label>
-        <p>{{ tradeNo }}</p>
+        <div class="infoContainer">
+          <label class="form-label">訂單編號</label>
+          <p>{{ tradeNo }}</p>
+        </div>
       </div>
 
       <div class="mb-3">
@@ -20,7 +22,7 @@
       </div>
       <div class="button-container">
         <a href="https://localhost:8080/activityIndex" class="custom-button"
-          >返回活動頁面</a
+          >返回活動首頁</a
         >
       </div>
     </div>
@@ -65,7 +67,7 @@ const tradeDesc = ref(route.params.ActivityName);
 
 .payBlock {
   border: 1px black solid;
-  margin-top: 13%;
+  margin-top: 3%;
   margin-left: 25%;
   margin-right: 25%;
   display: flex;
