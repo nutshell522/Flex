@@ -372,7 +372,7 @@
 
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
@@ -405,7 +405,7 @@
     </div>
 
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">輸入退款資訊</h5>
@@ -439,7 +439,7 @@
 
     <template v-for="item in GetOrders" :key="item.id">
       <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog  modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">評分</h5>
@@ -460,7 +460,7 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="returncomment()">
                 關閉
               </button>
-              <button type="button" class="btn btn-primary" @click="comment()">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="comment()">
                 確定
               </button>
             </div>
@@ -823,6 +823,7 @@ const comment = async () => {
       alert(error);
     });
 };
+
 const handleInput = () => {
   if (commentstar.value == 0) {
     commentstar.value = 1;
@@ -890,9 +891,6 @@ const sendMessage = () => {
     messageText.value = "";
   }
 };
-
-
-
 
 const formatOrderTime = (ordertime) => {
   const dateTimeObject = new Date(ordertime);
