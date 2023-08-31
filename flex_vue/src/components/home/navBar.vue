@@ -119,7 +119,7 @@
         <div v-if="favoritesItemCount != 0" class="countFavorites">
           {{ favoritesItemCount }}
         </div>
-        <div class="drap">
+        <div class="drap" v-if="loggedInUser">
           <div
             v-if="favoritesItemCount && favoritesItemCount != 0"
             class="w-100 h-100"
@@ -137,9 +137,13 @@
                   "
                   class="d-flex"
                 >
-                  <div style="width: 80px; height: 80px">
+                  <div
+                    style="width: 70px; height: 80px; overflow: hidden"
+                    class="p-2"
+                  >
                     <img
                       :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath"
+                      style="max-width: 100%; max-height: 100%"
                     />
                   </div>
                   <div>

@@ -17,7 +17,8 @@ namespace FlexCoreService.ProductCtrl.Interface
 
         CategoryDto GetProductCategories(string productId);
 
-        IEnumerable<ProductCardDto> GetHotSales(bool isNewProduct);
+        IEnumerable<ProductCardDto> GetHotSales();
+        IEnumerable<ProductCardDto> GetNewProducts();
         IEnumerable<ProductCardDto> SearchProductByKeyword(string? keyword, int? salesId);
     }
 }

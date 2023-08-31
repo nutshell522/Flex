@@ -5,13 +5,14 @@
   ></navBar>
   <div class="container mt-4">
     <div class="row">
-      <div class="nav-category">
+      <div class="nav-category col-2">
         <categoryNavBar></categoryNavBar>
         <searchPrice
           style="position: absolute; top: 460px; width: 140px"
         ></searchPrice>
       </div>
       <router-view
+        class="col-10"
         :updateCartFunction="updateCartFunction"
         :updateFavoritesCount="updateFavoritesCount"
       ></router-view>

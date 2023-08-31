@@ -1,44 +1,58 @@
 <template>
   <navBar></navBar>
-  <ul class="d-flex mt-4" style="align-items: center; justify-content: center">
-    <li
-      :class="{ searchCategory: true, searchCategoryActive: activeIndex == 0 }"
-      @click="searchCategoryClick(0)"
-    >
-      All
-    </li>
-    <li
-      :class="{
-        searchCategory: true,
-        searchCategoryActive: activeIndex == 1,
-        margins3: true,
-      }"
-      @click="searchCategoryClick(1)"
-    >
-      Men
-    </li>
-    <li
-      :class="{
-        searchCategory: true,
-        searchCategoryActive: activeIndex == 2,
-        margins3: true,
-      }"
-      @click="searchCategoryClick(2)"
-    >
-      Women
-    </li>
-    <li
-      :class="{
-        searchCategory: true,
-        searchCategoryActive: activeIndex == 3,
-        margins3: true,
-      }"
-      @click="searchCategoryClick(3)"
-    >
-      Kid
-    </li>
-  </ul>
   <div class="container mt-4">
+    <ul
+      class="d-flex mt-4"
+      style="align-items: center; justify-content: center"
+    >
+      <a href="#" class="col-3">
+        <li
+          :class="{
+            searchCategory: true,
+            searchCategoryActive: activeIndex == 0,
+          }"
+          @click="searchCategoryClick(0)"
+        >
+          All
+        </li>
+      </a>
+      <a href="#" class="col-3">
+        <li
+          :class="{
+            searchCategory: true,
+            searchCategoryActive: activeIndex == 1,
+            margins3: true,
+          }"
+          @click="searchCategoryClick(1)"
+        >
+          Men
+        </li>
+      </a>
+      <a href="#" class="col-3">
+        <li
+          :class="{
+            searchCategory: true,
+            searchCategoryActive: activeIndex == 2,
+            margins3: true,
+          }"
+          @click="searchCategoryClick(2)"
+        >
+          Women
+        </li>
+      </a>
+      <a href="#" class="col-3"
+        ><li
+          :class="{
+            searchCategory: true,
+            searchCategoryActive: activeIndex == 3,
+            margins3: true,
+          }"
+          @click="searchCategoryClick(3)"
+        >
+          Kid
+        </li></a
+      >
+    </ul>
     <ul class="d-flex flex-wrap" style="margin-left: 130px">
       <li
         v-if="cards.length != 0"
@@ -116,7 +130,7 @@ onMounted(() => {
   text-align: center;
 }
 .searchCategoryActive {
-  background-color: rgb(212, 164, 53);
+  background-color: #4d3028;
   color: white;
 }
 .margins3 {

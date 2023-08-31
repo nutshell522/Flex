@@ -4,7 +4,6 @@
       <h3>你好</h3>
     </div>
     <ul class="userList-items">
-
       <li class="mb-2"><router-link to="/user">個人資料</router-link></li>
 
       <li class="mb-2"><a href="/orders">訂單查詢/申請退貨</a></li>
@@ -32,6 +31,7 @@ const { handleLogout } = getApiStore; //function透過store取資料
 //登出
 function logout() {
   localStorage.removeItem('loggedInUser');
+  localStorage.removeItem('updateUserPhoto');
   handleLogout();
 }
 </script>
@@ -78,7 +78,6 @@ function logout() {
 }
 
 .userList-items li a:hover {
-
   color: #777;
 }
 
