@@ -15,7 +15,7 @@
         <label>輸入關鍵字:</label>
         <input type="text" v-model="keyword" @searchInput="inputhandler" class="form-control"
           placeholder="輸入商品/活動/課程名稱" />
-        <button class="button" @click="keywordSearch">搜尋</button>
+        <button class="button btn btn-outline-info" @click="keywordSearch">搜尋</button>
       </div>
     </section>
     <div id="cate">
@@ -397,7 +397,8 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
               關閉
             </button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()"
+              :disabled="isButtonDisabled">
               確定
             </button>
           </div>
@@ -448,7 +449,6 @@
             <div class="modal-body">
               <div class="form-group">
                 <label class="form-label">分數:</label>
-                <!-- <input type="text" class="form-control" v-model="commentstar" /> -->
                 <input class="form-range" type="range" min="0" max="5" step="1" v-model="commentstar"
                   @input="handleInput()" />
               </div>
@@ -537,7 +537,7 @@
 <script setup>
 //import OrdernavBar from "@/components/Order/OrdernavBar.vue";
 import navBar from '@/components/home/navBar.vue';
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
@@ -571,6 +571,8 @@ var socket = null;
 const messages = ref([]);
 const userName = ref("");
 const messageText = ref("");
+const isButtonDisabled = ref(true);
+
 //------get使用者ID--------
 const storedUser = localStorage.getItem('loggedInUser');
 const userObject = JSON.parse(storedUser);
@@ -644,6 +646,9 @@ const setcancelProductIdValue = (paramValue) => {
   cancelId.value = paramValue;
   CancelProductOrders();
 };
+watch([returnaccount, returnreason], ([accountValue, reasonValue]) => {
+  isButtonDisabled.value = !(accountValue.length >= 10 && accountValue.length <= 16 && /^\d+$/.test(accountValue) && reasonValue);
+});
 const ReturnOrders = async () => {
   await axios
     .put(`https://localhost:7183/api/Orders/return?orderid=${retrunId.value}`)
@@ -1028,8 +1033,8 @@ onMounted(() => {
 }
 
 #cateorder {
-  background:linear-gradient( rgb(250, 238, 198) 80%, rgb(255, 255, 255));
-  
+  background: linear-gradient(rgb(250, 238, 198) 80%, rgb(255, 255, 255));
+
   /* background-color: antiquewhite; */
   text-align: center;
   width: 40%;

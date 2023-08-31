@@ -15,10 +15,8 @@ namespace FlexCoreService.UserCtrl.Infa
             string body = $@"
                 <html>
                     <body>
-                        <h1>以下為 flex 提供的預設密碼</h1>
-                        <h3>{name}，您好</h3>  
-
-                        <h3>請使用以下連結登入您的帳戶以後至 會員中心>個人資料>變更密碼 進行密碼修改:<a href='{resetUrl}'> 馬上登入重新設定密碼 </a></h3>
+                        <h1>{name}，您好，歡迎重新設定密碼</h1>
+                        <h3>請點擊「重新設定密碼」連結來設定您新的密碼:<a href='{resetUrl}'> 重新設定密碼 </a></h3>
                         <br>
                         <img src='cid:logo'>
                     </body>
