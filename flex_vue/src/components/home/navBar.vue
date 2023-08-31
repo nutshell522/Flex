@@ -137,9 +137,13 @@
                   "
                   class="d-flex"
                 >
-                  <div style="width: 80px; height: 80px">
+                  <div
+                    style="width: 70px; height: 80px; overflow: hidden"
+                    class="p-2"
+                  >
                     <img
                       :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath"
+                      style="max-width: 100%; max-height: 100%"
                     />
                   </div>
                   <div>
@@ -737,8 +741,6 @@ header {
     right: 40px;
     display: flex;
     align-items: center;
-
-
 
     .nav-icon {
       font-size: 22px;
