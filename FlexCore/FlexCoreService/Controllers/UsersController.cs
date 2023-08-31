@@ -134,6 +134,7 @@ namespace FlexCoreService.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDto logindto)
         {
+            //todo email登入
             var userData = (from m in _db.Members
                             where m.Account == logindto.Account
                             select m).SingleOrDefault();
@@ -236,7 +237,7 @@ namespace FlexCoreService.Controllers
                     EncryptedPassword = HashUtility.ToSHA256(regdto.Email, salt) ,
                     Name = regdto.Name,
                     Email = regdto.Email,
-                    Mobile = Guid.NewGuid().ToString("N").Substring(0, 10),//todo自動給或留空
+                    Mobile = Guid.NewGuid().ToString("N").Substring(0, 10),
                     ConfirmCode = "Confirmed",
                     fk_LevelId = 1
                 };
@@ -652,7 +653,7 @@ namespace FlexCoreService.Controllers
             string email = "fuen28flex@gmail.com";
             DateTime birthday = faker.Date.Past(18, DateTime.Now.AddYears(-30)).Date;
             string phoneNumber = faker.Phone.PhoneNumber("09########");
-            string address = faker.Address.FullAddress();
+            string address = "320桃園市中壢區新生路二段421號";
 
             RegisterDto testUserRegData = new RegisterDto
             {
