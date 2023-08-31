@@ -20,36 +20,18 @@
             <div id="step-1-area" class="step-area">
               <h2>輸入你的聯絡資訊:</h2>
               <div class="input-wrapper">
-                <input
-                  type="text"
-                  name="ContactInfo.ContactName"
-                  id="contact-name"
-                  placeholder="姓名"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.contactName"
-                />
+                <input type="text" name="ContactInfo.ContactName" id="contact-name" placeholder="姓名" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.contactName" />
                 <span>姓名</span>
               </div>
               <div class="input-wrapper d-none">
-                <input
-                  type="text"
-                  name="ContactInfo.PostalCode"
-                  id="postal-code"
-                  placeholder="郵遞區號"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.postalCode"
-                />
+                <input type="text" name="ContactInfo.PostalCode" id="postal-code" placeholder="郵遞區號" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.postalCode" />
                 <span>郵遞區號</span>
               </div>
               <div class="input-wrapper">
-                <input
-                  type="text"
-                  name="ContactInfo.Address"
-                  id="address"
-                  placeholder="地址"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.address"
-                />
+                <input type="text" name="ContactInfo.Address" id="address" placeholder="地址" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.address" />
                 <span>地址</span>
                 <div class="address-area">
                   <button id="address-btn" type="button">變更地址</button>
@@ -57,65 +39,36 @@
                     <li>
                       <h2>已儲存地址</h2>
                     </li>
-                    <li
-                      class="address-option"
-                      v-if="
-                        addresses.commonAddress != '' &&
-                        addresses.commonAddress != null
-                      "
-                    >
+                    <li class="address-option" v-if="addresses.commonAddress != '' &&
+                      addresses.commonAddress != null
+                      ">
                       {{ addresses.commonAddress }}
                     </li>
-                    <li
-                      class="address-option"
-                      v-if="
-                        addresses.alternateAddress1 != '' &&
-                        addresses.alternateAddress1 != null
-                      "
-                    >
+                    <li class="address-option" v-if="addresses.alternateAddress1 != '' &&
+                      addresses.alternateAddress1 != null
+                      ">
                       {{ addresses.alternateAddress1 }}
                     </li>
-                    <li
-                      class="address-option"
-                      v-if="
-                        addresses.alternateAddress2 != '' &&
-                        addresses.alternateAddress2 != null
-                      "
-                    >
+                    <li class="address-option" v-if="addresses.alternateAddress2 != '' &&
+                      addresses.alternateAddress2 != null
+                      ">
                       {{ addresses.alternateAddress2 }}
                     </li>
                   </ul>
                 </div>
               </div>
               <div class="input-wrapper">
-                <input
-                  type="email"
-                  name="ContactInfo.Email"
-                  id="email"
-                  placeholder="電子郵件"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.email"
-                />
+                <input type="email" name="ContactInfo.Email" id="email" placeholder="電子郵件" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.email" />
                 <span>電子郵件</span>
               </div>
               <div class="input-wrapper">
-                <input
-                  type="tel"
-                  name="ContactInfo.Phone"
-                  id="phone"
-                  placeholder="電話號碼"
-                  v-if="cart"
-                  v-model="cart.checkoutData.contactInfo.phone"
-                />
+                <input type="tel" name="ContactInfo.Phone" id="phone" placeholder="電話號碼" v-if="cart"
+                  v-model="cart.checkoutData.contactInfo.phone" />
                 <span>電話號碼</span>
               </div>
-              <button
-                type="button"
-                id="next-step-btn-1"
-                class="change-step-btn next-step-btn"
-                target-step="1"
-                :disabled="step1Disabled"
-              >
+              <button type="button" id="next-step-btn-1" class="change-step-btn next-step-btn" target-step="1"
+                :disabled="step1Disabled">
                 繼續
               </button>
             </div>
@@ -123,22 +76,12 @@
             <div id="step-2-area" class="step-area">
               <h2>輸入你的帳單地址:</h2>
               <label class="same-address-label buy-label">
-                <input
-                  type="checkbox"
-                  id="bill-same-address"
-                  class="buy-checkbox"
-                  checked
-                />
+                <input type="checkbox" id="bill-same-address" class="buy-checkbox" checked />
                 帳單地址同送貨地址
               </label>
               <div id="different-address-area">
                 <div class="input-wrapper">
-                  <input
-                    type="text"
-                    name="BillingAddress.Name"
-                    id="bill-name"
-                    placeholder="姓名"
-                  />
+                  <input type="text" name="BillingAddress.Name" id="bill-name" placeholder="姓名" />
                   <span>姓名</span>
                 </div>
                 <!-- <div class="input-wrapper d-none">
@@ -151,124 +94,70 @@
                   <span></span>
                 </div> -->
                 <div class="input-wrapper">
-                  <input
-                    type="text"
-                    name="BillingAddress.Address"
-                    id="bill-address"
-                    placeholder="地址"
-                  />
+                  <input type="text" name="BillingAddress.Address" id="bill-address" placeholder="地址" />
                   <span>地址</span>
                 </div>
                 <div class="input-wrapper">
-                  <input
-                    type="tel"
-                    name="BillingAddress.Phone"
-                    id="bill-phone"
-                    placeholder="電話號碼"
-                  />
+                  <input type="tel" name="BillingAddress.Phone" id="bill-phone" placeholder="電話號碼" />
                   <span>電話號碼</span>
                 </div>
               </div>
-              <button
-                type="button"
-                id="next-step-btn-2"
-                class="change-step-btn next-step-btn"
-                target-step="2"
-              >
+              <button type="button" id="next-step-btn-2" class="change-step-btn next-step-btn" target-step="2">
                 繼續
               </button>
             </div>
             <!-- 付款 -->
             <div id="step-3-area" class="step-area">
               <h2>使用優惠券?</h2>
-              <a
-                @click="showCouponAreaEventHandler"
-                href="javascript:;"
-                class="choose-coupon"
-                >選擇優惠券</a
-              >
+              <a @click="showCouponAreaEventHandler" href="javascript:;" class="choose-coupon">選擇優惠券</a>
               <div class="used-coupon">
                 <p v-if="cart?.coupon" class="show-coupon-info">
                   {{ cart.coupon.name }}，折抵{{ cart?.couponValue }} 元
                 </p>
               </div>
               <h2>付款方式</h2>
-              <input
-                type="hidden"
-                name="payment-method"
-                id="payment-method"
-                value="credit-card"
-              />
+              <input type="hidden" name="payment-method" id="payment-method" value="credit-card" />
               <div class="pay-by-select">
                 <div class="pay-by-btn active" data-value="credit-card">
                   <i class="bi bi-credit-card"></i>
                   信用卡或金融簽帳卡
                 </div>
+
+                <div class="pay-by-btn" @click="ECPay" data-value="credit-card">
+                  <div class="pay-by-btn-img"><img src="@/../public/imgs/payLogo/ecpay_fb.png" alt=""></div>
+                  綠界支付
+                </div>
               </div>
               <h2>詳細付款資訊:</h2>
               <div class="pay-info-area">
                 <div class="input-wrapper">
-                  <input
-                    type="text"
-                    name="PaymentInfo.CardName"
-                    id="card-name"
-                    placeholder="Name on card"
-                    v-if="cart"
-                    v-model="cart.checkoutData.paymentInfo.cardName"
-                  />
+                  <input type="text" name="PaymentInfo.CardName" id="card-name" placeholder="Name on card" v-if="cart"
+                    v-model="cart.checkoutData.paymentInfo.cardName" />
                   <span>Name on card</span>
                 </div>
                 <div class="input-wrapper">
-                  <input
-                    type="tel"
-                    name="PaymentInfo.CardNumber"
-                    id="card-number"
-                    placeholder="Card Number"
-                    v-if="cart"
-                    v-model="cart.checkoutData.paymentInfo.cardNumber"
-                  />
+                  <input type="tel" name="PaymentInfo.CardNumber" id="card-number" placeholder="Card Number" v-if="cart"
+                    v-model="cart.checkoutData.paymentInfo.cardNumber" />
                   <span>Card Number</span>
                 </div>
                 <div class="row row-cols-2">
                   <div class="input-wrapper">
-                    <input
-                      type="text"
-                      name="PaymentInfo.Expiration"
-                      id="expiration"
-                      placeholder="MM/YY"
-                      v-if="cart"
-                      v-model="cart.checkoutData.paymentInfo.expiration"
-                    />
+                    <input type="text" name="PaymentInfo.Expiration" id="expiration" placeholder="MM/YY" v-if="cart"
+                      v-model="cart.checkoutData.paymentInfo.expiration" />
                     <span>MM/YY</span>
                   </div>
                   <div class="input-wrapper">
-                    <input
-                      type="tel"
-                      name="PaymentInfo.CVV"
-                      id="cvv"
-                      placeholder="CVV"
-                      v-if="cart"
-                      v-model="cart.checkoutData.paymentInfo.cvv"
-                    />
+                    <input type="tel" name="PaymentInfo.CVV" id="cvv" placeholder="CVV" v-if="cart"
+                      v-model="cart.checkoutData.paymentInfo.cvv" />
                     <span>CVV</span>
                   </div>
                 </div>
                 <label class="confirm-terms-label buy-label">
-                  <input
-                    type="checkbox"
-                    id="confirm-terms"
-                    class="buy-checkbox"
-                    v-model="termsChecked"
-                  />
+                  <input type="checkbox" id="confirm-terms" class="buy-checkbox" v-model="termsChecked" />
                   確認你同意 Flex 付款的 <a href="javascript:;">條款與條件</a>
                 </label>
-                <button
-                  @click="checkoutEventHandler"
-                  type="button"
-                  id="send-order"
-                  class="next-step-btn"
-                  :disabled="checkoutDisabled"
-                >
+                <button @click="checkoutEventHandler" type="button" id="send-order" class="next-step-btn"
+                  :disabled="checkoutDisabled">
                   下訂單
                 </button>
               </div>
@@ -310,10 +199,7 @@
             </div>
           </div>
         </div>
-        <div
-          class="buy-summary col-12 col-lg-5"
-          :class="{ active: summaryActive }"
-        >
+        <div class="buy-summary col-12 col-lg-5" :class="{ active: summaryActive }">
           <div class="mb-5">
             <div class="buy-summary-btn" @click="summaryActiveToggle">
               <h2>訂單摘要</h2>
@@ -340,11 +226,11 @@
                     {{
                       formatter.format(
                         cart.originalTotalAmount -
-                          cart.totalPrice +
-                          cart.deliveryFee -
-                          (cart.coupon && cart.coupon.discountType !== 2
-                            ? cart.couponValue
-                            : 0)
+                        cart.totalPrice +
+                        cart.deliveryFee -
+                        (cart.coupon && cart.coupon.discountType !== 2
+                          ? cart.couponValue
+                          : 0)
                       )
                     }}
                   </div>
@@ -365,33 +251,19 @@
               <div class="order-item-area">
                 <h2 class="mb-4">訂單詳情</h2>
                 <ul>
-                  <li
-                    v-if="cart"
-                    v-for="item in cart.cartItems"
-                    :key="item.cartItemId"
-                    class="d-flex mb-4"
-                  >
+                  <li v-if="cart" v-for="item in cart.cartItems" :key="item.cartItemId" class="d-flex mb-4">
                     <div class="item-img-wrapper me-2">
-                      <img
-                        :src="imgBaseUrl + 'Public/Img/' + item.product.imgPath"
-                        alt=""
-                      />
+                      <img :src="imgBaseUrl + 'Public/Img/' + item.product.imgPath" alt="" />
                     </div>
                     <div class="item-info">
                       <div class="text-black fw-bold title">
                         {{ item.product.productName }}
                       </div>
-                      <div
-                        v-if="item.product.matchDiscounts.length != 0"
-                        class="d-flex text-black"
-                      >
+                      <div v-if="item.product.matchDiscounts.length != 0" class="d-flex text-black">
                         適用折扣:
                         <ul class="d-flex">
-                          <li
-                            class="me-1 text-black"
-                            v-for="matchDiscount in item.product.matchDiscounts"
-                            :key="matchDiscount.discountId"
-                          >
+                          <li class="me-1 text-black" v-for="matchDiscount in item.product.matchDiscounts"
+                            :key="matchDiscount.discountId">
                             {{ matchDiscount.discountName }}
                           </li>
                         </ul>
@@ -415,11 +287,7 @@
         <div class="buy-summary-shadow" @click="closeSummaryActive"></div>
       </div>
     </div>
-    <div
-      @click.self="hideCouponAreaEventHandler"
-      id="coupon-area-bg"
-      :class="{ active: isActive }"
-    >
+    <div @click.self="hideCouponAreaEventHandler" id="coupon-area-bg" :class="{ active: isActive }">
       <div id="coupon-area">
         <i @click="hideCouponAreaEventHandler" class="bi bi-x"></i>
         <div id="coupon-header">
@@ -427,23 +295,16 @@
           <span>可選擇一張</span>
         </div>
         <ul class="coupon-list">
-          <li
-            v-if="coupons.length != 0"
-            v-for="coupon in coupons"
-            :key="coupon.sendingId"
-            :class="[
-              'coupon-item',
-              {
-                disabled:
-                  cart &&
-                  coupon.discountType == 2 &&
-                  cart.deliveryFee == 0 &&
-                  (!cart.coupon?.discountType || cart.coupon.discountType != 2),
-              },
-            ]"
-            :data-id="coupon.sendingId"
-            @click="selectCouponEventHandler"
-          >
+          <li v-if="coupons.length != 0" v-for="coupon in coupons" :key="coupon.sendingId" :class="[
+            'coupon-item',
+            {
+              disabled:
+                cart &&
+                coupon.discountType == 2 &&
+                cart.deliveryFee == 0 &&
+                (!cart.coupon?.discountType || cart.coupon.discountType != 2),
+            },
+          ]" :data-id="coupon.sendingId" @click="selectCouponEventHandler">
             <div class="coupon-body">
               <div class="coupon-top"></div>
               <div class="coupon-bottom"></div>
@@ -451,36 +312,26 @@
                 <div v-if="coupon.discountType == 2" class="coupon-discount">
                   免運費
                 </div>
-                <div
-                  v-else-if="coupon.discountType == 1"
-                  class="coupon-discount"
-                >
+                <div v-else-if="coupon.discountType == 1" class="coupon-discount">
                   {{
                     coupon.discountValue % 10 == 0
-                      ? 10 - coupon.discountValue / 10
-                      : 100 - coupon.discountValue
+                    ? 10 - coupon.discountValue / 10
+                    : 100 - coupon.discountValue
                   }}折
                 </div>
-                <div
-                  v-else-if="coupon.discountType == 0"
-                  class="coupon-discount"
-                >
+                <div v-else-if="coupon.discountType == 0" class="coupon-discount">
                   {{ coupon.discountValue }}元
                 </div>
               </div>
               <div class="coupon-info">
                 <div class="d-flex">
                   <h3 class="me-auto">{{ coupon.couponName }}</h3>
-                  <div
-                    v-if="
-                      cart &&
-                      coupon.discountType == 2 &&
-                      cart.deliveryFee == 0 &&
-                      (!cart.coupon?.discountType ||
-                        cart.coupon.discountType != 2)
-                    "
-                    class="danger-info text-danger"
-                  >
+                  <div v-if="cart &&
+                    coupon.discountType == 2 &&
+                    cart.deliveryFee == 0 &&
+                    (!cart.coupon?.discountType ||
+                      cart.coupon.discountType != 2)
+                    " class="danger-info text-danger">
                     無法使用 已達免運標準
                   </div>
                 </div>
@@ -496,27 +347,16 @@
               </div>
             </div>
           </li>
-          <li
-            v-else
-            class="w-100 h-100 d-flex justify-content-center align-items-center fs-4 text-gray"
-          >
+          <li v-else class="w-100 h-100 d-flex justify-content-center align-items-center fs-4 text-gray">
             無可使用的優惠券
           </li>
         </ul>
         <div class="d-flex px-5">
           <div class="me-auto"></div>
-          <button
-            class="btn btn-secondary mt-4 me-3"
-            @click="couponCXLEventHandler"
-          >
+          <button class="btn btn-secondary mt-4 me-3" @click="couponCXLEventHandler">
             不使用優惠券
           </button>
-          <button
-            @click="couponComfirmEventHandler"
-            id="coupon-comfirm-btn"
-            class="btn btn-primary mt-4"
-            disabled
-          >
+          <button @click="couponComfirmEventHandler" id="coupon-comfirm-btn" class="btn btn-primary mt-4" disabled>
             確定
           </button>
         </div>
@@ -563,17 +403,18 @@ const step1Disabled = ref<boolean>(false);
 const termsChecked = ref<boolean>(false);
 const checkoutDisabled = ref<boolean>(
   !cart.value ||
-    cart.value.checkoutData.paymentInfo.cardName == null ||
-    cart.value.checkoutData.paymentInfo.cardName == "" ||
-    cart.value.checkoutData.paymentInfo.cardNumber == null ||
-    cart.value.checkoutData.paymentInfo.cardNumber == "" ||
-    cart.value.checkoutData.paymentInfo.expiration == null ||
-    cart.value.checkoutData.paymentInfo.expiration == "" ||
-    cart.value.checkoutData.paymentInfo.cvv == null ||
-    cart.value.checkoutData.paymentInfo.cvv == "" ||
-    !termsChecked.value
+  cart.value.checkoutData.paymentInfo.cardName == null ||
+  cart.value.checkoutData.paymentInfo.cardName == "" ||
+  cart.value.checkoutData.paymentInfo.cardNumber == null ||
+  cart.value.checkoutData.paymentInfo.cardNumber == "" ||
+  cart.value.checkoutData.paymentInfo.expiration == null ||
+  cart.value.checkoutData.paymentInfo.expiration == "" ||
+  cart.value.checkoutData.paymentInfo.cvv == null ||
+  cart.value.checkoutData.paymentInfo.cvv == "" ||
+  !termsChecked.value
 );
 const summaryActive = ref<boolean>(false);
+
 
 const summaryActiveToggle = () => {
   summaryActive.value = !summaryActive.value;
@@ -834,6 +675,38 @@ const formatter = new Intl.NumberFormat("zh-TW", {
   minimumFractionDigits: 0, // 最少保留小數位數
   maximumFractionDigits: 0, // 最多保留小數位數
 });
+
+const ECPay = async () => {
+  const ids: number[] = [];
+  cart.value?.cartItems.forEach((item) => {
+    ids.push(item.cartItemId);
+  });
+  const request = {
+    memberId: memberId,
+    CartItemIds: ids,
+    CouponId: null as null | number,
+    checkoutData: {
+      contactInfo: toRaw(cart.value?.checkoutData.contactInfo),
+      billingAddress: toRaw(cart.value?.checkoutData.billingAddress),
+      paymentInfo: toRaw(cart.value?.checkoutData.paymentInfo),
+    },
+  };
+  if (request.checkoutData.paymentInfo) {
+    request.checkoutData.paymentInfo.paymentMethod = 2;
+  }
+  if (cart.value?.coupon?.id) {
+    request.CouponId = cart.value.coupon.sendingId;
+  }
+
+  await axios
+    .post(`${baseAddress}api/Payment/ProductMakePayment`, request)
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      alert(error);
+    });
+}
 
 const checkoutEventHandler = async () => {
   loading.value = true;
@@ -1185,7 +1058,7 @@ onUpdated(() => {
     align-items: center;
     height: 100%;
 
-    & > div {
+    &>div {
       font-size: 18px;
     }
 
@@ -1215,7 +1088,7 @@ main {
             position: relative;
             margin-bottom: 30px;
 
-            & > span {
+            &>span {
               background-color: #fff;
               position: absolute;
               left: 20px;
@@ -1225,7 +1098,7 @@ main {
               color: #999;
             }
 
-            & > input {
+            &>input {
               padding: 20px;
               width: 100%;
               height: 100%;
@@ -1239,7 +1112,7 @@ main {
               &:hover {
                 border-color: #333;
 
-                + span {
+                +span {
                   color: #333;
                 }
               }
@@ -1247,7 +1120,7 @@ main {
               &:focus {
                 border-color: #333;
 
-                + span {
+                +span {
                   color: #333;
                 }
               }
@@ -1277,11 +1150,11 @@ main {
                 padding: 0;
                 transition: max-height 0.6s;
 
-                & > li:first-child {
+                &>li:first-child {
                   margin-top: 15px;
                 }
 
-                & > li:last-child {
+                &>li:last-child {
                   margin-bottom: 30px;
                 }
 
@@ -1332,7 +1205,7 @@ main {
             font-size: 20px;
             margin-bottom: 50px;
 
-            & > a {
+            &>a {
               text-decoration: underline;
 
               &:hover {
@@ -1385,6 +1258,21 @@ main {
               border-radius: 7px;
               font-size: 20px;
               cursor: pointer;
+              display: flex;
+              margin-bottom: 15px;
+
+              .pay-by-btn-img,
+              i {
+                margin-right: 15px;
+              }
+
+              .pay-by-btn-img {
+                width: 35px;
+
+                img {
+                  object-fit: cover;
+                }
+              }
 
               &.active {
                 border: 2.5px solid #333;
@@ -1400,7 +1288,7 @@ main {
             padding: 30px 0;
             border-top: 1px solid #ccc;
 
-            &.active > h2 {
+            &.active>h2 {
               color: #333;
             }
 
@@ -1413,7 +1301,7 @@ main {
             .show-info {
               position: relative;
 
-              & > p {
+              &>p {
                 margin: 0;
                 color: #999;
               }
@@ -1468,7 +1356,7 @@ main {
           }
 
           &.active {
-            + .buy-summary-shadow {
+            +.buy-summary-shadow {
               transition: 0.3s;
               visibility: visible;
               opacity: 1;
@@ -1490,7 +1378,7 @@ main {
             margin-right: auto;
           }
 
-          > div {
+          >div {
             display: flex;
             align-items: end;
             font-size: 18px;
@@ -1510,7 +1398,7 @@ main {
           margin-bottom: 8px;
           align-items: center;
 
-          & > div {
+          &>div {
             font-size: 20px;
           }
 
@@ -1527,11 +1415,11 @@ main {
             cursor: default;
             margin-left: 10px;
 
-            &:hover > span {
+            &:hover>span {
               display: block;
             }
 
-            & > span {
+            &>span {
               display: none;
               position: absolute;
               width: 100px;
@@ -1546,10 +1434,10 @@ main {
         }
 
         .order-item-area {
-          & > ul {
+          &>ul {
             padding: 0;
 
-            & > li {
+            &>li {
               .item-img-wrapper {
                 width: 130px;
                 height: 130px;
@@ -1674,6 +1562,7 @@ main {
           cursor: pointer;
 
           &.selected {
+
             // border-color: #9bf;
             .coupon-discount {
               background-color: #c25033;

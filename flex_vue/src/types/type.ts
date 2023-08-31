@@ -82,6 +82,7 @@ export class PayInfo {
   ClientBackURL: string = "";
   CheckMacValue: string = "";
   OrderResultURL: string = "";
+  CustomField1: string = "";
 }
 export class SizeVM {
   productSaleId: string = "";
