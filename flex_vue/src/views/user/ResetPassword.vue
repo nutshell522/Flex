@@ -130,15 +130,15 @@ function finish() {
 }
 .eye1 {
   position: absolute;
-  right: 42%;
-  top: 35.5%;
+  right: 42.5%;
+  top: 33.8%;
   font-size: 20px;
 }
 
 .eye2 {
   position: absolute;
-  right: 42%;
-  top: 43.6%;
+  right: 42.5%;
+  top: 42%;
   font-size: 20px;
 }
 </style>
