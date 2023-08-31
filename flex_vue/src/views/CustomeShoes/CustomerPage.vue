@@ -471,11 +471,6 @@ function intoOrder() {
     agreeToCreateOrder.value = false;
     return;}
 
-  if (!agreeToCreateOrder.value) {
-    // 如果勾選框未被選中，不執行建立訂單操作
-    return;
-  }
-
    else {
     errors.value = [];
     // orderData.shoesOrderId = shoesOrderId;
