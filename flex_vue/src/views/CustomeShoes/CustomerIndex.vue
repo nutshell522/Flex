@@ -127,8 +127,8 @@ video {
 #banner2 {
   background-color: #111;
   position: absolute;
-  height: 380vh;
-  top: 440vh;
+  height: 420vh;
+  top: 420vh;
   width: 100vw;
   z-index: 0;
 

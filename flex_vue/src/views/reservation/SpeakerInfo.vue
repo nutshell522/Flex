@@ -1,265 +1,197 @@
 <template>
   <NavBar></NavBar>
-  <div class="container">
-    <div class="row main bigRow">
-      <div class="col-md-8">
-        <div class="speaker-img">
-          <img
-            :src="imgBaseUrl + '/Public/Img/Speaker/' + speaker.speakerImg"
-            alt="Featured 1"
-            class="speakerImg"
-          />
-        </div>
-
-        <div class="infoBlock">
-          <p>講師姓名：{{ speaker.speakerName }}</p>
-          <p>擅長領域：{{ speaker.fieldName }}</p>
-          <p>講師描述：{{ speaker.speakerDescription }}</p>
-          <p>
-            駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})
-          </p>
-        </div>
-        <div class="bookingBlock">
-          <!-- 預約系統 -->
-          <p>預約時間表</p>
-          <div id="datePicker">
-            <button id="prevButton">
-              <font-awesome-icon icon="fa-solid fa-angles-left" beat-fade />
-            </button>
-            <span id="currentDate"></span>
-            <button id="nextButton">
-              <font-awesome-icon icon="fa-solid fa-angles-right" beat-fade />
-            </button>
+  <div class="page-container">
+    <div class="container">
+      <div class="row main bigRow">
+        <div class="col-md-8">
+          <div class="speaker-img">
+            <img :src="imgBaseUrl + '/Public/Img/Speaker/' + speaker.speakerImg" alt="Featured 1" class="speakerImg" />
           </div>
-          <div id="schedule"></div>
-        </div>
-        <!-- 評論 -->
 
-        <div id="reviewWhole">
-          <h1>課程心得</h1>
-          <!-- v-for迴圈每一個評論，生成評論卡 -->
-          <div
-            class="comment-card"
-            v-for="comment in comments"
-            :key="comment.id"
-          >
-            <div class="comment-header">
-              <!-- <img :src="comment.author.avatar" alt="Author Avatar" class="avatar" /> -->
-              <div class="author-info">
-                <h3>{{ comment.account }}</h3>
-                <p>{{ formatDateTime(comment.creationTime) }}</p>
-              </div>
+          <div class="infoBlock">
+            <p>講師姓名：{{ speaker.speakerName }}</p>
+            <p>擅長領域：{{ speaker.fieldName }}</p>
+            <p>講師描述：{{ speaker.speakerDescription }}</p>
+            <p>
+              駐點分店：{{ speaker.branchName }} ({{ speaker.branchAddress }})
+            </p>
+          </div>
+          <div class="bookingBlock">
+            <!-- 預約系統 -->
+            <p>預約時間表</p>
+            <div id="datePicker">
+              <button id="prevButton">
+                <font-awesome-icon icon="fa-solid fa-angles-left" beat-fade />
+              </button>
+              <span id="currentDate"></span>
+              <button id="nextButton">
+                <font-awesome-icon icon="fa-solid fa-angles-right" beat-fade />
+              </button>
             </div>
-            <div class="comment-content">
-              <p
-                v-if="
-                  !comment.editing &&
+            <div id="schedule"></div>
+          </div>
+          <!-- 評論 -->
+
+          <div id="reviewWhole">
+            <h1>課程心得</h1>
+            <!-- v-for迴圈每一個評論，生成評論卡 -->
+            <div class="comment-card" v-for="comment in comments" :key="comment.id">
+              <div class="comment-header">
+                <!-- <img :src="comment.author.avatar" alt="Author Avatar" class="avatar" /> -->
+                <div class="author-info">
+                  <h3>{{ comment.account }}</h3>
+                  <p>{{ formatDateTime(comment.creationTime) }}</p>
+                </div>
+              </div>
+              <div class="comment-content">
+                <p v-if="!comment.editing &&
                   !comment.expanded &&
                   comment.content.length > 150
-                "
-              >
-                {{ comment.content.slice(0, 150) }}...
-              </p>
-              <p v-else-if="!comment.editing">{{ comment.content }}</p>
-              <textarea
-                v-model="comment.editContent"
-                v-if="comment.editing && canEdit(comment)"
-                rows="4"
-              ></textarea>
-            </div>
-            <div class="comment-footer">
-              <!-- 評分 -->
-              <div class="rating">
-                <span class="star" v-for="n in comment.rating" :key="n">★</span>
+                  ">
+                  {{ comment.content.slice(0, 150) }}...
+                </p>
+                <p v-else-if="!comment.editing">{{ comment.content }}</p>
+                <textarea v-model="comment.editContent" v-if="comment.editing && canEdit(comment)" rows="4"></textarea>
               </div>
-              <button
-                class="reviewButton"
-                @click="allowEdit(comment)"
-                v-if="canEdit(comment)"
-              >
-                {{ comment.editing ? "取消" : "編輯" }}
-              </button>
+              <div class="comment-footer">
+                <!-- 評分 -->
+                <div class="rating">
+                  <span class="star" v-for="n in comment.rating" :key="n">★</span>
+                </div>
+                <button class="reviewButton" @click="allowEdit(comment)" v-if="canEdit(comment)">
+                  {{ comment.editing ? "取消" : "編輯" }}
+                </button>
 
-              <button
-                class="reviewButton"
-                @click="saveEditedComment(comment)"
-                v-if="comment.editing && canEdit(comment)"
-              >
-                儲存
-              </button>
+                <button class="reviewButton" @click="saveEditedComment(comment)"
+                  v-if="comment.editing && canEdit(comment)">
+                  儲存
+                </button>
+              </div>
+            </div>
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary reviewButton" data-bs-toggle="modal"
+              data-bs-target="#exampleModal">
+              新增心得
+            </button>
+
+            <!-- 新增評論的Modal -->
+            <div class="modal fade modal-dialog modal-dialog-centered" id="exampleModal" tabindex="-1"
+              aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      留下您的心得...
+                    </h1>
+                  </div>
+                  <!-- 用submit.prevent防止刷新整個頁面 -->
+                  <form @submit.prevent="addComment">
+                    <div class="modal-body">
+                      <!-- 新增評論的表單 -->
+                      <div class="comment-form">
+                        <p>{{ userAccount }}</p>
+                        <star-rating @update:rating="setRating"
+                          style="margin-left: 50px; margin-bottom: 20px"></star-rating>
+                        <textarea v-model="newComment.content" placeholder="留下您的課程心得" required></textarea>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary reviewButton" data-bs-dismiss="modal">
+                        取消
+                      </button>
+                      <button type="submit" data-bs-dismiss="modal" class="btn btn-primary reviewButton">
+                        送出
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          <!-- Button trigger modal -->
-          <button
-            type="button"
-            class="btn btn-primary reviewButton"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-          >
-            新增心得
-          </button>
+        <div class="col-md-4 mt-5">
+          <div class="text-end">
+            <a href="#" class="btn bookingButton" @click="getActivityId" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop">
+              <!-- icon -->
+              <span class="icon">
+                <img width="70" height="50" src="../../../public/imgs/jump3.png" alt="exercise" />
+              </span>
+              <!-- 按鈕文字 -->
+              <span style="font-size: 50px; color: rgb(1, 2, 60)"> 預 約 </span>
+            </a>
+          </div>
 
-          <!-- 新增評論的Modal -->
-          <div
-            class="modal fade modal-dialog modal-dialog-centered"
-            id="exampleModal"
-            tabindex="-1"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog">
+          <!-- Modal -->
+          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">
-                    留下您的心得...
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                    {{ userName }} 您好
                   </h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <!-- 用submit.prevent防止刷新整個頁面 -->
-                <form @submit.prevent="addComment">
-                  <div class="modal-body">
-                    <!-- 新增評論的表單 -->
-                    <div class="comment-form">
-                      <p>{{ userAccount }}</p>
-                      <textarea
-                        v-model="newComment.content"
-                        placeholder="課程心得"
-                        required
-                      ></textarea>
-                      <star-rating @update:rating="setRating"></star-rating>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary reviewButton"
-                      data-bs-dismiss="modal"
-                    >
-                      取消
-                    </button>
-                    <button
-                      type="submit"
-                      data-bs-dismiss="modal"
-                      class="btn btn-primary reviewButton"
-                    >
-                      送出
-                    </button>
-                  </div>
-                </form>
+                <div class="modal-body">
+                  您預約的是<span class="importantInfo">{{
+                    speaker.speakerName
+                  }}</span>講師的諮詢服務
+                  <br />
+                  時間： <span class="importantInfo"> {{ date }} </span> 的
+                  <span class="importantInfo">
+                    {{ time }}
+                  </span>
+                  點
+                  <br />
+                  地點：<span class="importantInfo">{{
+                    speaker.branchName
+                  }}</span>
+                  <br />
+                  <br />
+
+                  <span style="text-decoration: underline">預約注意事項和同意聲明</span>
+                  <br />
+
+                  我們非常歡迎您使用預約講師的服務。請在預約之前仔細閱讀以下注意事項和同意聲明：
+                  <br />
+
+                  尊重時間：
+                  預約的時間是有限的資源，請確保您在預約的時間點出現。不要濫用此服務，以確保其他使用者也有機會受益。<br />
+
+                  取消預約：
+                  如果您無法在預約的時間點出現，請提前來電取消預約，以便其他人可以使用這個時間段。我們建議您提前至少24小時取消預約。<br />
+
+                  黑名單：
+                  如果您濫用預約服務，我們可能會將您列入黑名單，限制您未來的預約權限。
+                  <br />
+
+                  尊重他人：
+                  請在預約過程中尊重講師的時間和專業。不要發表冒犯性、不當或不尊重的言論。<br />
+
+                  我明白並同意遵守上述注意事項。我明白如果我不遵守這些規定，我的預約權限可能會受到限制。
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    取消
+                  </button>
+                  <button type="button" class="btn btn-primary" @click="addReservationOrderInfo" data-bs-dismiss="modal">
+                    確認
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="col-md-4 mt-5">
-        <div class="text-end">
-          <a
-            href="#"
-            class="btn button"
-            @click="getActivityId"
-            data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop"
-            style="height: 110px"
-          >
-            <!-- icon -->
-            <span class="icon">
-              <img
-                width="100"
-                height="90"
-                src="https://img.icons8.com/stickers/100/exercise.png"
-                alt="exercise"
-              />
-            </span>
-            <!-- 按鈕文字 -->
-            <span style="font-size: 50px"> 預約 </span>
-          </a>
-        </div>
-
-        <!-- Modal -->
-        <div
-          class="modal fade"
-          id="staticBackdrop"
-          data-bs-backdrop="static"
-          data-bs-keyboard="false"
-          tabindex="-1"
-          aria-labelledby="staticBackdropLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                  {{ userName }} 您好
-                </h1>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                您預約的是{{ speaker.speakerName }}講師的諮詢服務
-                <br />
-                時間： {{ date }} 的 {{ time }}點
-                <br />
-                地點：{{ speaker.branchName }}
-                <br />
-
-                預約注意事項和同意聲明
-                <br />
-
-                我們非常歡迎您使用預約講師的服務。請在預約之前仔細閱讀以下注意事項和同意聲明：
-                <br />
-
-                尊重時間：
-                預約的時間是有限的資源，請確保您在預約的時間點出現。不要濫用此服務，以確保其他使用者也有機會受益。<br />
-
-                取消預約：
-                如果您無法在預約的時間點出現，請提前來電取消預約，以便其他人可以使用這個時間段。我們建議您提前至少24小時取消預約。<br />
-
-                黑名單：
-                如果您濫用預約服務，我們可能會將您列入黑名單，限制您未來的預約權限。<br />
-
-                尊重他人：
-                請在預約過程中尊重講師的時間和專業。不要發表冒犯性、不當或不尊重的言論。<br />
-
-                我明白並同意遵守上述注意事項。我明白如果我不遵守這些規定，我的預約權限可能會受到限制。
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  取消
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  @click="addReservationOrderInfo"
-                  data-bs-dismiss="modal"
-                >
-                  確認
-                </button>
-              </div>
+          <div class="showTopThree">
+            <h2 class="mt-5">人氣講師</h2>
+            <div class="image-container" v-for="(single, index) in TopThreeSpeaker" :key="index">
+              <a :href="'/speakerInfo/' + single.fk_ReservationSpeakerId">
+                <img :src="imgBaseUrl + '/Public/Img/Speaker/' + single.speakerImg" alt="" />
+              </a>
             </div>
           </div>
-        </div>
-
-        <h2 class="mt-5">人氣講師</h2>
-        <div
-          class="image-container"
-          v-for="(single, index) in TopThreeSpeaker"
-          :key="index"
-        >
-          <a :href="'/speakerInfo/' + single.fk_ReservationSpeakerId">
-            <img
-              :src="imgBaseUrl + '/Public/Img/Speaker/' + single.speakerImg"
-              alt=""
-            />
-          </a>
         </div>
       </div>
     </div>
@@ -445,17 +377,18 @@ onMounted(() => {
         //使用 data- 屬性來在元素上儲存自定義的資料
         cell.dataset.date = day.toLocaleDateString();
         cell.dataset.time = timeSlot.substring(0, 2); //取出開始時間點
-
-        for (let i = 0; i < newDateResult.length; i++) {
-          if (
-            cell.dataset.date == newDateResult[i] &&
-            cell.dataset.time == newTimeResult[i]
-          ) {
-            cell.classList.add("unable");
-          } else {
-            cell.addEventListener("click", handleCellClick);
+        if (newDateResult.length > 0) {
+          for (let i = 0; i < newDateResult.length; i++) {
+            if (
+              cell.dataset.date == newDateResult[i] &&
+              cell.dataset.time == newTimeResult[i]
+            ) {
+              cell.classList.add("unable");
+            } else {
+              cell.addEventListener("click", handleCellClick);
+            }
+            row.appendChild(cell);
           }
-          row.appendChild(cell);
         }
       }
 
@@ -693,26 +626,113 @@ const formatDateTime = (dateString) => {
 };
 </script>
 
-<style>
+<style scoped>
+.importantInfo {
+  text-decoration: underline;
+  color: #3498db;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.showTopThree {
+  margin-top: 150px;
+}
+
+.infoBlock p,
+.bookingBlock p,
+.bookingBlock span {
+  font-size: 20px;
+}
+
+/* 按鈕 */
+.bookingButton {
+  position: absolute;
+  left: 1260px;
+  top: 150px;
+  height: 90px;
+  display: inline-block;
+  padding: 15px 30px;
+  font-size: 18px;
+  text-align: center;
+  border: none;
+  background-color: #3498db;
+  /* 按鈕背景顏色 */
+  color: #fff;
+  /* 按鈕文字顏色 */
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 8px;
+  /* 圓角半徑，可調整按鈕的外觀 */
+  transition: 0.2s;
+  margin-right: 60px;
+}
+
+.bookingButton:hover {
+  border: 0.1px solid #3498db;
+  /* 設定邊界樣式 */
+  background-color: #fff;
+  color: #3498db;
+}
+
+.bookingButton:hover .icon {
+  animation: bounce 0.7s infinite;
+  /* animation 動畫 */
+  /* infinite無限執行 */
+  /* bounce 彈跳，在animation:bounce的名字和 @keygrames bounce的名字要一模一樣 */
+  /* @keyframes就是動畫的部分 */
+}
+
+/* 在1秒內，從0%到50%到100%， 0%的時候Y軸在0，50%的時候Y軸在-30px，100%的時候Y軸又回到0%*/
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-60px);
+  }
+}
+
+.icon {
+  display: inline-block;
+  margin-right: 10px;
+  /* 調整圖標和文字之間的間距 */
+  font-size: 20px;
+  /* 調整圖標大小 */
+}
+
+.button span {
+  vertical-align: middle;
+  /* 垂直居中 */
+}
+
+.text-end {
+  display: flex;
+  align-items: center;
+}
+
 .bookingBlock {
   margin-top: 10%;
 }
+
 .infoBlock {
   margin-top: 15%;
 }
 
 .speaker-img {
-  height: 550px; /* Set the desired height for the speaker-img div */
-  width: 100%; /* Set the width to 100% to make it responsive */
+  height: 550px;
+  width: 100%;
   position: relative;
-  overflow: hidden; /* Ensure that images don't overflow */
+  overflow: hidden;
   top: 3%;
 }
 
 .speakerImg {
-  width: 100%; /* Set the image width to 100% to fit within the div */
-  height: 100%; /* Set the image height to 100% to cover the div */
-  object-fit: cover; /* Control how the image is displayed within the div */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .main {
@@ -782,8 +802,8 @@ const formatDateTime = (dateString) => {
 }
 
 .reviewButton {
-  background-color: #007bff;
-  color: rgb(126, 32, 32);
+  background-color: rgb(7, 7, 114);
+  color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
@@ -792,13 +812,21 @@ const formatDateTime = (dateString) => {
 }
 
 .reviewButton:hover {
-  background-color: #0056b3;
+  background-color: rgb(82, 82, 255);
 }
 
 .comment-card textarea {
   width: 100%;
   padding: 5px;
   border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.comment-form textarea {
+  resize: none;
+  width: 370px;
+  height: 100px;
+  border: #ddd solid 1px;
   border-radius: 5px;
 }
 
@@ -836,29 +864,36 @@ const formatDateTime = (dateString) => {
   /* 調整圖標和文字之間的間距 */
   font-size: 15px;
   /* 調整圖標大小 */
+  margin-bottom: 20px;
 }
 
 /* 日曆表樣式 */
 
 #schedule {
-  width: 73%; /* 設定日曆表的寬度 */
-  max-width: 800px; /* 設定最大寬度以防止過度放大 */
-  margin: 0 auto; /* 水平置中 */
+  width: 73%;
+  /* 設定日曆表的寬度 */
+  max-width: 800px;
+  /* 設定最大寬度以防止過度放大 */
+  margin: 0 auto;
+  /* 水平置中 */
 }
 
 .schedule-table {
   border-collapse: collapse;
   margin: 20px auto;
   width: 100%;
-  max-width: none; /* 移除最大寬度限制 */
+  max-width: none;
+  /* 移除最大寬度限制 */
 }
 
 #schedule .schedule-table {
   border-collapse: collapse;
   margin: 20px auto;
   /* border-radius: 50px; 圓角效果 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 陰影效果 */
-  background-color: #fff; /* 背景顏色 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* 陰影效果 */
+  background-color: #fff;
+  /* 背景顏色 */
 }
 
 #schedule .schedule-table th,
@@ -866,8 +901,10 @@ const formatDateTime = (dateString) => {
   border: 4px solid #fa8d69;
   padding: 10px;
   cursor: pointer;
-  width: 80px; /* 設定單元格寬度 */
-  height: 30px; /* 設定單元格高度 */
+  width: 80px;
+  /* 設定單元格寬度 */
+  height: 30px;
+  /* 設定單元格高度 */
 }
 
 #schedule .schedule-table td.selected {
@@ -877,7 +914,15 @@ const formatDateTime = (dateString) => {
 
 /* 滑鼠懸停時的效果 */
 #schedule .schedule-table td:hover {
-  background-color: rgb(255, 238, 6); /* 滑鼠懸停時的背景顏色 */
-  color: #111; /* 文字顏色 */
+  background-color: rgb(255, 238, 6);
+  /* 滑鼠懸停時的背景顏色 */
+  color: #111;
+  /* 文字顏色 */
 }
+
+/* 整頁背景色 */
+/* .page-container {
+  background-color: #03031e;
+  color: #fff; 
+} */
 </style>

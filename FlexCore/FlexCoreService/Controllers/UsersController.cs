@@ -222,7 +222,7 @@ namespace FlexCoreService.Controllers
         {
             var salt = HashUtility.GetSalt();
             var userEnterPwd = HashUtility.ToSHA256(regdto.EncryptedPassword, salt);
-
+            int memberId = 0;
             //google註冊
             if (regdto.ImgPath != null)
             {
@@ -241,6 +241,8 @@ namespace FlexCoreService.Controllers
                     fk_LevelId = 1
                 };
                 _db.Members.Add(member);
+                await _db.SaveChangesAsync();
+                memberId = member.MemberId;
 
             }
             else
@@ -269,9 +271,12 @@ namespace FlexCoreService.Controllers
                 new EmailHelper().SendConfirmRegisterEmail(resetUrl, member.Name, member.Email);
 
                 _db.Members.Add(member);
+                await _db.SaveChangesAsync();
+                memberId = member.MemberId;
             }
 
-            await _db.SaveChangesAsync();
+            _cartService.SendCoupons(2, memberId);
+            
             return regdto;
         }
 
@@ -642,9 +647,9 @@ namespace FlexCoreService.Controllers
             var faker = new Faker();
 
             string username = faker.Internet.UserName();
-            string password = faker.Internet.Password();
+            string password = "ASDF741a";
             string fullName = faker.Name.FullName();
-            string email = faker.Internet.Email();//改成fuen28flex@gmail.com
+            string email = "fuen28flex@gmail.com";
             DateTime birthday = faker.Date.Past(18, DateTime.Now.AddYears(-30)).Date;
             string phoneNumber = faker.Phone.PhoneNumber("09########");
             string address = faker.Address.FullAddress();

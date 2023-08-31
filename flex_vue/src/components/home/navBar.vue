@@ -114,7 +114,7 @@
         />
         <i class="bi bi-search" @click="searchActiveToggle"></i>
       </div>
-      <div class="icon d-none d-lg-block">
+      <div class="icon d-none d-lg-flex">
         <a href="javascript:;"><i class="bi bi-heart"></i></a>
         <div v-if="favoritesItemCount != 0" class="countFavorites">
           {{ favoritesItemCount }}
@@ -738,6 +738,8 @@ header {
     display: flex;
     align-items: center;
 
+
+
     .nav-icon {
       font-size: 22px;
       display: flex;
@@ -803,9 +805,15 @@ header {
 
     .icon {
       position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
 
       @media screen and (max-width: 991px) {
-        margin-left: -15px;
+        &:not(:last-child) {
+          margin-left: -15px;
+        }
       }
 
       i {
@@ -821,7 +829,7 @@ header {
       .count {
         cursor: pointer;
         position: absolute;
-        top: 31%;
+        top: 40%;
         left: 53%;
         font-size: 12px;
       }
@@ -829,7 +837,7 @@ header {
       .countFavorites {
         cursor: pointer;
         position: absolute;
-        top: 24%;
+        top: 35%;
         left: 53%;
         font-size: 12px;
       }

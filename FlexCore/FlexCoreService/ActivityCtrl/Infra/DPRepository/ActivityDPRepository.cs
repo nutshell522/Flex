@@ -55,7 +55,8 @@ JOIN
 JOIN
      ActivityCategories ON ActivityCategories.ActivityCategoryId = Activities.fk_ActivityCategoryId
 GROUP BY
-    Activities.ActivityId, Activities.ActivityName, ActivityCategories.ActivityCategoryName, ActivityPlace, ActivityBookEndTime, Activities.ActivityDate";
+    Activities.ActivityId, Activities.ActivityName, ActivityCategories.ActivityCategoryName, ActivityPlace, ActivityBookEndTime, Activities.ActivityDate
+ORDER BY ActivityDate ";
 
 
             using(var conn =new SqlConnection(_connStr))
