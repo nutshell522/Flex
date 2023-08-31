@@ -13,7 +13,11 @@
         <!-- <a href="" @mouseenter="showList" @click.prevent> -->
         <a href="/user" class="d-flex">
           <div class="userName">Hi, {{ userName }}</div>
-          <userPhoto class="userPhoto-component" :width="36" :height="36"></userPhoto>
+          <userPhoto
+            class="userPhoto-component"
+            :width="36"
+            :height="36"
+          ></userPhoto>
         </a>
         <!-- <userList class="userList" v-if="isListVisible" @mouseleave="hideList"></userList> -->
         <userList class="userList"></userList>
@@ -33,10 +37,14 @@
         <button @click="setNavcenterHide" class="btn-close"></button>
       </div>
       <a href="/user" class="d-flex align-items-center d-lg-none">
-        <userPhoto class="userPhoto-component" :width="60" :height="60"></userPhoto>
+        <userPhoto
+          class="userPhoto-component"
+          :width="60"
+          :height="60"
+        ></userPhoto>
         <div class="ms-2">
-          <div class="fs-4"> {{ userName }}</div>
-          <div class="fs-5"> 你好</div>
+          <div class="fs-4">{{ userName }}</div>
+          <div class="fs-5">你好</div>
         </div>
       </a>
       <ul>
@@ -74,42 +82,74 @@
         </router-link>
       </ul>
       <div class="icons d-lg-none">
-        <div><a href="/user"><i class="bi bi-person"></i>個人資料</a>
+        <div>
+          <a href="/user"><i class="bi bi-person"></i>個人資料</a>
         </div>
-        <div class="mb-2"><a href="/favorites"><i class="bi bi-heart"></i>最愛</a></div>
-        <div class="mb-2"><a href="/cart"><i class="bi bi-bag"></i>購物車</a></div>
-        <div class="mb-2"><a href="/orders"><i class="bi bi-box-seam"></i>訂單</a></div>
-        <div class="mb-2"><a href="javascript:;" @click="logout"><i class="bi bi-door-open"></i>登出</a></div>
-
+        <div class="mb-2">
+          <a href="/favorites"><i class="bi bi-heart"></i>最愛</a>
+        </div>
+        <div class="mb-2">
+          <a href="/cart"><i class="bi bi-bag"></i>購物車</a>
+        </div>
+        <div class="mb-2">
+          <a href="/orders"><i class="bi bi-box-seam"></i>訂單</a>
+        </div>
+        <div class="mb-2">
+          <a href="javascript:;" @click="logout"
+            ><i class="bi bi-door-open"></i>登出</a
+          >
+        </div>
       </div>
     </div>
     <div class="center-bg d-lg-none" @click="setNavcenterHide"></div>
     <div class="right">
       <div class="search-wrapper d-flex">
-        <input type="search" class="search-bar" :class="{ active: searchActive }" placeholder="搜尋" v-model="searchKeyword"
-          @mouseenter="searchKeywordHandler" />
+        <input
+          type="search"
+          class="search-bar"
+          :class="{ active: searchActive }"
+          placeholder="搜尋"
+          v-model="searchKeyword"
+          @mouseenter="searchKeywordHandler"
+        />
         <i class="bi bi-search" @click="searchActiveToggle"></i>
       </div>
-      <div class="icon d-none d-lg-flex">
+      <div class="nav-bar-icon d-none d-lg-flex">
         <a href="javascript:;"><i class="bi bi-heart"></i></a>
         <div v-if="favoritesItemCount != 0" class="countFavorites">
           {{ favoritesItemCount }}
         </div>
         <div class="drap">
-          <div v-if="favoritesItemCount && favoritesItemCount != 0" class="w-100 h-100">
+          <div
+            v-if="favoritesItemCount && favoritesItemCount != 0"
+            class="w-100 h-100"
+          >
             <ul class="p-2 w-100 h-100">
-              <li v-for="card in cards" :key="card.productId" class="d-flex mb-2"
-                style="border-bottom: 1px solid gainsboro">
-                <a :href="webBaseAddress + card.path + '/Detail/' + card.productId
-                  " class="d-flex">
+              <li
+                v-for="card in cards"
+                :key="card.productId"
+                class="d-flex mb-2"
+                style="border-bottom: 1px solid gainsboro"
+              >
+                <a
+                  :href="
+                    webBaseAddress + card.path + '/Detail/' + card.productId
+                  "
+                  class="d-flex"
+                >
                   <div style="width: 80px; height: 80px">
-                    <img :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath" />
+                    <img
+                      :src="imgBaseUrl + 'Public/Img/' + card.firstImgPath"
+                    />
                   </div>
                   <div>
                     <div>
                       {{ card.productName }}
                     </div>
-                    <span class="text-decoration-line-through" v-if="card.unitPrice != null">
+                    <span
+                      class="text-decoration-line-through"
+                      v-if="card.unitPrice != null"
+                    >
                       NT${{ card.unitPrice.toLocaleString("en-US") }}
                     </span>
                     <span v-if="card.unitPrice != null"> 活動價 </span>
@@ -124,28 +164,46 @@
         </div>
       </div>
 
-      <div class="icon">
-        <a href="/cart"><i class="bi bi-bag"></i>
+      <div class="nav-bar-icon">
+        <a href="/cart"
+          ><i class="bi bi-bag"></i>
           <div v-if="cartItemCount && cartItemCount.value != 0" class="count">
             {{ cartItemCount }}
           </div>
         </a>
         <div class="drap">
-          <div v-if="memberId == 0" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+          <div
+            v-if="memberId == 0"
+            class="w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+          >
             <div class="w-100 text-center fs-4">您尚未登入</div>
             <a class="btn btn-dark rounded-5 px-4 mt-4" href="/login">登入</a>
           </div>
-          <div v-else-if="cartItemCount && cartItemCount != 0" class="w-100 h-100 d-flex flex-column p-2">
+          <div
+            v-else-if="cartItemCount && cartItemCount != 0"
+            class="w-100 h-100 d-flex flex-column p-2"
+          >
             <ul class="p-0">
-              <li v-for="cartItem in cartItems" :key="cartItem.cartItemId" class="w-100">
-                <a :href="webBaseAddress +
-                  cartItem.product.categorySubStr +
-                  '/detail/' +
-                  cartItem.product.productSaleId
-                  " class="w-100 d-flex border-bottom pb-2 mb-2">
+              <li
+                v-for="cartItem in cartItems"
+                :key="cartItem.cartItemId"
+                class="w-100"
+              >
+                <a
+                  :href="
+                    webBaseAddress +
+                    cartItem.product.categorySubStr +
+                    '/detail/' +
+                    cartItem.product.productSaleId
+                  "
+                  class="w-100 d-flex border-bottom pb-2 mb-2"
+                >
                   <div class="cart-img-wrapper me-3">
-                    <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath
-                      " />
+                    <img
+                      :src="
+                        imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath
+                      "
+                    />
                   </div>
                   <div class="w-75">
                     <div class="fs-6">{{ cartItem.product.productName }}</div>
@@ -163,13 +221,18 @@
               </li>
             </ul>
           </div>
-          <div v-else class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+          <div
+            v-else
+            class="w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+          >
             <div class="w-100 text-center fs-4">購物車還沒有東西喔</div>
           </div>
         </div>
       </div>
-      <div class="icon d-lg-none">
-        <a href="javascript:;" @click="setNavcenterActive"><i class="bi bi-list"></i></a>
+      <div class="nav-bar-icon d-lg-none">
+        <a href="javascript:;" @click="setNavcenterActive"
+          ><i class="bi bi-list"></i
+        ></a>
         <div class="count"></div>
       </div>
     </div>
@@ -177,14 +240,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits, watchEffect, onBeforeUnmount } from 'vue';
-import userList from '../home/userList.vue';
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import { storeToRefs } from 'pinia'; //把解構又同時具備響應式功能
-import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
-import { useRoute, useRouter } from 'vue-router';
-import userPhoto from '@/components/user/userPhoto.vue';
+import { ref, onMounted, defineEmits, watchEffect, onBeforeUnmount } from "vue";
+import userList from "../home/userList.vue";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { storeToRefs } from "pinia"; //把解構又同時具備響應式功能
+import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
+import { useRoute, useRouter } from "vue-router";
+import userPhoto from "@/components/user/userPhoto.vue";
 
 const router = useRouter();
 const webBaseAddress = "https://localhost:8080/";
@@ -194,7 +257,7 @@ const { loginSuccess } = storeToRefs(getApiStore); //資料就透過storeToRefs�
 const { memberInfo } = storeToRefs(getApiStore);
 const { setLoginSuccess } = getApiStore; //function透過store取資料
 const { getData } = getApiStore;
-const searchKeyword = ref('');
+const searchKeyword = ref("");
 const navCerterIsActive = ref(false);
 const searchActive = ref(false);
 const favoritesItemCount = ref("");
@@ -203,22 +266,22 @@ const { handleLogout } = getApiStore; //function透過store取資料
 
 //登出
 function logout() {
-  localStorage.removeItem('loggedInUser');
+  localStorage.removeItem("loggedInUser");
   handleLogout();
 }
 
 const setNavcenterActive = () => {
   navCerterIsActive.value = true;
-}
+};
 const setNavcenterHide = () => {
   navCerterIsActive.value = false;
-}
+};
 const searchActiveToggle = () => {
   searchActive.value = !searchActive.value;
-}
+};
 const searchActiveClose = () => {
-  searchActive.value = false
-}
+  searchActive.value = false;
+};
 
 //關鍵字搜尋
 const searchKeywordHandler = () => {
@@ -302,22 +365,22 @@ function showList() {
 function hideList() {
   isListVisible.value = false;
 }
-window.addEventListener('resize', setNavcenterHide);
-window.addEventListener('resize', searchActiveClose);
+window.addEventListener("resize", setNavcenterHide);
+window.addEventListener("resize", searchActiveClose);
 onMounted(() => {
   sendFunctionToParent();
 });
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', setNavcenterHide);
-  window.removeEventListener('resize', searchActiveClose);
+  window.removeEventListener("resize", setNavcenterHide);
+  window.removeEventListener("resize", searchActiveClose);
 });
 watchEffect(() => {
   if (navCerterIsActive.value) {
     // 當 navCerterIsActive 為 true，隱藏卷軸
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   } else {
     // 當 navCerterIsActive 為 false，顯示卷軸
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = "auto";
   }
 });
 
@@ -365,8 +428,6 @@ $bg-gray: #f5f5f5;
   position: relative;
 }
 
-
-
 header {
   background-color: #f5f5f5;
   height: $header-height;
@@ -377,7 +438,7 @@ header {
     align-items: center;
     height: 100%;
 
-    &>li {
+    & > li {
       list-style: none;
       font-size: 14px;
       height: 100%;
@@ -386,12 +447,10 @@ header {
 
       &.userPhoto-box:hover {
         .userPhoto-component {
-
           transform: scale(2) translate(-30px, 30px);
           border-radius: 50px;
 
           // border: 1px solid #444;
-
         }
 
         .userList {
@@ -409,7 +468,7 @@ header {
         overflow: hidden;
       }
 
-      &>a {
+      & > a {
         @extend .text-link;
         height: 100%;
         line-height: $header-height;
@@ -422,21 +481,18 @@ header {
           z-index: 7000;
           position: absolute;
           right: 0;
-          transition: transform .3s;
-
+          transition: transform 0.3s;
         }
       }
 
       &:not(:first-child)::before {
-        content: '|';
+        content: "|";
         font-size: 14px;
         position: absolute;
         left: 0;
-        top: calc((100% - 21px)/ 2);
-
+        top: calc((100% - 21px) / 2);
       }
     }
-
   }
 
   .userIcon {
@@ -456,19 +512,18 @@ header {
   top: 0;
   z-index: 2000;
 
-
-  &>.left,
-  &>.right {
+  & > .left,
+  & > .right {
     @extend .nav-height;
     position: absolute;
   }
 
-  &>.left {
+  & > .left {
     @extend .nav-height;
     position: absolute;
     left: 40px;
 
-    &>.logo-wrapper {
+    & > .logo-wrapper {
       @extend .nav-height;
       width: 100px;
       display: flex;
@@ -490,7 +545,7 @@ header {
         object-fit: cover;
       }
 
-      &>h1 {
+      & > h1 {
         line-height: $nav-height;
         font-weight: bold;
         font-size: 40px;
@@ -505,8 +560,8 @@ header {
       opacity: 0;
       backdrop-filter: blur(3px);
       z-index: 5100;
-      transition: .3s;
-      background-color: rgba($color: #000, $alpha: .3);
+      transition: 0.3s;
+      background-color: rgba($color: #000, $alpha: 0.3);
       position: fixed;
       top: 0;
       left: 0;
@@ -515,7 +570,7 @@ header {
     }
   }
 
-  &>.center {
+  & > .center {
     @media screen and (max-width: 991px) {
       position: fixed;
       background-color: #fff;
@@ -526,12 +581,12 @@ header {
       z-index: 8000;
       padding: 40px 50px 150px 50px;
       overflow-y: scroll;
-      transition: .3s;
+      transition: 0.3s;
 
       &.active {
         right: 0;
 
-        +.center-bg {
+        + .center-bg {
           visibility: visible;
           opacity: 1;
         }
@@ -560,7 +615,6 @@ header {
           }
         }
       }
-
 
       .btn-close {
         padding: 7px;
@@ -602,12 +656,12 @@ header {
       transform: translate(-50%);
       position: absolute;
 
-      &>ul {
+      & > ul {
         display: flex;
         height: 100%;
 
-        &>.transetion {
-          &>li {
+        & > .transetion {
+          & > li {
             height: 100%;
             cursor: pointer;
             overflow-y: hidden;
@@ -617,14 +671,14 @@ header {
             display: flex;
             justify-content: center;
 
-            &>.nav-list-item {
+            & > .nav-list-item {
               width: 100%;
               height: 200%;
               position: absolute;
               top: 0;
               transition: 0.3s;
 
-              &>div {
+              & > div {
                 width: 100%;
                 display: flex;
                 height: 50%;
@@ -636,14 +690,14 @@ header {
             &:hover {
               border-bottom: 3px solid black;
 
-              &>.nav-list-item {
+              & > .nav-list-item {
                 top: -100%;
               }
             }
           }
         }
 
-        &>li {
+        & > li {
           height: 100%;
           cursor: pointer;
           overflow-y: hidden;
@@ -653,13 +707,13 @@ header {
           display: flex;
           justify-content: center;
 
-          &>.nav-list-item {
+          & > .nav-list-item {
             height: 200%;
             position: absolute;
             top: 0;
             transition: 0.3s;
 
-            &>div {
+            & > div {
               display: flex;
               height: 50%;
               align-items: center;
@@ -670,7 +724,7 @@ header {
           &:hover {
             border-bottom: 3px solid black;
 
-            &>.nav-list-item {
+            & > .nav-list-item {
               top: -100%;
             }
           }
@@ -683,8 +737,6 @@ header {
     right: 40px;
     display: flex;
     align-items: center;
-
-
 
     .nav-icon {
       font-size: 22px;
@@ -722,7 +774,7 @@ header {
             visibility: visible;
             width: calc(100% - 20px);
 
-            +.bi-search {
+            + .bi-search {
               left: calc(4px + 20px);
             }
           }
@@ -749,7 +801,7 @@ header {
       }
     }
 
-    .icon {
+    .nav-bar-icon {
       position: relative;
       width: 100%;
       height: 100%;
@@ -764,7 +816,6 @@ header {
 
       i {
         @extend .nav-icon;
-
 
         margin-left: 10px;
       }

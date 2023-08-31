@@ -68,6 +68,21 @@ export class CountdownTimer {
     this._countdownText = `截止日期: ${formattedDate}`;
   }
 }
+export class PayInfo {
+  MerchantID: string = "";
+  MerchantTradeNo: string = "";
+  MerchantTradeDate: string = "";
+  PaymentType: string = "";
+  TotalAmount: string = "";
+  TradeDesc: string = "";
+  ItemName: string = "";
+  ReturnURL: string = "";
+  ChoosePayment: string = "";
+  EncryptType: string = "";
+  ClientBackURL: string = "";
+  CheckMacValue: string = "";
+  OrderResultURL: string = "";
+}
 export class SizeVM {
   productSaleId: string = "";
   productId: number = 0;
