@@ -224,19 +224,23 @@ const loadActivities = async (id) => {
       console.log(err);
     });
 };
-// loadActivities(activityId);
+
+let actTime = ref();
 let startTime;
+let bookStartTime;
 //從後端獲得報名起訖時間
 const getActivityBookingTime = async (id) => {
   axios
     .get(`https://localhost:7183/api/Activity/GetActivityBookingTime?id=${id}`)
     .then((res) => {
       console.log(res.data);
-      const actTime = res.data;
+      actTime = res.data;
       console.log(actTime.activityBookEndTime);
       showDate = formatDateTime(actTime.activityBookEndTime);
       console.log(showDate); //2023/5/7 0:0:0
       endDate.value = new Date(showDate);
+      bookStartTime = actTime.activityBookStartTime;
+      console.log(bookStartTime);
       // console.log(endDate.value);
     })
     .catch((err) => {
