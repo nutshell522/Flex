@@ -13,24 +13,36 @@
       <verify class="verify" v-if="verifyArea"></verify>
     </div>
     <div class="col-md-6 editPwdAll" v-if="editPwdShow">
-      <div class="from-group" v-if="errors.length">
-        <ul class="mb-3 errorsText">
+      <div class="from-group errorsText" v-if="errors.length">
+        <ul class="mb-3">
           <span v-for="error in errors" class="text-danger">{{ error }}</span>
         </ul>
       </div>
-      <div class="col-md-9">
+      <div class="col-md-9 mt-4">
         <div class="input-group" v-if="editPwdShow">
           <label for="editPwdInput" class="text">修改密碼</label>
-          <input :type="eye1 ? 'text' : 'password'" class="form-control" id="editPwdInput" placeholder="輸入6-10碼英數字"
-            v-model="editPwd" maxlength="10" />
+          <input
+            :type="eye1 ? 'text' : 'password'"
+            class="form-control"
+            id="editPwdInput"
+            placeholder="輸入6-10碼英數字"
+            v-model="editPwd"
+            maxlength="10"
+          />
         </div>
         <div class="eye1" @click="openEye1">
           <i class="bi" :class="eye1 ? 'bi-eye' : 'bi-eye-slash'"></i>
         </div>
-        <div class="input-group">
+        <div class="input-group mb-4">
           <label for="checkPwdInput" class="text">確認密碼</label>
-          <input :type="eye2 ? 'text' : 'password'" class="form-control" id="checkPwdInput" placeholder="請重新輸入修改密碼"
-            v-model="checkPwd" maxlength="10" />
+          <input
+            :type="eye2 ? 'text' : 'password'"
+            class="form-control"
+            id="checkPwdInput"
+            placeholder="請重新輸入修改密碼"
+            v-model="checkPwd"
+            maxlength="10"
+          />
         </div>
         <div class="eye2" @click="openEye2">
           <i class="bi" :class="eye2 ? 'bi-eye' : 'bi-eye-slash'"></i>
@@ -54,31 +66,59 @@
     <div class="input-group gender">
       <div class="radioBtn">
         <label for="genderRadio1" class="text">性別</label>
-        <input class="form-check-input" type="radio" id="genderRadio1" :value="false" v-model="gender" />
+        <input
+          class="form-check-input"
+          type="radio"
+          id="genderRadio1"
+          :value="false"
+          v-model="gender"
+        />
         <label class="form-check-label ms-1" for="genderRadio1"> 生理男 </label>
       </div>
       <div class="radioBtn">
-        <input class="form-check-input" type="radio" id="genderRadio2" :value="true" v-model="gender" />
+        <input
+          class="form-check-input"
+          type="radio"
+          id="genderRadio2"
+          :value="true"
+          v-model="gender"
+        />
         <label class="form-check-label ms-1" for="genderRadio2">生理女 </label>
       </div>
     </div>
     <div class="col-md-6">
       <div class="input-group">
         <label for="emailInput" class="text">信箱</label>
-        <input type="text" class="form-control" id="emailInput" placeholder="email" v-model="email" />
+        <input
+          type="text"
+          class="form-control"
+          id="emailInput"
+          placeholder="email"
+          v-model="email"
+        />
       </div>
     </div>
     <!-- todo手機信箱input右邊的圓角 -->
     <div class="col-md-6">
       <div class="input-group">
         <label for="mobileInput" class="text">手機</label>
-        <input type="text" class="form-control" id="mobileInput" placeholder="mobile" v-model="mobile" />
+        <input
+          type="text"
+          class="form-control"
+          id="mobileInput"
+          placeholder="mobile"
+          v-model="mobile"
+        />
       </div>
     </div>
     <div class="col-md-6 birthday">
       <div class="input-group">
         <label for="birthday" class="text">生日</label>
-        <datepicker id="birthday" class="form-control birthday" v-model="birthday"></datepicker>
+        <datepicker
+          id="birthday"
+          class="form-control birthday"
+          v-model="birthday"
+        ></datepicker>
       </div>
     </div>
     <!-- todoUpdate -->
@@ -86,23 +126,47 @@
     <div class="col-md-6">
       <div class="input-group">
         <label for="addressInput" class="text">地址</label>
-        <input type="text" class="form-control" id="addressInput" placeholder="common address" v-model="commonAddress" />
+        <input
+          type="text"
+          class="form-control"
+          id="addressInput"
+          placeholder="common address"
+          v-model="commonAddress"
+        />
         <div class="col-md-1 addressBtn">
           <button type="button">
-            <i class="bi bi-plus-square-fill icon-size" v-if="!addressBtn" @click="addBtn"></i>
+            <i
+              class="bi bi-plus-square-fill icon-size"
+              v-if="!addressBtn"
+              @click="addBtn"
+            ></i>
           </button>
           <button type="button">
-            <i class="bi bi-dash-square-fill icon-size" v-if="addressBtn" @click="minusBtn"></i>
+            <i
+              class="bi bi-dash-square-fill icon-size"
+              v-if="addressBtn"
+              @click="minusBtn"
+            ></i>
           </button>
         </div>
       </div>
       <div class="addressInput">
-        <input type="text" class="form-control addAddressInput" placeholder="alternate address"
-          v-model="alternateAddress1" v-if="addAddressInput1" />
+        <input
+          type="text"
+          class="form-control addAddressInput"
+          placeholder="alternate address"
+          v-model="alternateAddress1"
+          v-if="addAddressInput1"
+        />
       </div>
       <div class="addressInput mb-3">
-        <input type="text" class="form-control addAddressInput" placeholder="alternate address"
-          v-model="alternateAddress2" v-if="addAddressInput2" />
+        <input
+          type="text"
+          class="form-control addAddressInput"
+          placeholder="alternate address"
+          v-model="alternateAddress2"
+          v-if="addAddressInput2"
+        />
       </div>
       <!-- todoAdd -->
       <!-- <div class="input-group mb-3">
@@ -114,8 +178,13 @@
       <div class="subscribe">
         <label class="text">訂閱電子報</label>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="subscribeBtn" v-model="isSubscribeNews"
-            v-if="isSubscribeNews" />
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="subscribeBtn"
+            v-model="isSubscribeNews"
+            v-if="isSubscribeNews"
+          />
         </div>
         <div class="form-check-label" for="subscribeBtn">訂閱</div>
       </div>
@@ -126,7 +195,13 @@
     <div class="userImg">
       <div>
         <img :src="imageSrc + 'Public/UserImgs/' + imgPath" id="profileImage" />
-        <input id="photo-input" ref="photo" type="file" class="photo" @change="fileChange($event)" />
+        <input
+          id="photo-input"
+          ref="photo"
+          type="file"
+          class="photo"
+          @change="fileChange($event)"
+        />
       </div>
       <div class="aa">
         <label for="photo-input" class="btn changePhoto"> 選擇圖片 </label>
@@ -168,7 +243,7 @@ const componentKey = ref(1);
 function reloadComponent() {
   showComponent.value = false; // 首先隐藏组件
   componentKey.value += 1; // 更改 key 值，触发重新加载
-  // 在下一个 tick 中再显示组件，以便触发重新渲染
+  // 在下一个 tick 中再顯示组件，以便觸發重新渲染
   setTimeout(() => {
     showComponent.value = true;
   }, 0);
@@ -194,7 +269,7 @@ function fileChange(event) {
     .then((res) => {
       console.log(res.data);
       localStorage.setItem('updateUserPhoto', res.data); // imgPath 是新照片的路径
-      reloadComponent()
+      reloadComponent();
     })
     .catch((err) => {
       console.log(err);
@@ -207,6 +282,7 @@ const userProfile = ref([]);
 const editPwd = ref('');
 const checkPwd = ref('');
 const editPwdShow = ref(false);
+const pwdRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]{6,10})$/;
 
 const id = ref('');
 const email = ref('');
@@ -332,6 +408,9 @@ function updatePwd() {
   if (editPwd.value == '' || checkPwd.value == '') {
     errors.value = [];
     errors.value.push('請確實填寫');
+  } else if (!pwdRegex.test(editPwd.value) || !pwdRegex.test(checkPwd.value)) {
+    errors.value = [];
+    errors.value.push('修改密碼或確認密碼格式錯誤');
   } else if (editPwd.value == checkPwd.value) {
     errors.value = [];
     editUserProfile.EncryptedPassword = checkPwd.value;
@@ -431,15 +510,15 @@ function saveBtn() {
 
 .eye1 {
   position: absolute;
-  right: 64%;
-  top: 11.5%;
+  right: 63%;
+  top: 13.5%;
   font-size: 20px;
 }
 
 .eye2 {
   position: absolute;
-  right: 64%;
-  top: 19%;
+  right: 63%;
+  top: 21.5%;
   font-size: 20px;
 }
 
@@ -517,12 +596,15 @@ function saveBtn() {
 
 .editPwdAll {
   border: 1px solid;
-  padding: 20px;
   margin-bottom: 20px;
+  padding-left: 25px;
 }
 
 .photo {
   position: fixed;
   top: -500px;
+}
+.errorsText {
+  height: 10px;
 }
 </style>
