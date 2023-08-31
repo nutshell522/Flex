@@ -4,40 +4,40 @@
     <div class="row">
       <div class="ps-5">
         <div class="row" style="min-height: 129px">
-            <div class="NTbox">訂單編號 : </div>
-          <div class="col-3 orderTitle" :title="shoesOrderDetail.shoesOrderId">
+            <div class="">訂單編號 : </div>
+          <div class="col-3" :title="shoesOrderDetail.shoesOrderId">
             {{ shoesOrderDetail.shoesOrderId }}
           </div>
         </div>
         <div class="row" style="min-height: 129px">
             <div class="col-3">
-            <div class="detailSalesPriceBox">
-              <div class="NTbox">商品編號 : </div>
-              <div class="detailSalesPrice" :title="shoesOrderDetail.shoesName">
+            <div class="">
+              <div class="">商品編號 : </div>
+              <div class="" :title="shoesOrderDetail.shoesName">
                 {{ shoesOrderDetail.shoesName }}
               </div>
             </div>
           </div>
           <div class="col-3">
-            <div class="detailSalesPriceBox">
-              <div class="NTbox">尺寸 : </div>
-              <div class="detailSalesPrice" :title="shoesOrderDetail.sizeName">
+            <div class="">
+              <div class="">尺寸 : </div>
+              <div class="" :title="shoesOrderDetail.sizeName">
                 {{ shoesOrderDetail.sizeName }}
               </div>
             </div>
           </div>
           <div class="col-3">
-            <div class="detailSalesPriceBox">
-              <div class="NTbox">NT$</div>
-              <div class="detailSalesPrice" :title="shoesOrderDetail.shoesUnitPrice">
+            <div class="">
+              <div class="">NT$</div>
+              <div class="" :title="shoesOrderDetail.shoesUnitPrice">
                 {{ shoesOrderDetail.shoesUnitPrice }}
               </div>
             </div>
           </div>
           <div class="col-3">
-            <div class="detailSalesPriceBox">
-              <div class="NTbox">數量 : </div>
-              <div class="detailSalesPrice" :title="shoesOrderDetail.qty">
+            <div class="">
+              <div class="">數量 : </div>
+              <div class="" :title="shoesOrderDetail.qty">
                 {{ shoesOrderDetail.qty }}
               </div>
             </div>
@@ -66,13 +66,13 @@
             </div>
         </div>
         <hr/>
-        <div class="row color-list">
+        <div class="row">
           <div class="mt-3 mb-3 col-12">
             <div class="d-flex row">
             <div class="col-6">
-            <div class="detailSalesPriceBox">
-              <div class="NTbox">總金額 : </div>
-              <div class="detailSalesPrice" :title="totalPrice">
+            <div class="">
+              <div class="">總金額 : </div>
+              <div class="" :title="totalPrice">
                 {{ shoesOrderDetail.qty * shoesOrderDetail.shoesUnitPrice }}
               </div>
             </div>
@@ -88,10 +88,16 @@
                             @click="submitPayment">
                       前往信用卡結帳頁面
                     </button>
-                    <button v-else-if="selectedPaymentMethod === 'cash'" @click="checkoutSuccess" type="button"
+                    <div v-else-if="selectedPaymentMethod === 'cash'">
+                    <label>
+                    <input type="checkbox" v-model="agreeToCreateOrder" />
+                    我同意建立訂單
+                  </label>
+                    <button v-if="showCheckoutButton"  @click="checkoutSuccess" type="button"
                             class="btn btn-primary comenextBtn mt-4">
                       結帳
                     </button>
+                    </div>
                   </form>
               </div>
             </div>
@@ -105,23 +111,95 @@
 
 <script setup>
 import axios from "axios";
-import { onMounted, ref, computed,reactive } from "vue";
+import { onMounted, ref, computed,reactive, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
 import router from "@/router";
+import { useActivityRoute } from "@/stores/useActivityRoute.js";
 
+const activityStore = useActivityRoute();
 const optionsAll = ref("");
 const shoesOrderDetail = ref({});
 const shoesDetail = ref({});
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const route = useRoute();
+const agreeToCreateOrder = ref(false); // 勾選框的狀態
+const showCheckoutButton = ref(false);
 
 const selectedPaymentMethod = ref("creditCard"); // 預設選中信用卡結帳
+
+// 根據勾選框的狀態更新 showCheckoutButton 標誌
+watch(agreeToCreateOrder, (newVal) => {
+  if (newVal) {
+    // 當勾選框被勾選時，執行 intoOrder 函式
+    ShoestoOrder();
+  }  
+  showCheckoutButton.value = newVal;
+});
 
 const totalPrice = computed(() => {
   return shoesOrderDetail.qty * shoesOrderDetail.shoesUnitPrice;
 });
+
+//塞入資料到訂單裡
+const shoesUri = `${baseAddress}api/CustomeShoes/IntoOrder`;
+const shoesdataUri = `${baseAddress}api/CustomeShoes/IntoShoesProduct`;
+
+//塞入資料進訂單
+var orderData = {};
+let orderId = 0;
+function ShoestoOrder()
+{
+  if (!agreeToCreateOrder.value) {
+    // 如果勾選框未被選中，不執行建立訂單操作
+    return;
+  }else{
+  orderData.fk_member_Id = parseInt(IdData.memberId);
+  orderData.total_quantity = shoesdata.qty;
+  orderData.cellphone = member.mobile;
+  orderData.receiver = member.name;
+  orderData.recipient_address = member.commonAddress;
+  orderData.total_price = shoesdata.qty * shoesdata.shoesUnitPrice;
+  orderData.order_status_Id = 1;
+  orderData.pay_method_Id = 3;
+  orderData.freight = 60;
+  orderData.order_description = "客製化";
+  orderData.fk_typeId = 4;
+  orderData.pay_status_Id = 3;
+  console.log(orderData)
+  axios
+    .post(shoesUri, orderData)
+    .then((res)=>{
+      console.log(res.data)
+      orderId = res.data;
+      shoesProductToOrder();
+    })
+    .catch((error)=>{
+      console.error("POST request error:", error);
+    })
+  }
+}
+
+var productdata = {};
+function shoesProductToOrder()
+{
+  productdata.order_Id = orderId;
+  productdata.product_name = product.shoesName;
+  productdata.per_price = product.shoesUnitPrice;
+  productdata.quantity = shoesdata.qty;
+  productdata.Items_description =product.shoesDescription ;
+  axios
+    .post(shoesdataUri, productdata)
+    .then((res)=>{
+      console.log(`item added:`, res.data);
+    })
+    .catch((error)=>{
+      console.error(`POST request error for item:`, error);
+    });
+
+}
+
 
 //抓取網頁登入資料
 const IdInfo = localStorage.getItem('loggedInUser');
@@ -157,6 +235,43 @@ const member = reactive({
     email:"",
     birthday:""
 })
+console.log(member)
+
+//傳給後端商品資料
+const product = reactive({
+    shoesName:"",
+    shoesDescription:"",
+    shoesUnitPrice:""
+})
+
+const shoesdata = reactive({
+  qty:"",
+  shoesUnitPrice:"",
+})
+console.log(shoesdata)
+
+
+//把會員編號傳給後單，自動帶入會員資料
+const loadMember = async (id) => {
+  axios
+    .get(`https://localhost:7183/api/Activity/SignUp${id}`)
+    .then((res) => {
+      //console.log(res.data);
+      const datas = res.data;
+      member.name = datas.name;
+      member.commonAddress = datas.commonAddress;
+      member.mobile = datas.mobile;
+      member.email = datas.email;
+      member.birthday = datas.birthday;
+      member.gender = datas == true ? "男" : "女";
+      //console.log(member.gender);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+loadMember(memberId);
+
 
 //結帳完返回商品頁
 const isCheckoutInProgress = ref(false);
@@ -181,28 +296,32 @@ const checkoutSuccess = async () => {
   }
 };
 
-//抓api資料
+//抓shoes api資料
 let getshoesData = async (id) => {
 
     await axios.get(
        `${baseAddress}api/CustomeShoes/shoes/Detail/${id}`
     )
     .then(res=>{
-    console.log(res.data);
+    //console.log(res.data);
     shoesDetail.value = res.data;
+    product.shoesName = res.data.shoesName;
+    product.shoesUnitPrice = res.data.shoesUnitPrice;
+    product.shoesDescription = res.data.shoesDescription;
     }).catch(error=>{console.log(error)})}
   
 
+    const activityId = route.params.shoesProductId
+    //console.log(activityId);
 
 
 //從後端得到綠界需要的參數資訊
-axios.get(`https://localhost:7183/api/Payment/Shoes/${shoesDetail.shoesProductId}`)
+axios.get(`https://localhost:7183/api/Payment/${activityId}`)
 
     .then(res=>{
 
         console.log(res.data);
         console.log(res);
-        
         const payresult = res.data;
         payInfo.MerchantID = payresult.MerchantID;
         console.log("畫面的ID="+payInfo.MerchantID);
@@ -248,7 +367,7 @@ axios.get(`https://localhost:7183/api/Payment/Shoes/${shoesDetail.shoesProductId
         //把訂單資訊傳給後端進資料庫
         axios.post("https://localhost:7183/api/Payment/addOrder", formData)
             .then(res=>{
-                console.log(res.data);
+                //console.log(res.data);
             })
             .catch(err=>{
                 console.log(err);
@@ -262,6 +381,9 @@ let getData = async () => {
     );
     console.log(response.data.shoesProductId);
     shoesOrderDetail.value = response.data;
+    console.log(response.data)
+    shoesdata.qty = response.data.qty;
+    shoesdata.shoesUnitPrice = response.data.shoesUnitPrice;
     optionsAll.value = shoesOrderDetail.value.shoesAllOptions[0]
     getshoesData(response.data.shoesProductId);
   } catch (error) {
