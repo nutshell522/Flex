@@ -153,12 +153,12 @@ namespace EFModels.Models
                     .WithMany(p => p.ActivityImgs)
                     .HasForeignKey(d => d.fk_ActivityId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ActivityI__fk_Ac__5AB9788F");
+                    .HasConstraintName("FK__ActivityI__fk_Ac__5D95E53A");
             });
 
             modelBuilder.Entity<ActivityStatus>(entity =>
             {
-                entity.HasIndex(e => e.ActivityStatusDescription, "UQ__Activity__732635EC40041F71")
+                entity.HasIndex(e => e.ActivityStatusDescription, "UQ__Activity__732635EC869748DF")
                     .IsUnique();
 
                 entity.Property(e => e.ActivityStatusDescription).HasMaxLength(50);
@@ -179,6 +179,7 @@ namespace EFModels.Models
                 entity.HasOne(d => d.fk_Member)
                     .WithOne(p => p.AlternateAddress)
                     .HasForeignKey<AlternateAddress>(d => d.fk_MemberId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__Alternate__fk_Me__3D2915A8");
             });
 
@@ -204,10 +205,10 @@ namespace EFModels.Models
 
             modelBuilder.Entity<Branch>(entity =>
             {
-                entity.HasIndex(e => e.BranchName, "UQ__Branches__3903DB03C9B1D3EA")
+                entity.HasIndex(e => e.BranchName, "UQ__Branches__3903DB0333823C4F")
                     .IsUnique();
 
-                entity.HasIndex(e => e.BranchAddress, "UQ__Branches__F50DE17A26F2B7FE")
+                entity.HasIndex(e => e.BranchAddress, "UQ__Branches__F50DE17A2F807D2E")
                     .IsUnique();
 
                 entity.Property(e => e.BranchAddress)
@@ -306,13 +307,14 @@ namespace EFModels.Models
                 entity.HasOne(d => d.fk_Member)
                     .WithMany(p => p.CouponSendings)
                     .HasForeignKey(d => d.fk_MemberId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_CouponSendings_Members");
             });
 
             modelBuilder.Entity<CustomizedOrder>(entity =>
             {
                 entity.HasKey(e => e.Customized_Id)
-                    .HasName("PK__Customiz__AFADABDD4CFFCC74");
+                    .HasName("PK__Customiz__AFADABDD62D38FD0");
 
                 entity.Property(e => e.Customized_number)
                     .IsRequired()
@@ -328,17 +330,17 @@ namespace EFModels.Models
                 entity.HasOne(d => d.Customized_EdgeProtectionNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_EdgeProtectionNavigations)
                     .HasForeignKey(d => d.Customized_EdgeProtection)
-                    .HasConstraintName("FK__Customize__Custo__6442E2C9");
+                    .HasConstraintName("FK__Customize__Custo__671F4F74");
 
                 entity.HasOne(d => d.Customized_EyeletNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_EyeletNavigations)
                     .HasForeignKey(d => d.Customized_Eyelet)
-                    .HasConstraintName("FK__Customize__Custo__634EBE90");
+                    .HasConstraintName("FK__Customize__Custo__662B2B3B");
 
                 entity.HasOne(d => d.Customized_RearNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_RearNavigations)
                     .HasForeignKey(d => d.Customized_Rear)
-                    .HasConstraintName("FK__Customize__Custo__65370702");
+                    .HasConstraintName("FK__Customize__Custo__681373AD");
 
                 entity.HasOne(d => d.Customized_Shoes)
                     .WithMany(p => p.CustomizedOrders)
@@ -348,12 +350,12 @@ namespace EFModels.Models
                 entity.HasOne(d => d.Customized_ToeNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_ToeNavigations)
                     .HasForeignKey(d => d.Customized_Toe)
-                    .HasConstraintName("FK__Customize__Custo__671F4F74");
+                    .HasConstraintName("FK__Customize__Custo__69FBBC1F");
 
                 entity.HasOne(d => d.Customized_TongueNavigation)
                     .WithMany(p => p.CustomizedOrderCustomized_TongueNavigations)
                     .HasForeignKey(d => d.Customized_Tongue)
-                    .HasConstraintName("FK__Customize__Custo__662B2B3B");
+                    .HasConstraintName("FK__Customize__Custo__690797E6");
 
                 entity.HasOne(d => d.Fk_ForMemberCustomized)
                     .WithMany(p => p.CustomizedOrders)
@@ -406,7 +408,7 @@ namespace EFModels.Models
             modelBuilder.Entity<Customized_material>(entity =>
             {
                 entity.HasKey(e => e.Shoesmaterial_Id)
-                    .HasName("PK__Customiz__06EFE12D2B32B15A");
+                    .HasName("PK__Customiz__06EFE12DEAAAE247");
 
                 entity.Property(e => e.material_Name)
                     .IsRequired()
@@ -442,7 +444,7 @@ namespace EFModels.Models
             modelBuilder.Entity<EcpayOrder>(entity =>
             {
                 entity.HasKey(e => e.MerchantTradeNo)
-                    .HasName("PK__EcpayOrd__D631191071F6EE4E");
+                    .HasName("PK__EcpayOrd__D63119100B4C8D7A");
 
                 entity.Property(e => e.MerchantTradeNo).HasMaxLength(50);
 
@@ -511,7 +513,8 @@ namespace EFModels.Models
                 entity.Property(e => e.Account)
                     .IsRequired()
                     .HasMaxLength(30)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('unique')");
 
                 entity.Property(e => e.Birthday).HasColumnType("date");
 
@@ -523,7 +526,8 @@ namespace EFModels.Models
 
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(300);
+                    .HasMaxLength(300)
+                    .HasDefaultValueSql("(N'unique')");
 
                 entity.Property(e => e.EncryptedPassword)
                     .IsRequired()
@@ -533,7 +537,8 @@ namespace EFModels.Models
                 entity.Property(e => e.Mobile)
                     .IsRequired()
                     .HasMaxLength(10)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('unique')");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -566,7 +571,6 @@ namespace EFModels.Models
                 entity.HasOne(d => d.fk_member)
                     .WithMany(p => p.MemberImgs)
                     .HasForeignKey(d => d.fk_memberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MemberImg_Members");
             });
 
@@ -609,7 +613,7 @@ namespace EFModels.Models
                         r => r.HasOne<MembershipLevel>().WithMany().HasForeignKey("fk_LevelId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Membershi__fk_Le__01D345B0"),
                         j =>
                         {
-                            j.HasKey("fk_LevelId", "fk_PrivilegeId").HasName("PK__Membersh__580C8EAAB97E0DA2");
+                            j.HasKey("fk_LevelId", "fk_PrivilegeId").HasName("PK__Membersh__580C8EAAFF14C4F1");
 
                             j.ToTable("MembershipLevelPrivileges");
                         });
@@ -618,7 +622,7 @@ namespace EFModels.Models
             modelBuilder.Entity<OneToOneReservation>(entity =>
             {
                 entity.HasKey(e => e.ReservationId)
-                    .HasName("PK__OneToOne__B7EE5F24910850F6");
+                    .HasName("PK__OneToOne__B7EE5F24F1A028EC");
 
                 entity.Property(e => e.ReservationCreatedDate)
                     .HasColumnType("datetime")
@@ -638,19 +642,19 @@ namespace EFModels.Models
                     .WithMany(p => p.OneToOneReservations)
                     .HasForeignKey(d => d.fk_BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OneToOneR__fk_Br__74794A92");
+                    .HasConstraintName("FK__OneToOneR__fk_Br__7755B73D");
 
                 entity.HasOne(d => d.fk_ReservationSpeaker)
                     .WithMany(p => p.OneToOneReservations)
                     .HasForeignKey(d => d.fk_ReservationSpeakerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OneToOneR__fk_Re__756D6ECB");
+                    .HasConstraintName("FK__OneToOneR__fk_Re__7849DB76");
 
                 entity.HasOne(d => d.fk_ReservationStatus)
                     .WithMany(p => p.OneToOneReservations)
                     .HasForeignKey(d => d.fk_ReservationStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OneToOneR__fk_Re__76619304");
+                    .HasConstraintName("FK__OneToOneR__fk_Re__793DFFAF");
             });
 
             modelBuilder.Entity<PointHistory>(entity =>
@@ -939,21 +943,21 @@ namespace EFModels.Models
                     .WithMany(p => p.ReservationReviews)
                     .HasForeignKey(d => d.fk_memberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Reservati__fk_me__14E61A24");
+                    .HasConstraintName("FK__Reservati__fk_me__17C286CF");
 
                 entity.HasOne(d => d.fk_speaker)
                     .WithMany(p => p.ReservationReviews)
                     .HasForeignKey(d => d.fk_speakerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Reservati__fk_sp__15DA3E5D");
+                    .HasConstraintName("FK__Reservati__fk_sp__18B6AB08");
             });
 
             modelBuilder.Entity<ReservationStatus>(entity =>
             {
                 entity.HasKey(e => e.ReservationId)
-                    .HasName("PK__Reservat__B7EE5F24E417BBBA");
+                    .HasName("PK__Reservat__B7EE5F24FD1E2455");
 
-                entity.HasIndex(e => e.ReservationStatusDescription, "UQ__Reservat__ADF40EA611CCCB76")
+                entity.HasIndex(e => e.ReservationStatusDescription, "UQ__Reservat__ADF40EA6BC1BF8BF")
                     .IsUnique();
 
                 entity.Property(e => e.ReservationId).ValueGeneratedNever();
@@ -1013,7 +1017,7 @@ namespace EFModels.Models
             modelBuilder.Entity<ShoesColorCategory>(entity =>
             {
                 entity.HasKey(e => e.ShoesColorId)
-                    .HasName("PK__ShoesCol__BB1469D4E29CA6C9");
+                    .HasName("PK__ShoesCol__BB1469D44CC26480");
 
                 entity.Property(e => e.ColorCode).HasMaxLength(100);
 
@@ -1075,7 +1079,7 @@ namespace EFModels.Models
             modelBuilder.Entity<ShoesPicture>(entity =>
             {
                 entity.HasKey(e => e.ShoesPicture_Id)
-                    .HasName("PK__ShoesPic__DF35EBA4D2578734");
+                    .HasName("PK__ShoesPic__DF35EBA4F267894B");
 
                 entity.Property(e => e.ShoesPictureUrl).HasMaxLength(4000);
 
@@ -1088,7 +1092,7 @@ namespace EFModels.Models
             modelBuilder.Entity<ShoesSize>(entity =>
             {
                 entity.HasKey(e => e.SizeId)
-                    .HasName("PK__ShoesSiz__83BD097AF19D6A5D");
+                    .HasName("PK__ShoesSiz__83BD097A5A8C5687");
 
                 entity.Property(e => e.SizeName)
                     .IsRequired()
@@ -1138,19 +1142,19 @@ namespace EFModels.Models
                 entity.HasOne(d => d.fk_SpeakerBranch)
                     .WithMany(p => p.Speakers)
                     .HasForeignKey(d => d.fk_SpeakerBranchId)
-                    .HasConstraintName("FK__Speakers__fk_Spe__2057CCD0");
+                    .HasConstraintName("FK__Speakers__fk_Spe__2334397B");
 
                 entity.HasOne(d => d.fk_SpeakerField)
                     .WithMany(p => p.Speakers)
                     .HasForeignKey(d => d.fk_SpeakerFieldId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Speakers__fk_Spe__214BF109");
+                    .HasConstraintName("FK__Speakers__fk_Spe__24285DB4");
             });
 
             modelBuilder.Entity<SpeakerField>(entity =>
             {
                 entity.HasKey(e => e.FieldId)
-                    .HasName("PK__SpeakerF__C8B6FF07978D45A5");
+                    .HasName("PK__SpeakerF__C8B6FF0732CB4F1E");
 
                 entity.Property(e => e.FieldName)
                     .IsRequired()
@@ -1223,7 +1227,7 @@ namespace EFModels.Models
 
             modelBuilder.Entity<Supplier>(entity =>
             {
-                entity.HasIndex(e => e.SupplierCompanyNumber, "UQ__Supplier__AE8E9B41121119CD")
+                entity.HasIndex(e => e.SupplierCompanyNumber, "UQ__Supplier__AE8E9B4177059568")
                     .IsUnique();
 
                 entity.Property(e => e.SupplierCompanyAddress).HasMaxLength(250);

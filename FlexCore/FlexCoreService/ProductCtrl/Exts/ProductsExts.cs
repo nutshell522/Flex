@@ -25,8 +25,12 @@ namespace FlexCoreService.ProductCtrl.Exts
         public static ProductDetailVM ToDetailVM(this IEnumerable<ProductDetailDto> dto)
         {
             var group = new Dictionary<string, List<ColorGroupDto>>();
-
-            foreach(var detail in dto)
+            if (dto.Count() == 0)
+            {
+                var emptVm = new ProductDetailVM();
+                return emptVm;
+            }
+            foreach (var detail in dto)
             {
                 var colorGroup = new ColorGroupDto()
                 {
@@ -59,6 +63,7 @@ namespace FlexCoreService.ProductCtrl.Exts
                 ProductSubCategoryName = dto.FirstOrDefault()?.ProductSubCategoryName,
                 ProductGroup = group
             };
+
             return vm;
         }
 
