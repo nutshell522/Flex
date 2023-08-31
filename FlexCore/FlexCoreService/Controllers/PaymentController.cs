@@ -36,8 +36,8 @@ namespace FlexCoreService.Controllers
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
             var website = $"https://localhost:7183";
 
-            var activityInfo = _actRepo.GetActivityInfo(id) ;
-            
+            var activityInfo = _actRepo.GetActivityInfo(id);
+
 
             var order = new Dictionary<string, string>
             {
@@ -55,6 +55,37 @@ namespace FlexCoreService.Controllers
                 { "OrderResultURL", $"https://localhost:7183/api/Payment/addPayInfo/{orderId}"} //client端回傳付款結果網址
                   
         };
+            order["CheckMacValue"] = GetCheckMacValue(order); //為 order 物件添加一個名為 "CheckMacValue" 【檢查碼】的屬性，並將其值設定為 GetCheckMacValue(order)
+
+            return order;
+
+        }
+
+        [HttpGet("ProductMakePayment/{id}")]
+        public Dictionary<string, string> ProductMakePayment(int id)
+        {
+            var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
+            var website = $"https://localhost:7183";
+
+            var activityInfo = _actRepo.GetActivityInfo(id);
+
+
+            var order = new Dictionary<string, string>
+            {
+                { "MerchantID", "3002607" }, //商店編號
+                { "MerchantTradeNo", orderId }, //訂單編號
+                { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") }, //交易時間
+                { "PaymentType", "aio" }, //交易類型，固定填aio
+                { "TotalAmount", activityInfo.ActivitySalePrice.ToString() }, //金額
+                { "TradeDesc", "Flex活動報名" },//交易描述
+                { "ItemName", activityInfo.ActivityName },//品名
+                { "ReturnURL",  $"https://localhost:7183/api/Payment/addPayInfo/{orderId}"}, //付款完成通知回傳網址
+                { "ChoosePayment", "ALL" }, //預設付款方式
+                { "EncryptType", "1" },//CheckMacValue加密類型，固定填1
+                { "ClientBackURL", "http://localhost:8080/" },//Client端返回商店的按鈕連結
+                { "OrderResultURL", $"{website}/api/Payment/addPayInfo/{orderId}"} //client端回傳付款結果網址
+                  
+            };
             order["CheckMacValue"] = GetCheckMacValue(order); //為 order 物件添加一個名為 "CheckMacValue" 【檢查碼】的屬性，並將其值設定為 GetCheckMacValue(order)
 
             return order;
@@ -85,7 +116,7 @@ namespace FlexCoreService.Controllers
                 { "ClientBackURL", "http://localhost:8080/" },//Client端返回商店的按鈕連結
                 { "OrderResultURL", $"https://localhost:7183/api/Payment/addPayInfo/{orderId}"} //client端回傳付款結果網址
                   
-        };
+            };
             order["CheckMacValue"] = GetCheckMacValue(order); //為 order 物件添加一個名為 "CheckMacValue" 【檢查碼】的屬性，並將其值設定為 GetCheckMacValue(order)
 
             return order;
@@ -131,7 +162,7 @@ namespace FlexCoreService.Controllers
 
         }
 
-       
+
         [HttpPost("addPayInfo/{id}")]
         public async Task<IActionResult> AddPayInfo([FromForm] AddPayInfoDTO info)
         {
@@ -177,7 +208,7 @@ namespace FlexCoreService.Controllers
                 orderCode = info.TradeNo
             };
 
-            var newId=_repo.UpdateOrderInfo(orders);
+            var newId = _repo.UpdateOrderInfo(orders);
 
             ActivityToOrderItemDTO item = new ActivityToOrderItemDTO
             {
@@ -225,7 +256,7 @@ namespace FlexCoreService.Controllers
 
 
         [HttpPost("addReservationOrderInfo")]
-        public async Task<string> ReservationAddOrder([FromBody]ReservationAddOrderDTO dto)
+        public async Task<string> ReservationAddOrder([FromBody] ReservationAddOrderDTO dto)
         {
             var memberInfo = await _actRepo.GetMembreInfoAsync(dto.memberId);
             var order = new ReservationToOrdersDTO
@@ -251,6 +282,6 @@ namespace FlexCoreService.Controllers
             return ("新增預約資料成功");
         }
 
-       
+
     }
 }

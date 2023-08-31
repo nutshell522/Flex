@@ -28,13 +28,13 @@ const routes = [
     //http://loaclhost/cart
     path: '/cart',
     component: () => import('@/views/home/Cart.vue'),
-    meta: { title: `${webTitle}購物車` },
+    meta: { title: `${webTitle}購物車` , require: true},
   },
   {
     //http://loaclhost/buy
     path: '/buy',
     component: () => import('@/views/home/Buy.vue'),
-    meta: { title: `${webTitle}結帳` },
+    meta: { title: `${webTitle}結帳`, require: true},
   },
   {
     //http://loaclhost/onSale

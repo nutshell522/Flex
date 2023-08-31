@@ -4,13 +4,13 @@
       <h4>重新設定密碼</h4>
     </div>
     <div class="from-group">
-      <ul class="mb-3 errorsText">
+      <ul class="mb-4 errorsText">
         <span v-for="error in errors" class="text-danger">{{ error }}</span>
       </ul>
     </div>
     <label for="resetPwd">新設密碼</label>
     <input
-      type="text"
+      :type="eye1 ? 'text' : 'password'"
       class="form-control mb-3"
       name="resetPwd"
       id="resetPwd"
@@ -18,9 +18,12 @@
       v-model="resetPwd"
       maxlength="10"
     />
+    <div class="eye1" @click="openEye1">
+      <i class="bi" :class="eye1 ? 'bi-eye' : 'bi-eye-slash'"></i>
+    </div>
     <label for="confirmPwd">確認密碼</label>
     <input
-      type="text"
+      :type="eye2 ? 'text' : 'password'"
       class="form-control mb-3"
       name="confirmPwd"
       id="confirmPwd"
@@ -28,6 +31,9 @@
       v-model="confirmPwd"
       maxlength="10"
     />
+    <div class="eye2" @click="openEye2">
+      <i class="bi" :class="eye2 ? 'bi-eye' : 'bi-eye-slash'"></i>
+    </div>
     <div class="finish">
       <button type="submit" class="btn finishBtn" @click="finish">
         完成設定
@@ -46,14 +52,30 @@ const route = useRoute();
 const errors = ref([]);
 const resetPwd = ref('');
 const confirmPwd = ref('');
+const eye1 = ref(false);
+const eye2 = ref(false);
+const pwdRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]{6,10})$/;
 const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
 const uri = `${baseAddress}api/Users/ResetPassword?memberId=${route.query.memberId}&confirmCode=${route.query.confirmCode}`;
 
+function openEye1() {
+  eye1.value = !eye1.value;
+}
+
+function openEye2() {
+  eye2.value = !eye2.value;
+}
 function finish() {
   //欄位驗證
   if (resetPwd.value == '' || confirmPwd.value == '') {
     errors.value = [];
     errors.value.push('請確實填寫');
+  } else if (
+    !pwdRegex.test(resetPwd.value) ||
+    !pwdRegex.test(confirmPwd.value)
+  ) {
+    errors.value = [];
+    errors.value.push('新設密碼或確認密碼格式錯誤');
   } else {
     //欄位驗證通過
     errors.value = [];
@@ -105,5 +127,18 @@ function finish() {
 .finishBtn {
   background-color: #bb3e20;
   color: white;
+}
+.eye1 {
+  position: absolute;
+  right: 42.5%;
+  top: 33.8%;
+  font-size: 20px;
+}
+
+.eye2 {
+  position: absolute;
+  right: 42.5%;
+  top: 42%;
+  font-size: 20px;
 }
 </style>

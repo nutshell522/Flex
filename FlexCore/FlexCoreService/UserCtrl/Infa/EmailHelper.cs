@@ -15,22 +15,20 @@ namespace FlexCoreService.UserCtrl.Infa
             string body = $@"
                 <html>
                     <body>
-                        <h1>以下為 flex 提供的預設密碼</h1>
-                        <h3>{name}，您好</h3>  
-
-                        <h3>請使用以下連結登入您的帳戶以後至 會員中心>個人資料>變更密碼 進行密碼修改:<a href='{resetUrl}'> 馬上登入重新設定密碼 </a></h3>
+                        <h1>{name}，您好，歡迎重新設定密碼</h1>
+                        <h3>請點擊「重新設定密碼」連結來設定您新的密碼:<a href='{resetUrl}'> 重新設定密碼 </a></h3>
                         <br>
                         <img src='cid:logo'>
                     </body>
                 </html>
             ";
             // 使用 AlternateView 添加 HTML 內容，包含圖片
-            AlternateView avHtml = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
+            //AlternateView avHtml = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
 
             // 添加圖片附件，並設定 ContentId 以供引用
-            LinkedResource logoResource = new LinkedResource("D:\\FlexFrontend\\FlexFrontendNew\\FlexCore\\FlexCoreService\\wwwroot\\Public\\Img\\Icon.png", MediaTypeNames.Image.Jpeg);
-            logoResource.ContentId = "logo";
-            avHtml.LinkedResources.Add(logoResource);
+            //LinkedResource logoResource = new LinkedResource("D:\\FlexFrontend\\FlexFrontendNew\\FlexCore\\FlexCoreService\\wwwroot\\Public\\Img\\Icon.png", MediaTypeNames.Image.Jpeg);
+            //logoResource.ContentId = "logo";
+            //avHtml.LinkedResources.Add(logoResource);
 
             var from = senderEmail;
             var to = email;
@@ -52,12 +50,12 @@ namespace FlexCoreService.UserCtrl.Infa
         </html>
     ";
             // 使用 AlternateView 添加 HTML 內容，包含圖片
-            AlternateView avHtml = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
+            //AlternateView avHtml = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
 
             // 添加圖片附件，並設定 ContentId 以供引用
-            LinkedResource logoResource = new LinkedResource("D:\\FlexFrontend\\FlexFrontendNew\\FlexCore\\FlexCoreService\\wwwroot\\Public\\Img\\Icon.png", MediaTypeNames.Image.Jpeg);
-            logoResource.ContentId = "logo";
-            avHtml.LinkedResources.Add(logoResource);
+            //LinkedResource logoResource = new LinkedResource("D:\\FlexFrontend\\FlexFrontendNew\\FlexCore\\FlexCoreService\\wwwroot\\Public\\Img\\Icon.png", MediaTypeNames.Image.Jpeg);
+            //logoResource.ContentId = "logo";
+            //avHtml.LinkedResources.Add(logoResource);
 
             var from = senderEmail;
             var to = email;
@@ -72,7 +70,7 @@ namespace FlexCoreService.UserCtrl.Infa
             // 寄出信
             // ref https://dotblogs.com.tw/chichiblog/2018/04/20/122816
             var smtpAccount = from;
-            var smtpPassword = "tvmalpfpzkcghuas";
+            var smtpPassword = "wbfcehcsdicqejcs";
 
             var smtpServer = "smtp.gmail.com";
             var SmtpPort = 587;
@@ -83,7 +81,7 @@ namespace FlexCoreService.UserCtrl.Infa
             mms.Body = body;
             mms.IsBodyHtml = true;
             mms.SubjectEncoding = Encoding.UTF8;
-            mms.To.Add(new MailAddress(to));
+            mms.To.Add(to);
 
             using (var client = new SmtpClient(smtpServer, SmtpPort))
             {

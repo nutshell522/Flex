@@ -4,6 +4,7 @@ using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.CustomeShoes.Models.Dtos;
 using FlexCoreService.CustomeShoes.Models.VMs;
 using FlexCoreService.CustomeShoes.Service;
+using FlexCoreService.Orders;
 using FlexCoreService.ProductCtrl.Models.VM;
 using FlexCoreService.ProductCtrl.Service;
 using FlexCoreService.UserCtrl.Models.Dtos;
@@ -168,6 +169,50 @@ namespace FlexCoreService.Controllers
             await _db.SaveChangesAsync();
             return dto;
         }
+
+        [HttpPost("IntoOrder")]
+        public async Task<ShoesToOrderDto> ShoesIntoOrders([FromBody] ShoesToOrderDto dto)
+        {
+            order shoes = new order
+            {
+                fk_member_Id = dto.fk_member_Id,
+                ordertime = DateTime.Now,
+                total_quantity = dto.total_quantity,
+                order_status_Id = dto.order_status_Id,
+                pay_method_Id = dto.pay_method_Id,
+                pay_status_Id = dto.pay_status_Id,
+                freight = dto.freight,
+                cellphone = dto.cellphone,
+                receiver = dto.receiver,
+                recipient_address = dto.recipient_address,
+                order_description = dto.order_description,
+                total_price = dto.total_price,
+                fk_typeId = dto.fk_typeId,
+                
+            };
+
+            _db.orders.Add(shoes);
+            await _db.SaveChangesAsync();
+            return dto;
+        }
+
+        [HttpPost("IntoShoesProduct")]
+        public async Task<OrderItemsVM> ShoesIntoOrders([FromBody] OrderItemsVM vm)
+        {
+            orderItem shoesitem = new orderItem
+            {
+                order_Id = vm.order_Id,
+                product_name = vm.product_name,
+                per_price = vm.per_price,
+                quantity = vm.quantity,
+                Items_description = vm.Items_description
+            };
+
+            _db.orderItems.Add(shoesitem);
+            await _db.SaveChangesAsync();
+            return vm;
+        }
+
 
         [HttpGet("shoes/Customization/Order/{ShoesOrderId}")]
         public async Task<ActionResult<ShoesTotalOrderVM>> GetShoesOrderTotal(string ShoesOrderId)

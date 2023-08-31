@@ -28,7 +28,7 @@
         id="account"
         v-model="account"
         class="form-control"
-        placeholder="帳號/Email"
+        placeholder="帳號(6-10碼英數字) / Email"
         maxlength="10"
       />
     </div>
@@ -226,23 +226,32 @@ const account = ref('');
 const password = ref('');
 const passwordCheck = ref('');
 const arrow = ref(false);
+const accPwdRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]{6,10})$/;
 
 //註冊表單
 const name = ref('');
 const email = ref('');
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const birthday = ref('');
 const mobile = ref('');
+const mobileRegex = /^\d{10}$|^\d{11}$/;
+
 const address = ref('');
 const googleUser = ref(null);
 
 const uri = `${baseAddress}api/Users/Login`;
 var loginData = {};
 
+//登入 / 註冊
 function ValidatedIdentity() {
   if (account.value === '') {
     errors.value = [];
     loading.value = false;
     errors.value.push('請確實填寫');
+  } else if (!accPwdRegex.test(account.value)) {
+    errors.value = [];
+    errors.value.push('帳號格式錯誤');
+    return;
   } else {
     //已填寫
     errors.value = [];
@@ -296,6 +305,10 @@ function Login() {
     errors.value = [];
     errors.value.push('請確實填寫');
     return;
+  } else if (!accPwdRegex.test(password.value)) {
+    errors.value = [];
+    errors.value.push('密碼格式錯誤');
+    return;
   }
 
   axios
@@ -335,10 +348,8 @@ function Login() {
     })
     .catch((err) => {
       errors.value = [];
-      errors.value.push('密碼累計錯誤1次');
-
+      errors.value.push('密碼錯誤');
       console.error(err);
-      //todo錯誤累計三次
     });
 }
 
@@ -393,14 +404,34 @@ const registercheck = ref(false);
 const regUri = `${baseAddress}api/Users/Register`;
 function registerBtn() {
   //帳號
-  if (email.value === '') {
+  if (
+    account.value === '' ||
+    password.value === '' ||
+    name.value === '' ||
+    email.value === '' ||
+    birthday.value === '' ||
+    mobile.value === '' ||
+    address.value === ''
+  ) {
     errors.value = [];
     errors.value.push('欄位尚未填寫完畢');
+  } else if (!accPwdRegex.test(account.value)) {
+    errors.value = [];
+    errors.value.push('帳號格式錯誤');
+    return;
+  } else if (!accPwdRegex.test(password.value)) {
+    errors.value = [];
+    errors.value.push('密碼格式錯誤');
   } else if (password.value != passwordCheck.value) {
     errors.value = [];
     errors.value.push('密碼或確認密碼錯誤');
+  } else if (!emailRegex.test(email.value)) {
+    errors.value = [];
+    errors.value.push('信箱格式錯誤');
+  } else if (!mobileRegex.test(mobile.value)) {
+    errors.value = [];
+    errors.value.push('手機格式錯誤');
   } else {
-    //註冊資料
     errors.value = [];
     const registerData = {
       Account: account.value,

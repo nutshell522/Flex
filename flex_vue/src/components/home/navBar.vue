@@ -114,7 +114,7 @@
         />
         <i class="bi bi-search" @click="searchActiveToggle"></i>
       </div>
-      <div class="icon d-none d-lg-flex">
+      <div class="nav-bar-icon d-none d-lg-flex">
         <a href="javascript:;"><i class="bi bi-heart"></i></a>
         <div v-if="favoritesItemCount != 0" class="countFavorites">
           {{ favoritesItemCount }}
@@ -168,7 +168,7 @@
         </div>
       </div>
 
-      <div class="icon">
+      <div class="nav-bar-icon">
         <a href="/cart"
           ><i class="bi bi-bag"></i>
           <div v-if="cartItemCount && cartItemCount.value != 0" class="count">
@@ -233,7 +233,7 @@
           </div>
         </div>
       </div>
-      <div class="icon d-lg-none">
+      <div class="nav-bar-icon d-lg-none">
         <a href="javascript:;" @click="setNavcenterActive"
           ><i class="bi bi-list"></i
         ></a>
@@ -805,7 +805,7 @@ header {
       }
     }
 
-    .icon {
+    .nav-bar-icon {
       position: relative;
       width: 100%;
       height: 100%;

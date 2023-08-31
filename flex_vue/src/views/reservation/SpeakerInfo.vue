@@ -5,7 +5,11 @@
       <div class="row main bigRow">
         <div class="col-md-8">
           <div class="speaker-img">
-            <img :src="imgBaseUrl + '/Public/Img/Speaker/' + speaker.speakerImg" alt="Featured 1" class="speakerImg" />
+            <img
+              :src="imgBaseUrl + '/Public/Img/Speaker/' + speaker.speakerImg"
+              alt="Featured 1"
+              class="speakerImg"
+            />
           </div>
 
           <div class="infoBlock">
@@ -35,7 +39,11 @@
           <div id="reviewWhole">
             <h1>課程心得</h1>
             <!-- v-for迴圈每一個評論，生成評論卡 -->
-            <div class="comment-card" v-for="comment in comments" :key="comment.id">
+            <div
+              class="comment-card"
+              v-for="comment in comments"
+              :key="comment.id"
+            >
               <div class="comment-header">
                 <!-- <img :src="comment.author.avatar" alt="Author Avatar" class="avatar" /> -->
                 <div class="author-info">
@@ -44,40 +52,65 @@
                 </div>
               </div>
               <div class="comment-content">
-                <p v-if="!comment.editing &&
-                  !comment.expanded &&
-                  comment.content.length > 150
-                  ">
+                <p
+                  v-if="
+                    !comment.editing &&
+                    !comment.expanded &&
+                    comment.content.length > 150
+                  "
+                >
                   {{ comment.content.slice(0, 150) }}...
                 </p>
                 <p v-else-if="!comment.editing">{{ comment.content }}</p>
-                <textarea v-model="comment.editContent" v-if="comment.editing && canEdit(comment)" rows="4"></textarea>
+                <textarea
+                  v-model="comment.editContent"
+                  v-if="comment.editing && canEdit(comment)"
+                  rows="4"
+                ></textarea>
               </div>
               <div class="comment-footer">
                 <!-- 評分 -->
                 <div class="rating">
-                  <span class="star" v-for="n in comment.rating" :key="n">★</span>
+                  <span class="star" v-for="n in comment.rating" :key="n"
+                    >★</span
+                  >
                 </div>
-                <button class="reviewButton" @click="allowEdit(comment)" v-if="canEdit(comment)">
+                <button
+                  class="reviewButton"
+                  @click="allowEdit(comment)"
+                  v-if="canEdit(comment)"
+                >
                   {{ comment.editing ? "取消" : "編輯" }}
                 </button>
 
-                <button class="reviewButton" @click="saveEditedComment(comment)"
-                  v-if="comment.editing && canEdit(comment)">
+                <button
+                  class="reviewButton"
+                  @click="saveEditedComment(comment)"
+                  v-if="comment.editing && canEdit(comment)"
+                >
                   儲存
                 </button>
               </div>
             </div>
 
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary reviewButton" data-bs-toggle="modal"
-              data-bs-target="#exampleModal">
+            <button
+              type="button"
+              class="btn btn-primary reviewButton"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
               新增心得
             </button>
 
             <!-- 新增評論的Modal -->
-            <div class="modal fade modal-dialog modal-dialog-centered" id="exampleModal" tabindex="-1"
-              aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div
+              class="modal fade modal-dialog modal-dialog-centered"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -91,16 +124,30 @@
                       <!-- 新增評論的表單 -->
                       <div class="comment-form">
                         <p>{{ userAccount }}</p>
-                        <star-rating @update:rating="setRating"
-                          style="margin-left: 50px; margin-bottom: 20px"></star-rating>
-                        <textarea v-model="newComment.content" placeholder="留下您的課程心得" required></textarea>
+                        <star-rating
+                          @update:rating="setRating"
+                          style="margin-left: 50px; margin-bottom: 20px"
+                        ></star-rating>
+                        <textarea
+                          v-model="newComment.content"
+                          placeholder="留下您的課程心得"
+                          required
+                        ></textarea>
                       </div>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary reviewButton" data-bs-dismiss="modal">
+                      <button
+                        type="button"
+                        class="btn btn-secondary reviewButton"
+                        data-bs-dismiss="modal"
+                      >
                         取消
                       </button>
-                      <button type="submit" data-bs-dismiss="modal" class="btn btn-primary reviewButton">
+                      <button
+                        type="submit"
+                        data-bs-dismiss="modal"
+                        class="btn btn-primary reviewButton"
+                      >
                         送出
                       </button>
                     </div>
@@ -112,12 +159,22 @@
         </div>
 
         <div class="col-md-4 mt-5">
-          <div class="text-end">
-            <a href="#" class="btn bookingButton" @click="getActivityId" data-bs-toggle="modal"
-              data-bs-target="#staticBackdrop">
+          <div>
+            <a
+              href="#"
+              class="btn bookingButton"
+              @click="getActivityId"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+            >
               <!-- icon -->
               <span class="icon">
-                <img width="70" height="50" src="../../../public/imgs/jump3.png" alt="exercise" />
+                <img
+                  width="70"
+                  height="50"
+                  src="../../../public/imgs/jump3.png"
+                  alt="exercise"
+                />
               </span>
               <!-- 按鈕文字 -->
               <span style="font-size: 50px; color: rgb(1, 2, 60)"> 預 約 </span>
@@ -125,20 +182,33 @@
           </div>
 
           <!-- Modal -->
-          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div
+            class="modal fade"
+            id="staticBackdrop"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="staticBackdropLabel"
+            aria-hidden="true"
+          >
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
                   <h1 class="modal-title fs-5" id="staticBackdropLabel">
                     {{ userName }} 您好
                   </h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
                 </div>
                 <div class="modal-body">
                   您預約的是<span class="importantInfo">{{
                     speaker.speakerName
-                  }}</span>講師的諮詢服務
+                  }}</span
+                  >講師的諮詢服務
                   <br />
                   時間： <span class="importantInfo"> {{ date }} </span> 的
                   <span class="importantInfo">
@@ -152,7 +222,9 @@
                   <br />
                   <br />
 
-                  <span style="text-decoration: underline">預約注意事項和同意聲明</span>
+                  <span style="text-decoration: underline"
+                    >預約注意事項和同意聲明</span
+                  >
                   <br />
 
                   我們非常歡迎您使用預約講師的服務。請在預約之前仔細閱讀以下注意事項和同意聲明：
@@ -174,10 +246,19 @@
                   我明白並同意遵守上述注意事項。我明白如果我不遵守這些規定，我的預約權限可能會受到限制。
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
                     取消
                   </button>
-                  <button type="button" class="btn btn-primary" @click="addReservationOrderInfo" data-bs-dismiss="modal">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="addReservationOrderInfo"
+                    data-bs-dismiss="modal"
+                  >
                     確認
                   </button>
                 </div>
@@ -186,9 +267,16 @@
           </div>
           <div class="showTopThree">
             <h2 class="mt-5">人氣講師</h2>
-            <div class="image-container" v-for="(single, index) in TopThreeSpeaker" :key="index">
+            <div
+              class="image-container"
+              v-for="(single, index) in TopThreeSpeaker"
+              :key="index"
+            >
               <a :href="'/speakerInfo/' + single.fk_ReservationSpeakerId">
-                <img :src="imgBaseUrl + '/Public/Img/Speaker/' + single.speakerImg" alt="" />
+                <img
+                  :src="imgBaseUrl + '/Public/Img/Speaker/' + single.speakerImg"
+                  alt=""
+                />
               </a>
             </div>
           </div>
@@ -626,7 +714,7 @@ const formatDateTime = (dateString) => {
 };
 </script>
 
-<style scoped>
+<style>
 .importantInfo {
   text-decoration: underline;
   color: #3498db;
@@ -684,7 +772,6 @@ const formatDateTime = (dateString) => {
 
 /* 在1秒內，從0%到50%到100%， 0%的時候Y軸在0，50%的時候Y軸在-30px，100%的時候Y軸又回到0%*/
 @keyframes bounce {
-
   0%,
   100% {
     transform: translateY(0);
@@ -704,13 +791,8 @@ const formatDateTime = (dateString) => {
 }
 
 .button span {
-  vertical-align: middle;
+  /* vertical-align: middle; */
   /* 垂直居中 */
-}
-
-.text-end {
-  display: flex;
-  align-items: center;
 }
 
 .bookingBlock {
