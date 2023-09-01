@@ -260,7 +260,7 @@ namespace FlexCoreService.Controllers
                     CommonAddress = regdto.CommonAddress,
                     fk_LevelId = 1
                 };
-                // 填入 confirmCode
+                //填入confirmCode
                 var confirmCode = Guid.NewGuid().ToString("N");
                 member.ConfirmCode = confirmCode;
                 _db.SaveChanges();
@@ -270,6 +270,8 @@ namespace FlexCoreService.Controllers
 
                 //發送驗證信
                 new EmailHelper().SendConfirmRegisterEmail(resetUrl, member.Name, member.Email);
+
+                //reCAPTCHA
 
                 _db.Members.Add(member);
                 await _db.SaveChangesAsync();
@@ -625,6 +627,18 @@ namespace FlexCoreService.Controllers
                 return Ok("已成功取消收藏");
             }
             return Ok("取消收藏失敗");
+        }
+
+        /// <summary>
+        /// reCAPTCHA驗證
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        [HttpPost("reCaptcha")]
+        public async Task<ActionResult> GetReCAPTCHAResult(string token)
+        {
+            
+            return Ok("驗證成功");
         }
 
         /// <summary>

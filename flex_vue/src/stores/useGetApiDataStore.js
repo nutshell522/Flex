@@ -25,7 +25,7 @@ export const useGetApiDataStore = defineStore('getApiData', {
       this.loginSuccess = false;
       Cookies.remove('user_cookie');
 
-      const baseAddress = 'https://localhost:7183';
+      const baseAddress = import.meta.env.VITE_API_BASEADDRESS;
       const uri = `${baseAddress}/api/Users/Logout`;
       axios
         .delete(uri)
