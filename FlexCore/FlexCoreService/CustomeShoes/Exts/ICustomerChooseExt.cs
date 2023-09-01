@@ -67,5 +67,22 @@ namespace FlexCoreService.CustomeShoes.Exts
                 ShoesAllOptions = dto1.ToList(),
             };
         }
+
+        public static ShoesOrderToOrderVM ToShoesOrderVM(this ShoesToOrderDto dto, IEnumerable<ShoesItemToOrderDto> dto1)
+        {
+            return new ShoesOrderToOrderVM
+            {
+                fk_member_Id = dto.fk_member_Id,
+                ordertime = dto.ordertime,
+                total_quantity = dto.total_quantity,
+                total_price = dto.total_price,
+                recipient_address = dto.recipient_address,
+                pay_method_Id = dto.pay_method_Id,
+                cellphone = dto.cellphone,
+                freight = dto.freight,
+                receiver = dto.receiver,
+                ShoesItems = dto1.ToList(),
+            };
+        }
     }
 }
