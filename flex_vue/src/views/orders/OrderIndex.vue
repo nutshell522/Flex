@@ -62,7 +62,7 @@
         </thead>
         <tbody>
           <template v-for="item in GetOrders" :key="item.id">
-            <tr class="firstTr" @click="toggleDetails(item.id)">
+            <tr class="firstTr firtr" @click="toggleDetails(item.id)">
               <!-- <td class="firstTr"><button><i class="bi bi-chevron-down"></i></button></td> -->
               <td class="firstTr">{{ formatOrderTime(item.ordertime) }}</td>
               <td class="firstTr">{{ item.id }}</td>
@@ -175,7 +175,7 @@
         </thead>
         <tbody>
           <template v-for="item in GetOrders" :key="item.id">
-            <tr class="firstTr" @click="toggleDetails(item.id)">
+            <tr class="firstTr firtr" @click="toggleDetails(item.id)">
               <!-- <td><button @click="toggleDetails(item.id)"><i class="bi bi-chevron-down"></i></button></td> -->
               <td class="firstTr">{{ formatOrderTime(item.ordertime) }}</td>
               <td class="firstTr">{{ item.id }}</td>
@@ -274,7 +274,7 @@
         </thead>
         <tbody>
           <template v-for="item in GetOrders" :key="item.id">
-            <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+            <tr v-for="orderItem in item.orderItems" :key="orderItem.id" class="secondtr">
               <td style="text-align: left" @click="toggleDetails(item.id)">
                 <div>活動名稱：{{ orderItem.product_name }}</div>
                 <div>活動時間:{{ formatOrderTime(item.close_time) }}</div>
@@ -330,7 +330,7 @@
         </thead>
         <tbody>
           <template v-for="item in GetOrders" :key="item.id">
-            <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+            <tr v-for="orderItem in item.orderItems" :key="orderItem.id" class="secondtr">
               <td style="text-align: left" @click="toggleDetails(item.id)">
                 <div>課程名稱：{{ orderItem.product_name }}</div>
                 <div>課程時間:{{ formatOrderTime(item.close_time) }}</div>
@@ -431,7 +431,8 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="setcancelreturnIdValue()">
               關閉
             </button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setreturndetalValue()"
+              :disabled="isButtonDisabled2">
               確定
             </button>
           </div>
@@ -459,7 +460,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="returncomment()">
-                關閉
+                取消
               </button>
               <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="comment()">
                 確定
@@ -542,6 +543,8 @@ import axios from "axios";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import userBar from '@/components/user/userBar.vue';
+import { MandarinTraditional } from "flatpickr/dist/l10n/zh-tw.js"
+import Swal from "sweetalert2/dist/sweetalert2.js";
 //------get使用者ID--------
 
 //------get使用者ID--------
@@ -572,6 +575,7 @@ const messages = ref([]);
 const userName = ref("");
 const messageText = ref("");
 const isButtonDisabled = ref(true);
+const isButtonDisabled2 = ref(true);
 
 //------get使用者ID--------
 const storedUser = localStorage.getItem('loggedInUser');
@@ -583,7 +587,15 @@ const loadGetOrders = async () => {
   const begintimeValue = begintime.value;
   const endtimeValue = endtime.value;
   if (begintimeValue > endtimeValue) {
-    alert("時間錯誤：開始時間不能大於結束時間");
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: '時間錯誤：開始時間不能大於結束時間!',
+      showConfirmButton: false,
+      timer: 1500
+    });
+    begintime.value = "";
+    endtime.value = "";
     return;
   }
   await axios
@@ -603,7 +615,27 @@ const CancelOrders = async () => {
     .put(`https://localhost:7183/api/Orders/cancel?id=${cancelId.value}`)
     .then((response) => {
       //console.log(response.data);
-      alert(response.data);
+      if (response.data == '已取消訂單') {
+        Swal.fire('訂單已取消');
+      }
+      else if (response.data == '訂單已寄出，無法取消') {
+        Swal.fire({
+          icon: 'info',
+          showConfirmButton: false,
+          text:
+            '商品已寄出，無法取消!',
+          timer: 1500
+        })
+      }
+      else if (response.data == '已過退費時間，無法取消') {
+        Swal.fire({
+          icon: 'info',
+          showConfirmButton: false,
+          text:
+            '已過退費時間，無法取消訂單',
+          timer: 1500
+        })
+      };
       loadGetOrders();
     })
     .catch((error) => {
@@ -615,7 +647,13 @@ const Cancelcourse = async () => {
     .put(`https://localhost:7183/api/Orders/cancelcourse?id=${cancelId.value}`)
     .then((response) => {
       //console.log(response.data);
-      alert(response.data);
+      if (response.data == '已取消預約') {
+        Swal.fire({
+          text: '已取消預約',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
       loadGetOrders();
     })
     .catch((error) => {
@@ -627,7 +665,28 @@ const CancelProductOrders = async () => {
     .put(`https://localhost:7183/api/Orders/cancelProduct?id=${cancelId.value}`)
     .then((response) => {
       //console.log(response.data);
-      alert(response.data);
+      if (response.data == '已取消訂單') {
+        Swal.fire('訂單已取消');
+      }
+      else if (response.data == '訂單已寄出，無法取消') {
+        Swal.fire({
+          icon: 'info',
+          showConfirmButton: false,
+          text:
+            '商品已寄出，無法取消!',
+          timer: 1500
+        })
+      }
+      else if (response.data == '已過退費時間，無法取消') {
+        Swal.fire({
+          icon: 'info',
+          showConfirmButton: false,
+          text:
+            '已過退費時間，無法取消訂單',
+          timer: 1500
+        })
+      }
+
       loadGetOrders();
     })
     .catch((error) => {
@@ -649,12 +708,19 @@ const setcancelProductIdValue = (paramValue) => {
 watch([returnaccount, returnreason], ([accountValue, reasonValue]) => {
   isButtonDisabled.value = !(accountValue.length >= 10 && accountValue.length <= 16 && /^\d+$/.test(accountValue) && reasonValue);
 });
+watch([returnaccount, returnreason], ([accountValue, reasonValue2]) => {
+  isButtonDisabled2.value = !(reasonValue2);
+});
 const ReturnOrders = async () => {
   await axios
     .put(`https://localhost:7183/api/Orders/return?orderid=${retrunId.value}`)
     .then((response) => {
       //console.log(response.data);
-      alert(response.data);
+      // if (response.data == '已申請退貨') {
+      //   Swal.fire({
+      //     position: 'top', icon: 'warning', text: '已申請退貨', showConfirmButton: false, timer: 1500
+      //   });
+      // }
       loadGetOrders();
     })
     .catch((error) => {
@@ -672,7 +738,11 @@ const CancelReturnOrders = async () => {
     )
     .then((response) => {
       //console.log(response.data);
-      alert(response.data);
+      if (response.data == '已取消退貨') {
+        Swal.fire({
+          position: 'top', icon: 'info', text: '已取消退貨', showConfirmButton: false, timer: 1500
+        });
+      }
       loadGetOrders();
       returnaccount.value = "";
       returnreason.value = "";
@@ -750,7 +820,11 @@ const Returndetail = async () => {
       requestData
     )
     .then((response) => {
-      alert("退款資訊已提交");
+      if (response.data == '輸入成功') {
+        Swal.fire({
+          position: 'center', icon: 'success', text: '退款資訊已提交', showConfirmButton: false, timer: 1500
+        });
+      }
       loadGetOrders();
       returnaccount.value = "";
       returnreason.value = "";
@@ -822,7 +896,12 @@ const comment = async () => {
       commentData
     )
     .then((response) => {
-      alert(response.data);
+      Swal.fire({
+        icon: 'success',
+        title: '評論成功',
+        showConfirmButton: false,
+        timer: 1500
+      });
       closecomment();
       loadGetOrders();
       commentstar.value = "1";
@@ -975,6 +1054,7 @@ onMounted(() => {
     enableTime: false,
     maxDate: "today",
     dateFormat: "Y-m-d",
+    "locale": MandarinTraditional,
   });
   activityclose();
   loadGetOrders();
@@ -1101,6 +1181,16 @@ onMounted(() => {
 
 .firstTr {
   padding: 30px 0 30px 0;
+}
+
+.firtr:hover td {
+  background-color: #e3ecff;
+  cursor: pointer;
+}
+
+.secondtr:hover td {
+  background-color: #FFE4CA;
+  cursor: pointer;
 }
 
 .sceTr {

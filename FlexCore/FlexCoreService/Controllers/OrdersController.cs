@@ -146,9 +146,9 @@ namespace FlexCoreService.Controllers
 			if (emp.order_status_Id == 1 || emp.order_status_Id == 2)
 			{
 				DateTime currentTime = DateTime.Now;
-				TimeSpan timeDifference = (TimeSpan)(currentTime - emp.close_time);
+				TimeSpan timeDifference = (TimeSpan)(emp.close_time - currentTime);
 
-				if (timeDifference.TotalDays <= 3)
+				if (timeDifference.TotalDays <= 7)
 				{
 					return "已過退費時間，無法取消";
 				}
