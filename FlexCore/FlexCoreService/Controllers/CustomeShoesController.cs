@@ -1,5 +1,6 @@
 ﻿using EFModels.Models;
 using FlexCoreService.CustomeShoes.Exts;
+using FlexCoreService.CustomeShoes.Infra.DPRepository;
 using FlexCoreService.CustomeShoes.Interface;
 using FlexCoreService.CustomeShoes.Models.Dtos;
 using FlexCoreService.CustomeShoes.Models.VMs;
@@ -15,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Text;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace FlexCoreService.Controllers
 {
@@ -24,7 +26,8 @@ namespace FlexCoreService.Controllers
 	public class CustomeShoesController : ControllerBase
 	{
 		private readonly AppDbContext _db;
-		private ICustomeShoesRepository _repo;
+        private CustomeShoesDPRepository _csrepo;
+        private ICustomeShoesRepository _repo;
         private ICustomerChooseRepository _chooserepo;
         public CustomeShoesController(AppDbContext context, ICustomeShoesRepository repo, ICustomerChooseRepository chooserepo)
 		{
@@ -171,46 +174,46 @@ namespace FlexCoreService.Controllers
         }
 
         [HttpPost("IntoOrder")]
-        public async Task<ShoesToOrderDto> ShoesIntoOrders([FromBody] ShoesToOrderDto dto)
+        public async Task<IActionResult> ShoesIntoOrders([FromBody] ShoesToOrderDto dto)
         {
+
             order shoes = new order
             {
                 fk_member_Id = dto.fk_member_Id,
                 ordertime = DateTime.Now,
                 total_quantity = dto.total_quantity,
-                order_status_Id = dto.order_status_Id,
-                pay_method_Id = dto.pay_method_Id,
-                pay_status_Id = dto.pay_status_Id,
                 freight = dto.freight,
                 cellphone = dto.cellphone,
                 receiver = dto.receiver,
                 recipient_address = dto.recipient_address,
-                order_description = dto.order_description,
                 total_price = dto.total_price,
+                pay_method_Id = dto.pay_method_Id,
+                order_status_Id = dto.order_status_Id,
+                pay_status_Id = dto.pay_status_Id,
+                order_description = dto.order_description,
                 fk_typeId = dto.fk_typeId,
-                
-            };
 
+            };
             _db.orders.Add(shoes);
             await _db.SaveChangesAsync();
-            return dto;
-        }
 
-        [HttpPost("IntoShoesProduct")]
-        public async Task<OrderItemsVM> ShoesIntoOrders([FromBody] OrderItemsVM vm)
-        {
             orderItem shoesitem = new orderItem
             {
-                order_Id = vm.order_Id,
-                product_name = vm.product_name,
-                per_price = vm.per_price,
-                quantity = vm.quantity,
-                Items_description = vm.Items_description
+                order_Id = shoes.Id,
+                product_name = dto.product_name,
+                per_price = dto.per_price,
+                quantity = dto.quantity,
+                Items_description = dto.Items_description,
+                fk_typeId = dto.fk_typeId,
+                discount_name = dto.discount_name,
+                subtotal = dto.subtotal,
+                discount_subtotal = dto.discount_subtotal,
             };
 
             _db.orderItems.Add(shoesitem);
             await _db.SaveChangesAsync();
-            return vm;
+
+            return Ok();
         }
 
 
