@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using FlexCoreService.CartCtrl.Exts.Coupon_dll;
 using FlexCoreService.CartCtrl.Exts.Discount_dll;
 using FlexCoreService.CartCtrl.Exts;
+using System.Dynamic;
 
 namespace FlexCoreService.Controllers
 {
@@ -76,8 +77,16 @@ namespace FlexCoreService.Controllers
 			var website = $"https://localhost:7183";
 
 			var cartItems = await Task.Run(() => _cartService.GetCartItemsByIds(vm.CartItemIds, vm.MemberId).Select(item => item.ToViewModel()));
+			int couponId = vm.CouponId.HasValue && vm.CouponId.Value != 0 ? vm.CouponId.Value : 0;
+			string c1 = $"{vm.MemberId},{couponId}";
+			foreach (var item in vm.CartItemIds) {
+				c1 += $",{item}";
+			}
+			string c2 = $"{vm.checkoutData.ContactInfo.ContactName},{vm.checkoutData.ContactInfo.Email},{vm.checkoutData.ContactInfo.Phone}";
+			string c3 = $"{vm.checkoutData.BillingAddress.Name},{vm.checkoutData.BillingAddress.Phone},{vm.checkoutData.BillingAddress.Address}";
+			string c4 = $"{vm.checkoutData.ContactInfo.Address}";
 			BaseCouponStrategy? coupon;
-			if (vm.CouponId.HasValue && vm.CouponId.Value != 0)
+			if (couponId!=0)
 			{
 				coupon = await Task.Run(() => LoadCoupon(vm.CouponId.Value));
 			}
@@ -94,9 +103,6 @@ namespace FlexCoreService.Controllers
 			}
 			var pdName = stringBuilder.ToString();
 
-			string json = JsonConvert.SerializeObject(vm);
-
-
 			var order = new Dictionary<string, string>
 			{
 				{ "MerchantID", "3002607" }, //商店編號
@@ -111,7 +117,10 @@ namespace FlexCoreService.Controllers
                 { "EncryptType", "1" },//CheckMacValue加密類型，固定填1
                 { "ClientBackURL", "http://localhost:8080/" },//Client端返回商店的按鈕連結
                 { "OrderResultURL", $"https://localhost:7183/api/Payment/AddPayInfoProduct/{orderId}"}, //client端回傳付款結果網址
-				{ "CustomField1", json}, //客製化欄位
+				{ "CustomField1", c1}, //客製化欄位
+				{ "CustomField2", c2}, //客製化欄位
+				{ "CustomField3", c3}, //客製化欄位
+				{ "CustomField4", c4}, //客製化欄位
             };
 			order["CheckMacValue"] = GetCheckMacValue(order); //為 order 物件添加一個名為 "CheckMacValue" 【檢查碼】的屬性，並將其值設定為 GetCheckMacValue(order)
 
@@ -251,6 +260,58 @@ namespace FlexCoreService.Controllers
 		[HttpPost("AddPayInfoProduct/{id}")]
 		public async Task<IActionResult> AddPayInfoProduct([FromForm] AddPayInfoDTO info)
 		{
+			var cartInfo = new CheckOutVM();
+			string[] idsStr = info.CustomField1.Split(',');
+			int.TryParse(idsStr[0],out int memberId);
+			int.TryParse(idsStr[1],out int couponId);
+			cartInfo.MemberId = memberId;
+			cartInfo.CouponId = couponId;
+			int[] itemIds = new int[idsStr.Length-2];
+			for (int i = 2; i < idsStr.Length; i++)
+			{
+				if (int.TryParse(idsStr[i], out int number))
+				{
+					itemIds[i-2] = number;
+				}
+			}
+			cartInfo.CartItemIds = itemIds;
+			cartInfo.checkoutData = new CheckoutDataVM();
+			cartInfo.checkoutData.PaymentInfo = new PaymentInfoVM();
+			cartInfo.checkoutData.ContactInfo = new ContactInfoVM();
+			cartInfo.checkoutData.BillingAddress = new BillingAddressVM();
+			switch (info.PaymentType)
+			{
+				case "Credit_CreditCard":
+					cartInfo.checkoutData.PaymentInfo.PaymentMethod = 2;
+					break;
+				case "TWQR_OPAY":
+					cartInfo.checkoutData.PaymentInfo.PaymentMethod = 3;
+					break;
+			}
+			string[] c2 = info.CustomField2.Split(',');
+			cartInfo.checkoutData.ContactInfo.ContactName = c2[0];
+			cartInfo.checkoutData.ContactInfo.Email = c2[1];
+			cartInfo.checkoutData.ContactInfo.Phone = c2[2];
+			cartInfo.checkoutData.ContactInfo.Address = info.CustomField4;
+			string[] c3 = info.CustomField3.Split(',');
+			cartInfo.checkoutData.BillingAddress.Name = c3[0];
+			cartInfo.checkoutData.BillingAddress.Phone = c3[1];
+			cartInfo.checkoutData.BillingAddress.Address = c3[2];
+
+			var cartItems = await Task.Run(() => _cartService.GetCartItemsByIds(cartInfo.CartItemIds, cartInfo.MemberId).Select(item => item.ToViewModel()));
+			BaseCouponStrategy? coupon;
+			if (cartInfo.CouponId.HasValue && cartInfo.CouponId.Value != 0)
+			{
+				coupon = await Task.Run(() => LoadCoupon(cartInfo.CouponId.Value));
+			}
+			else
+			{
+				coupon = null;
+			}
+			CartContext cart = CheckoutProcess(cartItems, coupon);
+			cart.MemberId = cartInfo.MemberId;
+			cart.checkoutData = cartInfo.checkoutData;
+			var result = _cartService.Checkout(cart);
 			return Ok("ok");
 		}
 

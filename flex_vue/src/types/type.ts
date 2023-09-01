@@ -83,6 +83,9 @@ export class PayInfo {
   CheckMacValue: string = "";
   OrderResultURL: string = "";
   CustomField1: string = "";
+  CustomField2: string = "";
+  CustomField3: string = "";
+  CustomField4: string = "";
 }
 export class SizeVM {
   productSaleId: string = "";
