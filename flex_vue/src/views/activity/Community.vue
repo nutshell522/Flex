@@ -4,7 +4,7 @@
   <div class="container mt-5">
     <div class="row">
       <div class="col-md-3">
-        <!-- 側邊攔 -->
+        <!-- 側邊分類欄 -->
 
         <h2>話題分類</h2>
         <ul>
@@ -19,7 +19,7 @@
         </ul>
       </div>
 
-      <!-- 右侧主要内容 -->
+      <!-- 右邊主要内容 -->
       <div class="col-md-9">
         <div class="row">
           <div class="col-md-10">
@@ -63,6 +63,20 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">新增文章</h5>
+                <button
+                  class="btn btn-primary"
+                  @click="fakeData()"
+                  style="
+                    margin-left: 5%;
+                    height: 30px;
+                    text-align: center;
+                    justify-content: center;
+                    line-height: 15px;
+                    background-color: #03522d;
+                  "
+                >
+                  一鍵輸入
+                </button>
                 <button
                   @click="clearEditor"
                   class="btn-close"
@@ -253,6 +267,17 @@ onMounted(() => {
   // getAllPost();
   loadCategory(categoryFromUrl);
 });
+
+//一鍵輸入
+const fakeData = () => {
+  postTitle.value = "挑戰自我，感受自由-Flex路跑參後感";
+  selectedCategory.value = "路跑";
+  editorContent.value = `在繁忙的城市生活中，偶爾需要逃離塵囂，讓心靈回歸自然。這次參加了Flex舉辦的路跑活動，經歷了一場極具挑戰性和滿足感的體驗。<span>活動一開始，我加入了一群充滿活力的跑者，大家在清晨的陽光下一同出發。我們的目標是突破自己，感受自由。Flex路跑的路線選擇非常獨特，穿越了郊區的青山綠水，讓參賽者能夠盡情沐浴大自然的美麗。</span><img src="../../../public/imgs/fakeRunning.jpg" alt="路跑照片" />
+<p>一開始，我感到身體的疲憊，但當我看到前方壯麗的風景時，內心的堅持使我繼續前進。隨著每一步的踏出，我開始感受到自己的力量和耐力，這是城市中無法體驗到的。彷彿一步一步走向自由，我忘卻了一切壓力和煩憂。</p>
+<p>而活動的終點，是一個美不勝收的湖泊。我們跑者們一起坐在湖邊，欣賞著日落的美景，享受著勝利的喜悅。這一刻，我們成為了朋友，分享了彼此的挑戰和成就。</p>
+<p>Flex路跑不僅讓我們挑戰了身體，更讓我們挑戰了內心。它教會了我們堅持不懈的精神，以及欣賞大自然的美麗。這次的路跑心得，讓我深刻體會到，只要有決心，無論多困難，我們都能夠克服。感謝Flex，讓我們重新找回了自由的感覺。</p>
+<p>如果你也渴望挑戰自己，感受自由，我強烈推薦參加Flex舉辦的路跑活動。它不僅是一場運動，更是一場心靈的洗禮，讓你重新與自然連結，挑戰極限，感受自由的奇妙。</p>`;
+};
 
 //格式化日期
 const formatDate = (dateString) => {

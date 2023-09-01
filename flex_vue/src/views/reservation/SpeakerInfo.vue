@@ -117,6 +117,17 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">
                       留下您的心得...
                     </h1>
+                    <button
+                      class="btn btn-primary"
+                      @click="fakeData()"
+                      style="
+                        height: 30px;
+                        background-color: #0e5305;
+                        line-height: 15px;
+                      "
+                    >
+                      一鍵輸入
+                    </button>
                   </div>
                   <!-- 用submit.prevent防止刷新整個頁面 -->
                   <form @submit.prevent="addComment">
@@ -170,7 +181,7 @@
               <!-- icon -->
               <span class="icon">
                 <img
-                  width="70"
+                  width="65"
                   height="50"
                   src="../../../public/imgs/jump3.png"
                   alt="exercise"
@@ -712,6 +723,11 @@ const formatDateTime = (dateString) => {
   const formattedDateTime = `${year}/${month}/${day} ${hours}:${minutes}`;
   return formattedDateTime;
 };
+
+//一鍵輸入心得
+const fakeData = () => {
+  newComment.value.content = "老師給的建議非常有用!";
+};
 </script>
 
 <style>
@@ -753,6 +769,8 @@ const formatDateTime = (dateString) => {
   /* 圓角半徑，可調整按鈕的外觀 */
   transition: 0.2s;
   margin-right: 60px;
+  display: flex;
+  width: 250px;
 }
 
 .bookingButton:hover {

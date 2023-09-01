@@ -186,6 +186,7 @@ const formatDate = (dateString) => {
 
 .cardbody {
   margin: 100px;
+  justify-content: center;
 }
 
 .selectedBlock {
