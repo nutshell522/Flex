@@ -870,7 +870,6 @@ const ECPay = async () => {
     .post<PayInfo>(`${baseAddress}api/Payment/ProductMakePayment`, request)
     .then((response) => {
       payinfo.value = response.data;
-      console.log(payinfo.value);
       paymentSubmit();
     })
     .catch((error) => {
@@ -894,6 +893,8 @@ const paymentSubmit = async () => {
     OrderResultURL: payinfo.value.OrderResultURL,
     CustomField1: payinfo.value.CustomField1,
   };
+  console.log(request);
+
   await axios
     .post(`https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5`, request)
     .then((res) => {
