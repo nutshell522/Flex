@@ -62,7 +62,7 @@
         </thead>
         <tbody>
           <template v-for="item in GetOrders" :key="item.id">
-            <tr class="firstTr" @click="toggleDetails(item.id)">
+            <tr class="firstTr firtr" @click="toggleDetails(item.id)">
               <!-- <td class="firstTr"><button><i class="bi bi-chevron-down"></i></button></td> -->
               <td class="firstTr">{{ formatOrderTime(item.ordertime) }}</td>
               <td class="firstTr">{{ item.id }}</td>
@@ -175,7 +175,7 @@
         </thead>
         <tbody>
           <template v-for="item in GetOrders" :key="item.id">
-            <tr class="firstTr" @click="toggleDetails(item.id)">
+            <tr class="firstTr firtr" @click="toggleDetails(item.id)">
               <!-- <td><button @click="toggleDetails(item.id)"><i class="bi bi-chevron-down"></i></button></td> -->
               <td class="firstTr">{{ formatOrderTime(item.ordertime) }}</td>
               <td class="firstTr">{{ item.id }}</td>
@@ -274,7 +274,7 @@
         </thead>
         <tbody>
           <template v-for="item in GetOrders" :key="item.id">
-            <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+            <tr v-for="orderItem in item.orderItems" :key="orderItem.id" class="secondtr">
               <td style="text-align: left" @click="toggleDetails(item.id)">
                 <div>活動名稱：{{ orderItem.product_name }}</div>
                 <div>活動時間:{{ formatOrderTime(item.close_time) }}</div>
@@ -330,7 +330,7 @@
         </thead>
         <tbody>
           <template v-for="item in GetOrders" :key="item.id">
-            <tr v-for="orderItem in item.orderItems" :key="orderItem.id">
+            <tr v-for="orderItem in item.orderItems" :key="orderItem.id" class="secondtr">
               <td style="text-align: left" @click="toggleDetails(item.id)">
                 <div>課程名稱：{{ orderItem.product_name }}</div>
                 <div>課程時間:{{ formatOrderTime(item.close_time) }}</div>
@@ -592,7 +592,7 @@ const loadGetOrders = async () => {
       title: 'Oops...',
       text: '時間錯誤：開始時間不能大於結束時間!',
       showConfirmButton: false,
-      timer: 1000
+      timer: 1500
     });
     begintime.value = "";
     endtime.value = "";
@@ -1183,6 +1183,16 @@ onMounted(() => {
   padding: 30px 0 30px 0;
 }
 
+.firtr:hover td {
+  background-color: #e3ecff;
+  cursor: pointer;
+}
+
+.secondtr:hover td {
+  background-color: #FFE4CA;
+  cursor: pointer;
+}
+
 .sceTr {
   padding: 10px;
 }
@@ -1369,9 +1379,5 @@ input[type=number]::-webkit-inner-spin-button {
   font-size: 10px;
   color: gray;
   margin-left: 10px;
-}
-
-.custom-popup-class {
-  top: calc(50px + 10%);
 }
 </style>
