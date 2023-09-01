@@ -3,7 +3,7 @@
   <div class="page-container1">
     <div class="container-body mt-3">
       <div class="row">
-        <div class="dscene col-6">
+        <div class="col-6">
           <div class="sketchfab-embed-wrapper">
             <iframe
               title="shoes FILA 1"
@@ -50,14 +50,14 @@
             </p>
           </div>
         </div>
-        <div class="part col-6 ps-5">
+        <div class="col-6 ps-5">
           <div class="row" style="min-height: 129px">
             <div class="col-7 detailTitle1" :title="shoesChoose.shoesName">
               {{ shoesChoose.shoesName }}
             </div>
             <div class="col-5">
-              <div class="detailSalesPriceBox">
-                <div class="NTbox">NT$</div>
+              <div class="">
+                <div class="">NT$</div>
                 <div
                   class="detailSalesPrice1"
                   :title="shoesChoose.shoesUnitPrice"
@@ -94,7 +94,7 @@
                     <div class="">
                       <button
                         @click="decrementProductQty()"
-                        class="increaseAndDecrease"
+                        class=""
                       >
                         <i class="bi bi-dash-lg"></i>
                       </button>
@@ -109,7 +109,7 @@
                       />
                       <button
                         @click="incrementProductQty()"
-                        class="increaseAndDecrease"
+                        class=""
                       >
                         <i class="bi bi-plus-lg"></i>
                       </button>
@@ -122,7 +122,7 @@
                   </div>
           </div>
           <hr />
-          <div class="row mt-3 d-flex selectbox">
+          <div class="row mt-3 d-flex">
             <div class="col-4">
                   <label for="optionsSelect">鞋面</label>
                 </div>
@@ -155,7 +155,7 @@
                   </select>
                 </div>
           </div>
-          <div class="row mt-3 d-flex selectbox">
+          <div class="row mt-3 d-flex">
             <div class="col-4">
                   <label for="optionsSelect">鞋尖</label>
                 </div>
@@ -188,7 +188,7 @@
                   </select>
                 </div>
           </div>
-          <div class="row mt-3 d-flex selectbox">
+          <div class="row mt-3 d-flex">
             <div class="col-4">
                   <label for="optionsSelect">護邊</label>
                 </div>
@@ -221,7 +221,7 @@
                   </select>
                 </div>
           </div>
-          <div class="row mt-3 d-flex selectbox">
+          <div class="row mt-3 d-flex">
             <div class="col-4">
                   <label for="optionsSelect">鞋領</label>
                 </div>
@@ -254,7 +254,7 @@
                   </select>
                 </div>
           </div>
-          <div class="row mt-3 d-flex selectbox">
+          <div class="row mt-3 d-flex">
             <div class="col-4">
                   <label for="optionsSelect">孔眼片</label>
                 </div>

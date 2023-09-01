@@ -90,11 +90,11 @@
                     </button>
                     <div v-else-if="selectedPaymentMethod === 'cash'">
                     <label>
-                    <input type="checkbox" v-model="agreeToCreateOrder" />
+                    <input type="checkbox" v-model="agreeToCreateOrder" class="mt-4" />
                     我同意建立訂單
                   </label>
                     <button v-if="showCheckoutButton"  @click="checkoutSuccess" type="button"
-                            class="btn btn-primary comenextBtn mt-4">
+                            class="btn btn-primary comenextBtn ms-2 mt-4">
                       結帳
                     </button>
                     </div>
@@ -117,6 +117,7 @@ import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
 import router from "@/router";
 import { useActivityRoute } from "@/stores/useActivityRoute.js";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 const activityStore = useActivityRoute();
 const optionsAll = ref("");
@@ -144,11 +145,10 @@ const totalPrice = computed(() => {
 
 //塞入資料到訂單裡
 const shoesUri = `${baseAddress}api/CustomeShoes/IntoOrder`;
-const shoesdataUri = `${baseAddress}api/CustomeShoes/IntoShoesProduct`;
+//const shoesdataUri = `${baseAddress}api/CustomeShoes/IntoShoesProduct`;
 
 //塞入資料進訂單
 var orderData = {};
-let orderId = 0;
 function ShoestoOrder()
 {
   if (!agreeToCreateOrder.value) {
@@ -161,19 +161,24 @@ function ShoestoOrder()
   orderData.receiver = member.name;
   orderData.recipient_address = member.commonAddress;
   orderData.total_price = shoesdata.qty * shoesdata.shoesUnitPrice;
+  orderData.pay_method_Id = 1;
   orderData.order_status_Id = 1;
-  orderData.pay_method_Id = 3;
-  orderData.freight = 60;
-  orderData.order_description = "客製化";
-  orderData.fk_typeId = 4;
   orderData.pay_status_Id = 3;
+  orderData.freight = 60;
+  orderData.fk_typeId = 4;
+  orderData.order_description = "客製化";
+  orderData.product_name = product.shoesName;
+  orderData.per_price = product.shoesUnitPrice;
+  orderData.quantity = shoesdata.qty;
+  orderData.Items_description = product.shoesDescription;
+  orderData.discount_name = "無";
+  orderData.subtotal = 0;
+  orderData.discount_subtotal = 0;
   console.log(orderData)
   axios
     .post(shoesUri, orderData)
     .then((res)=>{
       console.log(res.data)
-      orderId = res.data;
-      shoesProductToOrder();
     })
     .catch((error)=>{
       console.error("POST request error:", error);
@@ -181,24 +186,23 @@ function ShoestoOrder()
   }
 }
 
-var productdata = {};
-function shoesProductToOrder()
-{
-  productdata.order_Id = orderId;
-  productdata.product_name = product.shoesName;
-  productdata.per_price = product.shoesUnitPrice;
-  productdata.quantity = shoesdata.qty;
-  productdata.Items_description =product.shoesDescription ;
-  axios
-    .post(shoesdataUri, productdata)
-    .then((res)=>{
-      console.log(`item added:`, res.data);
-    })
-    .catch((error)=>{
-      console.error(`POST request error for item:`, error);
-    });
+// var productdata = {};
+// function shoesProductToOrder()
+// {
+//   productdata.product_name = product.shoesName;
+//   productdata.per_price = product.shoesUnitPrice;
+//   productdata.quantity = shoesdata.qty;
+//   productdata.Items_description =product.shoesDescription ;
+//   axios
+//     .post(shoesUri, productdata)
+//     .then((res)=>{
+//       console.log(`item added:`, res.data);
+//     })
+//     .catch((error)=>{
+//       console.error(`POST request error for item:`, error);
+//     });
 
-}
+// }
 
 
 //抓取網頁登入資料
@@ -239,10 +243,13 @@ console.log(member)
 
 //傳給後端商品資料
 const product = reactive({
+    shoesProductId:"",
     shoesName:"",
     shoesDescription:"",
     shoesUnitPrice:""
 })
+console.log(product)
+
 
 const shoesdata = reactive({
   qty:"",
@@ -283,7 +290,15 @@ const checkoutSuccess = async () => {
 
   try {
     // ... 您的結帳邏輯 ...
-    alert("恭喜結帳成功，3秒後跳轉回商品頁面");
+
+    // 顯示SweetAlert對話框
+    await Swal.fire({
+      title: "恭喜結帳成功",
+      text: "3秒後跳轉回商品頁面",
+      icon: "success",
+      timer: 3000,
+      showConfirmButton: false,
+    });
     // 模擬延遲
     await new Promise(resolve => setTimeout(resolve, 3000));
 
@@ -303,25 +318,25 @@ let getshoesData = async (id) => {
        `${baseAddress}api/CustomeShoes/shoes/Detail/${id}`
     )
     .then(res=>{
-    //console.log(res.data);
+    console.log(res.data);
     shoesDetail.value = res.data;
     product.shoesName = res.data.shoesName;
     product.shoesUnitPrice = res.data.shoesUnitPrice;
     product.shoesDescription = res.data.shoesDescription;
+    product.shoesProductId = res.data.shoesProductId
+
     }).catch(error=>{console.log(error)})}
   
 
-    const activityId = route.params.shoesProductId
-    //console.log(activityId);
+    const activityId = product.shoesProductId;
+    console.log(activityId);
 
 
 //從後端得到綠界需要的參數資訊
 axios.get(`https://localhost:7183/api/Payment/${activityId}`)
 
     .then(res=>{
-
         console.log(res.data);
-        console.log(res);
         const payresult = res.data;
         payInfo.MerchantID = payresult.MerchantID;
         console.log("畫面的ID="+payInfo.MerchantID);
@@ -337,6 +352,7 @@ axios.get(`https://localhost:7183/api/Payment/${activityId}`)
         payInfo.CheckMacValue = payresult.CheckMacValue;
         payInfo.OrderResultURL = payresult.OrderResultURL;
         payInfo.TotalAmount = payresult.TotalAmount;
+        console.log(payInfo)
     })
     .catch(err=>{
         console.log(err);

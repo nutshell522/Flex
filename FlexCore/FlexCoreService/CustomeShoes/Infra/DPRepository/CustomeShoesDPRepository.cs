@@ -116,5 +116,56 @@ having c.Status=0 and c.ShoesProductId=" + @Id;
             var result = dbConnection.QueryFirstOrDefault<CustomeShoesDto>(sql, new { Id });
             return result;
         }
+
+//        public int UpdateOrderInfo(ShoesToOrderDto order)
+//        {
+//            string sql = @"
+//INSERT INTO Orders (ordertime, fk_member_Id, total_quantity, logistics_company_Id, order_status_Id, pay_method_Id, pay_status_Id, coupon_name, coupon_discount, freight, cellphone, receipt, receiver, recipient_address, order_description, total_price, [close], close_time, fk_typeId, orderCode, biller, bill_address, bill_cellphone, agreement)
+//VALUES
+//    (@orderTime, @fk_member_Id, @total_quantity, null, 1, @pay_method_Id, 2, null, null, @freight, @cellphone, null, @receiver, @recipient_address, '客製化', @total_price, null, null, 4, null, null, null, null, 'true');
+//SELECT CAST(SCOPE_IDENTITY() AS INT);
+//";
+//            using (var conn = new SqlConnection(_connStr))
+//            {
+//                conn.Open();
+
+//                int insertedId = conn.Query<int>(sql, new
+//                {
+//                    orderTime = order.ordertime,
+//                    fk_member_Id = order.fk_member_Id,
+//                    pay_method_Id = order.pay_method_Id,
+//                    cellphone = order.cellphone,
+//                    receiver = order.receiver,
+//                    recipient_address = order.recipient_address,
+//                    total_quantity = order.total_quantity,
+//                    freight = order.freight,
+//                    total_price = order.total_price,
+//                }).Single();
+
+//                return insertedId;
+//            }
+//        }
+
+//        public void UpdateShoesItemInfo(ShoesItemToOrderDto orderItem)
+//        {
+//            string sql = @"
+//INSERT INTO Flex.dbo.orderItems (order_Id, product_name, per_price, quantity, discount_name, subtotal, discount_subtotal, Items_description, fk_typeId, productcommit, comment)
+//VALUES
+//    (@order_Id, @product_name, @per_price, @quantity, null, null, null, @Items_description, 4, null, null)
+//";
+//            using (var conn = new SqlConnection(_connStr))
+//            {
+//                conn.Execute(sql, new
+//                {
+//                    order_Id = orderItem.order_Id,
+//                    product_name = orderItem.product_name,
+//                    per_price = orderItem.per_price,
+//                    quantity = orderItem.quantity,
+//                    Items_description = orderItem.Items_description,
+
+//                });
+//            }
+//        }
+
     }
 }
