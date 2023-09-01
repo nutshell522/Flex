@@ -117,6 +117,7 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">
                       留下您的心得...
                     </h1>
+                    <button class="btn btn-primary" @click="fakeData()" style="height: 30px; background-color: #0e5305; line-height: 15px;">一鍵輸入</button>
                   </div>
                   <!-- 用submit.prevent防止刷新整個頁面 -->
                   <form @submit.prevent="addComment">
@@ -711,6 +712,11 @@ const formatDateTime = (dateString) => {
   // 組裝成我要的格式
   const formattedDateTime = `${year}/${month}/${day} ${hours}:${minutes}`;
   return formattedDateTime;
+};
+
+//一鍵輸入心得
+const fakeData = () => {
+  newComment.value.content = "老師給的建議非常有用!";
 };
 </script>
 
