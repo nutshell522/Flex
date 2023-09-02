@@ -17,6 +17,7 @@ using FlexCoreService.CartCtrl.Exts.Coupon_dll;
 using FlexCoreService.CartCtrl.Exts.Discount_dll;
 using FlexCoreService.CartCtrl.Exts;
 using System.Dynamic;
+using FlexCoreService.CustomeShoes.Models.Dtos;
 
 namespace FlexCoreService.Controllers
 {
@@ -31,13 +32,14 @@ namespace FlexCoreService.Controllers
 		private CustomeShoesDPRepository _csdRepo;
 		private IConfiguration _configuration;
 		private CartService _cartService;
-		public PaymentController(AppDbContext context, PaymentDPRepository repo, IConfiguration configuration, ActivityDPRepository actRepo, CartService cartService)
+		public PaymentController(AppDbContext context, PaymentDPRepository repo, IConfiguration configuration, ActivityDPRepository actRepo, CustomeShoesDPRepository csdRepo, CartService cartService)
 		{
 			_db = context;
 			_repo = repo;
 			_configuration = configuration;
 			_actRepo = actRepo;
 			_cartService = cartService;
+			_csdRepo = csdRepo;
 		}
 
 		[HttpGet("{id}")]
@@ -149,7 +151,7 @@ namespace FlexCoreService.Controllers
                 { "ChoosePayment", "ALL" }, //預設付款方式
                 { "EncryptType", "1" },//CheckMacValue加密類型，固定填1
                 { "ClientBackURL", "http://localhost:8080/" },//Client端返回商店的按鈕連結
-                { "OrderResultURL", $"https://localhost:7183/api/Payment/addPayInfo/{orderId}"} //client端回傳付款結果網址
+                { "OrderResultURL", $"https://localhost:7183/api/Payment/addShoesPayInfo/{orderId}"} //client端回傳付款結果網址
                   
             };
 			order["CheckMacValue"] = GetCheckMacValue(order); //為 order 物件添加一個名為 "CheckMacValue" 【檢查碼】的屬性，並將其值設定為 GetCheckMacValue(order)
@@ -257,6 +259,67 @@ namespace FlexCoreService.Controllers
 			return Redirect($"https://localhost:8080/paymentSuccess/{info.TradeAmt}/{tradeNo}/{encodedString}");
 
 		}
+
+		[HttpPost("addShoesPayInfo/{id}")]
+		public async Task<IActionResult> AddPayInfoShoes([FromForm] AddPayInfoDTO info)
+		{
+			//用AddPayInfoDTO接一個綠界回傳的JSON物件
+			if (info.RtnMsg.Contains("Succeeded"))
+			{
+				info.RtnMsg = "已付款";
+			}
+
+			switch (info.PaymentType)
+			{
+				case "Credit_CreditCard":
+					info.PaymentType = "信用卡";
+					break;
+				case "TWQR_OPAY":
+					info.PaymentType = "歐付寶TWQR 行動支付";
+					break;
+
+			}
+
+			_repo.UpdatePayInfo(info);
+			//return ("成功啦啦啦啦啦啦 收工下班!!!");
+
+			var tradeNo = info.TradeNo;
+
+			ShoesOrderDetailDto result = _csdRepo.GetTradeDesc(tradeNo);
+			string tradeDesc = result.ShoesName;
+			string encodedString = HttpUtility.UrlEncode(tradeDesc);
+
+			var member = await _actRepo.GetMembreInfoAsync(result.MemberID);
+			var shoes = _csdRepo.GetShoesDetail2(result.ItemId);
+			ShoesToOrderDto orders = new ShoesToOrderDto
+			{
+				ordertime = DateTime.Parse(result.TradeDate),
+				fk_member_Id = result.MemberID,
+				pay_method_Id = info.PaymentType.Contains("TWQR") ? 3 : 2,
+				cellphone = member.Mobile,
+				receiver = member.Name,
+				recipient_address = member.CommonAddress,
+				orderCode = info.TradeNo
+			};
+
+			var newId = _csdRepo.UpdateOrderInfo(orders);
+
+			ShoesItemToOrderDto item = new ShoesItemToOrderDto
+			{
+				order_Id = newId,
+				product_name = tradeDesc,
+				per_price = info.TradeAmt,
+				subtotal = info.TradeAmt,
+				discount_subtotal = info.TradeAmt
+
+			};
+			_csdRepo.UpdateShoesItemInfo(item);
+
+			return Redirect($"https://localhost:8080/paymentSuccess/{info.TradeAmt}/{tradeNo}/{encodedString}");
+
+		}
+
+
 		[HttpPost("AddPayInfoProduct/{id}")]
 		public async Task<IActionResult> AddPayInfoProduct([FromForm] AddPayInfoDTO info)
 		{
