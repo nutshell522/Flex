@@ -511,14 +511,14 @@ function saveBtn() {
 .eye1 {
   position: absolute;
   right: 63%;
-  top: 13.5%;
+  top: 12.5%;
   font-size: 20px;
 }
 
 .eye2 {
   position: absolute;
   right: 63%;
-  top: 21.5%;
+  top: 20%;
   font-size: 20px;
 }
 

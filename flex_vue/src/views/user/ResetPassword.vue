@@ -9,30 +9,34 @@
       </ul>
     </div>
     <label for="resetPwd">新設密碼</label>
-    <input
-      :type="eye1 ? 'text' : 'password'"
-      class="form-control mb-3"
-      name="resetPwd"
-      id="resetPwd"
-      placeholder="輸入6-10碼英數字"
-      v-model="resetPwd"
-      maxlength="10"
-    />
-    <div class="eye1" @click="openEye1">
-      <i class="bi" :class="eye1 ? 'bi-eye' : 'bi-eye-slash'"></i>
+    <div class="eyeAndInput">
+      <input
+        :type="eye1 ? 'text' : 'password'"
+        class="form-control mb-3"
+        name="resetPwd"
+        id="resetPwd"
+        placeholder="輸入6-10碼英數字"
+        v-model="resetPwd"
+        maxlength="10"
+      />
+      <div class="eye1" @click="openEye1">
+        <i class="bi" :class="eye1 ? 'bi-eye' : 'bi-eye-slash'"></i>
+      </div>
     </div>
-    <label for="confirmPwd">確認密碼</label>
-    <input
-      :type="eye2 ? 'text' : 'password'"
-      class="form-control mb-3"
-      name="confirmPwd"
-      id="confirmPwd"
-      placeholder="輸入6-10碼英數字"
-      v-model="confirmPwd"
-      maxlength="10"
-    />
-    <div class="eye2" @click="openEye2">
-      <i class="bi" :class="eye2 ? 'bi-eye' : 'bi-eye-slash'"></i>
+    <div class="eyeAndInput">
+      <label for="confirmPwd">確認密碼</label>
+      <input
+        :type="eye2 ? 'text' : 'password'"
+        class="form-control mb-3"
+        name="confirmPwd"
+        id="confirmPwd"
+        placeholder="輸入6-10碼英數字"
+        v-model="confirmPwd"
+        maxlength="10"
+      />
+      <div class="eye2" @click="openEye2">
+        <i class="bi" :class="eye2 ? 'bi-eye' : 'bi-eye-slash'"></i>
+      </div>
     </div>
     <div class="finish">
       <button type="submit" class="btn finishBtn" @click="finish">
@@ -76,6 +80,9 @@ function finish() {
   ) {
     errors.value = [];
     errors.value.push('新設密碼或確認密碼格式錯誤');
+  } else if (resetPwd.value != confirmPwd.value) {
+    errors.value = [];
+    errors.value.push('新設密碼或確認密碼必須相同');
   } else {
     //欄位驗證通過
     errors.value = [];
@@ -130,15 +137,18 @@ function finish() {
 }
 .eye1 {
   position: absolute;
-  right: 42.5%;
-  top: 33.8%;
+  right: 4%;
+  top: 8%;
   font-size: 20px;
 }
 
 .eye2 {
   position: absolute;
-  right: 42.5%;
-  top: 42%;
+  right: 4%;
+  top: 45%;
   font-size: 20px;
+}
+.eyeAndInput {
+  position: relative;
 }
 </style>
