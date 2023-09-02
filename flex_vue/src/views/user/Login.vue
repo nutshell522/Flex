@@ -455,6 +455,7 @@ function registerBtn() {
         });
         account.value = '';
         password.value = '';
+        passwordCheck.value = '';
         name.value = '';
         email.value = '';
         birthday.value = '';
