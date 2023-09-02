@@ -26,7 +26,7 @@ namespace FlexCoreService.UserCtrl.Infa
             //AlternateView avHtml = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
 
             // 添加圖片附件，並設定 ContentId 以供引用
-            //LinkedResource logoResource = new LinkedResource("D:\\FlexFrontend\\FlexFrontendNew\\FlexCore\\FlexCoreService\\wwwroot\\Public\\Img\\Icon.png", MediaTypeNames.Image.Jpeg);
+            //LinkedResource logoResource = new LinkedResource("D:\\FlexFrontend\\FlexFrontendNew\\FlexCore\\FlexCoreService\\wwwroot\\Public\\Img\\Eve.jpg", MediaTypeNames.Image.Jpeg);
             //logoResource.ContentId = "logo";
             //avHtml.LinkedResources.Add(logoResource);
 
