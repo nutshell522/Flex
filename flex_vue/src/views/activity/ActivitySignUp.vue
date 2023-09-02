@@ -307,7 +307,6 @@ axios
   .then((res) => {
     console.log(res.data);
     console.log(res);
-
     const payresult = res.data;
     payInfo.MerchantID = payresult.MerchantID;
     console.log("畫面的ID=" + payInfo.MerchantID);

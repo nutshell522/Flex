@@ -25,7 +25,9 @@ namespace FlexCoreService.CustomeShoes.Models.Dtos
 
         public string order_description { get; set;}
 
-        public int fk_typeId { get; set; }
+		public string orderCode { get; set; }
+
+		public int fk_typeId { get; set; }
 
         public int total_price { get; set; }
         public int order_Id { get; set; }
