@@ -137,6 +137,7 @@
                         <p>{{ userAccount }}</p>
                         <star-rating
                           @update:rating="setRating"
+                          :show-rating="false"
                           style="margin-left: 50px; margin-bottom: 20px"
                         ></star-rating>
                         <textarea
