@@ -76,7 +76,7 @@ where p.ProductId='"+@productId+
         {
             string sql = @"select 
 p.ProductId,p.ProductName,p.ProductDescription,p.ProductMaterial,p.ProductOrigin, 
-p.UnitPrice,p.SalesPrice,pg.ProductGroupId,cc.ColorName,sc.SizeName, 
+p.UnitPrice,p.SalesPrice,pg.ProductGroupId,cc.ColorRGB,sc.SizeName, 
 s.SalesCategoryName,pc.ProductCategoryName,psc.ProductSubCategoryName,pg.Qty,pi.ImgPath as DefaultColorImg 
 from Products as p 
 join ProductGroups as pg on pg.fk_ProductId=p.ProductId 

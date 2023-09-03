@@ -10,7 +10,8 @@
         public int? UnitPrice { get; set; }
         public int SalesPrice { get; set; }
         public int ProductGroupId { get; set; }
-        public string ColorName { get; set; }
+        //public string ColorName { get; set; }
+        public string ColorRGB { get; set; }
         public string SizeName { get; set; }
         public int Qty { get; set; }
         public string DefaultColorImg { get; set; }
