@@ -43,7 +43,7 @@ namespace FlexCoreService.UserCtrl.Infa
         <html>
             <body>
                 <h1>{name}，您好，感謝您註冊成為 flex 的會員!</h1>                
-                <h3>請點擊「啟用帳戶」連結來啟用您的帳戶:<a href='{resetUrl}'> 啟用帳戶</a></h3>
+                <h3>請點擊「啟用帳號」連結來啟用您的帳號:<a href='{resetUrl}'> 啟用帳號</a></h3>
                 <br>
                 <img src='cid:logo'>
             </body>

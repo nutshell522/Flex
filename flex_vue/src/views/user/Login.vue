@@ -263,7 +263,7 @@ function ValidatedIdentity() {
         //已註冊
         if (res.data == 'notEnabled') {
           errors.value = [];
-          errors.value.push('帳戶尚未啟用請至信箱收取驗證信');
+          errors.value.push('帳號尚未啟用請至信箱收取驗證信');
         } else {
           validated.value = true;
           accInput.value = false;
