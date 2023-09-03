@@ -17,7 +17,7 @@ namespace FlexCoreService.CartCtrl.Infra.EntityFramework
 		{
 			return _db.Discounts
 				.AsNoTracking()
-				.Where(x => (x.EndDate > DateTime.Now || x.EndDate == null) && x.StartDate <= DateTime.Now && x.Status == true)
+				.Where(x => (x.EndDate > DateTime.Now || x.EndDate == null)  && x.StartDate <= DateTime.Now && x.Status == true)
 				.Select(x => new ActiveDiscountDto
 				{
 					DiscountId = x.DiscountId,
@@ -59,7 +59,7 @@ namespace FlexCoreService.CartCtrl.Infra.EntityFramework
 							).FirstOrDefault()
 							select pi
 						) on p.ProductId equals pir.fk_ProductId
-						where d.DiscountId == discountId && (productCategoryId == null || ssc.SalesCategoryId == productCategoryId)
+						where d.DiscountId == discountId && (productCategoryId == null || ssc.SalesCategoryId == productCategoryId) && p.LogOut==false && p.Status==false 
 						select new
 						{
 							ProjectTagItem = pti,

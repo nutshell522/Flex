@@ -40,8 +40,10 @@
                 :href="webBaseAddress + cartItem.product.categorySubStr + '/detail/' + cartItem.product.productSaleId">
                 <img :src="imgBaseUrl + 'Public/Img/' + cartItem.product.imgPath" :title="cartItem.product.productName" />
               </a>
-              <div class="item-info-wrapper me-auto">
-                <div class="item-name">
+              <div class="w-100">
+
+
+                <div class="ms-4 item-name">
 
                   <a href="javascript:;" class="fw-bold">{{ cartItem.product.productName }}-{{
                     cartItem.product.salesCategoryNameStr
@@ -53,50 +55,57 @@
                     </li>
                   </ul>
                 </div>
-
                 <div class="d-flex">
 
-                  <div class="size">
-                    尺寸
-                    <div class="size-select-container">
-                      <a class="size-select" href="javascript:;" @click="toggleActive(cartItem.cartItemId)"
-                        :class="{ active: activeItem === cartItem.cartItemId }"><span>{{ cartItem.product.size }}</span><i
-                          class="bi bi-chevron-down"></i></a>
-                      <ul class="gray-scroll">
-                        <li
-                          v-for="size in sizeSelect.filter(size => size.productSaleId == cartItem.product.productSaleId && size.color == cartItem.product.color)"
-                          :key="size.productId"
-                          @click="sizeChangeHandler(size.productId, cartItem.cartItemId, cartItem.qty, cartItem.cartId)">
-                          {{ size.size }}
-                        </li>
-                      </ul>
+
+                  <div class="item-info-wrapper me-auto">
+
+
+                    <div class="d-flex">
+
+                      <div class="size">
+                        尺寸
+                        <div class="size-select-container">
+                          <a class="size-select" href="javascript:;" @click="toggleActive(cartItem.cartItemId)"
+                            :class="{ active: activeItem === cartItem.cartItemId }"><span>{{ cartItem.product.size
+                            }}</span><i class="bi bi-chevron-down"></i></a>
+                          <ul class="gray-scroll">
+                            <li
+                              v-for="size in sizeSelect.filter(size => size.productSaleId == cartItem.product.productSaleId && size.color == cartItem.product.color)"
+                              :key="size.productId"
+                              @click="sizeChangeHandler(size.productId, cartItem.cartItemId, cartItem.qty, cartItem.cartId)">
+                              {{ size.size }}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="qty-box">
+                        <button @click="decrementCartItem(cartItem)">
+                          <i class="bi bi-dash-lg"></i>
+                        </button>
+                        <div class="qty">{{ cartItem.qty }}</div>
+                        <button @click="incrementCartItem(cartItem)">
+                          <i class="bi bi-plus-lg"></i>
+                        </button>
+                      </div>
                     </div>
+
+                    <i @click="deleteCartItem(cartItem)" class="bi bi-trash3"></i>
                   </div>
-                  <div class="qty-box">
-                    <button @click="decrementCartItem(cartItem)">
-                      <i class="bi bi-dash-lg"></i>
-                    </button>
-                    <div class="qty">{{ cartItem.qty }}</div>
-                    <button @click="incrementCartItem(cartItem)">
-                      <i class="bi bi-plus-lg"></i>
-                    </button>
+
+                  <div>
+
                   </div>
-                </div>
+                  <div class="amont-box">
+                    <div>
 
-                <i @click="deleteCartItem(cartItem)" class="bi bi-trash3"></i>
-              </div>
-
-              <div>
-
-              </div>
-              <div class="amont-box">
-                <div>
-
-                  <div class="origin-total" v-if="cartItem.unitSubTotal !== null">
-                    {{ formatter.format(cartItem.unitSubTotal || 0) }}
+                      <div class="origin-total" v-if="cartItem.unitSubTotal !== null">
+                        {{ formatter.format(cartItem.unitSubTotal || 0) }}
+                      </div>
+                    </div>
+                    <div class="total">{{ formatter.format(cartItem.subTotal || 0) }}</div>
                   </div>
                 </div>
-                <div class="total">{{ formatter.format(cartItem.subTotal || 0) }}</div>
               </div>
               <div></div>
             </li>
@@ -496,6 +505,23 @@ main {
             }
           }
 
+          .item-name {
+            &>a {
+              font-size: 18px;
+            }
+
+            .discount-tag {
+              background-color: green;
+              padding: 0 3px;
+              border-radius: 5px;
+              font-size: 13px;
+
+              a {
+                color: #F5F5F5;
+              }
+            }
+          }
+
           .item-info-wrapper {
             display: flex;
             flex-direction: column;
@@ -504,34 +530,20 @@ main {
             width: 55%;
 
 
-            .item-name {
-              &>a {
-                font-size: 18px;
-              }
 
-              .discount-tag {
-                background-color: green;
-                padding: 0 3px;
-                border-radius: 5px;
-                font-size: 13px;
-
-                a {
-                  color: #F5F5F5;
-                }
-              }
-            }
 
             .size {
               margin-right: 28px;
               display: flex;
               font-weight: bold;
               color: #777;
+              flex-direction: column;
 
 
               .size-select-container {
                 position: relative;
-                width: 70px;
-                margin-left: 15px;
+                width: 80px;
+                // margin-left: 15px;
 
                 .size-select {
                   display: flex;
@@ -591,14 +603,24 @@ main {
             .qty-box {
               display: flex;
 
+
+              align-items: end;
+
+
+
               .qty {
+                height: 30px;
                 width: 30px;
                 text-align: center;
                 border-bottom: 1px solid #999;
                 border-top: 1px solid #999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
               }
 
               >button {
+                height: 30px;
                 border: 1px solid #999;
                 padding: 0 3px;
 

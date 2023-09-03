@@ -1,6 +1,6 @@
 <template>
   <div class="container area">
-    <h2 class="title">帳戶開通成功</h2>
+    <h2 class="title">帳號開通成功</h2>
     <div class="loginBtn btn">
       <button @click="loginBtn">馬上登入</button>
     </div>

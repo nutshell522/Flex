@@ -134,27 +134,36 @@
                 <div class="pay-info-area">
                   <div class="input-wrapper">
                     <input type="text" name="PaymentInfo.CardName" id="card-name" placeholder="Name on card" v-if="cart"
-                      v-model="cart.checkoutData.paymentInfo.cardName" />
+                      v-model="cart.checkoutData.paymentInfo.cardName" @blur="validateCardName" />
                     <span>Name on card</span>
+                    <div class="valid-text">
+                      <p v-if="!isCardNameValid" class="text-danger">信用卡姓名無效</p>
+                    </div>
                   </div>
                   <div class="input-wrapper">
                     <input type="tel" name="PaymentInfo.CardNumber" id="card-number" placeholder="Card Number" v-if="cart"
                       v-model="creditCardNumber" @focus="removeSpacesOnFocus" @blur="validateCreditCard" />
                     <span>Card Number</span>
+                    <div class="valid-text">
+                      <p v-if="!isCreditCardValid" class="text-danger">信用卡卡號無效</p>
+                    </div>
                   </div>
                   <div class="row row-cols-2">
                     <div class="input-wrapper">
                       <input type="text" name="PaymentInfo.Expiration" id="expiration" placeholder="MM/YY" v-if="cart"
-                        v-model="cart.checkoutData.paymentInfo.expiration" />
+                        v-model="cart.checkoutData.paymentInfo.expiration" @blur="validateExpiration" />
                       <span>MM/YY</span>
-                      <div>
-                        <p v-if="!isCreditCardValid" class="text-danger">信用卡卡號無效</p>
+                      <div class="valid-text">
+                        <p v-if="!isExpirationValid" class="text-danger">信用卡有效期無效</p>
                       </div>
                     </div>
                     <div class="input-wrapper">
                       <input type="tel" name="PaymentInfo.CVV" id="cvv" placeholder="CVV" v-if="cart"
-                        v-model="cart.checkoutData.paymentInfo.cvv" />
+                        v-model="cart.checkoutData.paymentInfo.cvv" maxlength="3" @blur="validateCvv" />
                       <span>CVV</span>
+                      <div class="valid-text">
+                        <p v-if="!isCvvValid" class="text-danger">CVV無效</p>
+                      </div>
                     </div>
                   </div>
                   <label class="confirm-terms-label buy-label">
@@ -452,7 +461,52 @@ const checkout2Disabled = ref<boolean>(!termsChecked.value);
 const summaryActive = ref<boolean>(false);
 const creditCardNumber = ref('');
 let formattedNumber = '';
+const isCreditCardValid = ref<boolean>(true);
+const isCardNameValid = ref<boolean>(true);
+const isExpirationValid = ref<boolean>(true);
+const isCvvValid = ref<boolean>(true);
 
+// 正規表達式
+const cardNameRegex = /^[A-Za-z\s]+$/; // 姓名
+const creditCardNumberRegex = /^[0-9]{16}$/; // 信用卡卡號
+const expirationRegex = /^(0[1-9]|1[0-2])(0[0-9]|1[0-9]|2[2-9])$/; // 信用卡有效期限
+const cvvRegex = /^[0-9]{3}$/; // CVV
+
+const validateCardName = () => {
+  if (cart.value) {
+    isCardNameValid.value = cardNameRegex.test(cart.value.checkoutData.paymentInfo.cardName);
+  }
+};
+const validateExpiration = () => {
+  let expiration = '';
+  if (cart.value) {
+    expiration = cart.value.checkoutData.paymentInfo.expiration;
+  }
+  if (expirationRegex.test(expiration)) {
+    const currentYear = new Date().getFullYear() % 100; // 获取当前的两位数年份
+    const currentMonth = new Date().getMonth() + 1; // 获取当前的月份，注意要加 1 因为月份是从 0 到 11
+
+    const month = parseInt(expiration.substring(0, 2), 10);
+    const year = parseInt(expiration.substring(2, 4), 10);
+
+    if (year > currentYear || (year === currentYear && month >= currentMonth)) {
+      // 有效期在当前日期之后或者是当前日期之后的同一年的月份
+      isExpirationValid.value = true;
+    } else {
+      // 有效期在当前日期之前，无效
+      isExpirationValid.value = false;
+    }
+  } else {
+    // 格式不合法
+    isExpirationValid.value = false;
+  }
+};
+
+const validateCvv = () => {
+  if (cart.value) {
+    isCvvValid.value = cvvRegex.test(cart.value.checkoutData.paymentInfo.cvv);
+  }
+};
 const formatCreditCardNumber = () => {
   // 在每四個數字後插入一個空格
   formattedNumber = creditCardNumber.value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ');
@@ -470,14 +524,9 @@ const removeSpacesOnFocus = () => {
   creditCardNumber.value = formattedNumber;
 };
 
-const isCreditCardValid = ref<boolean>(true);
-// 正規表達式用來驗證信用卡卡號，這個範例中只是一個簡單的驗證，請根據實際需求進行調整
-const creditCardRegex = /^[0-9]{16}$/;
-
-
 const validateCreditCard = () => {
   const strippedNumber = creditCardNumber.value.replace(/\s/g, '');
-  if (creditCardRegex.test(strippedNumber)) {
+  if (creditCardNumberRegex.test(strippedNumber)) {
     // 信用卡卡號有效
     isCreditCardValid.value = true;
   } else {
@@ -1043,6 +1092,10 @@ onMounted(() => {
     cart.value.checkoutData.paymentInfo.expiration == "" ||
     cart.value.checkoutData.paymentInfo.cvv == null ||
     cart.value.checkoutData.paymentInfo.cvv == "" ||
+    !isCreditCardValid.value ||
+    !isCardNameValid.value ||
+    !isExpirationValid.value ||
+    !isCvvValid.value ||
     !termsChecked.value;
 });
 watch(
@@ -1052,6 +1105,10 @@ watch(
     () => cart.value?.checkoutData.paymentInfo.cvv,
     () => cart.value?.checkoutData.paymentInfo.expiration,
     () => termsChecked.value,
+    () => isCreditCardValid.value,
+    () => isCardNameValid.value,
+    () => isExpirationValid.value,
+    () => isCvvValid.value,
   ],
   () => {
     checkoutDisabled.value =
@@ -1064,6 +1121,10 @@ watch(
       cart.value.checkoutData.paymentInfo.expiration == "" ||
       cart.value.checkoutData.paymentInfo.cvv == null ||
       cart.value.checkoutData.paymentInfo.cvv == "" ||
+      !isCreditCardValid.value ||
+      !isCardNameValid.value ||
+      !isExpirationValid.value ||
+      !isCvvValid.value ||
       !termsChecked.value;
   }
 );
@@ -1832,5 +1893,9 @@ main {
   &.active {
     display: block;
   }
+}
+
+.valid-text {
+  height: 15px;
 }
 </style>

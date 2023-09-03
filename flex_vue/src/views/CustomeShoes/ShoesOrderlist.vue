@@ -84,8 +84,61 @@
                   <option value="cash">現金付款</option>
                 </select>
                   <form id="payForm" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">
+                              <input
+                        type="hidden"
+                        name="MerchantID"
+                        :value="payInfo.MerchantID"
+                      />
+                      <input
+                        type="hidden"
+                        name="MerchantTradeNo"
+                        :value="payInfo.MerchantTradeNo"
+                      />
+                      <input
+                        type="hidden"
+                        name="MerchantTradeDate"
+                        :value="payInfo.MerchantTradeDate"
+                      />
+                      <input
+                        type="hidden"
+                        name="PaymentType"
+                        :value="payInfo.PaymentType"
+                      />
+                      <input
+                        type="hidden"
+                        name="TotalAmount"
+                        :value="payInfo.TotalAmount"
+                      />
+                      <input type="hidden" name="TradeDesc" :value="payInfo.TradeDesc" />
+                      <input type="hidden" name="ItemName" :value="payInfo.ItemName" />
+                      <input type="hidden" name="ReturnURL" :value="payInfo.ReturnURL" />
+                      <input
+                        type="hidden"
+                        name="ChoosePayment"
+                        :value="payInfo.ChoosePayment"
+                      />
+                      <input
+                        type="hidden"
+                        name="EncryptType"
+                        :value="payInfo.EncryptType"
+                      />
+                      <input
+                        type="hidden"
+                        name="ClientBackURL"
+                        :value="payInfo.ClientBackURL"
+                      />
+                      <input
+                        type="hidden"
+                        name="OrderResultURL"
+                        :value="payInfo.OrderResultURL"
+                      />
+                      <input
+                        type="hidden"
+                        name="CheckMacValue"
+                        :value="payInfo.CheckMacValue"
+                      />
                     <button v-if="selectedPaymentMethod === 'creditCard'" type="button" class="btn btn-primary comenextBtn mt-4"
-                            @click="submitPayment">
+                            id="payButton" @click="submitPayment">
                       前往信用卡結帳頁面
                     </button>
                     <div v-else-if="selectedPaymentMethod === 'cash'">
@@ -116,10 +169,10 @@ import { useRoute, useRouter } from "vue-router";
 import ShoesnavBar from "@/components/customeShoes/ShoesnavBar.vue";
 import homeFooter from "@/components/home/footer.vue";
 import router from "@/router";
-import { useActivityRoute } from "@/stores/useActivityRoute.js";
+import { useShoesRoute } from "@/stores/useShoesRoute.js";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 
-const activityStore = useActivityRoute();
+const shoesStore = useShoesRoute();
 const optionsAll = ref("");
 const shoesOrderDetail = ref({});
 const shoesDetail = ref({});
@@ -146,6 +199,8 @@ const totalPrice = computed(() => {
 //塞入資料到訂單裡
 const shoesUri = `${baseAddress}api/CustomeShoes/IntoOrder`;
 //const shoesdataUri = `${baseAddress}api/CustomeShoes/IntoShoesProduct`;
+
+
 
 //塞入資料進訂單
 var orderData = {};
@@ -178,31 +233,13 @@ function ShoestoOrder()
   axios
     .post(shoesUri, orderData)
     .then((res)=>{
-      console.log(res.data)
+      //console.log(res.data)
     })
     .catch((error)=>{
       console.error("POST request error:", error);
     })
   }
 }
-
-// var productdata = {};
-// function shoesProductToOrder()
-// {
-//   productdata.product_name = product.shoesName;
-//   productdata.per_price = product.shoesUnitPrice;
-//   productdata.quantity = shoesdata.qty;
-//   productdata.Items_description =product.shoesDescription ;
-//   axios
-//     .post(shoesUri, productdata)
-//     .then((res)=>{
-//       console.log(`item added:`, res.data);
-//     })
-//     .catch((error)=>{
-//       console.error(`POST request error for item:`, error);
-//     });
-
-// }
 
 
 //抓取網頁登入資料
@@ -229,6 +266,7 @@ const payInfo = reactive({
     CheckMacValue:"",
     OrderResultURL:""
 })
+//console.log(payInfo)
 
 //傳給後端會員資料
 const member = reactive({
@@ -239,7 +277,6 @@ const member = reactive({
     email:"",
     birthday:""
 })
-console.log(member)
 
 //傳給後端商品資料
 const product = reactive({
@@ -248,7 +285,6 @@ const product = reactive({
     shoesDescription:"",
     shoesUnitPrice:""
 })
-console.log(product)
 
 
 const shoesdata = reactive({
@@ -256,7 +292,6 @@ const shoesdata = reactive({
   shoesUnitPrice:"",
 })
 console.log(shoesdata)
-
 
 //把會員編號傳給後單，自動帶入會員資料
 const loadMember = async (id) => {
@@ -318,7 +353,7 @@ let getshoesData = async (id) => {
        `${baseAddress}api/CustomeShoes/shoes/Detail/${id}`
     )
     .then(res=>{
-    console.log(res.data);
+    //console.log(res.data);
     shoesDetail.value = res.data;
     product.shoesName = res.data.shoesName;
     product.shoesUnitPrice = res.data.shoesUnitPrice;
@@ -328,15 +363,16 @@ let getshoesData = async (id) => {
     }).catch(error=>{console.log(error)})}
   
 
-    const activityId = product.shoesProductId;
+    const activityId = 1;
     console.log(activityId);
 
 
 //從後端得到綠界需要的參數資訊
-axios.get(`https://localhost:7183/api/Payment/${activityId}`)
+axios.get(`https://localhost:7183/api/Payment/Shoes/${activityId}`)
 
     .then(res=>{
         console.log(res.data);
+        console.log(res);
         const payresult = res.data;
         payInfo.MerchantID = payresult.MerchantID;
         console.log("畫面的ID="+payInfo.MerchantID);
@@ -351,8 +387,7 @@ axios.get(`https://localhost:7183/api/Payment/${activityId}`)
         payInfo.ClientBackURL = payresult.ClientBackURL;
         payInfo.CheckMacValue = payresult.CheckMacValue;
         payInfo.OrderResultURL = payresult.OrderResultURL;
-        payInfo.TotalAmount = payresult.TotalAmount;
-        console.log(payInfo)
+        payInfo.TotalAmount = payresult.TotalAmount; 
     })
     .catch(err=>{
         console.log(err);
@@ -397,7 +432,7 @@ let getData = async () => {
     );
     console.log(response.data.shoesProductId);
     shoesOrderDetail.value = response.data;
-    console.log(response.data)
+    //console.log(response.data)
     shoesdata.qty = response.data.qty;
     shoesdata.shoesUnitPrice = response.data.shoesUnitPrice;
     optionsAll.value = shoesOrderDetail.value.shoesAllOptions[0]

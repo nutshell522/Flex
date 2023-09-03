@@ -6,6 +6,7 @@ using FlexCoreService.CartCtrl.Interface;
 using FlexCoreService.CartCtrl.Service;
 using FlexCoreService.ProductCtrl.Models.Dtos;
 using FlexCoreService.UserCtrl.Infa;
+using FlexCoreService.UserCtrl.Infa.reCaptcha;
 using FlexCoreService.UserCtrl.Interface;
 using FlexCoreService.UserCtrl.Models.Dtos;
 using FlexCoreService.UserCtrl.Models.VM;
@@ -635,10 +636,39 @@ namespace FlexCoreService.Controllers
         /// <param name="token"></param>
         /// <returns></returns>
         [HttpPost("reCaptcha")]
-        public async Task<ActionResult> GetReCAPTCHAResult(string token)
+        public async Task<ActionResult> GetReCAPTCHAResult([FromBody] TokenRequestModel request)
         {
-            
-            return Ok("驗證成功");
+            // 調用Google reCAPTCHA驗證API来驗證前端傳來的reCAPTCHA token
+            var googleRecaptchaSecretKey = "6LdZBLonAAAAAP33Gz1IGemw5q2Wo2mTRU8cge3B"; // reCAPTCHA密鑰
+
+            using var httpClient = new HttpClient();
+            var parameters = new Dictionary<string, string>
+    {
+        { "secret", googleRecaptchaSecretKey },
+        { "response", request.token }
+    };
+
+            var response = await httpClient.PostAsync("https://www.google.com/recaptcha/api/siteverify", new FormUrlEncodedContent(parameters));
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseData = await response.Content.ReadAsStringAsync();
+                var recaptchaResult = JsonConvert.DeserializeObject<RecaptchaResultModel>(responseData);
+
+                if (recaptchaResult.Success)
+                {
+                    return Ok("驗證成功");
+                }
+                else
+                {
+                    return BadRequest("驗證失敗");
+                }
+            }
+            else
+            {
+                return StatusCode(500, "reCAPTCHA驗證請求失敗");
+            }
+
         }
 
         /// <summary>
@@ -662,8 +692,8 @@ namespace FlexCoreService.Controllers
             var faker = new Faker();
 
             string username = faker.Internet.UserName();
-            string password = "ASDF741a";
-            string fullName = faker.Name.FullName();
+            string password = "ASDF456a";
+            string fullName = "小吳";
             string email = "fuen28flex@gmail.com";
             DateTime birthday = faker.Date.Past(18, DateTime.Now.AddYears(-30)).Date;
             string phoneNumber = faker.Phone.PhoneNumber("09########");
