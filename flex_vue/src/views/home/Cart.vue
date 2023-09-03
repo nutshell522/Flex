@@ -505,6 +505,23 @@ main {
             }
           }
 
+          .item-name {
+            &>a {
+              font-size: 18px;
+            }
+
+            .discount-tag {
+              background-color: green;
+              padding: 0 3px;
+              border-radius: 5px;
+              font-size: 13px;
+
+              a {
+                color: #F5F5F5;
+              }
+            }
+          }
+
           .item-info-wrapper {
             display: flex;
             flex-direction: column;
@@ -513,22 +530,7 @@ main {
             width: 55%;
 
 
-            .item-name {
-              &>a {
-                font-size: 18px;
-              }
 
-              .discount-tag {
-                background-color: green;
-                padding: 0 3px;
-                border-radius: 5px;
-                font-size: 13px;
-
-                a {
-                  color: #F5F5F5;
-                }
-              }
-            }
 
             .size {
               margin-right: 28px;
