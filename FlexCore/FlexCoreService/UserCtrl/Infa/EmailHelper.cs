@@ -18,15 +18,15 @@ namespace FlexCoreService.UserCtrl.Infa
                         <h1>{name}，您好，歡迎重新設定密碼</h1>
                         <h3>請點擊「重新設定密碼」連結來設定您新的密碼:<a href='{resetUrl}'> 重新設定密碼 </a></h3>
                         <br>
-                        <img src='cid:logo'>
+                        <img src='https://github.com/LanceLun/FlexSite/blob/main/FlexCore/FlexCoreService/wwwroot/Public/Img/就這貓貓.gif?raw=true' style='width: 500px;height: 500px'>
                     </body>
                 </html>
             ";
-            // 使用 AlternateView 添加 HTML 內容，包含圖片
-            //AlternateView avHtml = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
+            //使用 AlternateView 添加 HTML 內容，包含圖片
+            AlternateView avHtml = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
 
-            // 添加圖片附件，並設定 ContentId 以供引用
-            //LinkedResource logoResource = new LinkedResource("D:\\FlexFrontend\\FlexFrontendNew\\FlexCore\\FlexCoreService\\wwwroot\\Public\\Img\\Eve.jpg", MediaTypeNames.Image.Jpeg);
+            //添加圖片附件，並設定 ContentId 以供引用
+            //LinkedResource logoResource = new LinkedResource("C:/大專/FlexSite/FlexCore/FlexCoreService/wwwroot/Public/Img/Eve.jpg", MediaTypeNames.Image.Jpeg);
             //logoResource.ContentId = "logo";
             //avHtml.LinkedResources.Add(logoResource);
 
@@ -45,12 +45,12 @@ namespace FlexCoreService.UserCtrl.Infa
                 <h1>{name}，您好，感謝您註冊成為 flex 的會員!</h1>                
                 <h3>請點擊「啟用帳號」連結來啟用您的帳號:<a href='{resetUrl}'> 啟用帳號</a></h3>
                 <br>
-                <img src='cid:logo'>
+                <img src='https://github.com/LanceLun/FlexSite/blob/main/FlexCore/FlexCoreService/wwwroot/Public/Img/就這貓貓.gif?raw=true' style='width: 500px;height: 500px'>
             </body>
         </html>
     ";
             // 使用 AlternateView 添加 HTML 內容，包含圖片
-            //AlternateView avHtml = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
+            AlternateView avHtml = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
 
             // 添加圖片附件，並設定 ContentId 以供引用
             //LinkedResource logoResource = new LinkedResource("D:\\FlexFrontend\\FlexFrontendNew\\FlexCore\\FlexCoreService\\wwwroot\\Public\\Img\\Icon.png", MediaTypeNames.Image.Jpeg);
