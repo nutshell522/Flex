@@ -39,13 +39,13 @@ namespace FlexCoreService.ProductCtrl.Exts
                     Qty = detail.Qty,
                     DefaultColorImg = detail.DefaultColorImg,
                 };
-                if (!group.ContainsKey(detail.ColorName))
+                if (!group.ContainsKey(detail.ColorRGB))
                 {
-                    group[detail.ColorName]= new List<ColorGroupDto> { colorGroup };
+                    group[detail.ColorRGB] = new List<ColorGroupDto> { colorGroup };
                 }
                 else
                 {
-                    group[detail.ColorName].Add(colorGroup);
+                    group[detail.ColorRGB].Add(colorGroup);
                 }
             }
 

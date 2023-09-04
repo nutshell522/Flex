@@ -44,6 +44,7 @@
               :key="color"
               @click="updateSizeList(groupDetail, index)"
               :title="color"
+              :style="{ 'background-color': color }"
               >{{ color }}
             </a>
           </div>
@@ -83,6 +84,7 @@
               tabindex="-1"
               aria-labelledby="exampleModalLabel"
               aria-hidden="true"
+              style="z-index: 6000"
             >
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -865,11 +867,13 @@ const joinCartItemEventHandler = async () => {
 }
 
 .colorBoxSetting {
-  padding: 0;
-  margin-right: 15px;
-  background-color: rgb(222, 222, 222);
-  font-size: 30px;
-  border-radius: 10px;
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  text-indent: -9999px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
 }
 
 .color-height {
@@ -938,7 +942,7 @@ const joinCartItemEventHandler = async () => {
 
 .colorActive {
   background-color: #804040;
-  border: 1px solid black;
+  border: 2px solid black;
   color: aliceblue;
 }
 
@@ -1003,5 +1007,10 @@ const joinCartItemEventHandler = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.setColorBoxSize {
+  width: 50px;
+  height: 50px;
 }
 </style>
