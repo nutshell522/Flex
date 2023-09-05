@@ -1750,7 +1750,7 @@ main {
 
             // border-color: #9bf;
             .coupon-discount {
-              background-color: #c25033;
+              background-color: #fa6746;
               color: #333;
               font-size: 23px;
             }
@@ -1758,7 +1758,7 @@ main {
         }
 
         &.disabled {
-          opacity: 0.4;
+          opacity: 0.6;
         }
 
         .coupon-body {
@@ -1768,7 +1768,7 @@ main {
           // border: 1px solid blue;
           border-radius: 10px;
           position: relative;
-          background-color: #2a456e;
+          background-color: #405e8b;
 
           .coupon-top {
             position: absolute;
@@ -1848,7 +1848,7 @@ main {
             }
 
             .coupon-date-limit {
-              color: red;
+              color: rgb(255, 31, 31);
               margin-top: 3px;
               font-size: 15px;
             }
