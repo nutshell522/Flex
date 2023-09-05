@@ -9,7 +9,8 @@
         >
           <li class="nav-item" role="presentation">
             <button
-              class="nav-link active"
+              class="nav-link"
+              :class="{ active: btnActive == '1' }"
               data-bs-toggle="tab"
               aria-selected="false"
             >
@@ -19,6 +20,7 @@
           <li class="nav-item" role="presentation">
             <button
               class="nav-link"
+              :class="{ active: btnActive == '2' }"
               data-bs-toggle="tab"
               data-bs-target="#profile-tab-pane"
               aria-selected="true"
@@ -82,10 +84,12 @@
   </div>
 </template>
 
-<script>
-import { ref } from 'vue';
+<script setup>
+import { ref, defineProps } from "vue";
 
-const page = ref('favorites');
+const page = ref("favorites");
+
+const { btnActive } = defineProps(["btnActive"]);
 </script>
 
 <style scoped>
