@@ -141,12 +141,7 @@
         註冊
       </button>
     </div>
-    <div>
-      <button class="btn logAndRegBtn" @click="defaultAccountPassword">
-        DEMO
-      </button>
-    </div>
-    <div>
+    <div @click="defaultAccountPassword">
       <p>或</p>
     </div>
     <div class="from-group mb-3 registerBtn">
@@ -170,22 +165,22 @@
 </template>
 
 <script setup>
-import axios from "axios";
-import navBar from "@/components/home/navBar.vue";
-import { ref, onMounted } from "vue";
-import forgetPwdAndSetPwd from "@/components/user/forgetPwdAndSetPwd.vue";
-import register from "@/components/user/register.vue";
-import datepicker from "@/components/user/datepicker.vue";
-import Swal from "sweetalert2/dist/sweetalert2.js";
+import axios from 'axios';
+import navBar from '@/components/home/navBar.vue';
+import { ref, onMounted } from 'vue';
+import forgetPwdAndSetPwd from '@/components/user/forgetPwdAndSetPwd.vue';
+import register from '@/components/user/register.vue';
+import datepicker from '@/components/user/datepicker.vue';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 //google
-import googleLogin from "@/components/user/googleLogin.vue";
-import GoogleReCaptchaV2 from "@/components/user/GoogleReCaptchaV2.vue";
+import googleLogin from '@/components/user/googleLogin.vue';
+import GoogleReCaptchaV2 from '@/components/user/GoogleReCaptchaV2.vue';
 
 //pinia
-import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useGetApiDataStore } from "@/stores/useGetApiDataStore.js";
+import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useGetApiDataStore } from '@/stores/useGetApiDataStore.js';
 
 axios.defaults.withCredentials = true;
 
@@ -198,11 +193,11 @@ const router = useRouter();
 const userAcc = ref(null);
 const loggedInUser = ref(null);
 const defaultAccountPassword = () => {
-  account.value = "zxc123Z";
-  password.value = "vbn456V";
+  account.value = 'zxc123Z';
+  password.value = 'vbn456V';
 };
 onMounted(() => {
-  const storedUser = localStorage.getItem("loggedInUser");
+  const storedUser = localStorage.getItem('loggedInUser');
 
   if (storedUser) {
     loggedInUser.value = JSON.parse(storedUser);
@@ -230,21 +225,21 @@ const forgetPwd = ref(false);
 const unRegistered = ref(false);
 
 //登入表單
-const account = ref("");
-const password = ref("");
-const passwordCheck = ref("");
+const account = ref('');
+const password = ref('');
+const passwordCheck = ref('');
 const arrow = ref(false);
 const accPwdRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]{6,10})$/;
 
 //註冊表單
-const name = ref("");
-const email = ref("");
+const name = ref('');
+const email = ref('');
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const birthday = ref("");
-const mobile = ref("");
+const birthday = ref('');
+const mobile = ref('');
 const mobileRegex = /^\d{10}$|^\d{11}$/;
 
-const address = ref("");
+const address = ref('');
 const googleUser = ref(null);
 
 const uri = `${baseAddress}api/Users/Login`;
@@ -252,13 +247,13 @@ var loginData = {};
 
 //登入 / 註冊
 function ValidatedIdentity() {
-  if (account.value === "") {
+  if (account.value === '') {
     errors.value = [];
     loading.value = false;
-    errors.value.push("請確實填寫");
+    errors.value.push('請確實填寫');
   } else if (!accPwdRegex.test(account.value)) {
     errors.value = [];
-    errors.value.push("帳號格式錯誤");
+    errors.value.push('帳號格式錯誤');
     return;
   } else {
     //已填寫
@@ -269,9 +264,9 @@ function ValidatedIdentity() {
       .post(uri, loginData)
       .then((res) => {
         //已註冊
-        if (res.data == "notEnabled") {
+        if (res.data == 'notEnabled') {
           errors.value = [];
-          errors.value.push("帳號尚未啟用請至信箱收取驗證信");
+          errors.value.push('帳號尚未啟用請至信箱收取驗證信');
         } else {
           validated.value = true;
           accInput.value = false;
@@ -287,7 +282,7 @@ function ValidatedIdentity() {
         logAndRegBtn.value = false;
 
         errors.value = [];
-        errors.value.push("此註冊帳號尚未註冊");
+        errors.value.push('此註冊帳號尚未註冊');
         validated.value = true;
         unValidated.value = true; //信箱
         nameInput.value = true;
@@ -309,23 +304,23 @@ function prePage() {
 function Login() {
   loginData.EncryptedPassword = password.value;
   //未填寫密碼
-  if (password.value === "") {
+  if (password.value === '') {
     errors.value = [];
-    errors.value.push("請確實填寫");
+    errors.value.push('請確實填寫');
     return;
   } else if (!accPwdRegex.test(password.value)) {
     errors.value = [];
-    errors.value.push("密碼格式錯誤");
+    errors.value.push('密碼格式錯誤');
     return;
   }
 
   axios
     .post(uri, loginData)
     .then((res) => {
-      localStorage.setItem("userAcc", account.value);
+      localStorage.setItem('userAcc', account.value);
       const jsonData = res.data;
       const userPassword = jsonData.find(
-        (claim) => claim.Type === "UserPassword"
+        (claim) => claim.Type === 'UserPassword'
       );
 
       if (password.value) {
@@ -333,9 +328,9 @@ function Login() {
         errors.value = [];
 
         //取得登入者資料
-        const userName = jsonData.find((claim) => claim.Type === "FullName");
-        const userId = jsonData.find((claim) => claim.Type === "MemberId");
-        const userPhoto = jsonData.find((claim) => claim.Type === "MemberImg");
+        const userName = jsonData.find((claim) => claim.Type === 'FullName');
+        const userId = jsonData.find((claim) => claim.Type === 'MemberId');
+        const userPhoto = jsonData.find((claim) => claim.Type === 'MemberImg');
 
         //一般登入者資料包成物件
         const memberInfo = {
@@ -356,7 +351,7 @@ function Login() {
     })
     .catch((err) => {
       errors.value = [];
-      errors.value.push("密碼錯誤");
+      errors.value.push('密碼錯誤');
       console.error(err);
     });
 }
@@ -372,12 +367,12 @@ async function Login2(googleLoginUserData) {
 
     const jsonData = res.data;
     const userPassword = jsonData.find(
-      (claim) => claim.Type === "UserPassword"
+      (claim) => claim.Type === 'UserPassword'
     );
 
-    const userName = jsonData.find((claim) => claim.Type === "FullName");
-    const userId = jsonData.find((claim) => claim.Type === "MemberId");
-    const userPhoto = jsonData.find((claim) => claim.Type === "MemberImg");
+    const userName = jsonData.find((claim) => claim.Type === 'FullName');
+    const userId = jsonData.find((claim) => claim.Type === 'MemberId');
+    const userPhoto = jsonData.find((claim) => claim.Type === 'MemberImg');
 
     // 一般登入者資料包成物件
     const memberInfo = {
@@ -391,16 +386,16 @@ async function Login2(googleLoginUserData) {
     }
     handleSuccessfulLogin(memberInfo);
 
-    return "loginSuccess"; // 登入成功返回
+    return 'loginSuccess'; // 登入成功返回
   } catch (err) {
-    console.log("取得google登入這資訊失敗", err);
-    return "userNotFound"; // 登入失敗返回
+    console.log('取得google登入這資訊失敗', err);
+    return 'userNotFound'; // 登入失敗返回
   }
 }
 
 // 將用戶信息轉成字串儲存到本地存儲中
 function handleSuccessfulLogin(memberInfo) {
-  localStorage.setItem("loggedInUser", JSON.stringify(memberInfo));
+  localStorage.setItem('loggedInUser', JSON.stringify(memberInfo));
 
   // 同步用戶信息到 pinia store
   loggedInUser.value = memberInfo;
@@ -413,32 +408,32 @@ const regUri = `${baseAddress}api/Users/Register`;
 function registerBtn() {
   //帳號
   if (
-    account.value === "" ||
-    password.value === "" ||
-    name.value === "" ||
-    email.value === "" ||
-    birthday.value === "" ||
-    mobile.value === "" ||
-    address.value === ""
+    account.value === '' ||
+    password.value === '' ||
+    name.value === '' ||
+    email.value === '' ||
+    birthday.value === '' ||
+    mobile.value === '' ||
+    address.value === ''
   ) {
     errors.value = [];
-    errors.value.push("欄位尚未填寫完畢");
+    errors.value.push('欄位尚未填寫完畢');
   } else if (!accPwdRegex.test(account.value)) {
     errors.value = [];
-    errors.value.push("帳號格式錯誤");
+    errors.value.push('帳號格式錯誤');
     return;
   } else if (!accPwdRegex.test(password.value)) {
     errors.value = [];
-    errors.value.push("密碼格式錯誤");
+    errors.value.push('密碼格式錯誤');
   } else if (password.value != passwordCheck.value) {
     errors.value = [];
-    errors.value.push("密碼或確認密碼錯誤");
+    errors.value.push('密碼或確認密碼錯誤');
   } else if (!emailRegex.test(email.value)) {
     errors.value = [];
-    errors.value.push("信箱格式錯誤");
+    errors.value.push('信箱格式錯誤');
   } else if (!mobileRegex.test(mobile.value)) {
     errors.value = [];
-    errors.value.push("手機格式錯誤");
+    errors.value.push('手機格式錯誤');
   } else {
     errors.value = [];
     const registerData = {
@@ -456,22 +451,22 @@ function registerBtn() {
         registerData.value = res.data;
 
         Swal.fire({
-          icon: "success",
-          title: "註冊成功",
+          icon: 'success',
+          title: '註冊成功',
           text: `請至 ${registerData.Email} 啟用此帳號`,
           //todo 按下ok才跳頁
         });
-        account.value = "";
-        password.value = "";
-        passwordCheck.value = "";
-        name.value = "";
-        email.value = "";
-        birthday.value = "";
-        mobile.value = "";
-        address.value = "";
+        account.value = '';
+        password.value = '';
+        passwordCheck.value = '';
+        name.value = '';
+        email.value = '';
+        birthday.value = '';
+        mobile.value = '';
+        address.value = '';
       })
       .catch((err) => {
-        console.log("註冊失敗", err);
+        console.log('註冊失敗', err);
       });
   }
 }
@@ -484,38 +479,38 @@ function handleGoogleLoginUserData(googleLoginUserData) {
   // 嘗試登入
   Login2(googleLoginUserData)
     .then((loginResult) => {
-      if (loginResult === "loginSuccess") {
+      if (loginResult === 'loginSuccess') {
         // 登入成功
-        window.location.href = "/";
-      } else if (loginResult === "userNotFound") {
+        window.location.href = '/';
+      } else if (loginResult === 'userNotFound') {
         // 使用者不存在，進行註冊
         axios
           .post(regUri, googleLoginUserData)
           .then(() => {
-            console.log("使用者註冊成功");
+            console.log('使用者註冊成功');
 
             Login2(googleLoginUserData);
             //alert('為什麼要延遲啦');
 
             localStorage.setItem(
-              "loggedInUser",
+              'loggedInUser',
               JSON.stringify(googleLoginUserData)
             );
 
             Swal.fire({
-              icon: "success",
-              title: "Flex歡迎您~~",
+              icon: 'success',
+              title: 'Flex歡迎您~~',
             });
             //todo畫面不會跳轉
-            window.location.href = "/";
+            window.location.href = '/';
           })
           .catch((err) => {
-            console.log("使用者註冊失敗", err);
+            console.log('使用者註冊失敗', err);
           });
       }
     })
     .catch((err) => {
-      console.log("google登入失敗", err);
+      console.log('google登入失敗', err);
     });
 }
 
@@ -533,7 +528,7 @@ function forgetPwdClick() {
         email.value = res.data;
       })
       .catch((err) => {
-        console.error("Error:", err);
+        console.error('Error:', err);
       });
   }
   forgetPwdSetPwd.value = true;
@@ -562,35 +557,35 @@ function testData() {
         mobile: res.data.mobile,
         address: res.data.commonAddress,
       };
-      if (account.value == "") {
+      if (account.value == '') {
         account.value = testUserRegData.account;
       }
-      if (password.value == "") {
+      if (password.value == '') {
         password.value = testUserRegData.password;
       }
-      if (name.value == "") {
+      if (name.value == '') {
         name.value = testUserRegData.name;
       }
-      if (email.value == "") {
+      if (email.value == '') {
         email.value = testUserRegData.email;
       }
-      if (birthday.value == "") {
+      if (birthday.value == '') {
         birthday.value = testUserRegData.birthday;
       }
-      if (mobile.value == "") {
+      if (mobile.value == '') {
         mobile.value = testUserRegData.mobile;
       }
-      if (address.value == "") {
+      if (address.value == '') {
         address.value = testUserRegData.address;
       }
     })
     .catch((err) => {
-      console.log("測試資料取得失敗", err);
+      console.log('測試資料取得失敗', err);
     });
 }
 </script>
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lilita+One&display=swap');
 .pwdInput {
   position: relative;
 }
@@ -619,7 +614,7 @@ function testData() {
   justify-content: center;
 }
 .loginText > h4 {
-  font-family: "Bebas Neue", sans-serif;
+  font-family: 'Bebas Neue', sans-serif;
   font-weight: bold;
   font-size: 40px;
 }
@@ -658,7 +653,7 @@ p {
 
 p::before,
 p::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   width: 150px; /* 調整線段的長度 */
