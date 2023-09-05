@@ -36,7 +36,8 @@ namespace FlexCoreService.Controllers
         private IFavoriteDPRepository _repo;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWebHostEnvironment _environment;
-		private CartService _cartService;
+        private CartService _cartService;
+        public string imgPath = string.Empty;
 
         public UsersController(AppDbContext db, IHttpContextAccessor httpContextAccessor, IFavoriteDPRepository repo, IUrlHelperFactory urlHelperFactory, IWebHostEnvironment environment, CartService cartService)
         {
@@ -44,10 +45,14 @@ namespace FlexCoreService.Controllers
             _repo = repo;
             _httpContextAccessor = httpContextAccessor;
             _urlHelperFactory = urlHelperFactory;
-			_cartService = cartService;
+            _cartService = cartService;
             _environment = environment;
 
+            //信箱裡照片
+            var emailImgPath = Path.Combine(_environment.WebRootPath, "Public", "Img");
+            imgPath = Path.Combine(emailImgPath, "FlexLogo.png");
         }
+
 
         /// <summary>
         /// 取得會員信箱
@@ -235,7 +240,7 @@ namespace FlexCoreService.Controllers
                 Member member = new Member
                 {
                     Account = regdto.Email,
-                    EncryptedPassword = HashUtility.ToSHA256(regdto.Email, salt) ,
+                    EncryptedPassword = HashUtility.ToSHA256(regdto.Email, salt),
                     Name = regdto.Name,
                     Email = regdto.Email,
                     Mobile = Guid.NewGuid().ToString("N").Substring(0, 10),
@@ -270,7 +275,7 @@ namespace FlexCoreService.Controllers
                 string resetUrl = $"{url}?memberAcc={regdto.Account}&confirmCode={confirmCode}";
 
                 //發送驗證信
-                new EmailHelper().SendConfirmRegisterEmail(resetUrl, member.Name, member.Email);
+                new EmailHelper().SendConfirmRegisterEmail(resetUrl, member.Name, member.Email,imgPath);
 
                 //reCAPTCHA
 
@@ -280,7 +285,7 @@ namespace FlexCoreService.Controllers
             }
 
             _cartService.SendCoupons(2, memberId);
-            
+
             return regdto;
         }
 
@@ -339,7 +344,7 @@ namespace FlexCoreService.Controllers
                     }
 
                     img.ImgPath = image.FileName;
-                    updatePhoto= img.ImgPath;
+                    updatePhoto = img.ImgPath;
                     _db.MemberImgs.Add(img);
                 }
 

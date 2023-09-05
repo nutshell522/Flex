@@ -141,7 +141,7 @@
         註冊
       </button>
     </div>
-    <div>
+    <div @click="defaultAccountPassword">
       <p>或</p>
     </div>
     <div class="from-group mb-3 registerBtn">
@@ -192,7 +192,10 @@ const router = useRouter();
 
 const userAcc = ref(null);
 const loggedInUser = ref(null);
-
+const defaultAccountPassword = () => {
+  account.value = 'zxc123Z';
+  password.value = 'vbn456V';
+};
 onMounted(() => {
   const storedUser = localStorage.getItem('loggedInUser');
 
